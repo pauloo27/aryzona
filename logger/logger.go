@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"runtime/debug"
+	"time"
 
 	"github.com/Pauloo27/aryzona/utils"
 )
@@ -24,7 +25,10 @@ var (
 )
 
 func Log(level Level, msg string) {
-	formattedMsg := utils.Fmt("%s%s[%s]%s %s", level.Color, ColorBold, level.Name, ColorReset, msg)
+	now := time.Now().Format("15:04:05")
+	formattedMsg := utils.Fmt(
+		"%s%s[%s @ %s]%s %s", level.Color, ColorBold, level.Name, now, ColorReset, msg,
+	)
 	if level.Error {
 		stderr.Println(formattedMsg)
 		debug.PrintStack()
