@@ -19,3 +19,8 @@ dist:
 # (even smaller binary)
 pack: dist
 	upx ./$(BINARY_NAME)
+
+
+restart_bot: build
+	killall aryzona
+	./$(BINARY_NAME) 

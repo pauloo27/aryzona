@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/command/categories/utils"
@@ -37,7 +38,8 @@ func main() {
 	logger.Success("Commands loaded")
 
 	stop := make(chan os.Signal)
-	signal.Notify(stop, os.Interrupt)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	<-stop
+	// TODO: notify before leaving
 	logger.Success("Exiting...")
 }
