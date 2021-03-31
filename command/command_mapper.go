@@ -1,12 +1,14 @@
 package command
 
+import "strings"
+
 var commandMap = map[string]*Command{}
 
 var Prefix string
 
 func RegisterCommand(command *Command) {
-	commandMap[command.Name] = command
+	commandMap[strings.ToLower(command.Name)] = command
 	for _, alias := range command.Aliases {
-		commandMap[alias] = command
+		commandMap[strings.ToLower(alias)] = command
 	}
 }
