@@ -5,18 +5,26 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+type CommandHandler func(*CommandContext)
+type CommandPermissionChecker func(*CommandContext) bool
+
 type CommandContext struct {
 	Message       *discordgo.Message
 	MessageCreate *discordgo.MessageCreate
 	Session       *discordgo.Session
+	Args          []string
 }
 
-type CommandHandler func(*CommandContext)
+type CommandPermission struct {
+	Name    string
+	Checker CommandPermissionChecker
+}
 
 type Command struct {
 	Name, Description string
 	Aliases           []string
 	Handler           CommandHandler
+	Permission        *CommandPermission
 }
 
 func (ctx *CommandContext) Success(message string) {

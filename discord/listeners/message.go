@@ -17,5 +17,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	rawCommand := strings.TrimPrefix(strings.Split(m.Content, " ")[0], command.Prefix)
-	command.HandleCommand(rawCommand, s, m)
+	args := strings.Split(
+		strings.TrimPrefix(strings.TrimPrefix(m.Content, command.Prefix+rawCommand), " "), " ",
+	)
+	command.HandleCommand(rawCommand, args, s, m)
 }
