@@ -40,6 +40,7 @@ func main() {
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	<-stop
+	discord.Disconnect()
 	// TODO: notify before leaving
 	logger.Success("Exiting...")
 }
