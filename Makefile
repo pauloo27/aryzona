@@ -20,7 +20,6 @@ dist:
 pack: dist
 	upx ./$(BINARY_NAME)
 
-
 restart_bot: build
-	killall aryzona
+	- killall aryzona
 	./$(BINARY_NAME) 
