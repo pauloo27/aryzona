@@ -4,6 +4,8 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/command/categories/utils"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/logger"
 	"github.com/joho/godotenv"
@@ -16,12 +18,23 @@ func init() {
 	logger.Success(".env loaded")
 }
 
+func registerCategory(category command.Category) {
+	for _, cmd := range category.Commands {
+		command.RegisterCommand(cmd)
+	}
+}
+
 func main() {
 	logger.Info("Connecting to Discord...")
 	discord.Create(os.Getenv("DC_BOT_TOKEN"))
 	discord.AddDefaultListeners()
 	discord.Connect()
 	logger.Success("Connected to discord")
+
+	logger.Info("Registering commands...")
+	command.Prefix = os.Getenv("DC_BOT_PREFIX")
+	registerCategory(utils.Utils)
+	logger.Success("Commands loaded")
 
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt)
