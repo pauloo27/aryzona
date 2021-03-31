@@ -8,8 +8,8 @@ import (
 	"github.com/Pauloo27/aryzona/utils"
 )
 
-var Eval = command.Command{
-	Name:        "eval",
+var Bash = command.Command{
+	Name:        "bash",
 	Description: "Eval a bash command",
 	Permission:  &permissions.BeOwner,
 	Handler: func(ctx *command.CommandContext) {
