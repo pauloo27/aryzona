@@ -23,4 +23,5 @@ func Disconnect() {
 
 func AddDefaultListeners() {
 	Discord.AddHandler(listeners.MessageCreate)
+	Discord.AddHandler(listeners.Ready)
 }
