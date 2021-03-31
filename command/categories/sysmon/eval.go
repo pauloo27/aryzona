@@ -24,10 +24,11 @@ var Eval = command.Command{
 		}
 		cmd := exec.Command(name, args...)
 		buffer, err := cmd.CombinedOutput()
+		// TODO: escape ```
 		if err != nil {
-			ctx.Error(utils.Fmt("Something went wrong: %s", string(buffer)))
+			ctx.Error(utils.Fmt("Something went wrong:\n```\n%s\n```", string(buffer)))
 		} else {
-			ctx.Success(utils.Fmt("Command ran successfully: %s", string(buffer)))
+			ctx.Success(utils.Fmt("Command ran successfully:\n```\n%s\n```", string(buffer)))
 		}
 	},
 }
