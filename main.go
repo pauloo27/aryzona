@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/command/categories/sysmon"
 	"github.com/Pauloo27/aryzona/command/categories/utils"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/logger"
@@ -35,6 +36,7 @@ func main() {
 	logger.Info("Registering commands...")
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
 	registerCategory(utils.Utils)
+	registerCategory(sysmon.SysMon)
 	logger.Success("Commands loaded")
 
 	stop := make(chan os.Signal)
