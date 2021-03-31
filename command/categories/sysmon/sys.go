@@ -13,9 +13,8 @@ var Sys = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		var memStats runtime.MemStats
 		runtime.ReadMemStats(&memStats)
-		status := utils.Fmt(":computer: %s %s %s\n\n:abacus: RAM (MB): %d/%d\n\n",
+		status := utils.Fmt(":computer: %s %s %s",
 			runtime.GOOS, runtime.GOARCH, runtime.Version(),
-			memStats.Alloc/1024, memStats.Sys/1024,
 		)
 		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, status)
 	},
