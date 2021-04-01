@@ -2,6 +2,7 @@ package sysmon
 
 import (
 	"os/exec"
+	"strings"
 
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/command/permissions"
@@ -13,22 +14,14 @@ var Bash = command.Command{
 	Description: "Eval a bash command",
 	Permission:  &permissions.BeOwner,
 	Handler: func(ctx *command.CommandContext) {
-		name := ctx.Args[0]
-		if name == "" {
-			ctx.Error("Missing the command name")
-			return
-		}
-		var args []string
-		if len(ctx.Args) >= 1 {
-			args = ctx.Args[1:]
-		}
-		cmd := exec.Command(name, args...)
+		cmd := exec.Command("bash", "-c", strings.Join(ctx.Args, " "))
 		buffer, err := cmd.CombinedOutput()
-		// TODO: escape ```
+		output := string(buffer)
+		output = strings.ReplaceAll(output, "`", "\\`")
 		if err != nil {
-			ctx.Error(utils.Fmt("Something went wrong:\n```\n%s\n```", string(buffer)))
+			ctx.Error(utils.Fmt("Something went wrong:\n```\n%s\n```", output))
 		} else {
-			ctx.Success(utils.Fmt("Command ran successfully:\n```\n%s\n```", string(buffer)))
+			ctx.Success(utils.Fmt("Command ran successfully:\n```\n%s\n```", output))
 		}
 	},
 }
