@@ -7,5 +7,9 @@ import (
 )
 
 func Ready(s *discordgo.Session, m *discordgo.Ready) {
-	s.UpdateStreamingStatus(0, os.Getenv("DC_BOT_PRESENCE"), "https://twitch.tv/gaules")
+	presence := os.Getenv("DC_BOT_PRESENCE")
+	if presence == "" {
+		presence = ",help"
+	}
+	s.UpdateStreamingStatus(0, presence, "https://twitch.tv/gaules")
 }
