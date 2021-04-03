@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -22,18 +23,21 @@ func FormatDuration(duration time.Duration) string {
 		return "less than a minute"
 	}
 
-	hours := seconds / 3600
+	days := seconds / 86400
+	hours := (seconds % 86400) / 3600
 	minutes := (seconds % 3600) / 60
 
-	var out string
-
-	if minutes > 0 {
-		out = Fmt("%d %s", minutes, Pluralize(minutes, "minute", "minutes"))
+	stringfy := func(i int, singular, plural string) string {
+		if i == 0 {
+			return ""
+		}
+		return Fmt("%d %s", i, Pluralize(i, singular, plural))
 	}
 
-	if hours > 0 {
-		out = Fmt("%d %s and %s", hours, Pluralize(hours, "hour", "hours"), out)
-	}
-
-	return out
+	return strings.TrimSpace(Fmt(
+		"%s %s %s",
+		stringfy(days, "day", "days"),
+		stringfy(hours, "hour", "hours"),
+		stringfy(minutes, "minute", "minutes"),
+	))
 }
