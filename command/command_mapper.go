@@ -12,3 +12,7 @@ func RegisterCommand(command *Command) {
 		commandMap[strings.ToLower(alias)] = command
 	}
 }
+
+func GetCommandMap() map[string]*Command {
+	return commandMap
+}
