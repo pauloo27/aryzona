@@ -17,7 +17,11 @@ var HelpCommand = command.Command{
 			if alias != cmd.Name {
 				continue
 			}
-			sb.WriteString(utils.Fmt(" - `%s%s`: **%s**\n", command.Prefix, cmd.Name, cmd.Description))
+			var permission string
+			if cmd.Permission != nil {
+				permission = utils.Fmt("(_requires you to... %s_)", cmd.Permission.Name)
+			}
+			sb.WriteString(utils.Fmt(" - `%s%s`: **%s** %s\n", command.Prefix, cmd.Name, cmd.Description, permission))
 		}
 		ctx.Success(sb.String())
 	},
