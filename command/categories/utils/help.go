@@ -17,7 +17,7 @@ var HelpCommand = command.Command{
 			if alias != cmd.Name {
 				continue
 			}
-			sb.WriteString(utils.Fmt("%s%s: %s\n", command.Prefix, cmd.Name, cmd.Description))
+			sb.WriteString(utils.Fmt(" - `%s%s`: **%s**\n", command.Prefix, cmd.Name, cmd.Description))
 		}
 		ctx.Success(sb.String())
 	},
