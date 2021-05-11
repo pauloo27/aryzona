@@ -12,6 +12,8 @@ var HelpCommand = command.Command{
 	Aliases: []string{"h"},
 	Handler: func(ctx *command.CommandContext) {
 		sb := strings.Builder{}
+		sb.WriteString("I'm a open source bot, here's my code: ")
+		sb.WriteString("https://github.com/Pauloo27/aryzona")
 		sb.WriteString("List of commands:\n")
 		for alias, cmd := range command.GetCommandMap() {
 			if alias != cmd.Name {
