@@ -28,13 +28,15 @@ type Command struct {
 }
 
 func (ctx *CommandContext) Success(message string) {
-	ctx.Session.ChannelMessageSend(
+	ctx.Session.ChannelMessageSendReply(
 		ctx.Message.ChannelID, utils.Fmt(":green_square: %s", message),
+		ctx.Message.Reference(),
 	)
 }
 
 func (ctx *CommandContext) Error(message string) {
-	ctx.Session.ChannelMessageSend(
+	ctx.Session.ChannelMessageSendReply(
 		ctx.Message.ChannelID, utils.Fmt(":red_square: %s", message),
+		ctx.Message.Reference(),
 	)
 }
