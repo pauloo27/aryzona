@@ -14,6 +14,6 @@ var WoofCommand = command.Command{
 			ctx.Error(utils.Fmt("An error occurred:\n %v", err))
 		}
 
-		ctx.Success(url)
+		ctx.Success(utils.Fmt("https://random.dog/%s", url))
 	},
 }
