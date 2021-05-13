@@ -9,3 +9,11 @@ func GetRandomDog() (string, error) {
 	}
 	return utils.Fmt("https://random.dog/%s", url), nil
 }
+
+func GetRandomDogImage() (string, error) {
+	url, err := utils.GetString("https://random.dog/woof?include=jpg")
+	if err != nil {
+		return "", err
+	}
+	return utils.Fmt("https://random.dog/%s", url), nil
+}
