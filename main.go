@@ -9,15 +9,22 @@ import (
 	"github.com/Pauloo27/aryzona/command/categories/sysmon"
 	"github.com/Pauloo27/aryzona/command/categories/utils"
 	"github.com/Pauloo27/aryzona/discord"
+	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/aryzona/logger"
 	"github.com/joho/godotenv"
 )
+
+var commitHash, commitMessage string
 
 func init() {
 	logger.Info("Loading .env...")
 	err := godotenv.Load()
 	logger.HandleFatal(err, "Cannot load .env")
 	logger.Success(".env loaded")
+
+	git.CommitHash = commitHash
+	git.CommitMessage = commitMessage
+	git.RemoteRepo = os.Getenv("DC_BOT_REMOTE_REPO")
 }
 
 func registerCategory(category command.Category) {
