@@ -42,7 +42,7 @@ func createStartedEmbed() *discordgo.MessageEmbed {
 func Ready(s *discordgo.Session, m *discordgo.Ready) {
 	presence := os.Getenv("DC_BOT_PRESENCE")
 	if presence == "" {
-		presence = git.CommitMessage
+		presence = utils.Fmt("Last commit: %s", git.CommitMessage)
 	}
 	s.UpdateStreamingStatus(0, presence, "https://twitch.tv/gaules")
 
