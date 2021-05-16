@@ -2,7 +2,11 @@
 
 Just another simple Discord bot.
 
-## How to run
+## How to add to your server
+
+Aryzona is not public yet.
+
+## How to self host 
 Create a `.env` file and copy the content of the `.env.default` file into it.
 
 Then, change the stuffs.
