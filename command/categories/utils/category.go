@@ -6,6 +6,6 @@ var Utils = command.Category{
 	Name: "Utils",
 	Commands: []*command.Command{
 		&PingCommand, &UptimeCommand, &HelpCommand, &WoofCommand, &MeowCommand,
-		&FloofCommand, &SourceCommand,
+		&FloofCommand, &SourceCommand, &XkcdCommand,
 	},
 }
