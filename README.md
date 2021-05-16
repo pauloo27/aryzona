@@ -2,6 +2,10 @@
 
 Just another simple Discord bot.
 
+## Features
+- random animals (`!dog`, `!cat`, `!fox`)
+- run bash commands in the host (`!bash`)
+
 ## How to add to your server
 
 Aryzona is not public yet.
