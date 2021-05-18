@@ -4,20 +4,12 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
 func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
-	}
-
-	if m.Author.ID == "214486492909666305" {
-		err := s.ChannelMessageDelete(m.ChannelID, m.ID)
-		if err != nil {
-			logger.Errorf("%v", err)
-		}
 	}
 
 	if !strings.HasPrefix(m.Message.Content, command.Prefix) {
