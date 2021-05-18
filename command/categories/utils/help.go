@@ -14,7 +14,7 @@ var HelpCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		sb := strings.Builder{}
 		sb.WriteString("I'm a open source bot, here's my code: ")
-		sb.WriteString(utils.Fmt("%s\n", os.Getenv("DB_BOT_REMOTE_REPO")))
+		sb.WriteString(utils.Fmt("%s\n", os.Getenv("DC_BOT_REMOTE_REPO")))
 		sb.WriteString("List of commands:\n")
 		for alias, cmd := range command.GetCommandMap() {
 			if alias != cmd.Name {
