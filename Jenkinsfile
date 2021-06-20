@@ -26,8 +26,10 @@ pipeline {
     }
   }
   post {
-    always {
-      echo env.WEBHOOK_URL
+    failure {
+      discordSend description: "Jenkins Pipeline Build", footer: "Aryzona: " + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: env.WEBHOOK_URL
+    }
+    fixed {
       discordSend description: "Jenkins Pipeline Build", footer: "Aryzona: " + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: env.WEBHOOK_URL
     }
   }
