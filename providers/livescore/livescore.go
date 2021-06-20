@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/buger/jsonparser"
@@ -96,6 +97,20 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 	return &MatchInfo{
 		id, team1, team2, time, cupName, stadiumName, stadiumCity,
 	}, nil
+}
+
+func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
+	matches, err := ListLives()
+	if err != nil {
+		return nil, err
+	}
+	for _, match := range matches {
+		if strings.EqualFold(match.T1.Name, teamName) ||
+			strings.EqualFold(match.T2.Name, teamName) {
+			return match, nil
+		}
+	}
+	return nil, nil
 }
 
 func FetchMatchInfo(matchID string) (*MatchInfo, error) {

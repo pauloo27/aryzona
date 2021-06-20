@@ -13,14 +13,25 @@ var ScoreCommand = command.Command{
 	Aliases: []string{"placar", "gols"},
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 0 {
-			ctx.Error("Missing game id")
+			ctx.Error("Missing game id or team name")
 			return
 		}
-		match, err := livescore.FetchMatchInfo(ctx.Args[0])
-		if err != nil {
-			ctx.Error(err.Error())
-			return
+
+		var match *livescore.MatchInfo
+		if _, err := strconv.Atoi(ctx.Args[0]); err == nil {
+			match, err = livescore.FetchMatchInfo(ctx.Args[0])
+			if err != nil {
+				ctx.Error(err.Error())
+				return
+			}
+		} else {
+			match, err = livescore.FetchMatchInfoByTeamName(ctx.Args[0])
+			if err != nil {
+				ctx.Error(err.Error())
+				return
+			}
 		}
+
 		var color int
 		if match.T1.Score == match.T2.Score {
 			color = 0xC0FFEE
