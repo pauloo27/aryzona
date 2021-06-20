@@ -6,6 +6,7 @@ def deployApp() {
   remote.user = env.DEPLOY_USER
   remote.identityFile = env.DEPLOY_IDENTITY_FILE
   sshPut remote: remote, from: './aryzona', into: env.DEPLOY_FOLDER
+  sshCommand remote: remote, command: "ary-restart"
 }
 
 return this
