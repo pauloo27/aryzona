@@ -40,3 +40,10 @@ func (ctx *CommandContext) Error(message string) {
 		ctx.Message.Reference(),
 	)
 }
+
+func (ctx *CommandContext) SendEmbed(embed *discordgo.MessageEmbed) {
+	ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
+		Reference: ctx.Message.Reference(),
+		Embed: embed,
+	})
+}
