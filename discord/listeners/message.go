@@ -28,5 +28,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	args := strings.Split(
 		strings.TrimPrefix(strings.TrimPrefix(m.Content, command.Prefix+rawCommand), " "), " ",
 	)
+	if len(args) == 1 && args[0] == "" {
+		args = []string{}
+	}
 	command.HandleCommand(strings.ToLower(rawCommand), args, s, m)
 }
