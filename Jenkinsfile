@@ -1,3 +1,5 @@
+def gv 
+
 pipeline {
   agent any
 
@@ -7,6 +9,10 @@ pipeline {
 
   environment {
     WEBHOOK_URL = credentials('DISCORD_CI_WEBHOOK')
+    DEPLOY_HOST = credentials('DEPLOY_HOST')
+    DEPLOY_USER = credentials('DEPLOY_USER')
+    DEPLOY_IDENTITY_FILE = credentials('DEPLOY_IDENTITY_FILE')
+    DEPLOY_FOLDER = credentials('DEPLOY_FOLDER')
   }
 
   stages {
@@ -17,11 +23,14 @@ pipeline {
     }
 
     stage("deploy") {
-      when {
-        branch 'master'
-      }
+      //when {
+       // branch 'master'
+      //}
       steps {
-        echo 'deploy? not yet...'
+        script {
+          gv = load "deploy.groovy"
+          gv.deployApp()
+        }
       }
     }
   }
