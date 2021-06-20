@@ -11,10 +11,9 @@ var Sys = command.Command{
 	Name:        "sys",
 	Description: "Show system info",
 	Handler: func(ctx *command.CommandContext) {
-		ctx.ReplyWithEmbed(
+		ctx.SuccesEmbed(
 			utils.NewEmbedBuilder().
 				Title("System info").
-				Color(0xC0FFEE).
 				Description(
 					utils.Fmt(":computer: %s %s %s",
 						runtime.GOOS, runtime.GOARCH, runtime.Version(),

@@ -41,9 +41,18 @@ func (ctx *CommandContext) Error(message string) {
 	)
 }
 
-func (ctx *CommandContext) ReplyWithEmbed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) SuccesEmbed(embed *discordgo.MessageEmbed) {
+	embed.Color = 0x50fa7b
 	ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
 		Reference: ctx.Message.Reference(),
-		Embed: embed,
+		Embed:     embed,
+	})
+}
+
+func (ctx *CommandContext) ErrorEmbed(embed *discordgo.MessageEmbed) {
+	embed.Color = 0xff5555
+	ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
+		Reference: ctx.Message.Reference(),
+		Embed:     embed,
 	})
 }
