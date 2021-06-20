@@ -9,6 +9,14 @@ var PingCommand = command.Command{
 	Name: "ping", Description: "Get the bot latency",
 	Aliases: []string{"p", "pong"},
 	Handler: func(ctx *command.CommandContext) {
-		ctx.Success(utils.Fmt("Bot latency with Discord servers is %d ms", ctx.Session.HeartbeatLatency().Milliseconds()))
+		ctx.ReplyWithEmbed(
+			utils.NewEmbedBuilder().
+				Description(
+					utils.Fmt("Latency with Discord's server is **%d ms**",
+						ctx.Session.HeartbeatLatency().Milliseconds()),
+				).
+				Color(0xC0FFEE).
+				Build(),
+		)
 	},
 }
