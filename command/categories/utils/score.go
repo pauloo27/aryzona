@@ -26,7 +26,7 @@ var ScoreCommand = command.Command{
 				return
 			}
 		} else {
-			match, err = livescore.FetchMatchInfoByTeamName(strings.Join(ctx.Args))
+			match, err = livescore.FetchMatchInfoByTeamName(strings.Join(ctx.Args, " "))
 			if err != nil {
 				ctx.Error(err.Error())
 				return
