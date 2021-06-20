@@ -29,8 +29,17 @@ func (e *EmbedBuilder) Description(description string) *EmbedBuilder {
 
 func (e *EmbedBuilder) Field(name, value string) *EmbedBuilder {
 	e.embed.Fields = append(e.embed.Fields, &discordgo.MessageEmbedField{
-		Name: name,
+		Name:  name,
 		Value: value,
+	})
+	return e
+}
+
+func (e *EmbedBuilder) FieldInline(name, value string) *EmbedBuilder {
+	e.embed.Fields = append(e.embed.Fields, &discordgo.MessageEmbedField{
+		Name:   name,
+		Value:  value,
+		Inline: true,
 	})
 	return e
 }
