@@ -11,7 +11,7 @@ var Sys = command.Command{
 	Name:        "sys",
 	Description: "Show system info",
 	Handler: func(ctx *command.CommandContext) {
-		ctx.SendEmbed(
+		ctx.ReplyWithEmbed(
 			utils.NewEmbedBuilder().
 				Title("System info").
 				Color(0xC0FFEE).

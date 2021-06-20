@@ -41,7 +41,7 @@ func (ctx *CommandContext) Error(message string) {
 	)
 }
 
-func (ctx *CommandContext) SendEmbed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) ReplyWithEmbed(embed *discordgo.MessageEmbed) {
 	ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
 		Reference: ctx.Message.Reference(),
 		Embed: embed,
