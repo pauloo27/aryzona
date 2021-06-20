@@ -23,7 +23,7 @@ var LiveCommand = command.Command{
 		// more than 25? cant use fields =(
 		desc := strings.Builder{}
 		for _, match := range matches {
-			desc.WriteString(utils.Fmt("**%s** (%d) x (%d) **%s**: _%s_\n",
+			desc.WriteString(utils.Fmt("**%s** ||(%d) x (%d)|| **%s**: _%s_\n",
 				match.T1.Name, match.T1.Score,
 				match.T2.Score, match.T2.Name,
 				match.Id,
