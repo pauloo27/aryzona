@@ -24,6 +24,11 @@ dist:
 pack: dist
 	upx ./$(BINARY_NAME)
 
+# kill previous version and start a new one 
 restart_bot: build
 	- killall aryzona -w
 	./$(BINARY_NAME) 
+
+# auto restart bot (using fiber CLI)
+dev:
+	fiber dev
