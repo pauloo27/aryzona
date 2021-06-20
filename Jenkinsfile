@@ -23,9 +23,9 @@ pipeline {
     }
 
     stage("deploy") {
-      //when {
-       // branch 'master'
-      //}
+      when {
+        branch 'master'
+      }
       steps {
         script {
           gv = load "deploy.groovy"
