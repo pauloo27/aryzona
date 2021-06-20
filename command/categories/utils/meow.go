@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/provider/animal"
+	"github.com/Pauloo27/aryzona/providers/animal"
 	"github.com/Pauloo27/aryzona/utils"
 )
 
