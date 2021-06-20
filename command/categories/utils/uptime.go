@@ -13,10 +13,13 @@ var UptimeCommand = command.Command{
 	Aliases: []string{"up"},
 	Handler: func(ctx *command.CommandContext) {
 		uptime := time.Now().Sub(discord.StartedAt)
-		ctx.Success(
-			utils.Fmt("Bot started at %v. Up %s.",
-				discord.StartedAt.Format("2 Jan, 15:06"), utils.FormatDuration(uptime),
-			),
+		ctx.ReplyWithEmbed(
+			utils.NewEmbedBuilder().
+			Title("Bot uptime").
+			Color(0xC0FFEE).
+			Field("Uptime", utils.FormatDuration(uptime)).
+			Field("Started at", discord.StartedAt.Format("2 Jan, 15:04")).
+			Build(),
 		)
 	},
 }
