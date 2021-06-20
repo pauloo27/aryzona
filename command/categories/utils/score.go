@@ -30,6 +30,10 @@ var ScoreCommand = command.Command{
 				ctx.Error(err.Error())
 				return
 			}
+			if match == nil {
+				ctx.Error("Match not found")
+				return
+			}
 		}
 
 		var color int
