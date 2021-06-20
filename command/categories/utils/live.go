@@ -20,7 +20,6 @@ var LiveCommand = command.Command{
 		if len(matches) == 0 {
 			ctx.Error("I didn't find any live match right now...")
 		}
-		// more than 25? cant use fields =(
 		desc := strings.Builder{}
 		for _, match := range matches {
 			desc.WriteString(utils.Fmt("**%s** ||(%d) x (%d)|| **%s**: _%s_\n",
