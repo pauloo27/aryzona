@@ -5,7 +5,7 @@ import (
 	"os/user"
 
 	"github.com/Pauloo27/aryzona/git"
-	"github.com/Pauloo27/aryzona/provider/animal"
+	"github.com/Pauloo27/aryzona/providers/animal"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/bwmarrin/discordgo"
 )
@@ -46,9 +46,10 @@ func Ready(s *discordgo.Session, m *discordgo.Ready) {
 	}
 	s.UpdateStreamingStatus(0, presence, "https://twitch.tv/gaules")
 
-	c, err := s.UserChannelCreate(os.Getenv("DC_BOT_OWNER_ID"))
-	utils.HandleFatal(err)
-
-	_, err = s.ChannelMessageSendEmbed(c.ID, createStartedEmbed())
-	utils.HandleFatal(err)
+	if os.Getenv("DC_BOT_ENV") == "prod" {
+		c, err := s.UserChannelCreate(os.Getenv("DC_BOT_OWNER_ID"))
+		utils.HandleFatal(err)
+		_, err = s.ChannelMessageSendEmbed(c.ID, createStartedEmbed())
+		utils.HandleFatal(err)
+	}
 }
