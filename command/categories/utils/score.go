@@ -2,6 +2,7 @@ package utils
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/providers/livescore"
@@ -25,7 +26,7 @@ var ScoreCommand = command.Command{
 				return
 			}
 		} else {
-			match, err = livescore.FetchMatchInfoByTeamName(ctx.Args[0])
+			match, err = livescore.FetchMatchInfoByTeamName(strings.Join(ctx.Args))
 			if err != nil {
 				ctx.Error(err.Error())
 				return
