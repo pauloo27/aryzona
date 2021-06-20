@@ -2,6 +2,8 @@
 
 Just another simple Discord bot.
 
+Are you on GitHub? The main repository is at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
+
 ## Features
 - random animals (`!dog`, `!cat`, `!fox`)
 - run bash commands in the host (`!bash`)
