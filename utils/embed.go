@@ -22,6 +22,14 @@ func (e *EmbedBuilder) Title(title string) *EmbedBuilder {
 	return e
 }
 
+func (e *EmbedBuilder) Footer(text, iconURL string) *EmbedBuilder {
+	e.embed.Footer = &discordgo.MessageEmbedFooter{
+		Text:    text,
+		IconURL: iconURL,
+	}
+	return e
+}
+
 func (e *EmbedBuilder) Description(description string) *EmbedBuilder {
 	e.embed.Description = description
 	return e
