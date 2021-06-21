@@ -33,7 +33,7 @@ var RadioCommand = command.Command{
 			listRadios(ctx, "Invalid radio id. Here are some valid ones:")
 			return
 		}
-		ctx.Success("sorry, but right now I can only dance")
+		ctx.Error("Bot can't play stuff... yet")
 		// TODO: safe connect to channel
 		// TODO: play audio: Probably a common audio stuff providers dont mess up
 		// TODO: leave when empty
