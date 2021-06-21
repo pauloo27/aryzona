@@ -29,6 +29,7 @@ func init() {
 }
 
 func registerCategory(category command.Category) {
+	category.OnLoad()
 	for _, cmd := range category.Commands {
 		command.RegisterCommand(cmd)
 	}
