@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/command/categories/audio"
 	"github.com/Pauloo27/aryzona/command/categories/sysmon"
 	"github.com/Pauloo27/aryzona/command/categories/utils"
 	"github.com/Pauloo27/aryzona/discord"
@@ -44,12 +45,12 @@ func main() {
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
 	registerCategory(utils.Utils)
 	registerCategory(sysmon.SysMon)
+	registerCategory(audio.Audio)
 	logger.Success("Commands loaded")
 
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	<-stop
 	discord.Disconnect()
-	// TODO: notify before leaving
 	logger.Success("Exiting...")
 }
