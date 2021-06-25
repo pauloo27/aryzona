@@ -7,25 +7,25 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-var Discord *discordgo.Session
+var Session *discordgo.Session
 var StartedAt time.Time
 
 func Create(token string) error {
 	var err error
-	Discord, err = discordgo.New("Bot " + token)
+	Session, err = discordgo.New("Bot " + token)
 	return err
 }
 
 func Connect() error {
 	StartedAt = time.Now()
-	return Discord.Open()
+	return Session.Open()
 }
 
 func Disconnect() {
-	Discord.Close()
+	Session.Close()
 }
 
 func AddDefaultListeners() {
-	Discord.AddHandler(listeners.MessageCreate)
-	Discord.AddHandler(listeners.Ready)
+	Session.AddHandler(listeners.MessageCreate)
+	Session.AddHandler(listeners.Ready)
 }
