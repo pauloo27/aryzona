@@ -47,10 +47,11 @@ var RadioCommand = command.Command{
 			ctx.Error("Cannot  to your voice channel")
 			return
 		}
-		if err = vc.Play(channel); err != nil {
-			ctx.Error("Cannot play stuff")
-			return
-		}
-		ctx.Success("nice")
+		go func() {
+			if err = vc.Play(channel); err != nil {
+				ctx.Error("Cannot play stuff")
+				return
+			}
+		}()
 	},
 }
