@@ -1,6 +1,8 @@
 package radio
 
-import "strings"
+import (
+	"strings"
+)
 
 type RadioType struct {
 	Name         string
@@ -11,6 +13,30 @@ type RadioType struct {
 type RadioChannel struct {
 	Id, Name, URL string
 	Type          *RadioType
+}
+
+func (c RadioChannel) CanPause() bool {
+	return true
+}
+
+func (c RadioChannel) Pause() error {
+	return nil
+}
+
+func (c RadioChannel) Unpause() error {
+	return nil
+}
+
+func (c RadioChannel) TogglePause() error {
+	return nil
+}
+
+func (c RadioChannel) GetDirectURL() (string, error) {
+	return c.Type.GetDirectURL(c.URL), nil
+}
+
+func (c RadioChannel) IsOppus() bool {
+	return c.Type.IsOppus
 }
 
 var radios = []*RadioChannel{
