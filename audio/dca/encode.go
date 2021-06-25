@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Pauloo27/aryzona/logger"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/jonas747/ogg"
 )
@@ -58,9 +59,9 @@ func (e *EncodeSession) run() error {
 
 	ffmpegArgs := []string{
 		"-reconnect", "1",
-		"-reconnect_at_eof", "1",
+		//"-reconnect_at_eof", "1",
 		"-reconnect_streamed", "1",
-		"-reconnect_delay_max", "2",
+		//"-reconnect_delay_max", "2",
 		"-i", e.path,
 		"-analyzeduration", "0",
 		"-loglevel", "0",
@@ -85,6 +86,8 @@ func (e *EncodeSession) run() error {
 		return err
 	}
 
+	ffmpeg.Stderr = os.Stdout
+
 	err = ffmpeg.Start()
 	if err != nil {
 		e.Unlock()
@@ -103,6 +106,7 @@ func (e *EncodeSession) run() error {
 	wg.Wait()
 	err = ffmpeg.Wait()
 	if err != nil {
+		logger.Errorf("%v", err)
 		if err.Error() != "signal: killed" {
 			e.Lock()
 			e.err = err
@@ -133,7 +137,6 @@ func (e *EncodeSession) readStdout(stdout io.ReadCloser) error {
 		err = e.writeOpusFrame(packet)
 		if err != nil {
 			return err
-			break
 		}
 	}
 	return nil
