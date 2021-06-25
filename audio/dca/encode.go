@@ -1,4 +1,4 @@
-package audio
+package dca
 
 import (
 	"bytes"
@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Pauloo27/aryzona/utils"
 	"github.com/jonas747/ogg"
 )
 
@@ -64,7 +65,7 @@ func (e *EncodeSession) run() error {
 		"-analyzeduration", "0",
 		"-loglevel", "0",
 		"-map", "0:a",
-		"-acodec", utils.TernayString(e.isOpus, "copy", "libopus"),
+		"-acodec", utils.ConditionalString(e.isOpus, "copy", "libopus"),
 		"-f", "ogg",
 		"-ar", "48000",
 		"-ac", "2",
