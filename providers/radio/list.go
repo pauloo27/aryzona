@@ -47,6 +47,12 @@ var radios = []*RadioChannel{
 		Type: M3uRadio,
 	},
 	{
+		Id:   "hunter-lofi",
+		Name: "Rádio Hunter LoFi",
+		URL:  "https://hls.hunter.fm/lofi/192.m3u8",
+		Type: M3uRadio,
+	},
+	{
 		Id:   "globo-sp",
 		Name: "Globo SP",
 		URL:  "https://medias.sgr.globo.com/hls/aRGloboSP/aRGloboSP.m3u8",
