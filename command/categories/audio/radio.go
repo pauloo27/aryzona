@@ -2,6 +2,7 @@ package audio
 
 import (
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/command/permissions"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/providers/radio"
 	"github.com/Pauloo27/aryzona/utils"
@@ -23,6 +24,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 var RadioCommand = command.Command{
 	Name:        "radio",
 	Description: "Plays a pre-defined radio",
+	Permission:  &permissions.BeOwner,
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 0 {
 			listRadios(ctx, "Radio list:")
