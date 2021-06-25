@@ -19,6 +19,7 @@ var LiveCommand = command.Command{
 		}
 		if len(matches) == 0 {
 			ctx.Error("I didn't find any live match right now...")
+			return
 		}
 		desc := strings.Builder{}
 		for _, match := range matches {
