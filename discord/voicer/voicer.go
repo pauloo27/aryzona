@@ -8,6 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/aryzona/utils"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -61,6 +62,13 @@ func (v *Voicer) Connect() error {
 }
 
 func (v *Voicer) Disconnect() error {
+	v.StreamingSession = nil
+
+	v.EncodeSession.Cleanup()
+	v.EncodeSession.Stop()
+	v.EncodeSession = nil
+
+	v.Playing = nil
 	err := v.Voice.Disconnect()
 	v.Voice = nil
 	return err
@@ -101,5 +109,11 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	done := make(chan error)
 	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
-	return <-done
+	err = <-done
+	disconnectErr := v.Disconnect()
+	if disconnectErr != nil {
+		return utils.Wrap(disconnectErr.Error(), err)
+	}
+
+	return err
 }
