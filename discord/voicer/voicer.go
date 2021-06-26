@@ -84,7 +84,7 @@ func (v *Voicer) IsPlaying() bool {
 
 func (v *Voicer) Play(playable audio.Playable) error {
 	if v.IsPlaying() {
-		return VoicerError{"ALREADY_PLAYING", "Already playing something in the current channel"}
+		return ERR_ALREADY_PLAYING
 	}
 	if !v.IsConnected() {
 		if err := v.Connect(); err != nil {

@@ -52,7 +52,7 @@ var RadioCommand = command.Command{
 		}
 		go func() {
 			if err = vc.Play(channel); err != nil {
-				if is, vErr := voicer.IsVoicerError(err); is {
+				if is, vErr := utils.IsErrore(err); is {
 					ctx.Error(vErr.Message)
 				} else {
 					ctx.Error("Cannot play stuff")
