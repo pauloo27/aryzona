@@ -1,7 +1,6 @@
 package dca
 
 import (
-	"errors"
 	"io"
 	"sync"
 	"time"
@@ -101,7 +100,7 @@ func (s *StreamingSession) readNext() error {
 
 	select {
 	case <-timeOut:
-		return errors.New("voice connection is closed")
+		return ERR_VOICE_CONNECTION_CLOSED
 	case s.connection.OpusSend <- opus:
 	}
 	s.Lock()

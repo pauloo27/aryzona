@@ -47,7 +47,7 @@ var RadioCommand = command.Command{
 			return
 		}
 		if err = vc.Connect(); err != nil {
-			ctx.Error("Cannot  to your voice channel")
+			ctx.Error("Cannot to your voice channel")
 			return
 		}
 		go func() {
