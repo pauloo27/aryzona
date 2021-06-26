@@ -19,6 +19,8 @@ type Voicer struct {
 	StreamingSession   *dca.StreamingSession
 }
 
+var voiceMapper = map[*string]*Voicer{}
+
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	var chanID *string
 
@@ -33,7 +35,13 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 			break
 		}
 	}
-	return &Voicer{chanID, &guildID, nil, nil, nil, nil}, nil
+	voicer, found := voiceMapper[chanID]
+	if !found {
+		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil}
+		voiceMapper[chanID] = voicer
+	}
+	return voicer, nil
+
 }
 
 func (v *Voicer) CanConnect() bool {
@@ -62,7 +70,14 @@ func (v *Voicer) IsConnected() bool {
 	return v.Voice != nil
 }
 
+func (v *Voicer) IsPlaying() bool {
+	return v.Playing != nil
+}
+
 func (v *Voicer) Play(playable audio.Playable) error {
+	if v.IsPlaying() {
+		return VoicerError{"ALREADY_PLAYING", "Already playing something in the current channel"}
+	}
 	if !v.IsConnected() {
 		if err := v.Connect(); err != nil {
 			return err

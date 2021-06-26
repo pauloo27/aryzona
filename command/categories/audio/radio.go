@@ -4,6 +4,7 @@ import (
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/command/permissions"
 	"github.com/Pauloo27/aryzona/discord/voicer"
+	"github.com/Pauloo27/aryzona/logger"
 	"github.com/Pauloo27/aryzona/providers/radio"
 	"github.com/Pauloo27/aryzona/utils"
 )
@@ -51,7 +52,12 @@ var RadioCommand = command.Command{
 		}
 		go func() {
 			if err = vc.Play(channel); err != nil {
-				ctx.Error("Cannot play stuff")
+				if is, vErr := voicer.IsVoicerError(err); is {
+					ctx.Error(vErr.Message)
+				} else {
+					ctx.Error("Cannot play stuff")
+					logger.Error(err.Error())
+				}
 				return
 			}
 		}()
