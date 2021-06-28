@@ -20,11 +20,25 @@ type CommandPermission struct {
 	Checker CommandPermissionChecker
 }
 
+type CommandArgumentTypeParser func(index int, args []string) (interface{}, error)
+
+type CommandArgumentType struct {
+	Name   string
+	Parser CommandArgumentTypeParser
+}
+
+type CommandArgument struct {
+	Name     string
+	Type     *CommandArgumentType
+	Required bool
+}
+
 type Command struct {
 	Name, Description string
 	Aliases           []string
 	Handler           CommandHandler
 	Permission        *CommandPermission
+	Arguments         []*CommandArgument
 }
 
 func (ctx *CommandContext) Success(message string) {

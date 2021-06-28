@@ -12,6 +12,13 @@ import (
 var ScoreCommand = command.Command{
 	Name: "score", Description: "Get a game score",
 	Aliases: []string{"placar", "gols"},
+	Arguments: []*command.CommandArgument{
+		{
+			Required: true,
+			Name:     "Team name",
+			Type:     command.ArgumentString,
+		},
+	},
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 0 {
 			ctx.Error("Missing game id or team name")
