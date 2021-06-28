@@ -14,7 +14,7 @@ var Bash = command.Command{
 	Description: "Eval a bash command",
 	Permission:  &permissions.BeOwner,
 	Handler: func(ctx *command.CommandContext) {
-		if len(ctx.Args) == 0 {
+		if len(ctx.RawArgs) == 0 {
 			ctx.Error("Missing bash command")
 			return
 		}
