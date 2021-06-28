@@ -28,7 +28,7 @@ var RadioCommand = command.Command{
 	Arguments: []*command.CommandArgument{
 		{
 			Name:     "radio name",
-			Required: true,
+			Required: false,
 			Type:     command.ArgumentString,
 		},
 	},
