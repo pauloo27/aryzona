@@ -28,9 +28,10 @@ type CommandArgumentType struct {
 }
 
 type CommandArgument struct {
-	Name     string
-	Type     *CommandArgumentType
-	Required bool
+	Name            string
+	Type            *CommandArgumentType
+	Required        bool
+	RequiredMessage string
 }
 
 type Command struct {

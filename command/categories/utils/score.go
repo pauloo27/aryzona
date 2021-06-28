@@ -1,12 +1,11 @@
 package utils
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/providers/livescore"
 	"github.com/Pauloo27/aryzona/utils"
+	"strconv"
+	"strings"
 )
 
 var ScoreCommand = command.Command{
@@ -14,17 +13,13 @@ var ScoreCommand = command.Command{
 	Aliases: []string{"placar", "gols"},
 	Arguments: []*command.CommandArgument{
 		{
-			Required: true,
-			Name:     "Team name",
-			Type:     command.ArgumentString,
+			Required:        true,
+			RequiredMessage: "Missing the team name or a match id",
+			Name:            "Team name or match id",
+			Type:            command.ArgumentString,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
-		if len(ctx.Args) == 0 {
-			ctx.Error("Missing game id or team name")
-			return
-		}
-
 		var match *livescore.MatchInfo
 		if _, err := strconv.Atoi(ctx.Args[0]); err == nil {
 			match, err = livescore.FetchMatchInfo(ctx.Args[0])

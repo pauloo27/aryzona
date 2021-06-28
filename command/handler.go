@@ -20,5 +20,27 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 		}
 	}
 
+	var syntaxError string
+	if command.Arguments != nil && len(command.Arguments) != 0 {
+		parameters := args
+		parametersCount := len(parameters)
+		for i, argument := range command.Arguments {
+			if i >= parametersCount {
+				if argument.Required {
+					if argument.RequiredMessage == "" {
+						syntaxError = utils.Fmt("Argument %s (type %s) missing", argument.Name, argument.Type.Name)
+					} else {
+						syntaxError = argument.RequiredMessage
+					}
+				}
+			}
+			// TODO: parse and check
+		}
+	}
+	if syntaxError != "" {
+		ctx.Error(syntaxError)
+		return
+	}
+
 	command.Handler(ctx)
 }
