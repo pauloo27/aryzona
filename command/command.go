@@ -12,7 +12,8 @@ type CommandContext struct {
 	Message       *discordgo.Message
 	MessageCreate *discordgo.MessageCreate
 	Session       *discordgo.Session
-	Args          []string
+	RawArgs       []string
+	Args          []interface{}
 }
 
 type CommandPermission struct {

@@ -18,7 +18,7 @@ var Bash = command.Command{
 			ctx.Error("Missing bash command")
 			return
 		}
-		cmd := exec.Command("bash", "-c", strings.Join(ctx.Args, " "))
+		cmd := exec.Command("bash", "-c", strings.Join(ctx.RawArgs, " "))
 		buffer, err := cmd.CombinedOutput()
 		output := string(buffer)
 		output = strings.ReplaceAll(output, "`", "\\`")

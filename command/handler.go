@@ -11,7 +11,7 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 		return
 	}
 
-	ctx := &CommandContext{m.Message, m, s, args}
+	ctx := &CommandContext{m.Message, m, s, args, nil}
 
 	if command.Permission != nil {
 		if !command.Permission.Checker(ctx) {
@@ -21,6 +21,7 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 	}
 
 	var syntaxError string
+	values := []interface{}{}
 	if command.Arguments != nil && len(command.Arguments) != 0 {
 		parameters := args
 		parametersCount := len(parameters)
@@ -33,14 +34,21 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 						syntaxError = argument.RequiredMessage
 					}
 				}
+			} else {
+				// TODO: parse and check
+				value, err := argument.Type.Parser(i, args)
+				if err != nil {
+					syntaxError = err.Error()
+				}
+				values = append(values, value)
 			}
-			// TODO: parse and check
 		}
 	}
 	if syntaxError != "" {
 		ctx.Error(syntaxError)
 		return
 	}
+	ctx.Args = values
 
 	command.Handler(ctx)
 }

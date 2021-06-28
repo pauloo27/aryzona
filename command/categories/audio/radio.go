@@ -25,13 +25,20 @@ func listRadios(ctx *command.CommandContext, title string) {
 var RadioCommand = command.Command{
 	Name:        "radio",
 	Description: "Plays a pre-defined radio",
-	Permission:  &permissions.BeOwner,
+	Arguments: []*command.CommandArgument{
+		{
+			Name:     "radio name",
+			Required: true,
+			Type:     command.ArgumentString,
+		},
+	},
+	Permission: &permissions.BeOwner,
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 0 {
 			listRadios(ctx, "Radio list:")
 			return
 		}
-		radioId := ctx.Args[0]
+		radioId := ctx.Args[0].(string)
 		channel := radio.GetRadioById(radioId)
 		if channel == nil {
 			listRadios(ctx, "Invalid radio id. Here are some valid ones:")

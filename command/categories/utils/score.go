@@ -15,20 +15,21 @@ var ScoreCommand = command.Command{
 		{
 			Required:        true,
 			RequiredMessage: "Missing the team name or a match id",
-			Name:            "Team name or match id",
+			Name:            "team name or match id",
 			Type:            command.ArgumentString,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var match *livescore.MatchInfo
-		if _, err := strconv.Atoi(ctx.Args[0]); err == nil {
-			match, err = livescore.FetchMatchInfo(ctx.Args[0])
+		teamNameOrId := ctx.Args[0].(string)
+		if _, err := strconv.Atoi(teamNameOrId); err == nil {
+			match, err = livescore.FetchMatchInfo(teamNameOrId)
 			if err != nil {
 				ctx.Error(err.Error())
 				return
 			}
 		} else {
-			match, err = livescore.FetchMatchInfoByTeamName(strings.Join(ctx.Args, " "))
+			match, err = livescore.FetchMatchInfoByTeamName(strings.Join(ctx.RawArgs, " "))
 			if err != nil {
 				ctx.Error(err.Error())
 				return
