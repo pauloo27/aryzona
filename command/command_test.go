@@ -12,7 +12,6 @@ func TestPermissions(t *testing.T) {
 }
 
 func TestArguments(t *testing.T) {
-	// TODO: test required
 	t.Run("Required argument", func(t *testing.T) {
 		testCommand := Command{
 			Name: "Test command",
@@ -40,16 +39,60 @@ func TestArguments(t *testing.T) {
 			assert.Equal(t, input, values[0])
 		})
 	})
-	// TODO: test not required
+
 	t.Run("Not required argument", func(t *testing.T) {
-		t.Fatal("No tests written yet")
+		testCommand := Command{
+			Name: "Test command",
+			Arguments: []*CommandArgument{
+				{
+					Name:     "test string",
+					Required: false,
+					Type:     ArgumentString,
+				},
+			},
+		}
+
+		t.Run("Should NOT return required argument missing", func(t *testing.T) {
+			values, err := testCommand.ValidateArguments([]string{})
+			assert.Nil(t, err)
+			assert.Nil(t, values)
+			assert.Len(t, values, 0)
+		})
+
+		t.Run("Should return the value", func(t *testing.T) {
+			input := "hello"
+			values, err := testCommand.ValidateArguments([]string{input})
+			assert.Nil(t, err)
+			assert.NotNil(t, values)
+			assert.Len(t, values, 1)
+			assert.Equal(t, input, values[0])
+		})
 	})
-	// TODO: test parser
+
 	t.Run("Parse int argument", func(t *testing.T) {
-		t.Fatal("No tests written yet")
+		testCommand := Command{
+			Name: "Test command",
+			Arguments: []*CommandArgument{
+				{
+					Name:     "test string",
+					Required: false,
+					Type:     ArgumentInt,
+				},
+			},
+		}
+
+		t.Run("Should return cannot parse argument", func(t *testing.T) {
+			values, err := testCommand.ValidateArguments([]string{"asd"})
+			assert.NotNil(t, err)
+			assert.Nil(t, values)
+			assert.True(t, utils.Is(*err, *ErrCannotParseArgument(nil, nil)))
+		})
 	})
+
 	// TODO: test with "valid values"
 	t.Run("Check if value is inside a list", func(t *testing.T) {
-		t.Fatal("No tests written yet")
+		t.Skip("Not implemeneted yet")
 	})
+
+	// TODO: complex command
 }
