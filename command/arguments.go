@@ -38,7 +38,7 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 func ErrInvalidValue(argument *CommandArgument) *utils.Errore {
 	var message string
 	if argument != nil {
-		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", argument.Name, argument.ValidValues)
+		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", argument.Name, argument.GetValidValues())
 	}
 	return &utils.Errore{
 		ID:      "INVALID_VALUE",
@@ -73,9 +73,9 @@ func (command *Command) ValidateArguments(args []string) (values []interface{}, 
 					syntaxError = ErrCannotParseArgument(argument, err)
 					break
 				}
-				if argument.ValidValues != nil {
+				if argument.GetValidValues() != nil {
 					valid := false
-					for _, v := range argument.ValidValues {
+					for _, v := range argument.GetValidValues() {
 						if v == value {
 							valid = true
 							break

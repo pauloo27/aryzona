@@ -34,6 +34,17 @@ type CommandArgument struct {
 	Required        bool
 	RequiredMessage string
 	ValidValues     []interface{}
+	ValidValuesFunc func() []interface{}
+}
+
+func (ca *CommandArgument) GetValidValues() []interface{} {
+	if ca.ValidValues != nil {
+		return ca.ValidValues
+	}
+	if ca.ValidValuesFunc != nil {
+		return ca.ValidValuesFunc()
+	}
+	return nil
 }
 
 type Command struct {
