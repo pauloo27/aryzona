@@ -39,6 +39,7 @@ type Command struct {
 	Name, Description string
 	Aliases           []string
 	Handler           CommandHandler
+	ValidValues       []interface{}
 	Permission        *CommandPermission
 	Arguments         []*CommandArgument
 }

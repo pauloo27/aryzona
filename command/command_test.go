@@ -87,11 +87,49 @@ func TestArguments(t *testing.T) {
 			assert.Nil(t, values)
 			assert.True(t, utils.Is(*err, *ErrCannotParseArgument(nil, nil)))
 		})
+
+		t.Run("Should return the parsed int", func(t *testing.T) {
+			input := "-2"
+			parsedInput := -2
+			values, err := testCommand.ValidateArguments([]string{input})
+			assert.Nil(t, err)
+			assert.NotNil(t, values)
+			assert.NotNil(t, values)
+			assert.Len(t, values, 1)
+			assert.Equal(t, parsedInput, values[0])
+		})
 	})
 
 	// TODO: test with "valid values"
 	t.Run("Check if value is inside a list", func(t *testing.T) {
-		t.Skip("Not implemeneted yet")
+		testCommand := Command{
+			Name:        "Test command",
+			ValidValues: []interface{}{10, 20},
+			Arguments: []*CommandArgument{
+				{
+					Name:     "test string",
+					Required: false,
+					Type:     ArgumentInt,
+				},
+			},
+		}
+
+		t.Run("Should return invalid value", func(t *testing.T) {
+			values, err := testCommand.ValidateArguments([]string{"22"})
+			assert.NotNil(t, err)
+			assert.True(t, utils.Is(*err, *ErrInvalidValue(nil, nil)))
+			assert.Nil(t, values)
+		})
+
+		t.Run("Should return the value", func(t *testing.T) {
+			input := "10"
+			parsedInput := 10
+			values, err := testCommand.ValidateArguments([]string{input})
+			assert.Nil(t, err)
+			assert.NotNil(t, values)
+			assert.Len(t, values, 1)
+			assert.Equal(t, parsedInput, values[0])
+		})
 	})
 
 	// TODO: complex command
