@@ -30,6 +30,13 @@ var RadioCommand = command.Command{
 			Name:     "radio name",
 			Required: false,
 			Type:     command.ArgumentString,
+			ValidValuesFunc: func() []interface{} {
+				ids := []interface{}{}
+				for _, radio := range radio.GetRadioList() {
+					ids = append(ids, radio.Id)
+				}
+				return ids
+			},
 		},
 	},
 	Permission: &permissions.BeOwner,
@@ -40,10 +47,7 @@ var RadioCommand = command.Command{
 		}
 		radioId := ctx.Args[0].(string)
 		channel := radio.GetRadioById(radioId)
-		if channel == nil {
-			listRadios(ctx, "Invalid radio id. Here are some valid ones:")
-			return
-		}
+
 		vc, err := voicer.NewVoicerForUser(ctx.Message.Author.ID, ctx.Message.GuildID)
 		if err != nil {
 			ctx.Error("Cannot create voicer")
