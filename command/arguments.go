@@ -36,9 +36,13 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 }
 
 func ErrCannotParseArgument(argument *CommandArgument, err error) *utils.Errore {
+	var message string
+	if err != nil {
+		message = err.Error()
+	}
 	return &utils.Errore{
 		ID:      "CANNOT_PARSE_ARGUMENT",
-		Message: err.Error(),
+		Message: message,
 	}
 }
 
@@ -50,11 +54,13 @@ func (command *Command) ValidateArguments(args []string) (values []interface{}, 
 			if i >= parametersCount {
 				if argument.Required {
 					syntaxError = ErrRequiredArgument(argument)
+					break
 				}
 			} else {
 				value, err := argument.Type.Parser(i, args)
 				if err != nil {
 					syntaxError = ErrCannotParseArgument(argument, err)
+					break
 				}
 				values = append(values, value)
 			}
