@@ -20,32 +20,9 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 		}
 	}
 
-	var syntaxError string
-	values := []interface{}{}
-	if command.Arguments != nil && len(command.Arguments) != 0 {
-		parameters := args
-		parametersCount := len(parameters)
-		for i, argument := range command.Arguments {
-			if i >= parametersCount {
-				if argument.Required {
-					if argument.RequiredMessage == "" {
-						syntaxError = utils.Fmt("Argument %s (type %s) missing", argument.Name, argument.Type.Name)
-					} else {
-						syntaxError = argument.RequiredMessage
-					}
-				}
-			} else {
-				// TODO: parse and check
-				value, err := argument.Type.Parser(i, args)
-				if err != nil {
-					syntaxError = err.Error()
-				}
-				values = append(values, value)
-			}
-		}
-	}
-	if syntaxError != "" {
-		ctx.Error(syntaxError)
+	values, syntaxError := command.ValidateArguments(args)
+	if syntaxError != nil {
+		ctx.Error(syntaxError.Message)
 		return
 	}
 	ctx.Args = values
