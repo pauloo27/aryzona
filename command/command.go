@@ -33,13 +33,13 @@ type CommandArgument struct {
 	Type            *CommandArgumentType
 	Required        bool
 	RequiredMessage string
+	ValidValues     []interface{}
 }
 
 type Command struct {
 	Name, Description string
 	Aliases           []string
 	Handler           CommandHandler
-	ValidValues       []interface{}
 	Permission        *CommandPermission
 	Arguments         []*CommandArgument
 }

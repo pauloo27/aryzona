@@ -35,13 +35,10 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 	}
 }
 
-func ErrInvalidValue(argument *CommandArgument, validValues []interface{}) *utils.Errore {
+func ErrInvalidValue(argument *CommandArgument) *utils.Errore {
 	var message string
 	if argument != nil {
-		message = utils.Fmt("Invalid value for %s", argument.Name)
-		if validValues != nil {
-			message += utils.Fmt(". Valid values are %v", validValues)
-		}
+		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", argument.Name, argument.ValidValues)
 	}
 	return &utils.Errore{
 		ID:      "INVALID_VALUE",
@@ -76,16 +73,16 @@ func (command *Command) ValidateArguments(args []string) (values []interface{}, 
 					syntaxError = ErrCannotParseArgument(argument, err)
 					break
 				}
-				if command.ValidValues != nil {
+				if argument.ValidValues != nil {
 					valid := false
-					for _, v := range command.ValidValues {
+					for _, v := range argument.ValidValues {
 						if v == value {
 							valid = true
 							break
 						}
 					}
 					if !valid {
-						syntaxError = ErrInvalidValue(argument, command.ValidValues)
+						syntaxError = ErrInvalidValue(argument)
 						break
 					}
 				}
