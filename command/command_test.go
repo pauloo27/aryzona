@@ -100,7 +100,6 @@ func TestArguments(t *testing.T) {
 		})
 	})
 
-	// TODO: test with "valid values"
 	t.Run("Check if value is inside a list", func(t *testing.T) {
 		testCommand := Command{
 			Name: "Test command",
