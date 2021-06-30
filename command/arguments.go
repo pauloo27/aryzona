@@ -37,7 +37,7 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 
 func ErrCannotParseArgument(argument *CommandArgument, err error) *utils.Errore {
 	return &utils.Errore{
-		ID:      "CANNOT_PARSE_REQUIRED_ARGUMENT",
+		ID:      "CANNOT_PARSE_ARGUMENT",
 		Message: err.Error(),
 	}
 }
