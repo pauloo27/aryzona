@@ -16,12 +16,12 @@ func IsErrore(err error) (bool, Errore) {
 }
 
 func Is(err error, vErr Errore) bool {
-	voicerError, ok := err.(Errore)
+	errore, ok := err.(Errore)
 	if !ok {
 		return false
 	}
 
-	return voicerError.ID == vErr.ID
+	return errore.ID == vErr.ID
 }
 
 func HandleFatal(err error) {
