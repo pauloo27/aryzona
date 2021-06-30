@@ -103,13 +103,13 @@ func TestArguments(t *testing.T) {
 	// TODO: test with "valid values"
 	t.Run("Check if value is inside a list", func(t *testing.T) {
 		testCommand := Command{
-			Name:        "Test command",
-			ValidValues: []interface{}{10, 20},
+			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test string",
-					Required: false,
-					Type:     ArgumentInt,
+					ValidValues: []interface{}{10, 20},
+					Name:        "test string",
+					Required:    false,
+					Type:        ArgumentInt,
 				},
 			},
 		}
@@ -117,7 +117,7 @@ func TestArguments(t *testing.T) {
 		t.Run("Should return invalid value", func(t *testing.T) {
 			values, err := testCommand.ValidateArguments([]string{"22"})
 			assert.NotNil(t, err)
-			assert.True(t, utils.Is(*err, *ErrInvalidValue(nil, nil)))
+			assert.True(t, utils.Is(*err, *ErrInvalidValue(nil)))
 			assert.Nil(t, values)
 		})
 
