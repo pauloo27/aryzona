@@ -1,4 +1,5 @@
 def gv 
+def FAILED_STAGE
 
 pipeline {
   agent any
@@ -14,16 +15,22 @@ pipeline {
     DEPLOY_IDENTITY_FILE = credentials('DEPLOY_IDENTITY_FILE')
     DEPLOY_FOLDER = credentials('DEPLOY_FOLDER')
   }
-
+  
   stages {
     stage("build") {
       steps {
+        script {
+          FAILED_STAGE=env.STAGE_NAME
+        }
         sh 'make build'
       }
     }
 
     stage("test") {
       steps {
+        script {
+          FAILED_STAGE=env.STAGE_NAME
+        }
         sh 'make test'
       }
     }
@@ -34,7 +41,8 @@ pipeline {
       }
       steps {
         script {
-          gv = load "deploy.groovy"
+          FAILED_STAGE=env.STAGE_NAME
+          gv = load "./.jenkins/script.groovy"
           gv.deployApp()
         }
       }
@@ -42,10 +50,16 @@ pipeline {
   }
   post {
     failure {
-      discordSend description: "Jenkins Pipeline Build", footer: "Aryzona: " + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: env.WEBHOOK_URL
+      script {
+        gv = load "./.jenkins/script.groovy"
+        gv.notifyDiscord(FAILED_STAGE)
+      }
     }
     fixed {
-      discordSend description: "Jenkins Pipeline Build", footer: "Aryzona: " + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: env.WEBHOOK_URL
+      script {
+        gv = load "./.jenkins/script.groovy"
+        gv.notifyDiscord(FAILED_STAGE)
+      }
     }
   }
 }

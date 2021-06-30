@@ -11,4 +11,8 @@ def deployApp() {
   sshCommand remote: remote, command: "ary-restart"
 }
 
+def notifyDiscord(FAILED_STAGE) {
+  discordSend description: "Took " + currentBuild.durationString, footer: "Aryzona: " + (currentBuild.currentResult == "FAILURE" ? FAILED_STAGE + " " : "" ) + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME + " " + currentBuild.displayName, webhookURL: env.WEBHOOK_URL
+}
+
 return this
