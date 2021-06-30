@@ -22,6 +22,12 @@ pipeline {
       }
     }
 
+    stage("test") {
+      steps {
+        sh 'make test'
+      }
+    }
+
     stage("deploy") {
       when {
         branch 'master'
