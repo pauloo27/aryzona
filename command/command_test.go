@@ -13,7 +13,7 @@ func TestPermissions(t *testing.T) {
 
 func TestArguments(t *testing.T) {
 	// TODO: test required
-	t.Run("Required parameter", func(t *testing.T) {
+	t.Run("Required argument", func(t *testing.T) {
 		testCommand := Command{
 			Name: "Test command",
 			Arguments: []*CommandArgument{
@@ -41,6 +41,15 @@ func TestArguments(t *testing.T) {
 		})
 	})
 	// TODO: test not required
+	t.Run("Not required argument", func(t *testing.T) {
+		t.Fatal("No tests written yet")
+	})
 	// TODO: test parser
+	t.Run("Parse int argument", func(t *testing.T) {
+		t.Fatal("No tests written yet")
+	})
 	// TODO: test with "valid values"
+	t.Run("Check if value is inside a list", func(t *testing.T) {
+		t.Fatal("No tests written yet")
+	})
 }
