@@ -66,6 +66,8 @@ func (command *Command) ValidateArguments(args []string) (values []interface{}, 
 				if argument.Required {
 					syntaxError = ErrRequiredArgument(argument)
 					break
+				} else {
+					break
 				}
 			} else {
 				value, err := argument.Type.Parser(i, args)
