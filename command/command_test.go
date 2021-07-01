@@ -137,7 +137,7 @@ func TestArguments(t *testing.T) {
 			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test int",
+					Name:     "test int 1",
 					Required: true,
 					Type:     ArgumentInt,
 				},
@@ -148,7 +148,7 @@ func TestArguments(t *testing.T) {
 				},
 				{
 					ValidValues: []interface{}{10, 20},
-					Name:        "test int",
+					Name:        "test int 2",
 					Required:    true,
 					Type:        ArgumentInt,
 				},
@@ -162,15 +162,14 @@ func TestArguments(t *testing.T) {
 			assert.Len(t, value, 1)
 		})
 
-		t.Run("Should return required argument missing", func(t *testing.T) {
+		t.Run("Should return 2 values", func(t *testing.T) {
 			value, err := testCommand.ValidateArguments([]string{"-2", "hello"})
-			assert.NotNil(t, err)
-			assert.Nil(t, value)
-			assert.Equal(t, *err, *ErrRequiredArgument(nil))
-			assert.Len(t, value, 0)
+			assert.Nil(t, err)
+			assert.NotNil(t, value)
+			assert.Len(t, value, 2)
 		})
 
-		t.Run("Should return the values", func(t *testing.T) {
+		t.Run("Should return 3 values", func(t *testing.T) {
 			value, err := testCommand.ValidateArguments([]string{"-2", "hello", "10"})
 			assert.Nil(t, err)
 			assert.NotNil(t, value)
