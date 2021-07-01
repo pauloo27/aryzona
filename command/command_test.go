@@ -74,7 +74,7 @@ func TestArguments(t *testing.T) {
 			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test string",
+					Name:     "test int",
 					Required: false,
 					Type:     ArgumentInt,
 				},
@@ -106,7 +106,7 @@ func TestArguments(t *testing.T) {
 			Arguments: []*CommandArgument{
 				{
 					ValidValues: []interface{}{10, 20},
-					Name:        "test string",
+					Name:        "test int",
 					Required:    false,
 					Type:        ArgumentInt,
 				},
@@ -131,5 +131,50 @@ func TestArguments(t *testing.T) {
 		})
 	})
 
-	// TODO: complex command
+	// by complex I mean something with more than one argument lol
+	t.Run("Validate a complex commmand", func(t *testing.T) {
+		testCommand := Command{
+			Name: "Test command",
+			Arguments: []*CommandArgument{
+				{
+					Name:     "test int",
+					Required: true,
+					Type:     ArgumentInt,
+				},
+				{
+					Name:     "test string",
+					Required: false,
+					Type:     ArgumentString,
+				},
+				{
+					ValidValues: []interface{}{10, 20},
+					Name:        "test int",
+					Required:    true,
+					Type:        ArgumentInt,
+				},
+			},
+		}
+
+		t.Run("Should return value", func(t *testing.T) {
+			value, err := testCommand.ValidateArguments([]string{"-2"})
+			assert.Nil(t, err)
+			assert.NotNil(t, value)
+			assert.Len(t, value, 1)
+		})
+
+		t.Run("Should return required argument missing", func(t *testing.T) {
+			value, err := testCommand.ValidateArguments([]string{"-2", "hello"})
+			assert.NotNil(t, err)
+			assert.Nil(t, value)
+			assert.Equal(t, *err, *ErrRequiredArgument(nil))
+			assert.Len(t, value, 0)
+		})
+
+		t.Run("Should return the values", func(t *testing.T) {
+			value, err := testCommand.ValidateArguments([]string{"-2", "hello", "10"})
+			assert.Nil(t, err)
+			assert.NotNil(t, value)
+			assert.Len(t, value, 3)
+		})
+	})
 }
