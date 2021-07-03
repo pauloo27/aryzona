@@ -106,8 +106,8 @@ func (e *EncodeSession) run() error {
 	wg.Wait()
 	err = ffmpeg.Wait()
 	if err != nil {
-		logger.Errorf("%v", err)
 		if err.Error() != "signal: killed" {
+			logger.Errorf("%v", err)
 			e.Lock()
 			e.err = err
 			e.Unlock()
