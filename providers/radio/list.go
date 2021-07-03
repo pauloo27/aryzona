@@ -47,6 +47,30 @@ var radios = []*RadioChannel{
 		Type: M3uRadio,
 	},
 	{
+		Id:   "hunter-pisadinha",
+		Name: "Rádio Hunter Pisadinha",
+		URL:  "https://hls.hunter.fm/pisadinha/320.m3u8",
+		Type: M3uRadio,
+	},
+	{
+		Id:   "hunter-tropical",
+		Name: "Rádio Hunter Tropical",
+		URL:  "https://hls.hunter.fm/tropical/192.m3u8",
+		Type: M3uRadio,
+	},
+	{
+		Id:   "hunter-80s",
+		Name: "Rádio Hunter Anos 80",
+		URL:  "https://hls.hunter.fm/80s/192.m3u8",
+		Type: M3uRadio,
+	},
+	{
+		Id:   "hunter-rock",
+		Name: "Rádio Hunter Rock",
+		URL:  "https://hls.hunter.fm/rock/192.m3u8",
+		Type: M3uRadio,
+	},
+	{
 		Id:   "hunter-lofi",
 		Name: "Rádio Hunter LoFi",
 		URL:  "https://hls.hunter.fm/lofi/192.m3u8",
