@@ -2,6 +2,7 @@ package voicer
 
 import (
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/Pauloo27/aryzona/audio"
@@ -18,6 +19,7 @@ type Voicer struct {
 	Playing            *audio.Playable
 	EncodeSession      *dca.EncodeSession
 	StreamingSession   *dca.StreamingSession
+	disconnectMutex    sync.Mutex
 }
 
 var voiceMapper = map[*string]*Voicer{}
@@ -38,7 +40,7 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	}
 	voicer, found := voiceMapper[chanID]
 	if !found {
-		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil}
+		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
 		voiceMapper[chanID] = voicer
 	}
 	return voicer, nil
@@ -62,6 +64,12 @@ func (v *Voicer) Connect() error {
 }
 
 func (v *Voicer) Disconnect() error {
+	v.disconnectMutex.Lock()
+	defer v.disconnectMutex.Unlock()
+	if !v.IsConnected() {
+		return nil
+	}
+
 	v.StreamingSession = nil
 
 	v.EncodeSession.Cleanup()
