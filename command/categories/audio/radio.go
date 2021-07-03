@@ -1,6 +1,7 @@
 package audio
 
 import (
+	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/command/permissions"
 	"github.com/Pauloo27/aryzona/discord/voicer"
@@ -17,7 +18,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 		embed.Field(channel.Id, channel.Name)
 	}
 
-	embed.Footer("Use !radio <name> to listen to one!", "")
+	embed.Footer("Use `!radio <name>` and `!radio stop` when you are tired of it!", "")
 
 	ctx.SuccesEmbed(embed.Build())
 }
@@ -35,7 +36,7 @@ var RadioCommand = command.Command{
 				for _, radio := range radio.GetRadioList() {
 					ids = append(ids, radio.Id)
 				}
-				return ids
+				return append(ids, "stop")
 			},
 		},
 	},
@@ -45,25 +46,46 @@ var RadioCommand = command.Command{
 			listRadios(ctx, "Radio list:")
 			return
 		}
-		radioId := ctx.Args[0].(string)
-		channel := radio.GetRadioById(radioId)
 
 		vc, err := voicer.NewVoicerForUser(ctx.Message.Author.ID, ctx.Message.GuildID)
 		if err != nil {
 			ctx.Error("Cannot create voicer")
 			return
 		}
+
+		var channel *radio.RadioChannel
+		radioId := ctx.Args[0].(string)
+
+		if radioId == "stop" {
+			if !vc.IsConnected() || !vc.IsPlaying() {
+				ctx.Error("Already stopped")
+			} else {
+				err = vc.Disconnect()
+				if err != nil {
+					ctx.Error(utils.Fmt("Cannot disconnect: %v", err))
+				} else {
+					ctx.Success("Disconnected")
+				}
+			}
+			return
+		} else {
+			channel = radio.GetRadioById(radioId)
+		}
+
 		if !vc.CanConnect() {
 			ctx.Error("You are not in a voice channel")
 			return
 		}
 		if err = vc.Connect(); err != nil {
-			ctx.Error("Cannot to your voice channel")
+			ctx.Error("Cannot connect to your voice channel")
 			return
 		}
 		go func() {
 			if err = vc.Play(channel); err != nil {
 				if is, vErr := utils.IsErrore(err); is {
+					if vErr.ID == dca.ERR_VOICE_CONNECTION_CLOSED.ID {
+						return
+					}
 					ctx.Error(vErr.Message)
 				} else {
 					ctx.Error("Cannot play stuff")
