@@ -88,6 +88,24 @@ var radios = []*RadioChannel{
 		URL:  "https://medias.sgr.globo.com/hls/aRGloboRJ/aRGloboRJ.m3u8",
 		Type: M3uRadio,
 	},
+	{
+		Id:   "swing",
+		Name: "Swing songs (no ads)",
+		URL:  "http://lainon.life:8000/swing.mp3",
+		Type: M3uRadio,
+	},
+	{
+		Id:   "cyber",
+		Name: "Cyber songs (no ads)",
+		URL:  "http://lainon.life:8000/cyberia.mp3",
+		Type: M3uRadio,
+	},
+	{
+		Id:   "cafe",
+		Name: "Cafe songs (no ads)",
+		URL:  "http://lainon.life:8000/cafe.mp3",
+		Type: M3uRadio,
+	},
 }
 
 func GetRadioList() []*RadioChannel {
