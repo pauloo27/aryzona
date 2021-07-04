@@ -124,10 +124,8 @@ func (v *Voicer) Play(playable audio.Playable) error {
 		return ERR_ALREADY_PLAYING
 	}
 
-	if !v.IsConnected() {
-		if err := v.Connect(); err != nil {
-			return err
-		}
+	if err := v.Connect(); err != nil {
+		return err
 	}
 
 	v.Playing = &playable
@@ -147,9 +145,11 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
 	err = <-done
-	disconnectErr := v.Disconnect()
-	if disconnectErr != nil {
-		return utils.Wrap(disconnectErr.Error(), err)
+	if v.IsConnected() {
+		disconnectErr := v.Disconnect()
+		if disconnectErr != nil {
+			return utils.Wrap(disconnectErr.Error(), err)
+		}
 	}
 
 	return err
