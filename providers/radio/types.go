@@ -66,6 +66,6 @@ var YTLive = &RadioType{
 		return url
 	},
 	GetPlayingNow: func(url, directURL string) (title, artist string) {
-		return "", ""
+		return "YouTube live", ""
 	},
 }

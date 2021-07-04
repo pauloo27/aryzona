@@ -16,6 +16,14 @@ var PlayingCommand = command.Command{
 		}
 		playable := *(voicer.Playing)
 		title, artist := playable.GetFullTitle()
+		if title == "" {
+			ctx.Error("Media info not found")
+			return
+		}
+		if artist == "" {
+			ctx.Success(title)
+			return
+		}
 		ctx.Success(utils.Fmt("%s by %s", title, artist))
 	},
 }
