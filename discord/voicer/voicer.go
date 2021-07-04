@@ -22,7 +22,7 @@ type Voicer struct {
 	disconnectMutex    sync.Mutex
 }
 
-var voiceMapper = map[*string]*Voicer{}
+var voicerMapper = map[string]*Voicer{}
 
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	var chanID *string
@@ -38,10 +38,11 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 			break
 		}
 	}
-	voicer, found := voiceMapper[chanID]
+	voicer, found := voicerMapper[guildID]
 	if !found {
+		logger.Debugf("not found %s", guildID)
 		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
-		voiceMapper[chanID] = voicer
+		voicerMapper[guildID] = voicer
 	}
 	return voicer, nil
 
@@ -55,6 +56,7 @@ func (v *Voicer) Connect() error {
 	if !v.CanConnect() {
 		return errors.New("Cannot connect")
 	}
+
 	vc, err := discord.Session.ChannelVoiceJoin(*v.GuildID, *v.ChannelID, false, false)
 	if err != nil {
 		return err
