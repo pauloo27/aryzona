@@ -3,6 +3,7 @@ package listeners
 import (
 	"os"
 	"os/user"
+	"strconv"
 
 	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/aryzona/providers/animal"
@@ -10,7 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func createStartedEmbed() *discordgo.MessageEmbed {
+func createStartedEmbed(s *discordgo.Session) *discordgo.MessageEmbed {
 	dogImage, err := animal.GetRandomDogImage()
 	if err != nil {
 		dogImage = "https://http.cat/500"
@@ -32,9 +33,15 @@ func createStartedEmbed() *discordgo.MessageEmbed {
 		Color: 0xC0FFEE,
 		Image: &discordgo.MessageEmbedImage{URL: dogImage},
 		Fields: []*discordgo.MessageEmbedField{
-			{Name: "Last commit", Value: utils.Fmt(
-				"**[%s](%s/commit/%s)**", git.CommitMessage, git.RemoteRepo, git.CommitHash,
-			)},
+			{
+				Name:  "Guilds I'm in",
+				Value: strconv.Itoa(len(s.State.Guilds)),
+			},
+			{
+				Name: "Last commit", Value: utils.Fmt(
+					"**[%s](%s/commit/%s)**", git.CommitMessage, git.RemoteRepo, git.CommitHash,
+				),
+			},
 		},
 	}
 }
@@ -49,7 +56,7 @@ func Ready(s *discordgo.Session, m *discordgo.Ready) {
 	if os.Getenv("DC_BOT_ENV") == "prod" {
 		c, err := s.UserChannelCreate(os.Getenv("DC_BOT_OWNER_ID"))
 		utils.HandleFatal(err)
-		_, err = s.ChannelMessageSendEmbed(c.ID, createStartedEmbed())
+		_, err = s.ChannelMessageSendEmbed(c.ID, createStartedEmbed(s))
 		utils.HandleFatal(err)
 	}
 }
