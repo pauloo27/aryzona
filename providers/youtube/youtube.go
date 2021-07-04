@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/logger"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/kkdai/youtube/v2"
 )
@@ -24,7 +23,6 @@ func GetMediaURL(url string) (string, error) {
 }
 
 func getFirstURL(manifestURL string) (string, error) {
-	logger.Debugf("manifest %s", manifestURL)
 	res, err := http.Get(manifestURL)
 	if err != nil {
 		return "", err
@@ -36,11 +34,9 @@ func getFirstURL(manifestURL string) (string, error) {
 	}
 
 	body := string(buffer)
-	logger.Debugf("body: \n%s", body)
 
 	for _, line := range strings.Split(body, "\n") {
 		if strings.HasPrefix(line, "https://") {
-			logger.Debugf("line =%s=", line)
 			return line, nil
 		}
 	}
