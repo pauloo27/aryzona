@@ -64,6 +64,7 @@ func (v *Voicer) Connect() error {
 }
 
 func (v *Voicer) Disconnect() error {
+	delete(voicerMapper, *(v.GuildID))
 	v.disconnectMutex.Lock()
 	defer v.disconnectMutex.Unlock()
 	if !v.IsConnected() {
