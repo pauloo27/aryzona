@@ -7,8 +7,8 @@ import (
 	"github.com/buger/jsonparser"
 )
 
-var M3u8Playlist = &RadioType{
-	Name:    "Lainchan m3u8 playlist",
+var GenericRadio = &RadioType{
+	Name:    "Generic radio with simple streaming URL",
 	IsOppus: false,
 	GetDirectURL: func(url string) string {
 		return url
@@ -35,7 +35,7 @@ var LainchanRadio = &RadioType{
 	},
 }
 
-var HunterFMRadio = &RadioType{
+var HunterFM = &RadioType{
 	Name:    "HunterFM m3u8 playlist",
 	IsOppus: false,
 	GetDirectURL: func(url string) string {
