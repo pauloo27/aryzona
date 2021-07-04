@@ -22,6 +22,10 @@ type Voicer struct {
 
 var voicerMapper = map[string]*Voicer{}
 
+func GetExistingVoicerForGuild(guildID string) *Voicer {
+	return voicerMapper[guildID]
+}
+
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	var chanID *string
 
@@ -36,6 +40,7 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 			break
 		}
 	}
+
 	voicer, found := voicerMapper[guildID]
 	if !found {
 		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
