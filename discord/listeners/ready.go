@@ -34,7 +34,7 @@ func createStartedEmbed(s *discordgo.Session) *discordgo.MessageEmbed {
 		Image: &discordgo.MessageEmbedImage{URL: dogImage},
 		Fields: []*discordgo.MessageEmbedField{
 			{
-				Name:  "Guilds I'm in",
+				Name:  "Guild count",
 				Value: strconv.Itoa(len(s.State.Guilds)),
 			},
 			{
