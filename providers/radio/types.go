@@ -3,6 +3,8 @@ package radio
 import (
 	"github.com/Pauloo27/aryzona/logger"
 	"github.com/Pauloo27/aryzona/providers/youtube"
+	"github.com/Pauloo27/aryzona/utils"
+	"github.com/buger/jsonparser"
 )
 
 var M3u8Playlist = &RadioType{
@@ -10,6 +12,9 @@ var M3u8Playlist = &RadioType{
 	IsOppus: false,
 	GetDirectURL: func(url string) string {
 		return url
+	},
+	GetPlayingNow: func(url, directURL string) (title, artist string) {
+		return "", ""
 	},
 }
 
@@ -19,6 +24,15 @@ var LainchanRadio = &RadioType{
 	GetDirectURL: func(url string) string {
 		return url
 	},
+	GetPlayingNow: func(url, directURL string) (title, artist string) {
+		data, err := utils.GetStreamMetadata(directURL)
+		if err != nil {
+			return "", ""
+		}
+		title, _ = jsonparser.GetString(data, "format", "tags", "StreamTitle")
+
+		return
+	},
 }
 
 var HunterFMRadio = &RadioType{
@@ -26,6 +40,16 @@ var HunterFMRadio = &RadioType{
 	IsOppus: false,
 	GetDirectURL: func(url string) string {
 		return url
+	},
+	GetPlayingNow: func(url, directURL string) (title, artist string) {
+		data, err := utils.GetStreamMetadata(directURL)
+		if err != nil {
+			return "", ""
+		}
+		title, _ = jsonparser.GetString(data, "streams", "[0]", "tags", "title")
+		artist, _ = jsonparser.GetString(data, "streams", "[0]", "tags", "artist")
+
+		return
 	},
 }
 
@@ -40,5 +64,8 @@ var YTLive = &RadioType{
 		}
 
 		return url
+	},
+	GetPlayingNow: func(url, directURL string) (title, artist string) {
+		return "", ""
 	},
 }

@@ -7,4 +7,5 @@ type Playable interface {
 	TogglePause() error
 	GetDirectURL() (string, error)
 	IsOppus() bool
+	GetFullTitle() (title, artist string)
 }

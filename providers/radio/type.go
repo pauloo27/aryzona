@@ -1,9 +1,10 @@
 package radio
 
 type RadioType struct {
-	Name         string
-	IsOppus      bool
-	GetDirectURL func(url string) string
+	Name          string
+	IsOppus       bool
+	GetDirectURL  func(url string) string
+	GetPlayingNow func(url, directURL string) (title, artist string)
 }
 
 type RadioChannel struct {
@@ -29,6 +30,14 @@ func (c RadioChannel) TogglePause() error {
 
 func (c RadioChannel) GetDirectURL() (string, error) {
 	return c.Type.GetDirectURL(c.URL), nil
+}
+
+func (c RadioChannel) GetFullTitle() (title, artist string) {
+	directURL, err := c.GetDirectURL()
+	if err != nil {
+		return "", ""
+	}
+	return c.Type.GetPlayingNow(c.URL, directURL)
 }
 
 func (c RadioChannel) IsOppus() bool {
