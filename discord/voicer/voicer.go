@@ -1,7 +1,6 @@
 package voicer
 
 import (
-	"errors"
 	"sync"
 	"time"
 
@@ -40,7 +39,6 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	}
 	voicer, found := voicerMapper[guildID]
 	if !found {
-		logger.Debugf("not found %s", guildID)
 		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
 		voicerMapper[guildID] = voicer
 	}
@@ -54,7 +52,7 @@ func (v *Voicer) CanConnect() bool {
 
 func (v *Voicer) Connect() error {
 	if !v.CanConnect() {
-		return errors.New("Cannot connect")
+		return ERR_CANNOT_CONNECT
 	}
 
 	vc, err := discord.Session.ChannelVoiceJoin(*v.GuildID, *v.ChannelID, false, false)
