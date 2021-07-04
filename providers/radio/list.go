@@ -45,7 +45,7 @@ var radios = []*RadioChannel{
 		Id:   "cidade",
 		Name: "Rádio Cidade",
 		URL:  "https://18003.live.streamtheworld.com/RADIOCIDADEAAC.aac",
-		Type: GenericRadio,
+		Type: RadioCidade,
 	},
 	{
 		Id:   "globo-sp",
