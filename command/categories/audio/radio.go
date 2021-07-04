@@ -21,7 +21,8 @@ func listRadios(ctx *command.CommandContext, title string) {
 	embed.Footer(
 		utils.Fmt(
 			"Use `%sradio <name>` and `%sradio stop` when you are tired of it!",
-			command.Prefix, command.Prefix), "",
+			command.Prefix, command.Prefix,
+		), "",
 	)
 
 	ctx.SuccesEmbed(embed.Build())
