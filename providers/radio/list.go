@@ -42,6 +42,12 @@ var radios = []*RadioChannel{
 		Type: HunterFMRadio,
 	},
 	{
+		Id:   "cidade",
+		Name: "Rádio Cidade",
+		URL:  "https://18003.live.streamtheworld.com/RADIOCIDADEAAC.aac",
+		Type: M3u8Playlist,
+	},
+	{
 		Id:   "globo-sp",
 		Name: "Globo SP",
 		URL:  "https://medias.sgr.globo.com/hls/aRGloboSP/aRGloboSP.m3u8",
