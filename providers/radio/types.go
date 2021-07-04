@@ -5,8 +5,24 @@ import (
 	"github.com/Pauloo27/aryzona/providers/youtube"
 )
 
-var M3uRadio = &RadioType{
-	Name:    "m3u8 playlist",
+var M3u8Playlist = &RadioType{
+	Name:    "Lainchan m3u8 playlist",
+	IsOppus: false,
+	GetDirectURL: func(url string) string {
+		return url
+	},
+}
+
+var LainchanRadio = &RadioType{
+	Name:    "Lainchan m3u8 playlist",
+	IsOppus: false,
+	GetDirectURL: func(url string) string {
+		return url
+	},
+}
+
+var HunterFMRadio = &RadioType{
+	Name:    "HunterFM m3u8 playlist",
 	IsOppus: false,
 	GetDirectURL: func(url string) string {
 		return url
