@@ -2,6 +2,7 @@ package voicer
 
 import (
 	"sync"
+	"time"
 
 	"github.com/Pauloo27/aryzona/audio"
 	"github.com/Pauloo27/aryzona/audio/dca"
@@ -21,6 +22,29 @@ type Voicer struct {
 }
 
 var voicerMapper = map[string]*Voicer{}
+
+func init() {
+	go func() {
+		for {
+			for _, voicer := range voicerMapper {
+				g, err := discord.Session.State.Guild(*(voicer.GuildID))
+				if err != nil {
+					voicer.Disconnect()
+				}
+				count := 0
+				for _, state := range g.VoiceStates {
+					if state.ChannelID == *(voicer.ChannelID) {
+						count++
+					}
+				}
+				if count <= 1 {
+					voicer.Disconnect()
+				}
+			}
+			time.Sleep(2 * time.Second)
+		}
+	}()
+}
 
 func GetExistingVoicerForGuild(guildID string) *Voicer {
 	return voicerMapper[guildID]
@@ -118,7 +142,6 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	logger.Debugf("playing %s", url)
 
 	v.EncodeSession = dca.EncodeData(url, playable.IsOppus())
-	defer v.EncodeSession.Cleanup()
 
 	done := make(chan error)
 	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
