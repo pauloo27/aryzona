@@ -7,6 +7,8 @@ Are you on GitHub? The main repository is at [Gitea](https://git.notagovernment.
 ## Features
 - random animals (`!dog`, `!cat`, `!fox`)
 - run bash commands in the host (`!bash`)
+- delete all joao's messages
+- play radios: eg lofi, rock, pisadinha, pop, cafe, swing (`!radio`)
 
 ## How to add to your server
 
