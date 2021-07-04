@@ -3,7 +3,6 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/command/permissions"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/logger"
 	"github.com/Pauloo27/aryzona/providers/radio"
@@ -45,7 +44,6 @@ var RadioCommand = command.Command{
 			},
 		},
 	},
-	Permission: &permissions.BeOwner,
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 0 {
 			listRadios(ctx, "Radio list:")
