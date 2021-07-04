@@ -2,7 +2,6 @@ package voicer
 
 import (
 	"sync"
-	"time"
 
 	"github.com/Pauloo27/aryzona/audio"
 	"github.com/Pauloo27/aryzona/audio/dca"
@@ -95,11 +94,11 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	if v.IsPlaying() {
 		return ERR_ALREADY_PLAYING
 	}
+
 	if !v.IsConnected() {
 		if err := v.Connect(); err != nil {
 			return err
 		}
-		time.Sleep(1 * time.Second)
 	}
 
 	v.Playing = &playable
@@ -107,6 +106,7 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	if err != nil {
 		return err
 	}
+
 	if err := v.Voice.Speaking(true); err != nil {
 		return err
 	}
