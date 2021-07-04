@@ -2,7 +2,7 @@
 
 Just another simple Discord bot.
 
-Are you on GitHub? The main repository is at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
+Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
 ## Features
 - random animals (`!dog`, `!cat`, `!fox`)
