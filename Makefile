@@ -1,5 +1,5 @@
 BINARY_NAME = aryzona
-COMMIT_MESSAGE = $(shell git log -1 --pretty=%B | sed "s/'//g" | sed 's/"//g')
+COMMIT_MESSAGE = $(shell git log -1 --pretty=%B | sed "s/'//g; s/\"//g")
 COMMIT_HASH = $(shell git rev-list -1 HEAD)
 LDFLAGS = "-X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT_HASH)'"
 DIST_LDFLAGS = $(LDFLAGS) -w -s -X
