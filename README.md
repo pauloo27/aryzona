@@ -5,12 +5,12 @@ The one and only Discord Bot that is Flameguista.
 Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
 ## Features
-- delete all joao's messages (cuz he always drop some `.`)
+- delete all joao's messages (cuz he always drops some `.`)
 - play Flamengo's matches live (using the `!radio globo-rj`)
 - fetch live soccer scores (`!live`)
 - random animals (`!dog`, `!cat`, `!fox`)
 - run bash commands in the host (`!bash`)
-- play radios: eg lofi, rock, pisadinha, pop, cafe, swing (`!radio`)
+- play radios: lofi, rock, pisadinha, pop, cafe, swing and more (`!radio`)
 
 ## How to add to your server
 
@@ -19,7 +19,7 @@ Aryzona is not public yet.
 ## How to self host 
 Create a `.env` file and copy the content of the `.env.default` file into it.
 
-Then, change the stuffs.
+Then, change the values.
 
 To start the bot, run `make run`.
 
