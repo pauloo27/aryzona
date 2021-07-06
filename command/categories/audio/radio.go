@@ -14,7 +14,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 		Title(title)
 
 	for _, channel := range radio.GetRadioList() {
-		embed.Field(channel.Id, channel.Name)
+		embed.FieldInline(channel.Id, channel.Name)
 	}
 
 	embed.Footer(
