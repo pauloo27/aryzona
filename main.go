@@ -21,7 +21,7 @@ func init() {
 	logger.Info("Loading .env...")
 	err := godotenv.Load()
 	logger.HandleFatal(err, "Cannot load .env")
-	ogger.Success(".env loaded")
+	logger.Success(".env loaded")
 
 	git.CommitHash = commitHash
 	git.CommitMessage = commitMessage
