@@ -38,7 +38,7 @@ func registerCategory(category command.Category) {
 }
 
 func main() {
-	ogger.Info("Connecting to Discord...")
+	logger.Info("Connecting to Discord...")
 	discord.Create(os.Getenv("DC_BOT_TOKEN"))
 	discord.AddDefaultListeners()
 	discord.Connect()
