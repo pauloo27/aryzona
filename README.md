@@ -1,13 +1,15 @@
 # ARYZONA
 
-Discord bot with no special features.
+The one and only Discord Bot that is Flameguista.
 
 Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
 ## Features
+- delete all joao's messages (cuz he always drop some `.`)
+- play Flamengo's matches live (using the `!radio globo-rj`)
+- fetch live soccer scores (`!live`)
 - random animals (`!dog`, `!cat`, `!fox`)
 - run bash commands in the host (`!bash`)
-- delete all joao's messages
 - play radios: eg lofi, rock, pisadinha, pop, cafe, swing (`!radio`)
 
 ## How to add to your server
