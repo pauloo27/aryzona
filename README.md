@@ -1,6 +1,6 @@
 # ARYZONA
 
-Just another simple Discord bot.
+Discord bot with no special features.
 
 Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
