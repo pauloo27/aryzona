@@ -1,0 +1,17 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: golang
+  commands:
+  - make build
+
+- name: test
+  image: golang
+  commands:
+  - make test 
+
+# TODO: deploy
