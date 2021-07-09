@@ -7,6 +7,7 @@ The one and only Discord Bot that is proudly Flameguista.
 Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
 ## Features
+
 - delete all joao's messages (cuz he always drops some `.`)
 - play Flamengo's matches live (using the `!radio globo-rj`)
 - fetch live soccer scores (`!live`)
@@ -19,6 +20,7 @@ Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency
 Aryzona is not public yet.
 
 ## How to self host 
+
 Create a `.env` file and copy the content of the `.env.default` file into it.
 
 Then, change the values.
