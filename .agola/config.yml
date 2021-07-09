@@ -1,0 +1,50 @@
+version: v0
+
+runs:
+  - name: agola go example
+    tasks:
+      - name: build
+        runtime:
+          type: pod
+          arch: amd64
+          containers:
+            - image: golang:1.16-stretch
+        steps:
+          - clone:
+          - restore_cache:
+              keys:
+                - cache-sum-{{ md5sum "go.sum" }}
+                - cache-date-
+              ## golang image sets GOPATH to /go
+              dest_dir: /go/pkg/mod/cache
+          - run:
+              name: build aryzona
+              command: make build
+          - save_to_workspace:
+              contents:
+                - source_dir: .
+                  dest_dir: ./
+                  paths:
+                    - '**'
+          - save_cache:
+              key: cache-sum-{{ md5sum "go.sum" }}
+              contents:
+                - source_dir: /go/pkg/mod/cache
+          - save_cache:
+              key: cache-date-{{ year }}-{{ month }}-{{ day }}
+              contents:
+                - source_dir: /go/pkg/mod/cache
+      - name: test
+        runtime:
+          type: pod
+          arch: amd64
+          containers:
+            - image: golang:1.16-stretch
+        steps:
+          - restore_workspace:
+              dest_dir: .
+          - run:
+              name: test aryzona
+              command: make test
+        depends:
+          - build
