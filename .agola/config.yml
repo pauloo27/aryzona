@@ -1,7 +1,7 @@
 version: v0
 
 runs:
-  - name: agola go example
+  - name: Build and test Aryzona
     tasks:
       - name: build
         runtime:
