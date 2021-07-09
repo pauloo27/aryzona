@@ -1,6 +1,8 @@
 # ARYZONA
 
-The one and only Discord Bot that is Flameguista.
+The one and only Discord Bot that is proudly Flameguista.
+
+[Agola CI](https://ci.notagovernment.agency/user/Pauloo27/projects/Aryzona.proj)
 
 Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
