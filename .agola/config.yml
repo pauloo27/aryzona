@@ -28,6 +28,8 @@ runs:
                   dest_dir: ./
                   paths:
                     - '**'
+                - source_dir: ~/.cache/go-build
+                  dest_dir: ~/.cache/go-build
       - name: test
         runtime:
           type: pod
