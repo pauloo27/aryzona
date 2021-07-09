@@ -13,13 +13,15 @@ runs:
           - clone:
           - restore_cache:
               keys:
-                - cache-sum-{{ md5sum "go.sum" }}
-                - cache-date-
-              ## golang image sets GOPATH to /go
-              dest_dir: /go/pkg/mod/cache
+                - pkg-cache-sum-{{ md5sum "go.sum" }}
+              dest_dir: /go/pkg
+          - restore_cache:
+              keys:
+                - build-cache-sum-{{ md5sum "go.sum" }}
+              dest_dir: ~/.cache/go-build
           - run:
               name: build aryzona
-              command: make build
+              command: make build 
           - save_to_workspace:
               contents:
                 - source_dir: .
@@ -39,12 +41,12 @@ runs:
               name: test aryzona
               command: make test
           - save_cache:
-              key: cache-sum-{{ md5sum "go.sum" }}
+              key: pkg-cache-sum-{{ md5sum "go.sum" }}
               contents:
-                - source_dir: /go/pkg/mod/cache
+                - source_dir: /go/pkg
           - save_cache:
-              key: cache-date-{{ year }}-{{ month }}-{{ day }}
+              key: build-cache-sum-{{ md5sum "go.sum" }}
               contents:
-                - source_dir: /go/pkg/mod/cache
+                - source_dir: ~/.cache/go-build
         depends:
           - build
