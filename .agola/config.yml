@@ -26,14 +26,6 @@ runs:
                   dest_dir: ./
                   paths:
                     - '**'
-          - save_cache:
-              key: cache-sum-{{ md5sum "go.sum" }}
-              contents:
-                - source_dir: /go/pkg/mod/cache
-          - save_cache:
-              key: cache-date-{{ year }}-{{ month }}-{{ day }}
-              contents:
-                - source_dir: /go/pkg/mod/cache
       - name: test
         runtime:
           type: pod
@@ -46,5 +38,13 @@ runs:
           - run:
               name: test aryzona
               command: make test
+          - save_cache:
+              key: cache-sum-{{ md5sum "go.sum" }}
+              contents:
+                - source_dir: /go/pkg/mod/cache
+          - save_cache:
+              key: cache-date-{{ year }}-{{ month }}-{{ day }}
+              contents:
+                - source_dir: /go/pkg/mod/cache
         depends:
           - build
