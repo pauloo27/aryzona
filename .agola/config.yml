@@ -31,6 +31,8 @@ runs:
                 - source_dir: ~/.cache/go-build
                   dest_dir: ~/.cache/go-build
       - name: test
+        depends:
+          - build
         runtime:
           type: pod
           arch: amd64
@@ -50,5 +52,3 @@ runs:
               key: build-cache-sum-{{ md5sum "go.sum" }}
               contents:
                 - source_dir: ~/.cache/go-build
-        depends:
-          - build
