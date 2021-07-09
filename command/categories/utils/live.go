@@ -10,7 +10,7 @@ import (
 
 var LiveCommand = command.Command{
 	Name: "live", Description: "List live games",
-	Aliases: []string{"matches", "jogos"},
+	Aliases: []string{"matches", "jogos", "scores"},
 	Handler: func(ctx *command.CommandContext) {
 		matches, err := livescore.ListLives()
 		if err != nil {
