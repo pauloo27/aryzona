@@ -52,3 +52,29 @@ runs:
               key: build-cache-sum-{{ md5sum "go.sum" }}
               contents:
                 - source_dir: ~/.cache/go-build
+      - name: deploy
+        environment:
+          DEPLOY_USER:
+            from_variable: deployuser
+          DEPLOY_PATH:
+            from_variable: deploypath
+          DEPLOY_USER:
+            from_variable: deployuser
+          DEPLOY_HOST:
+              from_variable: deployhost
+        depends:
+          - test
+        runtime:
+          type: pod
+          arch: amd64
+          containers:
+            - image: golang:1.16-stretch
+        steps:
+          - restore_workspace:
+              dest_dir: .
+          - run:
+              name: deploy aryzona
+              command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./aryzona $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH 
+          - run:
+              name: restart bot
+              command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$DEPLOY_USER@$DEPLOY_HOST" ary-restart
