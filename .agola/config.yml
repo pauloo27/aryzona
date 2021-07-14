@@ -53,6 +53,8 @@ runs:
               contents:
                 - source_dir: ~/.cache/go-build
       - name: deploy
+        when:
+          branch: master
         environment:
           DEPLOY_USER:
             from_variable: deployuser
