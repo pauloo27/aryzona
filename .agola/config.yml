@@ -21,7 +21,7 @@ runs:
               dest_dir: ~/.cache/go-build
           - run:
               name: build aryzona
-              command: make build 
+              command: make build && echo $AGOLA_REPOSITORY_URL
           - save_to_workspace:
               contents:
                 - source_dir: .
