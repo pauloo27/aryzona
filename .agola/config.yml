@@ -18,10 +18,12 @@ runs:
           - restore_cache:
               keys:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
-              dest_dir: ~/.cache/go-build
+          - run:
+              name: install agola-discord
+              command: go get github.com/Pauloo27/agola-discord
           - run:
               name: build aryzona
-              command: make build
+              command: agola-discord make build
           - save_to_workspace:
               contents:
                 - source_dir: .
@@ -43,7 +45,7 @@ runs:
               dest_dir: .
           - run:
               name: test aryzona
-              command: make test
+              command: agola-discord make test
           - save_cache:
               key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
