@@ -28,12 +28,16 @@ runs:
               dest_dir: /root/.cache/go-build
           - run:
               name: install agola-discord
-              command: GO111MODULE=off go get github.com/Pauloo27/agola-discord
+              command: "[ -f /go/bin/agola-discord ] || GO111MODULE=off go get github.com/Pauloo27/agola-discord"
           - run:
               name: build aryzona
               command: agola-discord make build
           - save_to_workspace:
               contents:
+                - source_dir: /go/pkg
+                  paths:
+                    - '**'
+                  dest_dir: /go/pkg
                 - source_dir: /go/bin
                   paths:
                     - 'agola-discord'
@@ -96,7 +100,7 @@ runs:
             - image: golang:1.16-stretch
         steps:
           - restore_workspace:
-              dest_dir: .
+              dest_dir: /
           - run:
               name: deploy aryzona
               command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./aryzona $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/aryzona-new
