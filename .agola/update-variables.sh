@@ -8,10 +8,13 @@ agola project secret delete --project $PROJECT_ID -u $CI_URL --name DEPLOY --tok
 
 agola project secret create --project $PROJECT_ID -u $CI_URL --name DEPLOY --token $TOKEN -f ./deploy-secrets.yml
 
+agola project variable delete --project $PROJECT_ID -u $CI_URL --name discordwebhook --token $TOKEN
 agola project variable delete --project $PROJECT_ID -u $CI_URL --name deployuser --token $TOKEN
 agola project variable delete --project $PROJECT_ID -u $CI_URL --name deployhost --token $TOKEN
 agola project variable delete --project $PROJECT_ID -u $CI_URL --name deploypath --token $TOKEN
 
+echo '- secret_name: DEPLOY
+  secret_var: DISCORD_WEBHOOK' | agola project variable create --project $PROJECT_ID -u $CI_URL --name discordwebhook --token $TOKEN -f "-"
 echo '- secret_name: DEPLOY
   secret_var: USER' | agola project variable create --project $PROJECT_ID -u $CI_URL --name deployuser --token $TOKEN -f "-"
 echo '- secret_name: DEPLOY
