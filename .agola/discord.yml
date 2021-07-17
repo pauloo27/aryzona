@@ -2,3 +2,4 @@ project_name: Aryzona
 git_type: gitea
 last_command:
   dev: make test
+  master: make test

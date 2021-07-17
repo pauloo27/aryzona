@@ -18,7 +18,7 @@ import (
 var commitHash, commitMessage string
 
 func init() {
-	ogger.Info("Loading .env...")
+	logger.Info("Loading .env...")
 	err := godotenv.Load()
 	logger.HandleFatal(err, "Cannot load .env")
 	logger.Success(".env loaded")
