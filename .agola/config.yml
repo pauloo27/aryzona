@@ -34,6 +34,10 @@ runs:
               command: agola-discord make build
           - save_to_workspace:
               contents:
+                - source_dir: /go/pkg
+                  paths:
+                    - '**'
+                  dest_dir: /go/pkg
                 - source_dir: /go/bin
                   paths:
                     - 'agola-discord'
