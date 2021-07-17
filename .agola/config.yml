@@ -28,7 +28,7 @@ runs:
               dest_dir: /root/.cache/go-build
           - run:
               name: install agola-discord
-              command: go get github.com/Pauloo27/agola-discord
+              command: GO111MODULE=off go get github.com/Pauloo27/agola-discord
           - run:
               name: build aryzona
               command: agola-discord make build
