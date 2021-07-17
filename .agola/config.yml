@@ -25,9 +25,10 @@ runs:
           - restore_cache:
               keys:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
+              dest_dir: /root/.cache/go-build
           - run:
               name: install agola-discord
-              command: go get github.com/Pauloo27/agola-discord
+              command: GO111MODULE=off go get github.com/Pauloo27/agola-discord
           - run:
               name: build aryzona
               command: agola-discord make build
@@ -41,8 +42,10 @@ runs:
                   dest_dir: /root/project/
                   paths:
                     - '**'
-                - source_dir: ~/.cache/go-build
-                  dest_dir: ~/.cache/go-build
+                - source_dir: /root/.cache/go-build
+                  dest_dir: /root/.cache/go-build
+                  paths:
+                    - '**'
       - name: test
         environment:
           DISCORD_WEBHOOK:
@@ -71,7 +74,7 @@ runs:
           - save_cache:
               key: build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
-                - source_dir: ~/.cache/go-build
+                - source_dir: /root/.cache/go-build
       - name: deploy
         when:
           branch: master
