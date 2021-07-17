@@ -3,7 +3,7 @@ version: v0
 runs:
   - name: Build and test Aryzona
     tasks:
-      - name: build
+      - name: build and test
         environment:
           DISCORD_WEBHOOK:
             from_variable: discordwebhook
@@ -32,41 +32,15 @@ runs:
           - run:
               name: build aryzona
               command: agola-discord make build
-          - save_to_workspace:
-              contents:
-                - source_dir: /go/pkg
-                  paths:
-                    - '**'
-                  dest_dir: /go/pkg
-                - source_dir: /go/bin
-                  paths:
-                    - 'agola-discord'
-                  dest_dir: /go/bin
-                - source_dir: .
-                  dest_dir: /root/project/
-                  paths:
-                    - '**'
-                - source_dir: /root/.cache/go-build
-                  dest_dir: /root/.cache/go-build
-                  paths:
-                    - '**'
-      - name: test
-        environment:
-          DISCORD_WEBHOOK:
-            from_variable: discordwebhook
-        depends:
-          - build
-        runtime:
-          type: pod
-          arch: amd64
-          containers:
-            - image: golang:1.16-stretch
-        steps:
-          - restore_workspace:
-              dest_dir: /
           - run:
               name: test aryzona
               command: agola-discord make test
+          - save_to_workspace:
+              contents:
+                - source_dir: .
+                  paths:
+                    - 'aryzona'
+                  dest_dir: .
           - save_cache:
               key: bin-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
@@ -92,7 +66,7 @@ runs:
           DEPLOY_HOST:
               from_variable: deployhost
         depends:
-          - test
+          - build and test
         runtime:
           type: pod
           arch: amd64
@@ -100,7 +74,7 @@ runs:
             - image: golang:1.16-stretch
         steps:
           - restore_workspace:
-              dest_dir: /
+              dest_dir: .
           - run:
               name: deploy aryzona
               command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./aryzona $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/aryzona-new
