@@ -16,6 +16,9 @@ install: build
 test: 
 	go test -cover -parallel 5 -failfast  ./... 
 
+lint:
+	revive -formatter friendly -config revive.toml ./...
+
 update_mod:
 	go build -v -mod=mod
 
