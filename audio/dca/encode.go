@@ -31,16 +31,18 @@ type EncodeSession struct {
 	lastFrame int
 	err       error
 	isOpus    bool
+	isLocal   bool
 
 	buff bytes.Buffer
 }
 
-func EncodeData(path string, isOpus bool) *EncodeSession {
+func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 
 	session := &EncodeSession{
 		path:    path,
 		channel: make(chan []byte, 100),
 		isOpus:  isOpus,
+		isLocal: isLocal,
 	}
 
 	go session.run()

@@ -43,3 +43,7 @@ func (c RadioChannel) GetFullTitle() (title, artist string) {
 func (c RadioChannel) IsOppus() bool {
 	return c.Type.IsOppus
 }
+
+func (c RadioChannel) IsLocal() bool {
+	return false
+}

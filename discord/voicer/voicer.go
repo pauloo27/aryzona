@@ -139,7 +139,7 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	}
 	logger.Debugf("playing %s", url)
 
-	v.EncodeSession = dca.EncodeData(url, playable.IsOppus())
+	v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
 
 	done := make(chan error)
 	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
