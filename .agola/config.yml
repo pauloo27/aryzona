@@ -37,6 +37,10 @@ runs:
               command: agola-discord make test
           - save_to_workspace:
               contents:
+                - source_dir: ./assets
+                  paths:
+                    - '**'
+                  dest_dir: .
                 - source_dir: .
                   paths:
                     - 'aryzona'
