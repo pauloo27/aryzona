@@ -76,6 +76,9 @@ runs:
           - restore_workspace:
               dest_dir: .
           - run:
+              name: deploy aryzona assets
+              command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./assets $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+          - run:
               name: deploy aryzona
               command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./aryzona $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/aryzona-new
           - run:
