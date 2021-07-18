@@ -18,6 +18,11 @@ import (
 // based on https://git.notagovernment.agency/ItsClairton/Anny/ which é...
 // Isso é baseado no https://github.com/jonas747/dca porém com algumas correções e mais básico
 
+var remoteFfmpegArgs = []string{
+	"-reconnect", "1",
+	"-reconnect_streamed", "1",
+}
+
 type EncodeSession struct {
 	sync.Mutex
 	path   string
@@ -59,21 +64,26 @@ func (e *EncodeSession) run() error {
 	e.Lock()
 	e.ruining = true
 
-	ffmpegArgs := []string{
-		"-reconnect", "1",
-		//"-reconnect_at_eof", "1",
-		"-reconnect_streamed", "1",
-		//"-reconnect_delay_max", "2",
+	commonArgs := []string{
 		"-i", e.path,
+		"-acodec", utils.ConditionalString(e.isOpus, "copy", "libopus"),
 		"-analyzeduration", "0",
 		"-loglevel", "0",
 		"-map", "0:a",
-		"-acodec", utils.ConditionalString(e.isOpus, "copy", "libopus"),
 		"-f", "ogg",
 		"-ar", "48000",
 		"-ac", "2",
 		"-application", "lowdelay",
-		"-frame_duration", "20", "pipe:1"}
+		"-frame_duration", "20", "pipe:1",
+	}
+
+	var ffmpegArgs []string
+
+	if !e.isLocal {
+		ffmpegArgs = append(remoteFfmpegArgs, commonArgs...)
+	} else {
+		ffmpegArgs = commonArgs
+	}
 
 	ffmpeg := exec.Command("ffmpeg", ffmpegArgs...)
 
