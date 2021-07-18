@@ -14,7 +14,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 		Title(title)
 
 	for _, channel := range radio.GetRadioList() {
-		embed.FieldInline(channel.Id, channel.Name)
+		embed.FieldInline(channel.ID, channel.Name)
 	}
 
 	embed.Footer(
@@ -38,7 +38,7 @@ var RadioCommand = command.Command{
 			ValidValuesFunc: func() []interface{} {
 				ids := []interface{}{}
 				for _, radio := range radio.GetRadioList() {
-					ids = append(ids, radio.Id)
+					ids = append(ids, radio.ID)
 				}
 				return append(ids, "stop")
 			},
@@ -57,9 +57,9 @@ var RadioCommand = command.Command{
 		}
 
 		var channel *radio.RadioChannel
-		radioId := ctx.Args[0].(string)
+		radioID := ctx.Args[0].(string)
 
-		if radioId == "stop" {
+		if radioID == "stop" {
 			if !vc.IsConnected() || !vc.IsPlaying() {
 				ctx.Error("Already stopped")
 			} else {
@@ -71,9 +71,8 @@ var RadioCommand = command.Command{
 				}
 			}
 			return
-		} else {
-			channel = radio.GetRadioById(radioId)
 		}
+		channel = radio.GetRadioByID(radioID)
 
 		if !vc.CanConnect() {
 			ctx.Error("You are not in a voice channel")
@@ -86,7 +85,7 @@ var RadioCommand = command.Command{
 		go func() {
 			if err = vc.Play(channel); err != nil {
 				if is, vErr := utils.IsErrore(err); is {
-					if vErr.ID == dca.ERR_VOICE_CONNECTION_CLOSED.ID {
+					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
 						return
 					}
 					ctx.Error(vErr.Message)

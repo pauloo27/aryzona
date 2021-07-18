@@ -21,9 +21,9 @@ var ScoreCommand = command.Command{
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var match *livescore.MatchInfo
-		teamNameOrId := ctx.Args[0].(string)
-		if _, err := strconv.Atoi(teamNameOrId); err == nil {
-			match, err = livescore.FetchMatchInfo(teamNameOrId)
+		teamNameOrID := ctx.Args[0].(string)
+		if _, err := strconv.Atoi(teamNameOrID); err == nil {
+			match, err = livescore.FetchMatchInfo(teamNameOrID)
 			if err != nil {
 				ctx.Error(err.Error())
 				return

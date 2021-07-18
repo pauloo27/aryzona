@@ -100,7 +100,7 @@ func (s *StreamingSession) readNext() error {
 
 	select {
 	case <-timeOut:
-		return ERR_VOICE_CONNECTION_CLOSED
+		return ErrVoiceConnectionClosed
 	case s.connection.OpusSend <- opus:
 	}
 	s.Lock()

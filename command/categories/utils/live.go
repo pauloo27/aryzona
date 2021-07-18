@@ -26,7 +26,7 @@ var LiveCommand = command.Command{
 			desc.WriteString(utils.Fmt("**%s** ||(%d) x (%d)|| **%s**: _%s_\n",
 				match.T1.Name, match.T1.Score,
 				match.T2.Score, match.T2.Name,
-				match.Id,
+				match.ID,
 			))
 		}
 		ctx.SuccesEmbed(

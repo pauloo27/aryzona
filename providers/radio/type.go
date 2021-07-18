@@ -8,7 +8,7 @@ type RadioType struct {
 }
 
 type RadioChannel struct {
-	Id, Name, URL string
+	ID, Name, URL string
 	Type          *RadioType
 }
 

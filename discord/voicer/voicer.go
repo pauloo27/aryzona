@@ -80,7 +80,7 @@ func (v *Voicer) CanConnect() bool {
 
 func (v *Voicer) Connect() error {
 	if !v.CanConnect() {
-		return ERR_CANNOT_CONNECT
+		return ErrCannotConnect
 	}
 
 	vc, err := discord.Session.ChannelVoiceJoin(*v.GuildID, *v.ChannelID, false, false)
@@ -121,7 +121,7 @@ func (v *Voicer) IsPlaying() bool {
 
 func (v *Voicer) Play(playable audio.Playable) error {
 	if v.IsPlaying() {
-		return ERR_ALREADY_PLAYING
+		return ErrAlreadyPlaying
 	}
 
 	if err := v.Connect(); err != nil {

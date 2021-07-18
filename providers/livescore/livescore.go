@@ -25,7 +25,7 @@ func (t TeamInfo) ColorAsInt() int {
 }
 
 type MatchInfo struct {
-	Id                                string
+	ID                                string
 	T1, T2                            *TeamInfo
 	Time                              string // time as string? YES
 	CupName, StadiumName, StadiumCity string
