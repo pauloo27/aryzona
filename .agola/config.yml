@@ -40,7 +40,7 @@ runs:
                 - source_dir: ./assets
                   paths:
                     - '**'
-                  dest_dir: .
+                  dest_dir: ./assets
                 - source_dir: .
                   paths:
                     - 'aryzona'
