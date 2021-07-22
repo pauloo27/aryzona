@@ -4,7 +4,7 @@ The one and only Discord Bot that is proudly Flameguista.
 
 [Agola CI](https://ci.notagovernment.agency/user/Pauloo27/projects/Aryzona.proj)
 
-[![CI status](https://ci.notagovernment.agency/api/v1alpha/badges/d1370718-3b19-4912-a9bc-00125b65cfc6?branch=master)](https://ci.notagovernment.agency/user/Pauloo27/projects/Aryzona.proj)
+[![CI status](https://ci.notagovernment.agency/api/v1alpha/badges/42ad0126-dc8a-475c-8a30-0e1b6229a01f?branch=master)](https://ci.notagovernment.agency/user/Pauloo27/projects/Aryzona.proj)
 
 Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
 
