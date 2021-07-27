@@ -4,9 +4,6 @@ runs:
   - name: Build and test Aryzona
     tasks:
       - name: build and test
-        environment:
-          DISCORD_WEBHOOK:
-            from_variable: discordwebhook
         runtime:
           type: pod
           arch: amd64
@@ -16,10 +13,6 @@ runs:
           - clone:
           - restore_cache:
               keys:
-                - bin-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
-              dest_dir: /go/bin
-          - restore_cache:
-              keys:
                 - pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               dest_dir: /go/pkg
           - restore_cache:
@@ -27,14 +20,11 @@ runs:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               dest_dir: /root/.cache/go-build
           - run:
-              name: install agola-discord
-              command: "[ -f /go/bin/agola-discord ] || GO111MODULE=off go get github.com/Pauloo27/agola-discord"
-          - run:
               name: build aryzona
-              command: agola-discord make build
+              command:  make build
           - run:
               name: test aryzona
-              command: agola-discord make test
+              command: make test
           - save_to_workspace:
               contents:
                 - source_dir: ./assets
@@ -45,10 +35,6 @@ runs:
                   paths:
                     - 'aryzona'
                   dest_dir: .
-          - save_cache:
-              key: bin-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
-              contents:
-                - source_dir: /go/bin
           - save_cache:
               key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
