@@ -7,7 +7,7 @@ import (
 
 var PingCommand = command.Command{
 	Name: "ping", Description: "Get the bot latency",
-	Aliases: []string{"p", "pong"},
+	Aliases: []string{"pong"},
 	Handler: func(ctx *command.CommandContext) {
 		ctx.SuccesEmbed(
 			utils.NewEmbedBuilder().
