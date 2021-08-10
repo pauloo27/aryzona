@@ -1,6 +1,7 @@
 package command
 
 import (
+	"github.com/Pauloo27/aryzona/logger"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/bwmarrin/discordgo"
 )
@@ -26,6 +27,14 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 		return
 	}
 	ctx.Args = values
+
+	defer func() {
+		for {
+			if err := recover(); err != nil {
+				logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
+			}
+		}
+	}()
 
 	command.Handler(ctx)
 }
