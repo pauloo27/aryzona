@@ -2,9 +2,17 @@ package command
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/Pauloo27/aryzona/utils"
 )
+
+var ArgumentText = &CommandArgumentType{
+	Name: "string",
+	Parser: func(index int, args []string) (interface{}, error) {
+		return strings.Join(args[index:], " "), nil
+	},
+}
 
 var ArgumentString = &CommandArgumentType{
 	Name: "string",
