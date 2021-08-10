@@ -6,7 +6,8 @@ import (
 )
 
 type YouTubePlayable struct {
-	Video *youtube.Video
+	Video  *youtube.Video
+	IsLive bool
 }
 
 func (YouTubePlayable) CanPause() bool {
@@ -26,6 +27,9 @@ func (YouTubePlayable) TogglePause() error {
 }
 
 func (p YouTubePlayable) GetDirectURL() (string, error) {
+	if p.IsLive {
+		return getLiveURL(p.Video)
+	}
 	return defaultClient.GetStreamURL(p.Video, p.Video.Formats.FindByItag(140))
 }
 
@@ -48,5 +52,16 @@ func AsPlayable(videoURL string) (audio.Playable, error) {
 	}
 	return YouTubePlayable{
 		Video: vid,
+	}, nil
+}
+
+func AsPlayableLive(liveURL string) (audio.Playable, error) {
+	vid, err := defaultClient.GetVideo(GetVideoID(liveURL))
+	if err != nil {
+		return nil, err
+	}
+	return YouTubePlayable{
+		IsLive: true,
+		Video:  vid,
 	}, nil
 }
