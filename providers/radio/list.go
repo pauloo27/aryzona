@@ -77,6 +77,12 @@ var radios = []*RadioChannel{
 		URL:  "http://lainon.life:8000/cafe.mp3",
 		Type: LainchanRadio,
 	},
+	{
+		ID:   "lofi",
+		Name: "Lofi: beats to relax/study",
+		URL:  "https://youtube.com/watch?v=5qap5aO4i9A",
+		Type: YTLive,
+	},
 }
 
 func GetRadioList() []*RadioChannel {

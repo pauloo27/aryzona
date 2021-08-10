@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"regexp"
 
+	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/aryzona/providers/youtube"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/buger/jsonparser"
 )
@@ -82,5 +84,22 @@ var HunterFM = &RadioType{
 		artist, _ = jsonparser.GetString(data, "streams", "[0]", "tags", "artist")
 
 		return
+	},
+}
+
+var YTLive = &RadioType{
+	Name:    "YouTube live",
+	IsOppus: false,
+	GetDirectURL: func(url string) string {
+		url, err := youtube.GetLiveURL(url)
+
+		if err != nil {
+			logger.Errorf("%s", err)
+		}
+
+		return url
+	},
+	GetPlayingNow: func(url, directURL string) (title, artist string) {
+		return "YouTube live", ""
 	},
 }
