@@ -31,6 +31,14 @@ func getFirstURL(manifestURL string) (string, error) {
 	return "", utils.Errore{ID: "URL_NOT_FOUND", Message: "URL not found"}
 }
 
+func GetLiveURL(url string) (string, error) {
+	video, err := defaultClient.GetVideo(GetVideoID(url))
+	if err != nil {
+		return "", err
+	}
+	return getLiveURL(video)
+}
+
 func getLiveURL(video *youtube.Video) (string, error) {
 	manifest := video.HLSManifestURL
 	if manifest == "" {
