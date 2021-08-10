@@ -33,8 +33,8 @@ func (p YouTubePlayable) GetDirectURL() (string, error) {
 	return defaultClient.GetStreamURL(p.Video, p.Video.Formats.FindByItag(140))
 }
 
-func (p YouTubePlayable) GetFullTitle() (artist string, title string) {
-	return p.Video.Author, p.Video.Title
+func (p YouTubePlayable) GetFullTitle() (title string, artist string) {
+	return p.Video.Title, p.Video.Author
 }
 
 func (YouTubePlayable) IsLocal() bool {
