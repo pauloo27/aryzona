@@ -29,10 +29,8 @@ func HandleCommand(commandName string, args []string, s *discordgo.Session, m *d
 	ctx.Args = values
 
 	defer func() {
-		for {
-			if err := recover(); err != nil {
-				logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
-			}
+		if err := recover(); err != nil {
+			logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
 		}
 	}()
 
