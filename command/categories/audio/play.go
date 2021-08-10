@@ -28,15 +28,19 @@ var PlayCommand = command.Command{
 			ctx.Error("Cannot connect to your voice channel")
 			return
 		}
-		//		searchQuery := ctx.Args[0].(string)
-		// TODO: search
-		result, err := youtube.AsPlayable(ctx.Args[0].(string))
+		searchQuery := ctx.Args[0].(string)
+		result, err := youtube.GetBestResult(searchQuery)
+		if err != nil {
+			ctx.Error("Cannot find what you are looking for")
+			return
+		}
+		playable, err := youtube.AsPlayable(result.URL)
 		if err != nil {
 			ctx.Error("Something went wrong when getting the video to play")
 			return
 		}
 		go func() {
-			if err = vc.Play(result); err != nil {
+			if err = vc.Play(playable); err != nil {
 				if is, vErr := utils.IsErrore(err); is {
 					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
 						return
