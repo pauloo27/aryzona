@@ -51,17 +51,7 @@ func AsPlayable(videoURL string) (audio.Playable, error) {
 		return nil, err
 	}
 	return YouTubePlayable{
-		Video: vid,
-	}, nil
-}
-
-func AsPlayableLive(liveURL string) (audio.Playable, error) {
-	vid, err := defaultClient.GetVideo(GetVideoID(liveURL))
-	if err != nil {
-		return nil, err
-	}
-	return YouTubePlayable{
-		IsLive: true,
 		Video:  vid,
+		IsLive: vid.Duration == 0,
 	}, nil
 }
