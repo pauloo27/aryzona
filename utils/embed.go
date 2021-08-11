@@ -35,6 +35,13 @@ func (e *EmbedBuilder) Description(description string) *EmbedBuilder {
 	return e
 }
 
+func (e *EmbedBuilder) Thumbnail(url string) *EmbedBuilder {
+	e.embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
+		URL: url,
+	}
+	return e
+}
+
 func (e *EmbedBuilder) Field(name, value string) *EmbedBuilder {
 	e.embed.Fields = append(e.embed.Fields, &discordgo.MessageEmbedField{
 		Name:  name,
