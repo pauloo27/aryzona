@@ -12,7 +12,7 @@ var WoofCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomDog()
 		if err != nil {
-			ctx.Error(utils.Fmt("An error occured:\n %v", err))
+			ctx.Error(utils.Fmt("An error occurred:\n %v", err))
 			return
 		}
 		ctx.Success(url)

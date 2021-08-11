@@ -12,7 +12,7 @@ var FloofCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomFox()
 		if err != nil {
-			ctx.Error(utils.Fmt("An error occured:\n %v", err))
+			ctx.Error(utils.Fmt("An error occurred:\n %v", err))
 		}
 		ctx.Success(url)
 	},

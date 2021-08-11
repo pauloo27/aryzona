@@ -132,7 +132,7 @@ func TestArguments(t *testing.T) {
 	})
 
 	// by complex I mean something with more than one argument lol
-	t.Run("Validate a complex commmand", func(t *testing.T) {
+	t.Run("Validate a complex command", func(t *testing.T) {
 		testCommand := Command{
 			Name: "Test command",
 			Arguments: []*CommandArgument{
