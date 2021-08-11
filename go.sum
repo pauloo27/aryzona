@@ -42,6 +42,8 @@ github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Pauloo27/searchtube v0.0.0-20210810035613-7580a25f77bc h1:KuLZN+FyWISofz+oSOG+aAnDW/4AqcJXiJMYahjHYAs=
 github.com/Pauloo27/searchtube v0.0.0-20210810035613-7580a25f77bc/go.mod h1:o2/xbhp9ttLLIYpQcf8oApG1h4/qr90zusSvvnRV5VQ=
+github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80 h1:cM1yhftril0Bx+VDFnw7vrDVuX0iKQi9qAQbdZDC5YE=
+github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80/go.mod h1:o2/xbhp9ttLLIYpQcf8oApG1h4/qr90zusSvvnRV5VQ=
 github.com/VividCortex/ewma v1.1.1/go.mod h1:2Tkkvm3sRDVXaiyucHiACn4cqf7DpdyLvmxzcbUokwA=
 github.com/VividCortex/ewma v1.2.0/go.mod h1:nz4BbCtbLyFDeC9SUHbtcT5644juEuWfUAUnGx7j5l4=
 github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d/go.mod h1:asat636LX7Bqt5lYEZ27JNDcqxfjdBQuJ/MM4CN/Lzo=

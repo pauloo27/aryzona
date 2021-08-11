@@ -3,7 +3,7 @@ module github.com/Pauloo27/aryzona
 go 1.16
 
 require (
-	github.com/Pauloo27/searchtube v0.0.0-20210810035613-7580a25f77bc // indirect
+	github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80 // indirect
 	github.com/buger/jsonparser v1.1.1
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/joho/godotenv v1.3.0
