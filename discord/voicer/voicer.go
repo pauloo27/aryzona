@@ -1,6 +1,7 @@
 package voicer
 
 import (
+	"io"
 	"sync"
 	"time"
 
@@ -165,5 +166,8 @@ func (v *Voicer) Play(playable audio.Playable) error {
 		}
 	}
 
+	if err == io.EOF {
+		return nil
+	}
 	return err
 }
