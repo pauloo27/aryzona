@@ -35,6 +35,9 @@ restart_bot: build
 	- killall aryzona -w
 	./$(BINARY_NAME) 
 
+spell:
+	misspell -error ./**
+
 # auto restart bot (using fiber CLI)
 dev:
 	fiber dev
