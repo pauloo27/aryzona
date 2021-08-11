@@ -72,7 +72,10 @@ func (ctx *CommandContext) Error(message string) {
 func (ctx *CommandContext) Embed(embed *discordgo.MessageEmbed) {
 	ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
 		Reference: ctx.Message.Reference(),
-		Embed:     embed,
+		AllowedMentions: &discordgo.MessageAllowedMentions{
+			Users: []string{ctx.Message.Author.ID},
+		},
+		Embed: embed,
 	})
 }
 
