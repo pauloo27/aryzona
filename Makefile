@@ -42,9 +42,9 @@ staticcheck:
 	staticcheck ./...
 
 gosec:
-	gosec .../
+	gosec ./...
 
-check: lint spell staticcheck gosec
+inspect: lint spell gosec staticcheck
 
 # auto restart bot (using fiber CLI)
 dev:
