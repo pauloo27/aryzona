@@ -3,7 +3,7 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/discord/voicer"
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 )
 
 var StopCommand = command.Command{

@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/bwmarrin/discordgo"
 )

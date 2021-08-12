@@ -8,7 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/audio"
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/discord"
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/bwmarrin/discordgo"
 )

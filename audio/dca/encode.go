@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/jonas747/ogg"
 )

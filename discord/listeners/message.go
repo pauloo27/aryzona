@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 

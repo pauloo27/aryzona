@@ -11,7 +11,7 @@ import (
 	"github.com/Pauloo27/aryzona/command/categories/utils"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/git"
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 	"github.com/joho/godotenv"
 )
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/Pauloo27/aryzona/logger"
+	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/providers/youtube"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/buger/jsonparser"
