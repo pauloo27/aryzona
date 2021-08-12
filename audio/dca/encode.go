@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/jonas747/ogg"
 )
 
@@ -120,7 +120,7 @@ func (e *EncodeSession) run() error {
 	err = ffmpeg.Wait()
 	if err != nil {
 		if err.Error() != "signal: killed" {
-			logger.Errorf("%v", err)
+			logger.Error(err)
 			e.Lock()
 			e.err = err
 			e.Unlock()

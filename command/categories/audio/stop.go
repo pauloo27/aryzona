@@ -16,7 +16,7 @@ var StopCommand = command.Command{
 		}
 		err := voicer.Disconnect()
 		if err != nil {
-			logger.Errorf("%v", err)
+			logger.Error(err)
 			ctx.Error("Something went wrong when disconnecting...")
 			return
 		}

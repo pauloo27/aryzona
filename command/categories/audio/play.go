@@ -4,9 +4,9 @@ import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/discord/voicer"
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/providers/youtube"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 )
 
 var PlayCommand = command.Command{
@@ -60,7 +60,7 @@ var PlayCommand = command.Command{
 					ctx.Error(vErr.Message)
 				} else {
 					ctx.Error("Cannot play stuff")
-					logger.Error(err.Error())
+					logger.Error(err)
 				}
 				return
 			}

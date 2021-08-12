@@ -4,9 +4,9 @@ import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/discord/voicer"
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/providers/radio"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 )
 
 func listRadios(ctx *command.CommandContext, title string) {
@@ -91,7 +91,7 @@ var RadioCommand = command.Command{
 					ctx.Error(vErr.Message)
 				} else {
 					ctx.Error("Cannot play stuff")
-					logger.Error(err.Error())
+					logger.Error(err)
 				}
 				return
 			}

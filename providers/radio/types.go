@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/providers/youtube"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/buger/jsonparser"
 )
 
@@ -94,7 +94,7 @@ var YTLive = &RadioType{
 		url, err := youtube.GetLiveURL(url)
 
 		if err != nil {
-			logger.Errorf("%s", err)
+			logger.Error(err)
 		}
 
 		return url
