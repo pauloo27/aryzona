@@ -16,9 +16,6 @@ install: build
 test: 
 	go test -cover -parallel 5 -failfast  ./... 
 
-lint:
-	revive -formatter friendly -config revive.toml ./...
-
 tidy:
 	go mod tidy
 
@@ -35,8 +32,19 @@ restart_bot: build
 	- killall aryzona -w
 	./$(BINARY_NAME) 
 
+lint:
+	revive -formatter friendly -config revive.toml ./...
+
 spell:
 	misspell -error ./**
+
+staticcheck:
+	staticcheck ./...
+
+gosec:
+	gosec .../
+
+check: lint spell staticcheck gosec
 
 # auto restart bot (using fiber CLI)
 dev:
