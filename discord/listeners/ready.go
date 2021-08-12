@@ -8,6 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/aryzona/providers/animal"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -51,7 +52,10 @@ func Ready(s *discordgo.Session, m *discordgo.Ready) {
 	if presence == "" {
 		presence = utils.Fmt("%s", git.CommitMessage)
 	}
-	s.UpdateStreamingStatus(0, presence, "https://twitch.tv/gaules")
+	err := s.UpdateStreamingStatus(0, presence, "https://twitch.tv/gaules")
+	if err != nil {
+		logger.Error(err)
+	}
 
 	if os.Getenv("DC_BOT_ENV") == "prod" {
 		c, err := s.UserChannelCreate(os.Getenv("DC_BOT_OWNER_ID"))

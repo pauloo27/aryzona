@@ -21,8 +21,8 @@ func Connect() error {
 	return Session.Open()
 }
 
-func Disconnect() {
-	Session.Close()
+func Disconnect() error {
+	return Session.Close()
 }
 
 func AddDefaultListeners() {

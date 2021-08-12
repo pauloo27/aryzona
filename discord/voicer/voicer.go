@@ -8,8 +8,8 @@ import (
 	"github.com/Pauloo27/aryzona/audio"
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/discord"
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -30,7 +30,10 @@ func init() {
 			for _, voicer := range voicerMapper {
 				g, err := discord.Session.State.Guild(*(voicer.GuildID))
 				if err != nil {
-					voicer.Disconnect()
+					err = voicer.Disconnect()
+					if err != nil {
+						logger.Error(err)
+					}
 				}
 				count := 0
 				for _, state := range g.VoiceStates {
@@ -39,7 +42,10 @@ func init() {
 					}
 				}
 				if count <= 1 {
-					voicer.Disconnect()
+					err = voicer.Disconnect()
+					if err != nil {
+						logger.Error(err)
+					}
 				}
 			}
 			time.Sleep(2 * time.Second)
@@ -103,11 +109,17 @@ func (v *Voicer) Disconnect() error {
 	v.StreamingSession = nil
 
 	v.EncodeSession.Cleanup()
-	v.EncodeSession.Stop()
+	err := v.EncodeSession.Stop()
+	if err != nil {
+		logger.Error(err)
+	}
 	v.EncodeSession = nil
 
 	v.Playing = nil
-	err := v.Voice.Disconnect()
+	err = v.Voice.Disconnect()
+	if err != nil {
+		logger.Error(err)
+	}
 	v.Voice = nil
 	return err
 }

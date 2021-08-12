@@ -39,9 +39,15 @@ func registerCategory(category command.Category) {
 
 func main() {
 	logger.Info("Connecting to Discord...")
-	discord.Create(os.Getenv("DC_BOT_TOKEN"))
+	err := discord.Create(os.Getenv("DC_BOT_TOKEN"))
+	if err != nil {
+		logger.Fatal(err)
+	}
 	discord.AddDefaultListeners()
-	discord.Connect()
+	err = discord.Connect()
+	if err != nil {
+		logger.Fatal(err)
+	}
 	logger.Success("Connected to discord")
 
 	logger.Info("Registering commands...")
@@ -54,6 +60,9 @@ func main() {
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	<-stop
-	discord.Disconnect()
+	err = discord.Disconnect()
+	if err != nil {
+		logger.Error("Cannot disconnect... we are disconnecting anyway...", err)
+	}
 	logger.Success("Exiting...")
 }

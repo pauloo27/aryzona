@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/buger/jsonparser"
 )
 
@@ -146,7 +147,7 @@ func ListLives() ([]*MatchInfo, error) {
 	matches := []*MatchInfo{}
 
 	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
-		jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
+		_, err = jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
 			match, err := parseMatch(matchData)
 			if err != nil {
 				// TODO???? WHATTTTTT
@@ -155,6 +156,9 @@ func ListLives() ([]*MatchInfo, error) {
 				matches = append(matches, match)
 			}
 		}, "Events")
+		if err != nil {
+			logger.Error(err)
+		}
 	}, "Stages")
 	if err != nil {
 		return nil, utils.Wrap("stages", err)

@@ -115,7 +115,10 @@ func (e *EncodeSession) run() error {
 
 	var wg sync.WaitGroup
 	defer close(e.channel)
-	e.readStdout(stdout)
+	err = e.readStdout(stdout)
+	if err != nil {
+		return err
+	}
 	wg.Wait()
 	err = ffmpeg.Wait()
 	if err != nil {
@@ -189,7 +192,10 @@ func (e *EncodeSession) Stop() error {
 }
 
 func (e *EncodeSession) Cleanup() {
-	e.Stop()
+	err := e.Stop()
+	if err != nil {
+		logger.Error(err)
+	}
 	for range e.channel {
 		// empty till closed
 		// Cats can be right-pawed or left-pawed.
