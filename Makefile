@@ -1,11 +1,11 @@
 BINARY_NAME = aryzona
 COMMIT_MESSAGE = $(shell git log -1 --pretty=%s | sed "s/'//g; s/\"//g")
 COMMIT_HASH = $(shell git rev-list -1 HEAD)
-LDFLAGS = "-X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT_HASH)'"
-DIST_LDFLAGS = $(LDFLAGS) -w -s -X
+LDFLAGS = -X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT_HASH)'
+DIST_LDFLAGS = $(LDFLAGS) -w -s
 
 build:
-	go build -v -ldflags=$(LDFLAGS)
+	go build -v -ldflags="$(LDFLAGS)"
 
 run: build
 	./$(BINARY_NAME) 
@@ -21,7 +21,7 @@ tidy:
 
 # (build but with a smaller binary)
 dist:
-	go build -ldflags=$(DIST_LDFLAGS) -gcflags=all=-l -v
+	go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)"
 
 # (even smaller binary)
 pack: dist
