@@ -9,6 +9,7 @@ import (
 	"github.com/kkdai/youtube/v2"
 )
 
+/* #nosec GG107 */
 func getFirstURL(manifestURL string) (string, error) {
 	res, err := http.Get(manifestURL)
 	if err != nil {

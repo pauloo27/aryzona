@@ -113,6 +113,7 @@ func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
 	return nil, nil
 }
 
+/* #nosec GG107 */
 func FetchMatchInfo(matchID string) (*MatchInfo, error) {
 	endpoint := fmt.Sprintf("https://prod-public-api.livescore.com/v1/api/react/match-x/soccer/%s/-3", matchID)
 

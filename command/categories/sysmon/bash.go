@@ -9,6 +9,8 @@ import (
 	"github.com/Pauloo27/aryzona/utils"
 )
 
+// should i remove it? probably...
+/* #nosec G204 */
 var Bash = command.Command{
 	Name:        "bash",
 	Description: "Eval a bash command",

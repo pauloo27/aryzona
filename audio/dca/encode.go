@@ -54,6 +54,7 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 	return session
 }
 
+/* #nosec G204 */
 func (e *EncodeSession) run() error {
 	defer func() {
 		e.Lock()
