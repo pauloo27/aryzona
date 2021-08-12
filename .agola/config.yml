@@ -81,6 +81,10 @@ runs:
               dest_dir: /
           - restore_cache:
               keys:
+                - pkg-cache-staticcheck-{{ year }}-{{ month }}
+              dest_dir: /root/.cache/staticcheck
+          - restore_cache:
+              keys:
                 - pkg-cache-bin-{{ year }}-{{ month }}
               dest_dir: /go/bin
           - run:
@@ -89,6 +93,12 @@ runs:
           - run:
               name: inspect
               command:  make inspect 
+          - save_cache:
+              key: pkg-cache-staticcheck-{{ year }}-{{ month }}
+              contents:
+                - source_dir: /root/.cache/staticcheck
+                  paths: 
+                    - '**'
           - save_cache:
               key: pkg-cache-bin-{{ year }}-{{ month }}
               contents:
