@@ -3,7 +3,7 @@ version: v0
 runs:
   - name: Aryzona CI
 
-    # Build task
+    # Build
     tasks:
       - name: build
         runtime:
@@ -58,18 +58,14 @@ runs:
           - run:
               name: test
               command:  make test
-          - save_to_workspace:
-              contents:
-                - source_dir: /root/.cache/go-build
-                  dest_dir: /root/.cache/go-build
-                  paths:
-                    - '**'
-          - save_to_workspace:
+          - save_cache:
+              key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
                 - source_dir: /go/pkg
-                  dest_dir: /go/pkg
-                  paths:
-                    - '**'
+          - save_cache:
+              key: build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
+              contents:
+                - source_dir: /root/.cache/go-build
 
       # Inspect code
       - name: inspect
@@ -93,29 +89,6 @@ runs:
           - run:
               name: inspect
               command:  make inspect 
-          - save_to_workspace:
-              contents:
-                - source_dir: /go/bin
-                  dest_dir: /go/bin
-                  paths:
-                    - revive
-                    - gosec
-                    - misspell
-                    - staticcheck
-
-      # save cache
-      - name: save cache
-        depends:
-          - test
-          - inspect
-        runtime:
-          type: pod
-          arch: amd64
-          containers:
-            - image: golang:1.16-stretch
-        steps:
-          - restore_workspace:
-              dest_dir: /
           - save_cache:
               key: pkg-cache-bin-{{ year }}-{{ month }}
               contents:
@@ -125,14 +98,6 @@ runs:
                     - gosec
                     - misspell
                     - staticcheck
-          - save_cache:
-              key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
-              contents:
-                - source_dir: /go/pkg
-          - save_cache:
-              key: build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
-              contents:
-                - source_dir: /root/.cache/go-build
 
       # Deploy (when the branch is Master)
       - name: deploy
@@ -147,6 +112,7 @@ runs:
               from_variable: deployhost
         depends:
           - test
+          - inspect
         runtime:
           type: pod
           arch: amd64
