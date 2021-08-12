@@ -1,9 +1,11 @@
 version: v0
 
 runs:
-  - name: Build and test Aryzona
+  - name: Aryzona CI
+
+    # Build task
     tasks:
-      - name: build and test
+      - name: build
         runtime:
           type: pod
           arch: amd64
@@ -20,21 +22,42 @@ runs:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               dest_dir: /root/.cache/go-build
           - run:
-              name: build aryzona
+              name: build
               command:  make build
-          - run:
-              name: test aryzona
-              command: make test
           - save_to_workspace:
               contents:
-                - source_dir: ./assets
+                - source_dir: /root/project/
+                  dest_dir: /root/project/
                   paths:
                     - '**'
-                  dest_dir: ./assets
-                - source_dir: .
+          - save_to_workspace:
+              contents:
+                - source_dir: /root/.cache/go-build
+                  dest_dir: /root/.cache/go-build
                   paths:
-                    - 'aryzona'
-                  dest_dir: .
+                    - '**'
+          - save_to_workspace:
+              contents:
+                - source_dir: /go/pkg
+                  dest_dir: /go/pkg
+                  paths:
+                    - '**'
+
+      # Test
+      - name: test
+        depends:
+          - build
+        runtime:
+          type: pod
+          arch: amd64
+          containers:
+            - image: golang:1.16-stretch
+        steps:
+          - restore_workspace:
+              dest_dir: /
+          - run:
+              name: test
+              command:  make test
           - save_cache:
               key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
@@ -43,6 +66,10 @@ runs:
               key: build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
               contents:
                 - source_dir: /root/.cache/go-build
+
+
+
+      # Deploy (when the branch is Master)
       - name: deploy
         when:
           branch: master
@@ -51,12 +78,10 @@ runs:
             from_variable: deployuser
           DEPLOY_PATH:
             from_variable: deploypath
-          DEPLOY_USER:
-            from_variable: deployuser
           DEPLOY_HOST:
               from_variable: deployhost
         depends:
-          - build and test
+          - test
         runtime:
           type: pod
           arch: amd64
