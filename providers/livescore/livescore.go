@@ -39,15 +39,16 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 	}
 
 	color, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Shrt", "Bs")
+
 	// sometimes the color is not defined... so lets use white as fallback
 	if err != nil {
-		//return nil, utils.Wrap("color", err)
 		color = "ffffff"
+		logger.Error(err)
 	}
 
 	rawScore, err := jsonparser.GetString(data, "Tr"+strconv.Itoa(id))
 	if err != nil {
-		//return nil, utils.Wrap("raw score", err)
+		logger.Error(err)
 	}
 
 	score, err := strconv.Atoi(rawScore)
@@ -77,17 +78,17 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 
 	stadiumName, err := jsonparser.GetString(data, "Vnm")
 	if err != nil {
-		//return nil, utils.Wrap("stadium name", err)
+		logger.Error("stadium name", err)
 	}
 
 	stadiumCity, err := jsonparser.GetString(data, "VCity")
 	if err != nil {
-		//return nil, utils.Wrap("stadium city", err)
+		logger.Error("stadium city", err)
 	}
 
 	team1, err := parseTeam(1, data)
 	if err != nil {
-		//return nil, utils.Wrap("team1", err)
+		logger.Error("team1", err)
 	}
 
 	team2, err := parseTeam(2, data)
@@ -147,16 +148,15 @@ func ListLives() ([]*MatchInfo, error) {
 	matches := []*MatchInfo{}
 
 	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
-		_, err = jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
-			match, err := parseMatch(matchData)
-			if err != nil {
-				// TODO???? WHATTTTTT
+		_, err0 := jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
+			match, err1 := parseMatch(matchData)
+			if err1 != nil {
 				utils.HandleFatal(err)
 			} else {
 				matches = append(matches, match)
 			}
 		}, "Events")
-		if err != nil {
+		if err0 != nil {
 			logger.Error(err)
 		}
 	}, "Stages")

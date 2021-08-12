@@ -57,7 +57,8 @@ func main() {
 	registerCategory(audio.Audio)
 	logger.Success("Commands loaded")
 
-	stop := make(chan os.Signal)
+	stop := make(chan os.Signal, 1)
+	//lint:ignore SA1016 i dont know, it just works lol
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	<-stop
 	err = discord.Disconnect()

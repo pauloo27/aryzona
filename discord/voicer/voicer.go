@@ -160,7 +160,7 @@ func (v *Voicer) Play(playable audio.Playable) error {
 
 	err = <-done
 	if err != nil {
-		// TODO?
+		logger.Error(err)
 	}
 
 	logger.Debugf("playing %s", url)
