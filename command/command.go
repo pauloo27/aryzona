@@ -55,33 +55,33 @@ type Command struct {
 	Arguments         []*CommandArgument
 }
 
-func (ctx *CommandContext) Success(message string) {
-	ctx.Session.ChannelMessageSendReply(
+func (ctx *CommandContext) Success(message string) (*discordgo.Message, error) {
+	return ctx.Session.ChannelMessageSendReply(
 		ctx.Message.ChannelID, utils.Fmt(":green_square: %s", message),
 		ctx.Message.Reference(),
 	)
 }
 
-func (ctx *CommandContext) Error(message string) {
-	ctx.Session.ChannelMessageSendReply(
+func (ctx *CommandContext) Error(message string) (*discordgo.Message, error) {
+	return ctx.Session.ChannelMessageSendReply(
 		ctx.Message.ChannelID, utils.Fmt(":red_square: %s", message),
 		ctx.Message.Reference(),
 	)
 }
 
-func (ctx *CommandContext) Embed(embed *discordgo.MessageEmbed) {
-	ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
+func (ctx *CommandContext) Embed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
+	return ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
 		Reference: ctx.Message.Reference(),
 		Embed:     embed,
 	})
 }
 
-func (ctx *CommandContext) SuccesEmbed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) SuccesEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
 	embed.Color = 0x50fa7b
-	ctx.Embed(embed)
+	return ctx.Embed(embed)
 }
 
-func (ctx *CommandContext) ErrorEmbed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) ErrorEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
 	embed.Color = 0xff5555
-	ctx.Embed(embed)
+	return ctx.Embed(embed)
 }
