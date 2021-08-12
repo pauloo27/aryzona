@@ -11,7 +11,7 @@ var Sys = command.Command{
 	Name:        "sys",
 	Description: "Show system info",
 	Handler: func(ctx *command.CommandContext) {
-		ctx.SuccesEmbed(
+		ctx.SuccessEmbed(
 			utils.NewEmbedBuilder().
 				Title("System info").
 				Description(

@@ -43,7 +43,7 @@ var PlayCommand = command.Command{
 			ctx.Error("Something went wrong when getting the video to play")
 			return
 		}
-		ctx.SuccesEmbed(
+		ctx.SuccessEmbed(
 			utils.NewEmbedBuilder().
 				Title(utils.Fmt("Best result for %s:", searchQuery)).
 				Thumbnail(result.Thumbnail).

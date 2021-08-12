@@ -29,7 +29,7 @@ var LiveCommand = command.Command{
 				match.ID,
 			))
 		}
-		ctx.SuccesEmbed(
+		ctx.SuccessEmbed(
 			utils.NewEmbedBuilder().
 				Title("Live matches:").
 				Description(desc.String()).

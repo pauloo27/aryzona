@@ -2,6 +2,7 @@ package command
 
 import (
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -55,33 +56,59 @@ type Command struct {
 	Arguments         []*CommandArgument
 }
 
-func (ctx *CommandContext) Success(message string) (*discordgo.Message, error) {
+func (ctx *CommandContext) handleCannotSendMessage(message *discordgo.Message, err error) {
+	if err != nil {
+		logger.Error(err)
+	}
+}
+
+func (ctx *CommandContext) Success(message string) {
+	ctx.handleCannotSendMessage(ctx.SuccessReturning(message))
+}
+
+func (ctx *CommandContext) SuccessReturning(message string) (*discordgo.Message, error) {
 	return ctx.Session.ChannelMessageSendReply(
 		ctx.Message.ChannelID, utils.Fmt(":green_square: %s", message),
 		ctx.Message.Reference(),
 	)
 }
 
-func (ctx *CommandContext) Error(message string) (*discordgo.Message, error) {
+func (ctx *CommandContext) Error(message string) {
+	ctx.handleCannotSendMessage(ctx.ErrorReturning(message))
+}
+
+func (ctx *CommandContext) ErrorReturning(message string) (*discordgo.Message, error) {
 	return ctx.Session.ChannelMessageSendReply(
 		ctx.Message.ChannelID, utils.Fmt(":red_square: %s", message),
 		ctx.Message.Reference(),
 	)
 }
 
-func (ctx *CommandContext) Embed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
+func (ctx *CommandContext) Embed(embed *discordgo.MessageEmbed) {
+	ctx.handleCannotSendMessage(ctx.EmbedReturning(embed))
+}
+
+func (ctx *CommandContext) EmbedReturning(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
 	return ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
 		Reference: ctx.Message.Reference(),
 		Embed:     embed,
 	})
 }
 
-func (ctx *CommandContext) SuccesEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
-	embed.Color = 0x50fa7b
-	return ctx.Embed(embed)
+func (ctx *CommandContext) SuccessEmbed(embed *discordgo.MessageEmbed) {
+	ctx.handleCannotSendMessage(ctx.SuccessEmbedReturning(embed))
 }
 
-func (ctx *CommandContext) ErrorEmbed(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
+func (ctx *CommandContext) SuccessEmbedReturning(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
+	embed.Color = 0x50fa7b
+	return ctx.EmbedReturning(embed)
+}
+
+func (ctx *CommandContext) ErrorEmbed(embed *discordgo.MessageEmbed) {
+	ctx.handleCannotSendMessage(ctx.ErrorEmbedReturning(embed))
+}
+
+func (ctx *CommandContext) ErrorEmbedReturning(embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
 	embed.Color = 0xff5555
-	return ctx.Embed(embed)
+	return ctx.EmbedReturning(embed)
 }

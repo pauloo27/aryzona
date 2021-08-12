@@ -13,7 +13,7 @@ var UptimeCommand = command.Command{
 	Aliases: []string{"up"},
 	Handler: func(ctx *command.CommandContext) {
 		uptime := time.Now().Sub(discord.StartedAt)
-		ctx.SuccesEmbed(
+		ctx.SuccessEmbed(
 			utils.NewEmbedBuilder().
 				Title("Bot uptime").
 				Field("Uptime", utils.FormatDuration(uptime)).

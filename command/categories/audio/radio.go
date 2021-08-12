@@ -24,7 +24,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 		), "",
 	)
 
-	ctx.SuccesEmbed(embed.Build())
+	ctx.SuccessEmbed(embed.Build())
 }
 
 var RadioCommand = command.Command{
