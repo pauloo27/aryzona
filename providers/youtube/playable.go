@@ -22,6 +22,10 @@ func (YouTubePlayable) Unpause() error {
 	return nil
 }
 
+func (YouTubePlayable) GetName() string {
+	return "YouTube video"
+}
+
 func (YouTubePlayable) TogglePause() error {
 	return nil
 }

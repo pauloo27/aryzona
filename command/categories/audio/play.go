@@ -49,6 +49,7 @@ var PlayCommand = command.Command{
 				Thumbnail(result.Thumbnail).
 				Field("Title", result.Title).
 				Field("Uploader", result.Uploader).
+				Field("Duration", result.Duration).
 				Build(),
 		)
 		go func() {

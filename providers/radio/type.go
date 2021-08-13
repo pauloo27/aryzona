@@ -24,6 +24,10 @@ func (c RadioChannel) Unpause() error {
 	return nil
 }
 
+func (c RadioChannel) GetName() string {
+	return c.Name + " (radio)"
+}
+
 func (c RadioChannel) TogglePause() error {
 	return nil
 }

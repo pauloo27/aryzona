@@ -15,15 +15,19 @@ var PlayingCommand = command.Command{
 			return
 		}
 		playable := *(voicer.Playing)
+
 		title, artist := playable.GetFullTitle()
-		if title == "" {
-			ctx.Error("Media info not found")
-			return
+
+		embedBuilder := utils.NewEmbedBuilder().
+			Title("Now playing: "+playable.GetName()).
+			Field("Title", title)
+
+		if artist != "" {
+			embedBuilder.Field("Artist", artist)
 		}
-		if artist == "" {
-			ctx.Success(title)
-			return
-		}
-		ctx.Success(utils.Fmt("%s by %s", title, artist))
+
+		ctx.SuccessEmbed(
+			embedBuilder.Build(),
+		)
 	},
 }
