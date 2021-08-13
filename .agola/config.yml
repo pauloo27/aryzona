@@ -130,7 +130,7 @@ runs:
             - image: golang:1.16-stretch
         steps:
           - restore_workspace:
-              dest_dir: .
+              dest_dir: /
           - run:
               name: deploy aryzona assets
               command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./assets $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
