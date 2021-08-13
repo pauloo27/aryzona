@@ -14,12 +14,12 @@ import (
 )
 
 type Voicer struct {
-	ChannelID, GuildID *string
-	Voice              *discordgo.VoiceConnection
-	Playing            *audio.Playable
-	EncodeSession      *dca.EncodeSession
-	StreamingSession   *dca.StreamingSession
-	disconnectMutex    sync.Mutex
+	UserID, ChannelID, GuildID *string
+	Voice                      *discordgo.VoiceConnection
+	Playing                    *audio.Playable
+	EncodeSession              *dca.EncodeSession
+	StreamingSession           *dca.StreamingSession
+	disconnectMutex            sync.Mutex
 }
 
 var voicerMapper = map[string]*Voicer{}
@@ -74,7 +74,7 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 
 	voicer, found := voicerMapper[guildID]
 	if !found {
-		voicer = &Voicer{chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
+		voicer = &Voicer{&userID, chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
 		voicerMapper[guildID] = voicer
 	}
 	return voicer, nil
