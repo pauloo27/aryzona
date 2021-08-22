@@ -3,7 +3,7 @@ module github.com/Pauloo27/aryzona
 go 1.16
 
 require (
-	github.com/Pauloo27/logger v0.0.0-20210812025047-d2d6fcebe81a
+	github.com/Pauloo27/logger v0.0.0-20210822024544-cbb7e725414e
 	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
 	github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80
 	github.com/buger/jsonparser v1.1.1
