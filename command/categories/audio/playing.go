@@ -8,6 +8,7 @@ import (
 
 var PlayingCommand = command.Command{
 	Name: "playing", Aliases: []string{"np", "nowplaying", "tocando"},
+	Description: "Show what is playing now",
 	Handler: func(ctx *command.CommandContext) {
 		vc := voicer.GetExistingVoicerForGuild(ctx.Message.GuildID)
 		if vc == nil {

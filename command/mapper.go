@@ -16,3 +16,13 @@ func RegisterCommand(command *Command) {
 func GetCommandMap() map[string]*Command {
 	return commandMap
 }
+
+func RegisterCategory(category CommandCategory) {
+	if category.OnLoad != nil {
+		category.OnLoad()
+	}
+	for _, cmd := range category.Commands {
+		cmd.category = &category
+		RegisterCommand(cmd)
+	}
+}

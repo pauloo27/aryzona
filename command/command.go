@@ -54,6 +54,11 @@ type Command struct {
 	Handler           CommandHandler
 	Permission        *CommandPermission
 	Arguments         []*CommandArgument
+	category          *CommandCategory
+}
+
+func (c *Command) GetCategory() *CommandCategory {
+	return c.category
 }
 
 func (ctx *CommandContext) handleCannotSendMessage(message *discordgo.Message, err error) {

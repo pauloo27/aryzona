@@ -28,15 +28,6 @@ func init() {
 	git.RemoteRepo = os.Getenv("DC_BOT_REMOTE_REPO")
 }
 
-func registerCategory(category command.Category) {
-	if category.OnLoad != nil {
-		category.OnLoad()
-	}
-	for _, cmd := range category.Commands {
-		command.RegisterCommand(cmd)
-	}
-}
-
 func main() {
 	logger.Info("Connecting to Discord...")
 	err := discord.Create(os.Getenv("DC_BOT_TOKEN"))
@@ -52,9 +43,9 @@ func main() {
 
 	logger.Info("Registering commands...")
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
-	registerCategory(utils.Utils)
-	registerCategory(sysmon.SysMon)
-	registerCategory(audio.Audio)
+	command.RegisterCategory(utils.Utils)
+	command.RegisterCategory(sysmon.SysMon)
+	command.RegisterCategory(audio.Audio)
 	logger.Success("Commands loaded")
 
 	stop := make(chan os.Signal, 1)

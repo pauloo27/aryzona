@@ -28,7 +28,10 @@ var HelpCommand = command.Command{
 			if len(cmd.Aliases) > 0 {
 				aliases = utils.Fmt("(aka %s)", strings.Join(cmd.Aliases, ", "))
 			}
-			sb.WriteString(utils.Fmt(" - `%s%s` %s: **%s** %s\n", command.Prefix, cmd.Name, aliases, cmd.Description, permission))
+			sb.WriteString(utils.Fmt(
+				" - %s `%s%s` %s: **%s** %s\n", cmd.GetCategory().Emoji,
+				command.Prefix, cmd.Name, aliases, cmd.Description, permission,
+			))
 		}
 		ctx.Success(sb.String())
 	},

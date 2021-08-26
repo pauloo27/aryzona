@@ -8,6 +8,7 @@ import (
 
 var StopCommand = command.Command{
 	Name: "stop", Aliases: []string{"st", "parar", "pare"},
+	Description: "Stop what is playing",
 	Handler: func(ctx *command.CommandContext) {
 		voicer := voicer.GetExistingVoicerForGuild(ctx.Message.GuildID)
 		if voicer == nil {
