@@ -11,6 +11,7 @@ import (
 
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
+	Description: "Play a video/song from utube",
 	Arguments: []*command.CommandArgument{
 		{Name: "Search query", Required: true, Type: command.ArgumentText},
 	},
