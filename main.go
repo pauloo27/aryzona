@@ -6,13 +6,15 @@ import (
 	"syscall"
 
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/command/categories/audio"
-	"github.com/Pauloo27/aryzona/command/categories/sysmon"
-	"github.com/Pauloo27/aryzona/command/categories/utils"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/logger"
 	"github.com/joho/godotenv"
+
+	// import all command categories
+	_ "github.com/Pauloo27/aryzona/command/categories/audio"
+	_ "github.com/Pauloo27/aryzona/command/categories/sysmon"
+	_ "github.com/Pauloo27/aryzona/command/categories/utils"
 )
 
 var commitHash, commitMessage string
@@ -41,12 +43,7 @@ func main() {
 	}
 	logger.Success("Connected to discord")
 
-	logger.Info("Registering commands...")
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
-	command.RegisterCategory(utils.Utils)
-	command.RegisterCategory(sysmon.SysMon)
-	command.RegisterCategory(audio.Audio)
-	logger.Success("Commands loaded")
 
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol

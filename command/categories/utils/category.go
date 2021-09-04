@@ -11,3 +11,7 @@ var Utils = command.CommandCategory{
 		&EvenCommand,
 	},
 }
+
+func init() {
+	command.RegisterCategory(Utils)
+}

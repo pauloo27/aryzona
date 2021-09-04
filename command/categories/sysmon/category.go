@@ -7,3 +7,7 @@ var SysMon = command.CommandCategory{
 	Emoji:    "💻",
 	Commands: []*command.Command{&Sys, &Bash},
 }
+
+func init() {
+	command.RegisterCategory(SysMon)
+}
