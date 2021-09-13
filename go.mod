@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/Pauloo27/logger v0.0.0-20210822024544-cbb7e725414e
 	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
-	github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80
+	github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df
 	github.com/buger/jsonparser v1.1.1
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/joho/godotenv v1.3.0
