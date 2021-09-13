@@ -24,13 +24,13 @@ func createStartedEmbed(s *discordgo.Session) *discordgo.MessageEmbed {
 		userName = user.Username
 	}
 
-	hostname, err := os.Hostname()
+	hostName, err := os.Hostname()
 	if err != nil {
-		hostname = "??"
+		hostName = "??"
 	}
 
 	return &discordgo.MessageEmbed{
-		Title: utils.Fmt("I've just started in %s@%s", userName, hostname),
+		Title: utils.Fmt("I've just started as %s@%s", userName, hostName),
 		Color: 0xC0FFEE,
 		Image: &discordgo.MessageEmbedImage{URL: dogImage},
 		Fields: []*discordgo.MessageEmbedField{
