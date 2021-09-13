@@ -39,19 +39,25 @@ var PlayCommand = command.Command{
 			ctx.Error("Cannot find what you are looking for")
 			return
 		}
+
 		playable, err := youtube.AsPlayable(result.URL)
 		if err != nil {
 			ctx.Error("Something went wrong when getting the video to play")
 			return
 		}
+		embed := utils.NewEmbedBuilder().
+			Title(utils.Fmt("Best result for %s:", searchQuery)).
+			Thumbnail(result.Thumbnail).
+			Field("Title", result.Title).
+			Field("Uploader", result.Uploader)
+
+		if result.Live {
+			embed.Field("Durationn", "**LIVE**")
+		} else {
+			embed.Field("Duration", result.RawDuration)
+		}
 		ctx.SuccessEmbed(
-			utils.NewEmbedBuilder().
-				Title(utils.Fmt("Best result for %s:", searchQuery)).
-				Thumbnail(result.Thumbnail).
-				Field("Title", result.Title).
-				Field("Uploader", result.Uploader).
-				Field("Duration", result.Duration).
-				Build(),
+			embed.Build(),
 		)
 		go func() {
 			if err = vc.Play(playable); err != nil {
