@@ -52,7 +52,7 @@ var PlayCommand = command.Command{
 			Field("Uploader", result.Uploader)
 
 		if result.Live {
-			embed.Field("Durationn", "**🔴 LIVE**")
+			embed.Field("Duration", "**🔴 LIVE**")
 		} else {
 			embed.Field("Duration", result.RawDuration)
 		}
