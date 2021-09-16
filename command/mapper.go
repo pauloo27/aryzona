@@ -23,6 +23,8 @@ func RegisterCommand(command *Command) {
 	}
 }
 
+// why a function? I think I did it that way, so the access to the
+// command map was "harder" (the idea is to use RegisterCommand())
 func GetCommandMap() map[string]*Command {
 	return commandMap
 }

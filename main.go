@@ -15,6 +15,7 @@ import (
 	_ "github.com/Pauloo27/aryzona/command/categories/audio"
 	_ "github.com/Pauloo27/aryzona/command/categories/sysmon"
 	_ "github.com/Pauloo27/aryzona/command/categories/utils"
+	"github.com/Pauloo27/aryzona/command/slash"
 )
 
 var commitHash, commitMessage string
@@ -44,6 +45,13 @@ func main() {
 	logger.Success("Connected to discord")
 
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
+
+	logger.Info("Creating slash commands..")
+	err = slash.RegisterCommands()
+	if err != nil {
+		logger.Fatal(err)
+	}
+	logger.Success("Slash commands created!")
 
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol
