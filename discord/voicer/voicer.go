@@ -159,7 +159,7 @@ func (v *Voicer) Play(playable audio.Playable) error {
 	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
 	err = <-done
-	if err != nil {
+	if err != nil && err != io.EOF {
 		logger.Error(err)
 	}
 
