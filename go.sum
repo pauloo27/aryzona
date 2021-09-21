@@ -40,14 +40,10 @@ dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/Pauloo27/logger v0.0.0-20210812025047-d2d6fcebe81a h1:o2w6rfeu+rs8vpJ4IJFaJvpG/rC8Nw0bzdY/gv78SJA=
-github.com/Pauloo27/logger v0.0.0-20210812025047-d2d6fcebe81a/go.mod h1:6CxGIJi9NP/QPbgCq5Q1nchv7xjRd0D+l16VzM7vCoA=
 github.com/Pauloo27/logger v0.0.0-20210822024544-cbb7e725414e h1:GgB5JRKDOpiBuGCef/G6ATCZ/6YeymYNrjB15kHTa7I=
 github.com/Pauloo27/logger v0.0.0-20210822024544-cbb7e725414e/go.mod h1:6CxGIJi9NP/QPbgCq5Q1nchv7xjRd0D+l16VzM7vCoA=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856 h1:k8zl0zenL6c8jnOkvrv8+JfTD7o7zLxG8qS9gYloJec=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856/go.mod h1:iy94yme2Foi86LomMXphTGQWhG0dxneMLhIA6mlUZ50=
-github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80 h1:cM1yhftril0Bx+VDFnw7vrDVuX0iKQi9qAQbdZDC5YE=
-github.com/Pauloo27/searchtube v0.0.0-20210811024746-fb481e5efb80/go.mod h1:o2/xbhp9ttLLIYpQcf8oApG1h4/qr90zusSvvnRV5VQ=
 github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df h1:43+CvjKAxXuBzVxGdydWCzaLrfCEOfVq7JrK0yo564A=
 github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df/go.mod h1:o2/xbhp9ttLLIYpQcf8oApG1h4/qr90zusSvvnRV5VQ=
 github.com/VividCortex/ewma v1.1.1/go.mod h1:2Tkkvm3sRDVXaiyucHiACn4cqf7DpdyLvmxzcbUokwA=
