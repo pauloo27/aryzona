@@ -184,7 +184,7 @@ func (e *EncodeSession) Stop() error {
 	e.Lock()
 	defer e.Unlock()
 	if !e.ruining || e.process == nil {
-		return errors.New("not ruining")
+		return errors.New("not running")
 	}
 
 	err := e.process.Kill()
