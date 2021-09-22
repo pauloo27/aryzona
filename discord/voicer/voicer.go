@@ -109,14 +109,10 @@ func (v *Voicer) Disconnect() error {
 	v.StreamingSession = nil
 
 	v.EncodeSession.Cleanup()
-	err := v.EncodeSession.Stop()
-	if err != nil {
-		logger.Error(err)
-	}
 	v.EncodeSession = nil
 
 	v.Playing = nil
-	err = v.Voice.Disconnect()
+	err := v.Voice.Disconnect()
 	if err != nil {
 		logger.Error(err)
 	}
