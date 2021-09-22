@@ -181,7 +181,6 @@ func (e *EncodeSession) writeOpusFrame(frame []byte) error {
 }
 
 func (e *EncodeSession) Stop() error {
-	logger.Error("STOP STOP STOP!!!!1!!")
 	e.Lock()
 	defer e.Unlock()
 	if !e.running || e.process == nil {

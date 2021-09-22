@@ -159,8 +159,6 @@ func (v *Voicer) Play(playable audio.Playable) error {
 		logger.Error(err)
 	}
 
-	logger.Debugf("playing %s", url)
-
 	v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
 
 	done = make(chan error)
