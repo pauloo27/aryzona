@@ -28,7 +28,7 @@ type EncodeSession struct {
 	path   string
 	reader io.Reader
 
-	ruining bool
+	running bool
 	started time.Time
 	channel chan []byte
 	process *os.Process
@@ -58,12 +58,12 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 func (e *EncodeSession) run() error {
 	defer func() {
 		e.Lock()
-		e.ruining = false
+		e.running = false
 		e.Unlock()
 	}()
 
 	e.Lock()
-	e.ruining = true
+	e.running = true
 
 	commonArgs := []string{
 		"-i", e.path,
@@ -181,9 +181,10 @@ func (e *EncodeSession) writeOpusFrame(frame []byte) error {
 }
 
 func (e *EncodeSession) Stop() error {
+	logger.Error("STOP STOP STOP!!!!1!!")
 	e.Lock()
 	defer e.Unlock()
-	if !e.ruining || e.process == nil {
+	if !e.running || e.process == nil {
 		return errors.New("not running")
 	}
 
