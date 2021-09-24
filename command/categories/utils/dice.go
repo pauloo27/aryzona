@@ -8,7 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/utils"
 )
 
-var gif = "https://c.tenor.com/IfbgWLbg_88AAAAd/dice.gif"
+var gif = "https://c.tenor.com/KzfDyYrsLngAAAAM/dice-roll.gif"
 
 var DiceCommand = command.Command{
 	Name: "dice", Aliases: []string{"rolar", "dado", "dados", "roll", "rool", "d"},
