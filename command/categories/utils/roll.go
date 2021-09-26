@@ -10,8 +10,8 @@ import (
 
 var gif = "https://c.tenor.com/KzfDyYrsLngAAAAM/dice-roll.gif"
 
-var DiceCommand = command.Command{
-	Name: "dice", Aliases: []string{"rolar", "dado", "dados", "roll", "rool", "d"},
+var RollCommand = command.Command{
+	Name: "roll", Aliases: []string{"rolar", "dado", "dados", "dice", "rool", "d"},
 	Description: "Play a video/song from utube",
 	Arguments: []*command.CommandArgument{
 		{Name: "Dice sides", Required: false, Type: command.ArgumentInt},
