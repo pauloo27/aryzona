@@ -20,7 +20,7 @@ var LyricCommand = command.Command{
 		if len(ctx.Args) != 0 {
 			searchTerms = ctx.Args[0].(string)
 		} else {
-			vc := voicer.GetExistingVoicerForGuild(ctx.Message.GuildID)
+			vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
 			if vc == nil {
 				ctx.Error("Bot is not connect to a voice channel, you can pass the song title")
 				return

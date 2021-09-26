@@ -10,7 +10,7 @@ var PlayingCommand = command.Command{
 	Name: "playing", Aliases: []string{"np", "nowplaying", "tocando"},
 	Description: "Show what is playing now",
 	Handler: func(ctx *command.CommandContext) {
-		vc := voicer.GetExistingVoicerForGuild(ctx.Message.GuildID)
+		vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
 		if vc == nil {
 			ctx.Error("Bot is not connect to a voice channel")
 			return

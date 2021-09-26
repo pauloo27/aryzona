@@ -16,7 +16,7 @@ var PlayCommand = command.Command{
 		{Name: "Search query", Required: true, Type: command.ArgumentText},
 	},
 	Handler: func(ctx *command.CommandContext) {
-		vc, err := voicer.NewVoicerForUser(ctx.Message.Author.ID, ctx.Message.GuildID)
+		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)
 		if err != nil {
 			ctx.Error("Cannot create voicer")
 			return

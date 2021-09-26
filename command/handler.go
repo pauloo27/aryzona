@@ -6,16 +6,22 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func HandleCommand(commandName string, args []string, s *discordgo.Session, eventCtx *Event) {
+func HandleCommand(
+	commandName string, args []string, s *discordgo.Session,
+	event *Event,
+) {
 	command, ok := commandMap[commandName]
 	if !ok {
 		return
 	}
 
 	ctx := &CommandContext{
-		Session: s,
-		RawArgs: args,
-		Message: eventCtx.Message,
+		Session:    s,
+		RawArgs:    args,
+		Reply:      event.Reply,
+		ReplyEmbed: event.ReplyEmbed,
+		AuthorID:   event.AuthorID,
+		GuildID:    event.GuildID,
 	}
 
 	if command.Permission != nil {

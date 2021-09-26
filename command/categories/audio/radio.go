@@ -50,7 +50,7 @@ var RadioCommand = command.Command{
 			return
 		}
 
-		vc, err := voicer.NewVoicerForUser(ctx.Message.Author.ID, ctx.Message.GuildID)
+		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)
 		if err != nil {
 			ctx.Error("Cannot create voicer")
 			return

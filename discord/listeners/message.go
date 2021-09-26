@@ -32,7 +32,22 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		args = []string{}
 	}
 	event := command.Event{
-		Message: m.Message,
+		AuthorID: m.Author.ID,
+		GuildID:  m.GuildID,
+		Reply: func(msg string) error {
+			_, err := s.ChannelMessageSendReply(
+				m.Message.ChannelID, msg,
+				m.Message.Reference(),
+			)
+			return err
+		},
+		ReplyEmbed: func(embed *discordgo.MessageEmbed) error {
+			_, err := s.ChannelMessageSendComplex(m.Message.ChannelID, &discordgo.MessageSend{
+				Reference: m.Message.Reference(),
+				Embed:     embed,
+			})
+			return err
+		},
 	}
 	command.HandleCommand(strings.ToLower(rawCommand), args, s, &event)
 }

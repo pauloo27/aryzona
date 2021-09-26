@@ -10,7 +10,7 @@ var StopCommand = command.Command{
 	Name: "stop", Aliases: []string{"st", "parar", "pare"},
 	Description: "Stop what is playing",
 	Handler: func(ctx *command.CommandContext) {
-		voicer := voicer.GetExistingVoicerForGuild(ctx.Message.GuildID)
+		voicer := voicer.GetExistingVoicerForGuild(ctx.GuildID)
 		if voicer == nil {
 			ctx.Error("Bot is not connect to a voice channel")
 			return
