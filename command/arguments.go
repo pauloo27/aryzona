@@ -65,40 +65,56 @@ func ErrCannotParseArgument(argument *CommandArgument, err error) *utils.Errore 
 	}
 }
 
-func (command *Command) ValidateArguments(args []string) (values []interface{}, syntaxError *utils.Errore) {
-	if command.Arguments != nil && len(command.Arguments) != 0 {
-		parameters := args
-		parametersCount := len(parameters)
-		for i, argument := range command.Arguments {
-			if i >= parametersCount {
-				if argument.Required {
-					syntaxError = ErrRequiredArgument(argument)
-					break
-				} else {
+/*
+ PARAMETERS -> what was passed to the command
+ ARGUMENTS -> what the command expect
+
+ this function is supposed to, given a string array (the parameters),
+ tell if a command can be executed based on it's arguments. The function checks
+ for "required" arguments, acceptable values (when only a pre-defined set of
+ values are accepted) and also for type validation (eg, if a argument
+ is an integer number but the parameter is a invalid string).
+
+ If not errors are returned, then we are good to go.
+*/
+func (command *Command) ValidateArguments(parameters []string) (values []interface{}, syntaxError *utils.Errore) {
+
+	if command.Arguments == nil || len(command.Arguments) == 0 {
+		return
+	}
+
+	parametersCount := len(parameters)
+
+	for i, argument := range command.Arguments {
+		if i >= parametersCount {
+			if argument.Required {
+				syntaxError = ErrRequiredArgument(argument)
+			}
+			break
+		}
+
+		value, err := argument.Type.Parser(i, parameters)
+		if err != nil {
+			syntaxError = ErrCannotParseArgument(argument, err)
+			break
+		}
+
+		if argument.GetValidValues() != nil {
+			valid := false
+			for _, v := range argument.GetValidValues() {
+				if v == value {
+					valid = true
 					break
 				}
-			} else {
-				value, err := argument.Type.Parser(i, args)
-				if err != nil {
-					syntaxError = ErrCannotParseArgument(argument, err)
-					break
-				}
-				if argument.GetValidValues() != nil {
-					valid := false
-					for _, v := range argument.GetValidValues() {
-						if v == value {
-							valid = true
-							break
-						}
-					}
-					if !valid {
-						syntaxError = ErrInvalidValue(argument)
-						break
-					}
-				}
-				values = append(values, value)
+			}
+			if !valid {
+				syntaxError = ErrInvalidValue(argument)
+				break
 			}
 		}
+
+		values = append(values, value)
 	}
+
 	return
 }
