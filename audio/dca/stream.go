@@ -90,13 +90,12 @@ func (s *StreamingSession) stream() {
 }
 
 func (s *StreamingSession) readNext() error {
-
 	opus, err := s.source.OpusFrame()
 	if err != nil {
 		return err
 	}
 
-	timeOut := time.After(time.Second)
+	timeOut := time.After(60 * time.Second)
 
 	select {
 	case <-timeOut:
