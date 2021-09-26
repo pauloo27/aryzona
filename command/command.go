@@ -10,11 +10,10 @@ type CommandHandler func(*CommandContext)
 type CommandPermissionChecker func(*CommandContext) bool
 
 type CommandContext struct {
-	Message       *discordgo.Message
-	MessageCreate *discordgo.MessageCreate
-	Session       *discordgo.Session
-	RawArgs       []string
-	Args          []interface{}
+	Session *discordgo.Session
+	RawArgs []string
+	Args    []interface{}
+	Message *discordgo.Message
 }
 
 type CommandPermission struct {

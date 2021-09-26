@@ -1,18 +1,22 @@
 package command
 
 import (
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
-func HandleCommand(commandName string, args []string, s *discordgo.Session, m *discordgo.MessageCreate) {
+func HandleCommand(commandName string, args []string, s *discordgo.Session, eventCtx *Event) {
 	command, ok := commandMap[commandName]
 	if !ok {
 		return
 	}
 
-	ctx := &CommandContext{m.Message, m, s, args, nil}
+	ctx := &CommandContext{
+		Session: s,
+		RawArgs: args,
+		Message: eventCtx.Message,
+	}
 
 	if command.Permission != nil {
 		if !command.Permission.Checker(ctx) {

@@ -31,5 +31,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if len(args) == 1 && args[0] == "" {
 		args = []string{}
 	}
-	command.HandleCommand(strings.ToLower(rawCommand), args, s, m)
+	event := command.Event{
+		Message: m.Message,
+	}
+	command.HandleCommand(strings.ToLower(rawCommand), args, s, &event)
 }

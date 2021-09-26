@@ -13,7 +13,7 @@ func RegisterCommands() error {
 		if key != cmd.Name {
 			continue
 		}
-		// TODO: create a slash command struct
+
 		slashCommand := discordgo.ApplicationCommand{
 			Name:        cmd.Name,
 			Description: cmd.Description,
@@ -24,6 +24,7 @@ func RegisterCommands() error {
 			return err
 		}
 	}
+
 	discord.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		commandName := i.ApplicationCommandData().Name
 		_, ok := command.GetCommandMap()[commandName]
@@ -35,7 +36,11 @@ func RegisterCommands() error {
 		for _, option := range i.ApplicationCommandData().Options {
 			args = append(args, option.StringValue())
 		}
-		command.HandleCommand(commandName, args, s, nil)
+		event := command.Event{
+			Message: i.Message,
+		}
+		command.HandleCommand(commandName, args, s, &event)
 	})
+
 	return nil
 }
