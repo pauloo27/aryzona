@@ -6,9 +6,9 @@ import (
 	"github.com/Pauloo27/aryzona/utils"
 )
 
-var MeowCommand = command.Command{
-	Name: "meow", Description: "Get a cute cat",
-	Aliases: []string{"cat", "miau"},
+var CatCommand = command.Command{
+	Name: "cat", Description: "Get a cute cat",
+	Aliases: []string{"meow", "miau"},
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomCat()
 		if err != nil {
