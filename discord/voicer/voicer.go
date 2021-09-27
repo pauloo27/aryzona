@@ -24,35 +24,6 @@ type Voicer struct {
 
 var voicerMapper = map[string]*Voicer{}
 
-func init() {
-	go func() {
-		for {
-			for _, voicer := range voicerMapper {
-				g, err := discord.Session.State.Guild(*(voicer.GuildID))
-				if err != nil {
-					err = voicer.Disconnect()
-					if err != nil {
-						logger.Error(err)
-					}
-				}
-				count := 0
-				for _, state := range g.VoiceStates {
-					if state.ChannelID == *(voicer.ChannelID) {
-						count++
-					}
-				}
-				if count <= 1 {
-					err = voicer.Disconnect()
-					if err != nil {
-						logger.Error(err)
-					}
-				}
-			}
-			time.Sleep(2 * time.Second)
-		}
-	}()
-}
-
 func GetExistingVoicerForGuild(guildID string) *Voicer {
 	return voicerMapper[guildID]
 }

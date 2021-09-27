@@ -36,7 +36,7 @@ func RegisterCommands() error {
 
 	for key, cmd := range command.GetCommandMap() {
 		// skip aliases
-		if key != cmd.Name {
+		if key != cmd.Name || true {
 			continue
 		}
 
