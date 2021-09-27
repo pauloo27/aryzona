@@ -1,7 +1,6 @@
 package youtube
 
 import (
-	"github.com/Pauloo27/aryzona/audio"
 	"github.com/kkdai/youtube/v2"
 )
 
@@ -49,10 +48,10 @@ func (YouTubePlayable) IsOppus() bool {
 	return false
 }
 
-func AsPlayable(videoURL string) (audio.Playable, error) {
+func AsPlayable(videoURL string) (YouTubePlayable, error) {
 	vid, err := defaultClient.GetVideo(GetVideoID(videoURL))
 	if err != nil {
-		return nil, err
+		return YouTubePlayable{}, err
 	}
 	return YouTubePlayable{
 		Video:  vid,

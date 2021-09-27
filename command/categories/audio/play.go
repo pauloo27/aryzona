@@ -34,27 +34,28 @@ var PlayCommand = command.Command{
 			return
 		}
 		searchQuery := ctx.Args[0].(string)
-		result, err := youtube.GetBestResult(searchQuery)
+		resultURL, err := youtube.GetBestResult(searchQuery)
 		if err != nil {
 			ctx.Error("Cannot find what you are looking for")
 			return
 		}
 
-		playable, err := youtube.AsPlayable(result.URL)
+		playable, err := youtube.AsPlayable(resultURL)
 		if err != nil {
 			ctx.Error("Something went wrong when getting the video to play")
 			return
 		}
+
 		embed := utils.NewEmbedBuilder().
 			Title(utils.Fmt("Best result for %s:", searchQuery)).
-			Thumbnail(result.Thumbnail).
-			Field("Title", result.Title).
-			Field("Uploader", result.Uploader)
+			Thumbnail(playable.Video.Thumbnails[0].URL).
+			Field("Title", playable.Video.Title).
+			Field("Uploader", playable.Video.Author)
 
-		if result.Live {
+		if playable.IsLive {
 			embed.Field("Duration", "**🔴 LIVE**")
 		} else {
-			embed.Field("Duration", result.RawDuration)
+			embed.Field("Duration", playable.Video.Duration.String())
 		}
 		ctx.SuccessEmbed(
 			embed.Build(),
