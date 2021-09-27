@@ -8,9 +8,10 @@ var EvenCommand = command.Command{
 	Name: "even", Description: "Check if a number is even or odd",
 	Arguments: []*command.CommandArgument{
 		{
-			Name:     "number",
-			Type:     command.ArgumentInt,
-			Required: true,
+			Name:        "number",
+			Description: "number",
+			Type:        command.ArgumentInt,
+			Required:    true,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {

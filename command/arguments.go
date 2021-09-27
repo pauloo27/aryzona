@@ -34,7 +34,7 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 		if argument.RequiredMessage != "" {
 			message = argument.RequiredMessage
 		} else {
-			message = utils.Fmt("Argument %s (type %s) missing", argument.Name, argument.Type.Name)
+			message = utils.Fmt("Argument %s (type %s) missing", argument.Description, argument.Type.Name)
 		}
 	}
 	return &utils.Errore{
@@ -46,7 +46,7 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 func ErrInvalidValue(argument *CommandArgument) *utils.Errore {
 	var message string
 	if argument != nil {
-		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", argument.Name, argument.GetValidValues())
+		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", argument.Description, argument.GetValidValues())
 	}
 	return &utils.Errore{
 		ID:      "INVALID_VALUE",

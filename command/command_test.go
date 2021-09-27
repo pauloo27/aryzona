@@ -17,9 +17,10 @@ func TestArguments(t *testing.T) {
 			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test string",
-					Required: true,
-					Type:     ArgumentString,
+					Name:        "test",
+					Description: "test string",
+					Required:    true,
+					Type:        ArgumentString,
 				},
 			},
 		}
@@ -45,9 +46,9 @@ func TestArguments(t *testing.T) {
 			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test string",
-					Required: false,
-					Type:     ArgumentString,
+					Description: "test string",
+					Required:    false,
+					Type:        ArgumentString,
 				},
 			},
 		}
@@ -74,9 +75,9 @@ func TestArguments(t *testing.T) {
 			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test int",
-					Required: false,
-					Type:     ArgumentInt,
+					Description: "test int",
+					Required:    false,
+					Type:        ArgumentInt,
 				},
 			},
 		}
@@ -106,7 +107,7 @@ func TestArguments(t *testing.T) {
 			Arguments: []*CommandArgument{
 				{
 					ValidValues: []interface{}{10, 20},
-					Name:        "test int",
+					Description: "test int",
 					Required:    false,
 					Type:        ArgumentInt,
 				},
@@ -137,18 +138,18 @@ func TestArguments(t *testing.T) {
 			Name: "Test command",
 			Arguments: []*CommandArgument{
 				{
-					Name:     "test int 1",
-					Required: true,
-					Type:     ArgumentInt,
+					Description: "test int 1",
+					Required:    true,
+					Type:        ArgumentInt,
 				},
 				{
-					Name:     "test string",
-					Required: false,
-					Type:     ArgumentString,
+					Description: "test string",
+					Required:    false,
+					Type:        ArgumentString,
 				},
 				{
 					ValidValues: []interface{}{10, 20},
-					Name:        "test int 2",
+					Description: "test int 2",
 					Required:    true,
 					Type:        ArgumentInt,
 				},

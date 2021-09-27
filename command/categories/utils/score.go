@@ -13,9 +13,10 @@ var ScoreCommand = command.Command{
 	Aliases: []string{"placar", "gols"},
 	Arguments: []*command.CommandArgument{
 		{
+			Name:            "game",
 			Required:        true,
 			RequiredMessage: "Missing the team name or a match id",
-			Name:            "team name or match id",
+			Description:     "team name or match id",
 			Type:            command.ArgumentString,
 		},
 	},

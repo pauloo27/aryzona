@@ -12,7 +12,7 @@ var LyricCommand = command.Command{
 	Name: "lyric", Aliases: []string{"ly", "letra", "letras", "lyrics"},
 	Description: "Show lyric from a song",
 	Arguments: []*command.CommandArgument{
-		{Name: "Search terms", Type: command.ArgumentText, Required: false},
+		{Name: "song", Description: "Search terms", Type: command.ArgumentText, Required: false},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var searchTerms string

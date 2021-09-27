@@ -11,9 +11,9 @@ import (
 
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
-	Description: "Play a video/song from utube",
+	Description: "Play a video/song from uto2",
 	Arguments: []*command.CommandArgument{
-		{Name: "Search query", Required: true, Type: command.ArgumentText},
+		{Name: "song", Description: "Search query", Required: true, Type: command.ArgumentText},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)

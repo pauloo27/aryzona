@@ -32,9 +32,10 @@ var RadioCommand = command.Command{
 	Description: "Plays a pre-defined radio",
 	Arguments: []*command.CommandArgument{
 		{
-			Name:     "radio name",
-			Required: false,
-			Type:     command.ArgumentString,
+			Name:        "radio",
+			Description: "radio name",
+			Required:    false,
+			Type:        command.ArgumentString,
 			ValidValuesFunc: func() []interface{} {
 				ids := []interface{}{}
 				for _, radio := range radio.GetRadioList() {

@@ -14,7 +14,7 @@ var RollCommand = command.Command{
 	Name: "roll", Aliases: []string{"rolar", "dado", "dados", "dice", "rool", "d"},
 	Description: "Play a video/song from utube",
 	Arguments: []*command.CommandArgument{
-		{Name: "Dice sides", Required: false, Type: command.ArgumentInt},
+		{Name: "sides", Description: "dice sides", Required: false, Type: command.ArgumentInt},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var sides int

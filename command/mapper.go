@@ -12,11 +12,19 @@ var Prefix string
 
 func RegisterCommand(command *Command) {
 	if command.Name == "" {
+		// "lol why dont i put the name of the name in the error message?"
+		// counter: 2
 		logger.Fatal("One command has no name")
 	}
 	if command.Description == "" {
 		logger.Fatalf("Command %s has no description", command.Name)
 	}
+	for _, arg := range command.Arguments {
+		if arg.Name == "" || len(strings.Split(arg.Name, " ")) != 1 {
+			logger.Fatalf("Command %s an invalid argument name (%s)", command.Name, arg.Name)
+		}
+	}
+
 	commandMap[strings.ToLower(command.Name)] = command
 	for _, alias := range command.Aliases {
 		commandMap[strings.ToLower(alias)] = command
