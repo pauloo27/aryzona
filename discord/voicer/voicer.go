@@ -3,7 +3,6 @@ package voicer
 import (
 	"io"
 	"sync"
-	"time"
 
 	"github.com/Pauloo27/aryzona/audio"
 	"github.com/Pauloo27/aryzona/audio/dca"
