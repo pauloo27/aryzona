@@ -46,15 +46,12 @@ func main() {
 
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
 
-	// TODO: enable when fixed
-	if false {
-		logger.Info("Updating slash commands, it may take a while...")
-		err = slash.RegisterCommands()
-		if err != nil {
-			logger.Fatal(err)
-		}
-		logger.Success("Slash commands created!")
+	logger.Info("Updating slash commands, it may take a while...")
+	err = slash.RegisterCommands()
+	if err != nil {
+		logger.Fatal(err)
 	}
+	logger.Success("Slash commands created!")
 
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol
