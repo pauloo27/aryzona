@@ -15,12 +15,14 @@ var Bash = command.Command{
 	Name:        "bash",
 	Description: "Eval a bash command",
 	Permission:  &permissions.BeOwner,
+	Arguments: []*command.CommandArgument{
+		{
+			Name: "command", Description: "command to execute", Required: true,
+			RequiredMessage: "Missing command", Type: command.ArgumentText,
+		},
+	},
 	Handler: func(ctx *command.CommandContext) {
-		if len(ctx.RawArgs) == 0 {
-			ctx.Error("Missing bash command")
-			return
-		}
-		cmd := exec.Command("bash", "-c", strings.Join(ctx.RawArgs, " "))
+		cmd := exec.Command("bash", "-c", (ctx.Args[0].(string)))
 		buffer, err := cmd.CombinedOutput()
 		output := string(buffer)
 		output = strings.ReplaceAll(output, "`", "\\`")
