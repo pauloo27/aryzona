@@ -12,7 +12,7 @@ var gif = "https://c.tenor.com/KzfDyYrsLngAAAAM/dice-roll.gif"
 
 var RollCommand = command.Command{
 	Name: "roll", Aliases: []string{"rolar", "dado", "dados", "dice", "rool", "d"},
-	Description: "Play a video/song from utube",
+	Description: "Roll a dice",
 	Arguments: []*command.CommandArgument{
 		{Name: "sides", Description: "dice sides", Required: false, Type: command.ArgumentInt},
 	},
