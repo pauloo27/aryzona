@@ -16,6 +16,7 @@ Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency
 - random animals (`!dog`, `!cat`, `!fox`)
 - run bash commands in the host (`!bash`)
 - play radios: lofi, rock, pisadinha, pop, cafe, swing and more (`!radio`)
+- play youtube videos (`!play`, but just sometimes cuz we respect the law)
 
 ## How to add to your server
 
