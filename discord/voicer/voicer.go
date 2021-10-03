@@ -19,10 +19,13 @@ type Voicer struct {
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
-	disconnectMutex            sync.Mutex
+	guildLock                  *sync.Mutex
 }
 
-var voicerMapper = map[string]*Voicer{}
+var (
+	voicerMapper = map[string]*Voicer{}
+	voicerLocks  = map[string]*sync.Mutex{}
+)
 
 func GetExistingVoicerForGuild(guildID string) *Voicer {
 	return voicerMapper[guildID]
@@ -39,6 +42,13 @@ func (v *Voicer) registerListeners() {
 }
 
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
+	lock, found := voicerLocks[guildID]
+	if !found {
+		lock = &sync.Mutex{}
+		voicerLocks[guildID] = lock
+	}
+	lock.Lock()
+
 	var chanID *string
 
 	g, err := discord.Session.State.Guild(guildID)
@@ -59,8 +69,8 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 		voicer = &Voicer{
 			UserID: &userID, ChannelID: chanID, GuildID: &guildID, Voice: nil,
 			StreamingSession: nil, EncodeSession: nil,
-			disconnectMutex: sync.Mutex{},
-			Queue:           queue,
+			Queue:     queue,
+			guildLock: lock,
 		}
 		voicer.registerListeners()
 		voicerMapper[guildID] = voicer
@@ -88,8 +98,9 @@ func (v *Voicer) Connect() error {
 
 func (v *Voicer) Disconnect() error {
 	delete(voicerMapper, *(v.GuildID))
-	v.disconnectMutex.Lock()
-	defer v.disconnectMutex.Unlock()
+
+	defer v.guildLock.Unlock()
+
 	if !v.IsConnected() {
 		return nil
 	}
