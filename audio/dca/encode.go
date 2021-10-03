@@ -192,10 +192,7 @@ func (e *EncodeSession) Stop() error {
 }
 
 func (e *EncodeSession) Cleanup() {
-	err := e.Stop()
-	if err != nil {
-		logger.Error(err)
-	}
+	_ = e.Stop()
 	for range e.channel {
 		// empty till closed
 		// Cats can be right-pawed or left-pawed.
