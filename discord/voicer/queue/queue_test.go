@@ -3,7 +3,8 @@ package queue_test
 import (
 	"testing"
 
-	"github.com/Pauloo27/aryzona/discord/voicer"
+	"github.com/Pauloo27/aryzona/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/discord/voicer/queue"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,8 +14,8 @@ func TestQueue(t *testing.T) {
 	assert.Equal(t, 0, queue.Size())
 	assert.Nil(t, queue.First())
 
-	queue.Append(voicer.TestPlayable{Name: "hello"})
-	queue.Append(voicer.TestPlayable{Name: "coming next"})
+	queue.Append(playable.DummyPlayable{Name: "hello"})
+	queue.Append(playable.DummyPlayable{Name: "coming next"})
 	assert.Equal(t, 2, queue.Size())
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "hello", queue.First().GetName())
@@ -24,8 +25,8 @@ func TestQueue(t *testing.T) {
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "coming next", queue.First().GetName())
 
-	queue.Append(TestPlayable{Name: "hello"})
-	queue.Append(TestPlayable{Name: "bye"})
+	queue.Append(playable.DummyPlayable{Name: "hello"})
+	queue.Append(playable.DummyPlayable{Name: "bye"})
 
 	assert.Equal(t, 3, queue.Size())
 	assert.NotNil(t, queue.ItemAt(1))
@@ -45,9 +46,9 @@ func TestQueue(t *testing.T) {
 	assert.Equal(t, 0, queue.Size())
 	assert.Nil(t, queue.First())
 
-	queue.Append(TestPlayable{Name: "hello"})
-	queue.Append(TestPlayable{Name: "bye"})
-	queue.AppendAt(1, TestPlayable{Name: "=)"})
+	queue.Append(playable.DummyPlayable{Name: "hello"})
+	queue.Append(playable.DummyPlayable{Name: "bye"})
+	queue.AppendAt(1, playable.DummyPlayable{Name: "=)"})
 
 	assert.Equal(t, 3, queue.Size())
 	assert.Equal(t, "hello", queue.ItemAt(0).GetName())
