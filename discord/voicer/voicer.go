@@ -19,7 +19,7 @@ type Voicer struct {
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
-	disconnectMutex            sync.Mutex
+	playMutex, disconnectMutex sync.Mutex
 }
 
 var voicerMapper = map[string]*Voicer{}
@@ -126,17 +126,22 @@ func (v *Voicer) AppendToQueue(playable playable.Playable) error {
 }
 
 func (v *Voicer) Start() error {
+	v.playMutex.Lock()
+
 	if v.IsPlaying() {
+		v.playMutex.Unlock()
 		return ErrAlreadyPlaying
 	}
 
-	v.playing = true
 	defer func() {
 		v.playing = false
 		if v.IsConnected() {
 			_ = v.Disconnect()
 		}
+		v.playMutex.Unlock()
 	}()
+
+	v.playing = true
 
 	if err := v.Connect(); err != nil {
 		return err
