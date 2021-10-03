@@ -32,7 +32,7 @@ func (q *Queue) ItemAt(index int) audio.Playable {
 	return q.queue[index]
 }
 
-func (q *Queue) Playing() audio.Playable {
+func (q *Queue) First() audio.Playable {
 	if q.Size() == 0 {
 		return nil
 	}
