@@ -14,6 +14,7 @@ import (
 )
 
 type Voicer struct {
+	playing                    bool
 	UserID, ChannelID, GuildID *string
 	Voice                      *discordgo.VoiceConnection
 	Queue                      *queue.Queue
@@ -112,7 +113,7 @@ func (v *Voicer) IsConnected() bool {
 }
 
 func (v *Voicer) IsPlaying() bool {
-	return v.Queue.Size() != 0
+	return v.playing
 }
 
 func (v *Voicer) Playing() playable.Playable {
@@ -128,6 +129,11 @@ func (v *Voicer) Start() error {
 	if v.IsPlaying() {
 		return ErrAlreadyPlaying
 	}
+
+	v.playing = true
+	defer func() {
+		v.playing = false
+	}()
 
 	if err := v.Connect(); err != nil {
 		return err
