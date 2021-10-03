@@ -8,7 +8,6 @@ import (
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/discord/voicer/queue"
-	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
@@ -30,12 +29,13 @@ func GetExistingVoicerForGuild(guildID string) *Voicer {
 }
 
 func (v *Voicer) registerListeners() {
-	v.Queue.On(queue.EventAppend, func(params ...interface{}) {
-		err := v.Start()
-		if err != nil {
-			logger.Error(err)
+	start := func(params ...interface{}) {
+		if v.IsPlaying() {
+			return
 		}
-	})
+		_ = v.Start()
+	}
+	v.Queue.On(queue.EventAppend, start)
 }
 
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
@@ -133,9 +133,16 @@ func (v *Voicer) Start() error {
 	v.playing = true
 	defer func() {
 		v.playing = false
+		if v.IsConnected() {
+			_ = v.Disconnect()
+		}
 	}()
 
 	if err := v.Connect(); err != nil {
+		return err
+	}
+
+	if err := v.Voice.Speaking(true); err != nil {
 		return err
 	}
 
@@ -153,10 +160,6 @@ func (v *Voicer) Start() error {
 			return err
 		}
 
-		if err := v.Voice.Speaking(true); err != nil {
-			return err
-		}
-
 		done := make(chan error)
 		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
@@ -171,16 +174,13 @@ func (v *Voicer) Start() error {
 		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
 		err = <-done
-		if v.IsConnected() {
-			disconnectErr := v.Disconnect()
-			if disconnectErr != nil {
-				return utils.Wrap(disconnectErr.Error(), err)
-			}
-		}
 
-		if err == io.EOF {
+		v.Queue.Pop(0)
+
+		if err == nil || err == io.EOF {
 			continue
 		}
+
 		return err
 	}
 }

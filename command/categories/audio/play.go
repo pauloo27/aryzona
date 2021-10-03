@@ -25,13 +25,11 @@ var PlayCommand = command.Command{
 			ctx.Error("You are not in a voice channel")
 			return
 		}
-		if vc.IsPlaying() {
-			ctx.Error("Already playing something")
-			return
-		}
-		if err = vc.Connect(); err != nil {
-			ctx.Error("Cannot connect to your voice channel")
-			return
+		if !vc.IsConnected() {
+			if err = vc.Connect(); err != nil {
+				ctx.Error("Cannot connect to your voice channel")
+				return
+			}
 		}
 		searchQuery := ctx.Args[0].(string)
 		resultURL, err := youtube.GetBestResult(searchQuery)
