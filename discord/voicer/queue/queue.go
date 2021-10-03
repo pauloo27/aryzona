@@ -1,8 +1,6 @@
 package queue
 
 import (
-	"fmt"
-
 	"github.com/Pauloo27/aryzona/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/utils/event"
 )
@@ -36,7 +34,6 @@ func (q *Queue) AppendAt(index int, item playable.Playable) {
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, item)
 	tmp = append(tmp, q.queue[index:]...)
-	fmt.Println(tmp)
 	q.queue = tmp
 	q.Emit(EventAppend, q, index, item)
 }

@@ -148,6 +148,13 @@ func (v *Voicer) Start() error {
 
 	// play a simple "pre connect" sound
 	v.EncodeSession = dca.EncodeData("./assets/radio_start.wav", false, true)
+	done := make(chan error)
+	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
+
+	err := <-done
+	if err != nil && err != io.EOF {
+		logger.Error(err)
+	}
 
 	for {
 		playable := v.Queue.First()
@@ -158,14 +165,6 @@ func (v *Voicer) Start() error {
 		url, err := playable.GetDirectURL()
 		if err != nil {
 			return err
-		}
-
-		done := make(chan error)
-		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
-
-		err = <-done
-		if err != nil && err != io.EOF {
-			logger.Error(err)
 		}
 
 		v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
