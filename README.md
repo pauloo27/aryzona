@@ -24,11 +24,13 @@ Aryzona is not public yet.
 
 ## How to self host 
 
+_The bot is written in GoLang, so you need the Go compiler._
+
 Create a `.env` file and copy the content of the `.env.default` file into it.
 
 Then, change the values.
 
-To start the bot, run `make run`.
+To start the bot, run `make run` or `go run .`.
 
 ## License
 
