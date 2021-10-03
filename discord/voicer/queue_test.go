@@ -9,7 +9,7 @@ import (
 
 // yeap, a test for Append and Pop operations =P
 func TestQueue(t *testing.T) {
-	queue := voicer.Queue{}
+	queue := voicer.NewQueue()
 	assert.Equal(t, 0, queue.Size())
 	assert.Nil(t, queue.First())
 
@@ -47,7 +47,7 @@ func TestQueue(t *testing.T) {
 
 	queue.Append(TestPlayable{Name: "hello"})
 	queue.Append(TestPlayable{Name: "bye"})
-	queue.AppendAfter(0, TestPlayable{Name: "=)"})
+	queue.AppendAt(1, TestPlayable{Name: "=)"})
 
 	assert.Equal(t, 3, queue.Size())
 	assert.Equal(t, "hello", queue.ItemAt(0).GetName())
