@@ -10,7 +10,6 @@ Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency
 
 ## Features
 
-- delete all joao's messages (cuz he always drops some `.`)
 - play Flamengo's matches live (using the `!radio globo-rj`)
 - fetch live soccer scores (`!live`)
 - random animals (`!dog`, `!cat`, `!fox`)
