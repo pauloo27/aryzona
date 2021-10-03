@@ -1,9 +1,9 @@
-package voicer
+package queue
 
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/audio"
+	"github.com/Pauloo27/aryzona/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/utils/event"
 )
 
@@ -16,23 +16,23 @@ const (
 
 type Queue struct {
 	*event.EventEmitter
-	queue []audio.Playable
+	queue []playable.Playable
 }
 
 func NewQueue() *Queue {
 	return &Queue{
-		queue:        []audio.Playable{},
+		queue:        []playable.Playable{},
 		EventEmitter: event.NewEventEmitter(),
 	}
 }
 
-func (q *Queue) Append(item audio.Playable) {
+func (q *Queue) Append(item playable.Playable) {
 	q.queue = append(q.queue, item)
 	q.Emit(EventAppend, q, 0, item)
 }
 
-func (q *Queue) AppendAt(index int, item audio.Playable) {
-	var tmp []audio.Playable
+func (q *Queue) AppendAt(index int, item playable.Playable) {
+	var tmp []playable.Playable
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, item)
 	tmp = append(tmp, q.queue[index:]...)
@@ -42,15 +42,15 @@ func (q *Queue) AppendAt(index int, item audio.Playable) {
 }
 
 func (q *Queue) Clear() {
-	var tmp []audio.Playable
+	var tmp []playable.Playable
 	q.queue = tmp
 }
 
-func (q *Queue) ItemAt(index int) audio.Playable {
+func (q *Queue) ItemAt(index int) playable.Playable {
 	return q.queue[index]
 }
 
-func (q *Queue) First() audio.Playable {
+func (q *Queue) First() playable.Playable {
 	if q.Size() == 0 {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (q *Queue) First() audio.Playable {
 }
 
 func (q *Queue) Pop(index int) {
-	var tmp []audio.Playable
+	var tmp []playable.Playable
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
 	q.queue = tmp

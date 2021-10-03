@@ -1,4 +1,4 @@
-package voicer_test
+package queue_test
 
 import (
 	"testing"
@@ -9,12 +9,12 @@ import (
 
 // yeap, a test for Append and Pop operations =P
 func TestQueue(t *testing.T) {
-	queue := voicer.NewQueue()
+	queue := queue.NewQueue()
 	assert.Equal(t, 0, queue.Size())
 	assert.Nil(t, queue.First())
 
-	queue.Append(TestPlayable{Name: "hello"})
-	queue.Append(TestPlayable{Name: "coming next"})
+	queue.Append(voicer.TestPlayable{Name: "hello"})
+	queue.Append(voicer.TestPlayable{Name: "coming next"})
 	assert.Equal(t, 2, queue.Size())
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "hello", queue.First().GetName())
