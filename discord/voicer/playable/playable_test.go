@@ -1,4 +1,4 @@
-package voicer_test
+package playable_test
 
 import "github.com/Pauloo27/aryzona/audio"
 

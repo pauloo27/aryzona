@@ -1,4 +1,4 @@
-package audio
+package playable
 
 type Playable interface {
 	CanPause() bool
