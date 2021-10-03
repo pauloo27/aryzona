@@ -4,9 +4,10 @@ import (
 	"io"
 	"sync"
 
-	"github.com/Pauloo27/aryzona/audio"
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/discord"
+	"github.com/Pauloo27/aryzona/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/discord/voicer/queue"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
@@ -15,7 +16,7 @@ import (
 type Voicer struct {
 	UserID, ChannelID, GuildID *string
 	Voice                      *discordgo.VoiceConnection
-	Playing                    *audio.Playable
+	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
 	disconnectMutex            sync.Mutex
@@ -25,6 +26,15 @@ var voicerMapper = map[string]*Voicer{}
 
 func GetExistingVoicerForGuild(guildID string) *Voicer {
 	return voicerMapper[guildID]
+}
+
+func (v *Voicer) registerListeners() {
+	v.Queue.On(queue.EventAppend, func(params ...interface{}) {
+		err := v.Start()
+		if err != nil {
+			logger.Error(err)
+		}
+	})
 }
 
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
@@ -44,7 +54,14 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 
 	voicer, found := voicerMapper[guildID]
 	if !found {
-		voicer = &Voicer{&userID, chanID, &guildID, nil, nil, nil, nil, sync.Mutex{}}
+		queue := queue.NewQueue()
+		voicer = &Voicer{
+			UserID: &userID, ChannelID: chanID, GuildID: &guildID, Voice: nil,
+			StreamingSession: nil, EncodeSession: nil,
+			disconnectMutex: sync.Mutex{},
+			Queue:           queue,
+		}
+		voicer.registerListeners()
 		voicerMapper[guildID] = voicer
 	}
 	return voicer, nil
@@ -81,7 +98,7 @@ func (v *Voicer) Disconnect() error {
 	v.EncodeSession.Cleanup()
 	v.EncodeSession = nil
 
-	v.Playing = nil
+	v.Queue.Clear()
 	err := v.Voice.Disconnect()
 	if err != nil {
 		logger.Error(err)
@@ -95,10 +112,19 @@ func (v *Voicer) IsConnected() bool {
 }
 
 func (v *Voicer) IsPlaying() bool {
-	return v.Playing != nil
+	return v.Queue.Size() != 0
 }
 
-func (v *Voicer) Play(playable audio.Playable) error {
+func (v *Voicer) Playing() playable.Playable {
+	return v.Queue.First()
+}
+
+func (v *Voicer) AppendToQueue(playable playable.Playable) error {
+	v.Queue.Append(playable)
+	return nil
+}
+
+func (v *Voicer) Start() error {
 	if v.IsPlaying() {
 		return ErrAlreadyPlaying
 	}
@@ -107,43 +133,48 @@ func (v *Voicer) Play(playable audio.Playable) error {
 		return err
 	}
 
-	v.Playing = &playable
-
-	url, err := playable.GetDirectURL()
-	if err != nil {
-		return err
-	}
-
-	if err := v.Voice.Speaking(true); err != nil {
-		return err
-	}
-
 	// play a simple "pre connect" sound
 	v.EncodeSession = dca.EncodeData("./assets/radio_start.wav", false, true)
 
-	done := make(chan error)
-	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
-
-	err = <-done
-	if err != nil {
-		logger.Error(err)
-	}
-
-	v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
-
-	done = make(chan error)
-	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
-
-	err = <-done
-	if v.IsConnected() {
-		disconnectErr := v.Disconnect()
-		if disconnectErr != nil {
-			return utils.Wrap(disconnectErr.Error(), err)
+	for {
+		playable := v.Queue.First()
+		if playable == nil {
+			return nil
 		}
-	}
 
-	if err == io.EOF {
-		return nil
+		url, err := playable.GetDirectURL()
+		if err != nil {
+			return err
+		}
+
+		if err := v.Voice.Speaking(true); err != nil {
+			return err
+		}
+
+		done := make(chan error)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
+
+		err = <-done
+		if err != nil && err != io.EOF {
+			logger.Error(err)
+		}
+
+		v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
+
+		done = make(chan error)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
+
+		err = <-done
+		if v.IsConnected() {
+			disconnectErr := v.Disconnect()
+			if disconnectErr != nil {
+				return utils.Wrap(disconnectErr.Error(), err)
+			}
+		}
+
+		if err == io.EOF {
+			continue
+		}
+		return err
 	}
-	return err
 }

@@ -84,7 +84,7 @@ var RadioCommand = command.Command{
 			return
 		}
 		go func() {
-			if err = vc.Play(channel); err != nil {
+			if err = vc.AppendToQueue(channel); err != nil {
 				if is, vErr := utils.IsErrore(err); is {
 					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
 						return

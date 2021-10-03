@@ -25,7 +25,7 @@ var LyricCommand = command.Command{
 				ctx.Error("Bot is not connect to a voice channel, you can pass the song title")
 				return
 			}
-			playable := *(vc.Playing)
+			playable := vc.Playing()
 
 			title, artist := playable.GetFullTitle()
 			searchTerms = utils.Fmt("%s %s", title, artist)

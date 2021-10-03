@@ -15,7 +15,7 @@ var PlayingCommand = command.Command{
 			ctx.Error("Bot is not connect to a voice channel")
 			return
 		}
-		playable := *(vc.Playing)
+		playable := vc.Playing()
 
 		title, artist := playable.GetFullTitle()
 

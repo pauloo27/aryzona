@@ -61,7 +61,7 @@ var PlayCommand = command.Command{
 			embed.Build(),
 		)
 		go func() {
-			if err = vc.Play(playable); err != nil {
+			if err = vc.AppendToQueue(playable); err != nil {
 				if is, vErr := utils.IsErrore(err); is {
 					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
 						return
