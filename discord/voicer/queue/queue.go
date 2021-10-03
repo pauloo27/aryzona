@@ -28,7 +28,7 @@ func NewQueue() *Queue {
 
 func (q *Queue) Append(item playable.Playable) {
 	q.queue = append(q.queue, item)
-	q.Emit(EventAppend, q, 0, item)
+	q.Emit(EventAppend, q, q.Size()-1, item)
 }
 
 func (q *Queue) AppendAt(index int, item playable.Playable) {
