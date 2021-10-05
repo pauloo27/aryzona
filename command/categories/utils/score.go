@@ -19,6 +19,12 @@ var ScoreCommand = command.Command{
 			Description:     "team name or match id",
 			Type:            command.ArgumentString,
 		},
+		{
+			Name:        "spoilers",
+			Required:    false,
+			Description: "if true, all events will be displayed without spoiler tags",
+			Type:        command.ArgumentBool,
+		},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var match *livescore.MatchInfo
@@ -49,6 +55,24 @@ var ScoreCommand = command.Command{
 		} else {
 			color = match.T2.ColorAsInt()
 		}
+
+		spoiler := true
+
+		if len(ctx.Args) >= 2 {
+			spoiler = ctx.Args[1].(bool)
+		}
+
+		desc := strings.Builder{}
+		if len(match.Events) > 0 {
+			for _, event := range match.Events {
+				text := event.Text
+				if spoiler {
+					text = utils.Fmt("||%s||", text)
+				}
+
+				desc.WriteString(utils.Fmt(" -> %d' %s\n", event.Min, text))
+			}
+		}
 		ctx.Embed(
 			utils.NewEmbedBuilder().
 				Description(utils.Fmt("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
@@ -56,6 +80,7 @@ var ScoreCommand = command.Command{
 				Field("Time", match.Time).
 				FieldInline(match.T1.Name, strconv.Itoa(match.T1.Score)).
 				FieldInline(match.T2.Name, strconv.Itoa(match.T2.Score)).
+				Description(desc.String()).
 				Build(),
 		)
 	},

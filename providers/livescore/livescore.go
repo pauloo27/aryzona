@@ -17,6 +17,12 @@ type TeamInfo struct {
 	Score       int
 }
 
+type Event struct {
+	Min  int64
+	Text string
+	ID   int64
+}
+
 func (t TeamInfo) ColorAsInt() int {
 	color, err := strconv.ParseInt(t.Color, 16, 32)
 	if err != nil {
@@ -26,6 +32,7 @@ func (t TeamInfo) ColorAsInt() int {
 }
 
 type MatchInfo struct {
+	Events                            []*Event
 	ID                                string
 	T1, T2                            *TeamInfo
 	Time                              string // time as string? YES
@@ -96,8 +103,25 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 		return nil, utils.Wrap("team2", err)
 	}
 
+	var events []*Event
+
+	jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		text, _ := jsonparser.GetString(value, "Txt")
+		id, _ := jsonparser.GetInt(value, "IT")
+		min, _ := jsonparser.GetInt(value, "Min")
+
+		event := Event{
+			Text: text,
+			ID:   id,
+			Min:  min,
+		}
+		events = append(events, &event)
+	}, "Com")
+
 	return &MatchInfo{
-		id, team1, team2, time, cupName, stadiumName, stadiumCity,
+		ID: id, T1: team1, T2: team2, Time: time, CupName: cupName,
+		StadiumName: stadiumName, StadiumCity: stadiumCity,
+		Events: events,
 	}, nil
 }
 
