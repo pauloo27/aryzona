@@ -13,19 +13,29 @@ import (
 )
 
 type Voicer struct {
-	playing                    bool
+	usable, playing            bool
 	UserID, ChannelID, GuildID *string
 	Voice                      *discordgo.VoiceConnection
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
-	disconnectMutex            sync.Mutex
+	lock                       *sync.Mutex
 }
 
-var voicerMapper = map[string]*Voicer{}
+var (
+	voicerMapper = map[string]*Voicer{}
+)
 
 func GetExistingVoicerForGuild(guildID string) *Voicer {
 	return voicerMapper[guildID]
+}
+
+func (v *Voicer) Lock() {
+	v.lock.Lock()
+}
+
+func (v *Voicer) Unlock() {
+	v.lock.Unlock()
 }
 
 func (v *Voicer) registerListeners() {
@@ -39,6 +49,18 @@ func (v *Voicer) registerListeners() {
 }
 
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
+	voicer, found := voicerMapper[guildID]
+
+	if found {
+		voicer.Lock()
+		defer voicer.Unlock()
+		// usable = fully disconnected or going to disconnect
+		// why? cuz doing ,play then ,stop ,play very quickly broke the bot =(
+		if voicer.usable {
+			return voicer, nil
+		}
+	}
+
 	var chanID *string
 
 	g, err := discord.Session.State.Guild(guildID)
@@ -53,18 +75,18 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 		}
 	}
 
-	voicer, found := voicerMapper[guildID]
-	if !found {
-		queue := queue.NewQueue()
-		voicer = &Voicer{
-			UserID: &userID, ChannelID: chanID, GuildID: &guildID, Voice: nil,
-			StreamingSession: nil, EncodeSession: nil,
-			disconnectMutex: sync.Mutex{},
-			Queue:           queue,
-		}
-		voicer.registerListeners()
-		voicerMapper[guildID] = voicer
+	queue := queue.NewQueue()
+
+	voicer = &Voicer{
+		UserID: &userID, ChannelID: chanID, GuildID: &guildID, Voice: nil,
+		StreamingSession: nil, EncodeSession: nil,
+		lock:  &sync.Mutex{},
+		Queue: queue, usable: true,
 	}
+
+	voicer.registerListeners()
+	voicerMapper[guildID] = voicer
+
 	return voicer, nil
 
 }
@@ -87,9 +109,12 @@ func (v *Voicer) Connect() error {
 }
 
 func (v *Voicer) Disconnect() error {
-	delete(voicerMapper, *(v.GuildID))
-	v.disconnectMutex.Lock()
-	defer v.disconnectMutex.Unlock()
+	v.Lock()
+	defer v.Unlock()
+
+	// usable = fully disconnected or going to disconnect
+	v.usable = false
+
 	if !v.IsConnected() {
 		return nil
 	}
@@ -105,6 +130,7 @@ func (v *Voicer) Disconnect() error {
 		logger.Error(err)
 	}
 	v.Voice = nil
+	delete(voicerMapper, *(v.GuildID))
 	return err
 }
 
