@@ -21,6 +21,13 @@ var ArgumentString = &CommandArgumentType{
 	},
 }
 
+var ArgumentBool = &CommandArgumentType{
+	Name: "bool",
+	Parser: func(index int, args []string) (interface{}, error) {
+		return strconv.ParseBool(args[index])
+	},
+}
+
 var ArgumentInt = &CommandArgumentType{
 	Name: "int",
 	Parser: func(index int, args []string) (interface{}, error) {
