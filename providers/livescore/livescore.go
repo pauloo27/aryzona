@@ -105,7 +105,7 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 
 	var events []*Event
 
-	jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		text, _ := jsonparser.GetString(value, "Txt")
 		id, _ := jsonparser.GetInt(value, "IT")
 		min, _ := jsonparser.GetInt(value, "Min")
@@ -117,6 +117,10 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 		}
 		events = append(events, &event)
 	}, "Com")
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &MatchInfo{
 		ID: id, T1: team1, T2: team2, Time: time, CupName: cupName,
