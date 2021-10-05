@@ -13,9 +13,13 @@ var discordTypeMap = map[*command.CommandArgumentType]discordgo.ApplicationComma
 	command.ArgumentString: discordgo.ApplicationCommandOptionString,
 	command.ArgumentText:   discordgo.ApplicationCommandOptionString,
 	command.ArgumentInt:    discordgo.ApplicationCommandOptionInteger,
+	command.ArgumentBool:   discordgo.ApplicationCommandOptionBoolean,
 }
 
-func RegisterCommands() error {
+// to ensure the listeners are not added twice
+var handlersAdded = false
+
+func RegisterCommands(update bool) error {
 	mustGetChoisesFor := func(arg *command.CommandArgument) (options []*discordgo.ApplicationCommandOptionChoice) {
 		for _, value := range arg.GetValidValues() {
 			options = append(options, &discordgo.ApplicationCommandOptionChoice{
@@ -35,8 +39,13 @@ func RegisterCommands() error {
 	}
 
 	for key, cmd := range command.GetCommandMap() {
+		// break if not update
+		if !update {
+			break
+		}
+
 		// skip aliases
-		if key != cmd.Name || true {
+		if key != cmd.Name {
 			continue
 		}
 
@@ -59,6 +68,11 @@ func RegisterCommands() error {
 		if err != nil {
 			return err
 		}
+	}
+
+	// avoid adding the handlers twice
+	if handlersAdded {
+		return nil
 	}
 
 	discord.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {

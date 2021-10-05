@@ -46,8 +46,8 @@ func main() {
 
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
 
-	logger.Info("Updating slash commands, it may take a while...")
-	err = slash.RegisterCommands()
+	logger.Info("Registering slash commands handlers...")
+	err = slash.RegisterCommands(false)
 	if err != nil {
 		logger.Fatal(err)
 	}
