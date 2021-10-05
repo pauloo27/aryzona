@@ -1,6 +1,8 @@
 package audio
 
 import (
+	"strings"
+
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/utils"
@@ -28,6 +30,27 @@ var PlayingCommand = command.Command{
 		}
 
 		embedBuilder.Field("Requested by", utils.AsMention(*vc.UserID))
+
+		if vc.Queue.Size() > 1 {
+			sb := strings.Builder{}
+			next := vc.Queue.All()[1:]
+			limit := len(next)
+			if len(next) > 10 {
+				limit = 10
+			}
+			for _, item := range next[:limit] {
+				title, artist := item.GetFullTitle()
+				if artist == "" {
+					sb.WriteString(utils.Fmt("  -> %s\n", title))
+				} else {
+					sb.WriteString(utils.Fmt("  -> %s - %s\n", artist, title))
+				}
+			}
+			if len(next) > 10 {
+				sb.WriteString("_... and more ..._")
+			}
+			embedBuilder.Field("**Coming next:**", sb.String())
+		}
 
 		ctx.SuccessEmbed(
 			embedBuilder.Build(),
