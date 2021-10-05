@@ -29,6 +29,11 @@ func (q *Queue) Append(item playable.Playable) {
 	q.Emit(EventAppend, q, q.Size()-1, item)
 }
 
+func (q *Queue) All() []playable.Playable {
+	// TODO: return a "deep copy"?
+	return q.queue
+}
+
 func (q *Queue) AppendAt(index int, item playable.Playable) {
 	var tmp []playable.Playable
 	tmp = append(tmp, q.queue[:index]...)

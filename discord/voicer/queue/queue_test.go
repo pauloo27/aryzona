@@ -54,4 +54,9 @@ func TestQueue(t *testing.T) {
 	assert.Equal(t, "hello", queue.ItemAt(0).GetName())
 	assert.Equal(t, "=)", queue.ItemAt(1).GetName())
 	assert.Equal(t, "bye", queue.ItemAt(2).GetName())
+
+	assert.Equal(t, 3, len(queue.All()))
+	assert.Equal(t, "hello", queue.All()[0].GetName())
+	assert.Equal(t, "=)", queue.All()[1].GetName())
+	assert.Equal(t, "bye", queue.All()[2].GetName())
 }
