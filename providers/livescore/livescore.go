@@ -119,7 +119,7 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 	}, "Com")
 
 	if err != nil {
-		return nil, err
+		logger.Error("events", err)
 	}
 
 	return &MatchInfo{
