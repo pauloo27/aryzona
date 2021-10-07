@@ -3,7 +3,7 @@ package command
 import (
 	"testing"
 
-	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/errore"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,7 +29,7 @@ func TestArguments(t *testing.T) {
 		t.Run("Should return required argument missing", func(t *testing.T) {
 			_, err := testCommand.ValidateArguments([]string{})
 			assert.NotNil(t, err)
-			assert.True(t, utils.Is(*err, *ErrRequiredArgument(nil)))
+			assert.True(t, errore.Is(*err, *ErrRequiredArgument(nil)))
 		})
 
 		t.Run("Should return the value", func(t *testing.T) {
@@ -87,7 +87,7 @@ func TestArguments(t *testing.T) {
 			values, err := testCommand.ValidateArguments([]string{"asd"})
 			assert.NotNil(t, err)
 			assert.Nil(t, values)
-			assert.True(t, utils.Is(*err, *ErrCannotParseArgument(nil, nil)))
+			assert.True(t, errore.Is(*err, *ErrCannotParseArgument(nil, nil)))
 		})
 
 		t.Run("Should return the parsed int", func(t *testing.T) {
@@ -118,7 +118,7 @@ func TestArguments(t *testing.T) {
 		t.Run("Should return invalid value", func(t *testing.T) {
 			values, err := testCommand.ValidateArguments([]string{"22"})
 			assert.NotNil(t, err)
-			assert.True(t, utils.Is(*err, *ErrInvalidValue(nil)))
+			assert.True(t, errore.Is(*err, *ErrInvalidValue(nil)))
 			assert.Nil(t, values)
 		})
 
@@ -169,7 +169,7 @@ func TestArguments(t *testing.T) {
 		t.Run("Should return required argument missing error", func(t *testing.T) {
 			_, err := testCommand.ValidateArguments([]string{"-2", "hello"})
 			assert.NotNil(t, err)
-			assert.True(t, utils.Is(*err, *ErrRequiredArgument(nil)))
+			assert.True(t, errore.Is(*err, *ErrRequiredArgument(nil)))
 		})
 
 		t.Run("Should return 3 values", func(t *testing.T) {
