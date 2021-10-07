@@ -19,12 +19,6 @@ var ScoreCommand = command.Command{
 			Description:     "team name or match id",
 			Type:            command.ArgumentString,
 		},
-		{
-			Name:        "spoilers",
-			Required:    false,
-			Description: "if true, all events will be displayed without spoiler tags",
-			Type:        command.ArgumentBool,
-		},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var match *livescore.MatchInfo
@@ -56,19 +50,10 @@ var ScoreCommand = command.Command{
 			color = match.T2.ColorAsInt()
 		}
 
-		spoiler := true
-
-		if len(ctx.Args) >= 2 {
-			spoiler = ctx.Args[1].(bool)
-		}
-
 		desc := strings.Builder{}
 		if len(match.Events) > 0 {
 			for _, event := range match.Events {
 				text := event.Text
-				if spoiler {
-					text = utils.Fmt("||%s||", text)
-				}
 
 				desc.WriteString(utils.Fmt(" -> %d' %s\n", event.Min, text))
 			}
