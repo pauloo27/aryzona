@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/errore"
 	"github.com/kkdai/youtube/v2"
 )
 
@@ -29,7 +29,7 @@ func getFirstURL(manifestURL string) (string, error) {
 		}
 	}
 
-	return "", utils.Errore{ID: "URL_NOT_FOUND", Message: "URL not found"}
+	return "", errore.Errore{ID: "URL_NOT_FOUND", Message: "URL not found"}
 }
 
 func GetLiveURL(url string) (string, error) {
@@ -43,7 +43,7 @@ func GetLiveURL(url string) (string, error) {
 func getLiveURL(video *youtube.Video) (string, error) {
 	manifest := video.HLSManifestURL
 	if manifest == "" {
-		return "", utils.Errore{
+		return "", errore.Errore{
 			ID:      "HLS_NOT_FOUND",
 			Message: "HLS manifest not found",
 		}

@@ -8,6 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/aryzona/providers/animal"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/errore"
 	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
@@ -59,8 +60,8 @@ func Ready(s *discordgo.Session, m *discordgo.Ready) {
 
 	if os.Getenv("DC_BOT_ENV") == "prod" {
 		c, err := s.UserChannelCreate(os.Getenv("DC_BOT_OWNER_ID"))
-		utils.HandleFatal(err)
+		errore.HandleFatal(err)
 		_, err = s.ChannelMessageSendEmbed(c.ID, createStartedEmbed(s))
-		utils.HandleFatal(err)
+		errore.HandleFatal(err)
 	}
 }

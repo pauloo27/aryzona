@@ -1,13 +1,15 @@
 package voicer
 
-import "github.com/Pauloo27/aryzona/utils"
+import (
+	"github.com/Pauloo27/aryzona/utils/errore"
+)
 
 var (
-	ErrAlreadyPlaying = utils.Errore{
+	ErrAlreadyPlaying = errore.Errore{
 		ID:      "ALREADY_PLAYING",
 		Message: "Already playing something in the current guild",
 	}
-	ErrCannotConnect = utils.Errore{
+	ErrCannotConnect = errore.Errore{
 		ID:      "CANNOT_CONNECT",
 		Message: "Cannot connect to voice channel",
 	}

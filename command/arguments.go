@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/errore"
 )
 
 var ArgumentText = &CommandArgumentType{
@@ -35,7 +36,7 @@ var ArgumentInt = &CommandArgumentType{
 	},
 }
 
-func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
+func ErrRequiredArgument(argument *CommandArgument) *errore.Errore {
 	var message string
 	if argument != nil {
 		if argument.RequiredMessage != "" {
@@ -44,29 +45,29 @@ func ErrRequiredArgument(argument *CommandArgument) *utils.Errore {
 			message = utils.Fmt("Argument %s (type %s) missing", argument.Description, argument.Type.Name)
 		}
 	}
-	return &utils.Errore{
+	return &errore.Errore{
 		ID:      "REQUIRED_ARGUMENT_MISSING",
 		Message: message,
 	}
 }
 
-func ErrInvalidValue(argument *CommandArgument) *utils.Errore {
+func ErrInvalidValue(argument *CommandArgument) *errore.Errore {
 	var message string
 	if argument != nil {
 		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", argument.Description, argument.GetValidValues())
 	}
-	return &utils.Errore{
+	return &errore.Errore{
 		ID:      "INVALID_VALUE",
 		Message: message,
 	}
 }
 
-func ErrCannotParseArgument(argument *CommandArgument, err error) *utils.Errore {
+func ErrCannotParseArgument(argument *CommandArgument, err error) *errore.Errore {
 	var message string
 	if err != nil {
 		message = err.Error()
 	}
-	return &utils.Errore{
+	return &errore.Errore{
 		ID:      "CANNOT_PARSE_ARGUMENT",
 		Message: message,
 	}
@@ -84,7 +85,7 @@ func ErrCannotParseArgument(argument *CommandArgument, err error) *utils.Errore 
 
  If not errors are returned, then we are good to go.
 */
-func (command *Command) ValidateArguments(parameters []string) (values []interface{}, syntaxError *utils.Errore) {
+func (command *Command) ValidateArguments(parameters []string) (values []interface{}, syntaxError *errore.Errore) {
 
 	if command.Arguments == nil || len(command.Arguments) == 0 {
 		return

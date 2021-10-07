@@ -6,6 +6,7 @@ import (
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/providers/radio"
 	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/errore"
 	"github.com/Pauloo27/logger"
 )
 
@@ -85,7 +86,7 @@ var RadioCommand = command.Command{
 		}
 		go func() {
 			if err = vc.AppendToQueue(channel); err != nil {
-				if is, vErr := utils.IsErrore(err); is {
+				if is, vErr := errore.IsErrore(err); is {
 					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
 						return
 					}

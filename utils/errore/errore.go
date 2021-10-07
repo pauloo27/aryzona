@@ -1,6 +1,8 @@
-package utils
+package errore
 
-import "errors"
+import (
+	"fmt"
+)
 
 type Errore struct {
 	ID, Message string
@@ -31,5 +33,5 @@ func HandleFatal(err error) {
 }
 
 func Wrap(msg string, err error) error {
-	return errors.New(Fmt("%s: %v", msg, err))
+	return fmt.Errorf("%s: %w", msg, err)
 }

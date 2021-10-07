@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/errore"
 	"github.com/Pauloo27/logger"
 	"github.com/buger/jsonparser"
 )
@@ -42,7 +42,7 @@ type MatchInfo struct {
 func parseTeam(id int, data []byte) (*TeamInfo, error) {
 	name, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Nm")
 	if err != nil {
-		return nil, utils.Wrap("name", err)
+		return nil, errore.Wrap("name", err)
 	}
 
 	color, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Shrt", "Bs")
@@ -61,7 +61,7 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 	score, err := strconv.Atoi(rawScore)
 	if err != nil {
 		score = -1
-		//return nil, utils.Wrap("score", err)
+		//return nil, errore.Wrap("score", err)
 	}
 
 	return &TeamInfo{name, color, score}, nil
@@ -70,17 +70,17 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 func parseMatch(data []byte) (*MatchInfo, error) {
 	id, err := jsonparser.GetString(data, "Eid")
 	if err != nil {
-		return nil, utils.Wrap("id", err)
+		return nil, errore.Wrap("id", err)
 	}
 
 	time, err := jsonparser.GetString(data, "Eps")
 	if err != nil {
-		return nil, utils.Wrap("time", err)
+		return nil, errore.Wrap("time", err)
 	}
 
 	cupName, err := jsonparser.GetString(data, "Stg", "Sdn")
 	if err != nil {
-		return nil, utils.Wrap("cup name", err)
+		return nil, errore.Wrap("cup name", err)
 	}
 
 	stadiumName, err := jsonparser.GetString(data, "Vnm")
@@ -100,7 +100,7 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 
 	team2, err := parseTeam(2, data)
 	if err != nil {
-		return nil, utils.Wrap("team2", err)
+		return nil, errore.Wrap("team2", err)
 	}
 
 	var events []*Event
@@ -179,7 +179,7 @@ func ListLives() ([]*MatchInfo, error) {
 		_, err0 := jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
 			match, err1 := parseMatch(matchData)
 			if err1 != nil {
-				utils.HandleFatal(err)
+				errore.HandleFatal(err)
 			} else {
 				matches = append(matches, match)
 			}
@@ -189,7 +189,7 @@ func ListLives() ([]*MatchInfo, error) {
 		}
 	}, "Stages")
 	if err != nil {
-		return nil, utils.Wrap("stages", err)
+		return nil, errore.Wrap("stages", err)
 	}
 
 	return matches, nil
