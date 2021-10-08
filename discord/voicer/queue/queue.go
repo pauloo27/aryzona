@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	EventAppend  = event.EventType("APPEND")
-	EventPop     = event.EventType("POP")
-	EventEnded   = event.EventType("ENDED")
-	EventCleared = event.EventType("CLEARED")
+	EventAppend = event.EventType("APPEND")
+	EventPop    = event.EventType("POP")
+	//EventEnded   = event.EventType("ENDED")
+	//EventCleared = event.EventType("CLEARED")
 )
 
 type Queue struct {
@@ -64,6 +64,7 @@ func (q *Queue) Pop(index int) {
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
 	q.queue = tmp
+	q.Emit(EventPop, q, index)
 }
 
 func (q *Queue) Size() int {
