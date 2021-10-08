@@ -19,6 +19,11 @@ var PlayingCommand = command.Command{
 		}
 		playable := vc.Playing()
 
+		if playable == nil {
+			ctx.Error("Nothing playing...")
+			return
+		}
+
 		title, artist := playable.GetFullTitle()
 
 		embedBuilder := utils.NewEmbedBuilder().
