@@ -49,7 +49,6 @@ func (v *Voicer) registerListeners() {
 
 	v.Queue.On(queue.EventPop, func(params ...interface{}) {
 		index := params[1].(int)
-		logger.Debug("poped!", index)
 		if index == 0 {
 			v.EncodeSession.Cleanup()
 		}
