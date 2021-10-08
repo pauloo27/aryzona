@@ -46,6 +46,14 @@ func (v *Voicer) registerListeners() {
 		_ = v.Start()
 	}
 	v.Queue.On(queue.EventAppend, start)
+
+	v.Queue.On(queue.EventPop, func(params ...interface{}) {
+		index := params[1].(int)
+		logger.Debug("poped!", index)
+		if index == 0 {
+			v.EncodeSession.Cleanup()
+		}
+	})
 }
 
 func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
@@ -93,6 +101,13 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 
 func (v *Voicer) CanConnect() bool {
 	return v.ChannelID != nil
+}
+
+func (v *Voicer) Skip() {
+	if v.EncodeSession == nil {
+		return
+	}
+	v.EncodeSession.Cleanup()
 }
 
 func (v *Voicer) Connect() error {
