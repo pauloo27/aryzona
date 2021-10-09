@@ -61,7 +61,7 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	if found {
 		voicer.Lock()
 		defer voicer.Unlock()
-		// usable = fully disconnected or going to disconnect
+		// not usable means fully disconnected or going to disconnect
 		// why? cuz doing ,play then ,stop ,play very quickly broke the bot =(
 		if voicer.usable {
 			return voicer, nil
