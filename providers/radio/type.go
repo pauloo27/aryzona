@@ -1,5 +1,7 @@
 package radio
 
+import "time"
+
 type RadioType struct {
 	Name          string
 	IsOppus       bool
@@ -14,6 +16,14 @@ type RadioChannel struct {
 
 func (c RadioChannel) CanPause() bool {
 	return true
+}
+
+func (c RadioChannel) IsLive() bool {
+	return true
+}
+
+func (RadioChannel) GetDuration() (time.Duration, error) {
+	return 0, nil
 }
 
 func (c RadioChannel) GetName() string {

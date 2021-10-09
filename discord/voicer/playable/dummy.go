@@ -1,5 +1,7 @@
 package playable
 
+import "time"
+
 /*
 	DummyPlayable is used in tests
 */
@@ -19,6 +21,14 @@ func (DummyPlayable) IsOppus() bool {
 
 func (DummyPlayable) IsLocal() bool {
 	return true
+}
+
+func (DummyPlayable) IsLive() bool {
+	return false
+}
+
+func (DummyPlayable) GetDuration() (time.Duration, error) {
+	return 0, nil
 }
 
 func (DummyPlayable) GetDirectURL() (string, error) {

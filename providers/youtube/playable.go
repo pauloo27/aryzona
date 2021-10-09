@@ -1,6 +1,8 @@
 package youtube
 
 import (
+	"time"
+
 	"github.com/kkdai/youtube/v2"
 )
 
@@ -15,6 +17,14 @@ func (YouTubePlayable) CanPause() bool {
 
 func (YouTubePlayable) GetName() string {
 	return "YouTube video"
+}
+
+func (p YouTubePlayable) IsLive() bool {
+	return p.Live
+}
+
+func (p YouTubePlayable) GetDuration() (time.Duration, error) {
+	return p.Video.Duration, nil
 }
 
 func (YouTubePlayable) TogglePause() error {
