@@ -15,6 +15,9 @@ import (
 	// import listeners
 	_ "github.com/Pauloo27/aryzona/discord/listeners"
 
+	// import scheduler
+	_ "github.com/Pauloo27/aryzona/utils/scheduler"
+
 	// import all command categories
 	_ "github.com/Pauloo27/aryzona/command/categories/audio"
 	_ "github.com/Pauloo27/aryzona/command/categories/sysmon"
