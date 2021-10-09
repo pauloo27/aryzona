@@ -1,13 +1,17 @@
 package listeners
 
 import (
+	"time"
+
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
+	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/scheduler"
 	"github.com/bwmarrin/discordgo"
 )
 
 func init() {
-	discord.Listen(VoiceChannelDisconnect)
+	discord.Listen(VoiceUpdate)
 }
 
 func countUsersInChannel(guildID, channelID string) (count int) {
@@ -23,25 +27,51 @@ func countUsersInChannel(guildID, channelID string) (count int) {
 	return
 }
 
-func VoiceChannelDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
-	if s.State.User.ID == e.UserID {
+func onConnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Voicer) {
+	userCount := countUsersInChannel(e.GuildID, e.ChannelID)
+	if userCount <= 1 {
 		return
 	}
-	v := voicer.GetExistingVoicerForGuild(e.GuildID)
-	if v == nil || v.ChannelID == nil {
-		return
-	}
-	if e.BeforeUpdate.ChannelID != *v.ChannelID {
-		return
-	}
+
+	scheduler.Unschedule(utils.Fmt("voice_disconnect_%s", e.GuildID))
+}
+
+func onDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Voicer) {
 	userCount := countUsersInChannel(e.GuildID, e.ChannelID)
 	if userCount > 1 {
 		return
 	}
-	// TODO: schedule disconnect - Instead of disconnecting right away, wait around
-	// 30 seconds because maybe the user will come back. If they dont, then we say
-	// bye bye =)
 
-	// TODO: how do "unschedule" when the user come back? Btw, handle that in the current
-	// listener
+	task := scheduler.Task{
+		Time: time.Now().Add(30 * time.Second),
+		Callback: func(parmas ...interface{}) {
+			v.Disconnect()
+		},
+	}
+	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", e.GuildID), &task)
+}
+
+func VoiceUpdate(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
+	if s.State.User.ID == e.UserID {
+		return
+	}
+	v := voicer.GetExistingVoicerForGuild(e.GuildID)
+
+	if v == nil || v.ChannelID == nil {
+		return
+	}
+	voicerChan := *v.ChannelID
+
+	prevChan := e.BeforeUpdate.ChannelID
+	currentChan := e.VoiceState.ChannelID
+
+	if prevChan == voicerChan && currentChan != prevChan {
+		onDisconnect(s, e, v)
+		return
+	}
+
+	if currentChan == voicerChan {
+		onConnect(s, e, v)
+		return
+	}
 }
