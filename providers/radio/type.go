@@ -15,7 +15,7 @@ type RadioChannel struct {
 }
 
 func (c RadioChannel) CanPause() bool {
-	return true
+	return false
 }
 
 func (c RadioChannel) IsLive() bool {
