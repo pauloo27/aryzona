@@ -2,9 +2,6 @@ package playable
 
 type Playable interface {
 	CanPause() bool
-	Pause() error
-	Unpause() error
-	TogglePause() error
 	GetDirectURL() (string, error)
 	GetName() string
 	IsOppus() bool

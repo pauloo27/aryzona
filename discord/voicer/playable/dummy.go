@@ -21,18 +21,6 @@ func (DummyPlayable) IsLocal() bool {
 	return true
 }
 
-func (DummyPlayable) Pause() error {
-	return nil
-}
-
-func (DummyPlayable) Unpause() error {
-	return nil
-}
-
-func (DummyPlayable) TogglePause() error {
-	return nil
-}
-
 func (DummyPlayable) GetDirectURL() (string, error) {
 	return "", nil
 }

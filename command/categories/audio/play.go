@@ -51,7 +51,7 @@ var PlayCommand = command.Command{
 			Field("Title", playable.Video.Title).
 			Field("Uploader", playable.Video.Author)
 
-		if playable.IsLive {
+		if playable.Live {
 			embed.Field("Duration", "**🔴 LIVE**")
 		} else {
 			embed.Field("Duration", playable.Video.Duration.String())

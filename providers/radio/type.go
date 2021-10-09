@@ -16,20 +16,8 @@ func (c RadioChannel) CanPause() bool {
 	return true
 }
 
-func (c RadioChannel) Pause() error {
-	return nil
-}
-
-func (c RadioChannel) Unpause() error {
-	return nil
-}
-
 func (c RadioChannel) GetName() string {
 	return c.Name + " (radio)"
-}
-
-func (c RadioChannel) TogglePause() error {
-	return nil
 }
 
 func (c RadioChannel) GetDirectURL() (string, error) {
