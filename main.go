@@ -6,16 +6,19 @@ import (
 	"syscall"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/command/slash"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/logger"
 	"github.com/joho/godotenv"
 
+	// import listeners
+	_ "github.com/Pauloo27/aryzona/discord/listeners"
+
 	// import all command categories
 	_ "github.com/Pauloo27/aryzona/command/categories/audio"
 	_ "github.com/Pauloo27/aryzona/command/categories/sysmon"
 	_ "github.com/Pauloo27/aryzona/command/categories/utils"
-	"github.com/Pauloo27/aryzona/command/slash"
 )
 
 var commitHash, commitMessage string
@@ -37,7 +40,7 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
-	discord.AddDefaultListeners()
+	discord.RegisterListeners()
 	err = discord.Connect()
 	if err != nil {
 		logger.Fatal(err)

@@ -5,6 +5,7 @@ import (
 	"os/user"
 	"strconv"
 
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/git"
 	"github.com/Pauloo27/aryzona/providers/animal"
 	"github.com/Pauloo27/aryzona/utils"
@@ -12,6 +13,10 @@ import (
 	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	discord.Listen(Ready)
+}
 
 func createStartedEmbed(s *discordgo.Session) *discordgo.MessageEmbed {
 	dogImage, err := animal.GetRandomDogImage()

@@ -4,8 +4,13 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	discord.Listen(MessageCreate)
+}
 
 func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {

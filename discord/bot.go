@@ -3,7 +3,6 @@ package discord
 import (
 	"time"
 
-	"github.com/Pauloo27/aryzona/discord/listeners"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -25,7 +24,14 @@ func Disconnect() error {
 	return Session.Close()
 }
 
-func AddDefaultListeners() {
-	Session.AddHandler(listeners.MessageCreate)
-	Session.AddHandler(listeners.Ready)
+var listeners []interface{}
+
+func Listen(listener interface{}) {
+	listeners = append(listeners, listener)
+}
+
+func RegisterListeners() {
+	for _, listener := range listeners {
+		Session.AddHandler(listener)
+	}
 }
