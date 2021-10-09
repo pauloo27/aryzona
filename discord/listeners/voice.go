@@ -3,9 +3,7 @@ package listeners
 import (
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
-	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
-	"github.com/gorilla/websocket"
 )
 
 func init() {
