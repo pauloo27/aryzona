@@ -11,8 +11,8 @@ type YouTubePlayable struct {
 	Live  bool
 }
 
-func (YouTubePlayable) CanPause() bool {
-	return false
+func (p YouTubePlayable) CanPause() bool {
+	return !p.Live
 }
 
 func (YouTubePlayable) GetName() string {

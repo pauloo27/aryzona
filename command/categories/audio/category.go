@@ -7,7 +7,7 @@ var Audio = command.CommandCategory{
 	Emoji: "🎵",
 	Commands: []*command.Command{
 		&LyricCommand, &RadioCommand, &PlayingCommand, &StopCommand, &PlayCommand,
-		&SkipCommand,
+		&SkipCommand, &PauseCommand,
 	},
 }
 

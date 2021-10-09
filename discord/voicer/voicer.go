@@ -102,6 +102,20 @@ func (v *Voicer) CanConnect() bool {
 	return v.ChannelID != nil
 }
 
+func (v *Voicer) IsPaused() bool {
+	if v.StreamingSession == nil {
+		return false
+	}
+	return v.StreamingSession.Paused()
+}
+
+func (v *Voicer) TogglePause() {
+	if v.StreamingSession == nil {
+		return
+	}
+	v.StreamingSession.TogglePause()
+}
+
 func (v *Voicer) Skip() {
 	if v.EncodeSession == nil {
 		return
