@@ -60,6 +60,9 @@ func (q *Queue) First() playable.Playable {
 }
 
 func (q *Queue) Pop(index int) {
+	if q.Size() == 0 {
+		return
+	}
 	var tmp []playable.Playable
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
