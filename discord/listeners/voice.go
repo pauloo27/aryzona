@@ -7,6 +7,7 @@ import (
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/aryzona/utils/scheduler"
+	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -45,7 +46,10 @@ func onDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer
 	task := scheduler.Task{
 		Time: time.Now().Add(30 * time.Second),
 		Callback: func(parmas ...interface{}) {
-			v.Disconnect()
+			err := v.Disconnect()
+			if err != nil {
+				logger.Errorf("cannot disconnect empty channel: %v", err)
+			}
 		},
 	}
 	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", e.GuildID), &task)
