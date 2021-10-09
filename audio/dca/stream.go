@@ -116,7 +116,7 @@ func (s *StreamingSession) PlaybackPosition() int {
 	return time
 }
 
-func (s *StreamingSession) Pause() {
+func (s *StreamingSession) TogglePause() {
 	s.Lock()
 
 	if s.finished {
