@@ -29,8 +29,7 @@ func countUsersInChannel(guildID, channelID string) (count int) {
 }
 
 func onConnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Voicer) {
-	userCount := countUsersInChannel(e.GuildID, e.ChannelID)
-	if userCount <= 1 {
+	if countUsersInChannel(e.GuildID, e.ChannelID) <= 1 {
 		return
 	}
 
@@ -38,16 +37,14 @@ func onConnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Vo
 }
 
 func onDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Voicer) {
-	userCount := countUsersInChannel(e.GuildID, e.ChannelID)
-	if userCount > 1 {
+	if countUsersInChannel(e.GuildID, e.ChannelID) > 1 {
 		return
 	}
 
 	task := scheduler.Task{
 		Time: time.Now().Add(30 * time.Second),
 		Callback: func(parmas ...interface{}) {
-			err := v.Disconnect()
-			if err != nil {
+			if err := v.Disconnect(); err != nil {
 				logger.Errorf("cannot disconnect empty channel: %v", err)
 			}
 		},
