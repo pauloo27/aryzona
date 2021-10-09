@@ -35,6 +35,14 @@ var PlayingCommand = command.Command{
 		}
 
 		embedBuilder.Field("Requested by", utils.AsMention(*vc.UserID))
+		if playable.IsLive() {
+			embedBuilder.Field("Duration", "**🔴 LIVE**")
+		} else {
+			duration, err := playable.GetDuration()
+			if err == nil {
+				embedBuilder.Field("Duration", duration.String())
+			}
+		}
 
 		if vc.Queue.Size() > 1 {
 			sb := strings.Builder{}
