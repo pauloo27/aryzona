@@ -1,8 +1,10 @@
 package voicer
 
 import (
+	"errors"
 	"io"
 	"sync"
+	"time"
 
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/discord"
@@ -177,6 +179,14 @@ func (v *Voicer) Playing() playable.Playable {
 func (v *Voicer) AppendToQueue(playable playable.Playable) error {
 	v.Queue.Append(playable)
 	return nil
+}
+
+func (v *Voicer) GetPosition() (time.Duration, error) {
+	if v == nil || v.Queue.First() == nil {
+		// TODO: create an errore?
+		return 0, errors.New("nothing playing")
+	}
+	return time.Duration(v.StreamingSession.PlaybackPosition()), nil
 }
 
 func (v *Voicer) Start() error {

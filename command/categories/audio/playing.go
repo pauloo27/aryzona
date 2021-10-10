@@ -38,6 +38,10 @@ var PlayingCommand = command.Command{
 		if playable.IsLive() {
 			embedBuilder.Field("Duration", "**🔴 LIVE**")
 		} else {
+			position, err := vc.GetPosition()
+			if err == nil {
+				embedBuilder.Field("Position", position.String())
+			}
 			duration, err := playable.GetDuration()
 			if err == nil {
 				embedBuilder.Field("Duration", duration.String())
