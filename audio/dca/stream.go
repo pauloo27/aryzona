@@ -95,12 +95,14 @@ func (s *StreamingSession) readNext() error {
 		return err
 	}
 
-	timeOut := time.After(60 * time.Second)
+	timeOut := time.NewTimer(60 * time.Second)
 
 	select {
-	case <-timeOut:
+	case <-timeOut.C:
+		timeOut.Stop()
 		return ErrVoiceConnectionClosed
 	case s.connection.OpusSend <- opus:
+		timeOut.Stop()
 	}
 	s.Lock()
 	s.framesSent++
