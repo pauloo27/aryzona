@@ -2,6 +2,7 @@ package audio
 
 import (
 	"strings"
+	"time"
 
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/discord/voicer"
@@ -40,7 +41,7 @@ var PlayingCommand = command.Command{
 		} else {
 			position, err := vc.GetPosition()
 			if err == nil {
-				embedBuilder.Field("Position", position.String())
+				embedBuilder.Field("Position", position.Truncate(time.Second).String())
 			}
 			duration, err := playable.GetDuration()
 			if err == nil {
