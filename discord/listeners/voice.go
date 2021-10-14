@@ -63,7 +63,10 @@ func VoiceUpdate(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
 	}
 	voicerChan := *v.ChannelID
 
-	prevChan := e.BeforeUpdate.ChannelID
+	var prevChan string
+	if e.BeforeUpdate != nil {
+		prevChan = e.BeforeUpdate.ChannelID
+	}
 	currentChan := e.VoiceState.ChannelID
 
 	if prevChan == voicerChan && currentChan != prevChan {
