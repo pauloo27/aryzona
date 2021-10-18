@@ -1,14 +1,20 @@
 package youtube
 
 import (
-	"strings"
-
 	"github.com/kkdai/youtube/v2"
 )
 
-var defaultClient = youtube.Client{}
+var (
+	defaultClient = youtube.Client{}
+)
 
 func GetVideoID(videoURL string) string {
-	// probably not the best way to do it tho
-	return strings.Split(videoURL, "=")[1]
+	matches := videoRegex.FindAllStringSubmatch(videoURL, -1)
+	if len(matches) == 1 {
+		match := matches[0]
+		if len(match) == 2 {
+			return match[1]
+		}
+	}
+	return ""
 }
