@@ -64,7 +64,7 @@ func Ready(s *discordgo.Session, m *discordgo.Ready) {
 	}
 
 	if os.Getenv("DC_BOT_ENV") == "prod" {
-		c, err := s.UserChannelCreate(os.Getenv("DC_BOT_OWNER_ID"))
+		c, err := utils.OpenChatWithOwner(s)
 		errore.HandleFatal(err)
 		_, err = s.ChannelMessageSendEmbed(c.ID, createStartedEmbed(s))
 		errore.HandleFatal(err)
