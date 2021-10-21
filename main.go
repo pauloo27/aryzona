@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 
 	"github.com/Pauloo27/aryzona/command"
 	"github.com/Pauloo27/aryzona/command/slash"
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/git"
+	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
 	"github.com/joho/godotenv"
 
@@ -37,12 +40,44 @@ func init() {
 	git.RemoteRepo = os.Getenv("DC_BOT_REMOTE_REPO")
 }
 
+func init() {
+	logger.AddLogListener(func(level logger.Level, params ...interface{}) {
+		if discord.Session == nil || (level != logger.ERROR && level != logger.FATAL) {
+			return
+		}
+
+		c, err := utils.OpenChatWithOwner(discord.Session)
+		if err != nil {
+			// to avoid loops, do not call the logger again
+			fmt.Println("shit 0", err)
+			return
+		}
+
+		if err != nil {
+			fmt.Println("shit 1", err)
+		}
+
+		embed := utils.NewEmbedBuilder().
+			FieldInline("Message", fmt.Sprintln(params...)).
+			Description(utils.Fmt("```\n%s\n```", string(debug.Stack()))).
+			Color(0xff5555).
+			Title(utils.Fmt("Oops! [%s]", level.Name))
+
+		_, err = discord.Session.ChannelMessageSendEmbed(c.ID, embed.Build())
+		if err != nil {
+			fmt.Println("shit 2", err)
+			return
+		}
+	})
+}
+
 func main() {
 	logger.Info("Connecting to Discord...")
 	err := discord.Create(os.Getenv("DC_BOT_TOKEN"))
 	if err != nil {
 		logger.Fatal(err)
 	}
+
 	discord.RegisterListeners()
 	err = discord.Connect()
 	if err != nil {
