@@ -32,20 +32,16 @@ var PlayCommand = command.Command{
 				return
 			}
 		}
-
 		searchQuery := ctx.Args[0].(string)
 		resultURL, err := youtube.GetBestResult(searchQuery)
-
 		if err != nil {
 			ctx.Error("Cannot find what you are looking for")
-			logger.Error(err)
 			return
 		}
 
 		playable, err := youtube.AsPlayable(resultURL)
 		if err != nil {
 			ctx.Error("Something went wrong when getting the video to play")
-			logger.Error(err)
 			return
 		}
 
