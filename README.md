@@ -16,6 +16,7 @@ Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency
 - run bash commands in the host (`!bash`)
 - play radios: lofi, rock, pisadinha, pop, cafe, swing and more (`!radio`)
 - play youtube videos (`!play`, but just sometimes cuz we respect the law)
+- and a few more stuff
 
 ## How to add to your server
 
