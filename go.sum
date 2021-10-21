@@ -46,6 +46,8 @@ github.com/Pauloo27/logger v0.0.0-20210823022929-53bcdd44d1e5 h1:gnTEtBTKu/RAUNf
 github.com/Pauloo27/logger v0.0.0-20210823022929-53bcdd44d1e5/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
 github.com/Pauloo27/logger v0.0.0-20211021021050-37be67db536b h1:KHeJGAKG6qWt7r/Pk/2wmzYrc5i7DMWTftJ05qxIkPc=
 github.com/Pauloo27/logger v0.0.0-20211021021050-37be67db536b/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
+github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f h1:aMmlzeEZForBN4R5qrtCyGpYqnfAIUscWlDy3nc1aAY=
+github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856 h1:k8zl0zenL6c8jnOkvrv8+JfTD7o7zLxG8qS9gYloJec=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856/go.mod h1:iy94yme2Foi86LomMXphTGQWhG0dxneMLhIA6mlUZ50=
 github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df h1:43+CvjKAxXuBzVxGdydWCzaLrfCEOfVq7JrK0yo564A=
