@@ -59,7 +59,7 @@ func (q *Queue) First() playable.Playable {
 	return q.queue[0]
 }
 
-func (q *Queue) Pop(index int) {
+func (q *Queue) Remove(index int) {
 	if q.Size() == 0 {
 		return
 	}

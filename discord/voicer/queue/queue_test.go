@@ -20,7 +20,7 @@ func TestQueue(t *testing.T) {
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "hello", queue.First().GetName())
 
-	queue.Pop(0)
+	queue.Remove(0)
 	assert.Equal(t, 1, queue.Size())
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "coming next", queue.First().GetName())
@@ -32,12 +32,12 @@ func TestQueue(t *testing.T) {
 	assert.NotNil(t, queue.ItemAt(1))
 	assert.Equal(t, "hello", queue.ItemAt(1).GetName())
 
-	queue.Pop(1)
+	queue.Remove(1)
 	assert.Equal(t, 2, queue.Size())
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "coming next", queue.First().GetName())
 
-	queue.Pop(0)
+	queue.Remove(0)
 	assert.Equal(t, 1, queue.Size())
 	assert.NotNil(t, queue.First())
 	assert.Equal(t, "bye", queue.First().GetName())

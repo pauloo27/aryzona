@@ -238,7 +238,7 @@ func (v *Voicer) Start() error {
 
 		err = <-done
 
-		v.Queue.Pop(0)
+		v.Queue.Remove(0)
 
 		if err == nil || err == io.EOF {
 			continue
