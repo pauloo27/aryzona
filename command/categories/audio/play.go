@@ -59,7 +59,7 @@ var PlayCommand = command.Command{
 		ctx.SuccessEmbed(
 			embed.Build(),
 		)
-		go func() {
+		utils.Go(func() {
 			if err = vc.AppendToQueue(playable); err != nil {
 				if is, vErr := errore.IsErrore(err); is {
 					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
@@ -72,6 +72,6 @@ var PlayCommand = command.Command{
 				}
 				return
 			}
-		}()
+		})
 	},
 }

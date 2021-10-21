@@ -1,6 +1,7 @@
 package dca
 
 import (
+	"github.com/Pauloo27/aryzona/utils"
 	"io"
 	"sync"
 	"time"
@@ -37,7 +38,7 @@ func NewStream(source *EncodeSession, vc *discordgo.VoiceConnection, callback ch
 		callback:   callback,
 	}
 
-	go session.stream()
+	utils.Go(session.stream)
 
 	return session
 }
@@ -130,7 +131,7 @@ func (s *StreamingSession) TogglePause() {
 
 	s.paused = isPaused
 	if !isPaused {
-		go s.stream()
+		utils.Go(s.stream)
 	}
 	s.Unlock()
 }

@@ -3,6 +3,7 @@ package scheduler
 import (
 	"time"
 
+	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -48,5 +49,5 @@ func scheduleLoop(delay time.Duration) {
 }
 
 func init() {
-	go scheduleLoop(1 * time.Second)
+	utils.Go(func() { scheduleLoop(1 * time.Second) })
 }

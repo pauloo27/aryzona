@@ -50,7 +50,7 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 		isLocal: isLocal,
 	}
 
-	go session.run()
+	utils.Go(func() { session.run() })
 	return session
 }
 
