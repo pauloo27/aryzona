@@ -1,6 +1,7 @@
 {
   "PrefixPack": "text",
   "AskCISkip": true,
+  "Modules": ["commands", "voicer", "scheduler"],
   "PreCommit": [
     {
       "Command": "make lint",
