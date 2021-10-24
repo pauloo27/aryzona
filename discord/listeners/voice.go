@@ -41,15 +41,16 @@ func onDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer
 		return
 	}
 
-	task := scheduler.Task{
-		Time: time.Now().Add(30 * time.Second),
-		Callback: func(parmas ...interface{}) {
+	task := scheduler.NewRunLaterTask(
+		30*time.Second,
+		func(params ...interface{}) {
 			if err := v.Disconnect(); err != nil {
 				logger.Errorf("cannot disconnect empty channel: %v", err)
 			}
 		},
-	}
-	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", e.GuildID), &task)
+	)
+
+	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", e.GuildID), task)
 }
 
 func VoiceUpdate(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {

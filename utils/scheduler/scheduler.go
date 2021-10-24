@@ -7,9 +7,14 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
+type TaskCallback func(params ...interface{})
+
 type Task struct {
-	Time     time.Time
-	Callback func(params ...interface{})
+	Delay                 time.Duration
+	Repeat, RepeatCounter int
+	Callback              TaskCallback
+	LastRunAt             time.Time
+	RunAt                 time.Time
 }
 
 var tasks = make(map[string]*Task)
@@ -30,7 +35,8 @@ func Unschedule(key string) {
 func scheduleLoop(delay time.Duration) {
 	for {
 		for key, task := range tasks {
-			if task.Time.After(time.Now()) {
+			now := time.Now()
+			if task.RunAt.After(now) {
 				continue
 			}
 
@@ -42,7 +48,12 @@ func scheduleLoop(delay time.Duration) {
 				}()
 				task.Callback()
 			}()
-			Unschedule(key)
+
+			task.RepeatCounter++
+			if task.Repeat > 0 && task.Repeat-task.RepeatCounter == 0 {
+				Unschedule(key)
+			}
+			task.RunAt = now.Add(task.Delay)
 		}
 		time.Sleep(delay)
 	}
