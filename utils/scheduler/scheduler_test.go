@@ -14,7 +14,7 @@ func TestRunLater(t *testing.T) {
 	now := time.Now()
 	c := make(chan bool, 1)
 	task := scheduler.NewRunLaterTask(delay, func(params ...interface{}) {
-		c <- time.Now().Sub(now).Truncate(time.Second) == time.Second
+		c <- time.Since(now).Truncate(time.Second) == time.Second
 	})
 	scheduler.Schedule("test run later", task)
 	assert.True(t, <-c)
@@ -29,7 +29,7 @@ func TestRepeatingRun(t *testing.T) {
 	counter := 0
 	task := scheduler.NewRepeatingTask(delay, repeat, func(params ...interface{}) {
 		counter++
-		c <- time.Now().Sub(now).Truncate(time.Second) == time.Duration(counter*int(time.Second))
+		c <- time.Since(now).Truncate(time.Second) == time.Duration(counter*int(time.Second))
 	})
 	scheduler.Schedule("test repeating", task)
 	for {
