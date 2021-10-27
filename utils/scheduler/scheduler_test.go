@@ -29,7 +29,8 @@ func TestRepeatingRun(t *testing.T) {
 	counter := 0
 	task := scheduler.NewRepeatingTask(delay, repeat, func(params ...interface{}) {
 		counter++
-		c <- time.Since(now).Truncate(time.Second) == time.Duration(counter*int(time.Second))
+		c <- time.Since(now).Truncate(time.Second) == time.Duration(int(time.Second))
+		now = time.Now()
 	})
 	scheduler.Schedule("test repeating", task)
 	for {
