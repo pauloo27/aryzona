@@ -15,11 +15,11 @@ runs:
           - clone:
           - restore_cache:
               keys:
-                - pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
+                - pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               dest_dir: /go/pkg
           - restore_cache:
               keys:
-                - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
+                - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               dest_dir: /root/.cache/go-build
           - run:
               name: build
@@ -59,11 +59,11 @@ runs:
               name: test
               command:  make test
           - save_cache:
-              key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
+              key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               contents:
                 - source_dir: /go/pkg
           - save_cache:
-              key: build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}-{{ day }}
+              key: build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               contents:
                 - source_dir: /root/.cache/go-build
 
