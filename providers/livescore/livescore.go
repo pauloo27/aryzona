@@ -50,12 +50,11 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 	// sometimes the color is not defined... so lets use white as fallback
 	if err != nil {
 		color = "ffffff"
-		logger.Error(err)
 	}
 
 	rawScore, err := jsonparser.GetString(data, "Tr"+strconv.Itoa(id))
 	if err != nil {
-		logger.Error(err)
+		logger.Warn(errore.Wrap("cannot get raw score", err))
 	}
 
 	score, err := strconv.Atoi(rawScore)
@@ -80,17 +79,17 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 
 	cupName, err := jsonparser.GetString(data, "Stg", "Sdn")
 	if err != nil {
-		return nil, errore.Wrap("cup name", err)
+		cupName = "Stree game"
 	}
 
 	stadiumName, err := jsonparser.GetString(data, "Vnm")
 	if err != nil {
-		logger.Error("stadium name", err)
+		stadiumName = "Somewhere"
 	}
 
 	stadiumCity, err := jsonparser.GetString(data, "VCity")
 	if err != nil {
-		logger.Error("stadium city", err)
+		stadiumCity = "Earth"
 	}
 
 	team1, err := parseTeam(1, data)
@@ -105,7 +104,7 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 
 	var events []*Event
 
-	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+	_, _ = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		text, _ := jsonparser.GetString(value, "Txt")
 		id, _ := jsonparser.GetInt(value, "IT")
 		min, _ := jsonparser.GetInt(value, "Min")
@@ -117,10 +116,6 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 		}
 		events = append(events, &event)
 	}, "Com")
-
-	if err != nil {
-		logger.Error("events", err)
-	}
 
 	return &MatchInfo{
 		ID: id, T1: team1, T2: team2, Time: time, CupName: cupName,
