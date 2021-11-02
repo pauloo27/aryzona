@@ -65,6 +65,7 @@ var ScoreCommand = command.Command{
 				Field("Time", match.Time).
 				FieldInline(match.T1.Name, strconv.Itoa(match.T1.Score)).
 				FieldInline(match.T2.Name, strconv.Itoa(match.T2.Score)).
+				Field("ID", match.ID).
 				Description(desc.String()).
 				Build(),
 		)
