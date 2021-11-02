@@ -8,7 +8,7 @@ var Utils = command.CommandCategory{
 	Commands: []*command.Command{
 		&PingCommand, &UptimeCommand, &HelpCommand, &DogCommand, &CatCommand,
 		&FoxCommand, &SourceCommand, &XkcdCommand, &ScoreCommand, &LiveCommand,
-		&EvenCommand, &RollCommand, &UpdateCommand,
+		&EvenCommand, &RollCommand,
 	},
 }
 
