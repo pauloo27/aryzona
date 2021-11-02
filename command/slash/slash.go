@@ -16,10 +16,7 @@ var discordTypeMap = map[*command.CommandArgumentType]discordgo.ApplicationComma
 	command.ArgumentBool:   discordgo.ApplicationCommandOptionBoolean,
 }
 
-// to ensure the listeners are not added twice
-var handlersAdded = false
-
-func RegisterCommands(update bool) error {
+func RegisterCommands() error {
 	mustGetChoisesFor := func(arg *command.CommandArgument) (options []*discordgo.ApplicationCommandOptionChoice) {
 		for _, value := range arg.GetValidValues() {
 			options = append(options, &discordgo.ApplicationCommandOptionChoice{
@@ -38,42 +35,35 @@ func RegisterCommands(update bool) error {
 		return t
 	}
 
-	if update {
-		var slashCommands []*discordgo.ApplicationCommand
+	var slashCommands []*discordgo.ApplicationCommand
 
-		for key, cmd := range command.GetCommandMap() {
+	for key, cmd := range command.GetCommandMap() {
 
-			// skip aliases
-			if key != cmd.Name {
-				continue
-			}
-
-			slashCommand := discordgo.ApplicationCommand{
-				Name:        cmd.Name,
-				Description: cmd.Description,
-			}
-
-			for _, arg := range cmd.Arguments {
-				slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
-					Name:        arg.Name,
-					Description: arg.Description,
-					Required:    arg.Required,
-					Type:        mustGetTypeFor(arg),
-					Choices:     mustGetChoisesFor(arg),
-				})
-			}
-
-			slashCommands = append(slashCommands, &slashCommand)
+		// skip aliases
+		if key != cmd.Name {
+			continue
 		}
-		_, err := discord.Session.ApplicationCommandBulkOverwrite(discord.Session.State.User.ID, "", slashCommands)
-		if err != nil {
-			return err
+
+		slashCommand := discordgo.ApplicationCommand{
+			Name:        cmd.Name,
+			Description: cmd.Description,
 		}
+
+		for _, arg := range cmd.Arguments {
+			slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
+				Name:        arg.Name,
+				Description: arg.Description,
+				Required:    arg.Required,
+				Type:        mustGetTypeFor(arg),
+				Choices:     mustGetChoisesFor(arg),
+			})
+		}
+
+		slashCommands = append(slashCommands, &slashCommand)
 	}
-
-	// avoid adding the handlers twice
-	if handlersAdded {
-		return nil
+	_, err := discord.Session.ApplicationCommandBulkOverwrite(discord.Session.State.User.ID, "", slashCommands)
+	if err != nil {
+		return err
 	}
 
 	discord.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {

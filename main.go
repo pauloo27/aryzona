@@ -88,7 +88,7 @@ func main() {
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
 
 	logger.Info("Registering slash commands handlers...")
-	err = slash.RegisterCommands(false)
+	err = slash.RegisterCommands()
 	if err != nil {
 		logger.Fatal(err)
 	}
