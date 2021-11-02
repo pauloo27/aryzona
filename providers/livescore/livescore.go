@@ -66,6 +66,27 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 	return &TeamInfo{name, color, score}, nil
 }
 
+func parseMatchForListing(data []byte) (*MatchInfo, error) {
+	id, err := jsonparser.GetString(data, "Eid")
+	if err != nil {
+		return nil, errore.Wrap("id", err)
+	}
+
+	team1, err := parseTeam(1, data)
+	if err != nil {
+		logger.Error("team1", err)
+	}
+
+	team2, err := parseTeam(2, data)
+	if err != nil {
+		return nil, errore.Wrap("team2", err)
+	}
+
+	return &MatchInfo{
+		ID: id, T1: team1, T2: team2,
+	}, nil
+}
+
 func parseMatch(data []byte) (*MatchInfo, error) {
 	id, err := jsonparser.GetString(data, "Eid")
 	if err != nil {
@@ -132,7 +153,7 @@ func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
 	for _, match := range matches {
 		if strings.EqualFold(match.T1.Name, teamName) ||
 			strings.EqualFold(match.T2.Name, teamName) {
-			return match, nil
+			return FetchMatchInfo(match.ID)
 		}
 	}
 	return nil, nil
@@ -172,7 +193,7 @@ func ListLives() ([]*MatchInfo, error) {
 
 	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		_, err0 := jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
-			match, err1 := parseMatch(matchData)
+			match, err1 := parseMatchForListing(matchData)
 			if err1 != nil {
 				errore.HandleFatal(err)
 			} else {
