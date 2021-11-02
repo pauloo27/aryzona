@@ -38,33 +38,34 @@ func RegisterCommands(update bool) error {
 		return t
 	}
 
-	for key, cmd := range command.GetCommandMap() {
-		// break if not update
-		if !update {
-			break
-		}
+	if update {
+		var slashCommands []*discordgo.ApplicationCommand
 
-		// skip aliases
-		if key != cmd.Name {
-			continue
-		}
+		for key, cmd := range command.GetCommandMap() {
 
-		slashCommand := discordgo.ApplicationCommand{
-			Name:        cmd.Name,
-			Description: cmd.Description,
-		}
+			// skip aliases
+			if key != cmd.Name {
+				continue
+			}
 
-		for _, arg := range cmd.Arguments {
-			slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
-				Name:        arg.Name,
-				Description: arg.Description,
-				Required:    arg.Required,
-				Type:        mustGetTypeFor(arg),
-				Choices:     mustGetChoisesFor(arg),
-			})
-		}
+			slashCommand := discordgo.ApplicationCommand{
+				Name:        cmd.Name,
+				Description: cmd.Description,
+			}
 
-		_, err := discord.Session.ApplicationCommandCreate(discord.Session.State.User.ID, "", &slashCommand)
+			for _, arg := range cmd.Arguments {
+				slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
+					Name:        arg.Name,
+					Description: arg.Description,
+					Required:    arg.Required,
+					Type:        mustGetTypeFor(arg),
+					Choices:     mustGetChoisesFor(arg),
+				})
+			}
+
+			slashCommands = append(slashCommands, &slashCommand)
+		}
+		_, err := discord.Session.ApplicationCommandBulkOverwrite(discord.Session.State.User.ID, "", slashCommands)
 		if err != nil {
 			return err
 		}
