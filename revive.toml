@@ -22,5 +22,5 @@ warningCode = 0
 [rule.unexported-return]
 [rule.indent-error-flow]
 [rule.errorf]
-[rule.exported]
-  arguments = ["checkPrivateReceivers"]
+#[rule.exported]
+#  arguments = ["checkPrivateReceivers"]
