@@ -12,6 +12,9 @@ require (
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
 	github.com/kkdai/youtube/v2 v2.7.2
 	github.com/stretchr/testify v1.7.0
+)
+
+require (
 	golang.org/x/crypto v0.0.0-20210915214749-c084706c2272 // indirect
 	golang.org/x/sys v0.0.0-20210915083310-ed5796bab164 // indirect
 )
