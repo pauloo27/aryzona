@@ -33,9 +33,14 @@ var PlayCommand = command.Command{
 			}
 		}
 		searchQuery := ctx.Args[0].(string)
-		resultURL, err := youtube.GetBestResult(searchQuery)
+		resultURL, isPlaylist, err := youtube.GetBestResult(searchQuery)
 		if err != nil {
 			ctx.Error("Cannot find what you are looking for")
+			return
+		}
+
+		if isPlaylist {
+			ctx.Error("Cannot play playlists yet =(")
 			return
 		}
 

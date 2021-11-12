@@ -7,23 +7,30 @@ import (
 	"github.com/Pauloo27/searchtube"
 )
 
-// FIXME: this regex allows things like `youtu.be.com`, which is not valid...
-// with a "right" string payload (and the hard part, the proper domain), the
-// regex might say that the link is from  youtube when it's not, leading the
-// bot to connect in a "invalid" server which can lead to "IP leaking" or
-// whatever...
-var videoRegex = regexp.MustCompile(`(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?`)
+var (
+	// FIXME: this regex allows things like `youtu.be.com`, which is not valid...
+	// with a "right" string payload (and the hard part, the proper domain), the
+	// regex might say that the link is from  youtube when it's not, leading the
+	// bot to connect in a "invalid" server which can lead to "IP leaking" or
+	// whatever...
+	videoRegex = regexp.MustCompile(`^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?$`)
 
-func GetBestResult(searchQuery string) (string, error) {
+	playlistRegex = regexp.MustCompile(`^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$`)
+)
+
+func GetBestResult(searchQuery string) (url string, isPlaylist bool, err error) {
 	if videoRegex.MatchString(searchQuery) {
-		return searchQuery, nil
+		return searchQuery, false, nil
+	}
+	if playlistRegex.MatchString(searchQuery) {
+		return searchQuery, true, nil
 	}
 	results, err := searchtube.Search(searchQuery, 1)
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 	if len(results) == 0 {
-		return "", errors.New("no results found")
+		return "", false, errors.New("no results found")
 	}
-	return results[0].URL, nil
+	return results[0].URL, false, nil
 }
