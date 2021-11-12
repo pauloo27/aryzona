@@ -9,7 +9,7 @@ type EventAppendData struct {
 	Items  []playable.Playable
 }
 
-type EventPopData struct {
+type EventRemoveData struct {
 	Queue *Queue
 	Index int
 }

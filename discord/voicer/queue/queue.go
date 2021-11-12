@@ -7,7 +7,7 @@ import (
 
 const (
 	EventAppend = event.EventType("APPEND")
-	EventPop    = event.EventType("POP")
+	EventRemove = event.EventType("REMOVE")
 )
 
 type Queue struct {
@@ -84,7 +84,7 @@ func (q *Queue) Remove(index int) {
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
 	q.queue = tmp
-	q.Emit(EventPop, EventPopData{Queue: q, Index: index})
+	q.Emit(EventRemove, EventRemoveData{Queue: q, Index: index})
 }
 
 func (q *Queue) Size() int {
