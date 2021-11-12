@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// yeap, a test for Append and Pop operations =P
+// yeap, tests for Append and Remove operations =P
 func TestQueue(t *testing.T) {
 	queue := queue.NewQueue()
 	assert.Equal(t, 0, queue.Size())
@@ -59,4 +59,20 @@ func TestQueue(t *testing.T) {
 	assert.Equal(t, "hello", queue.All()[0].GetName())
 	assert.Equal(t, "=)", queue.All()[1].GetName())
 	assert.Equal(t, "bye", queue.All()[2].GetName())
+
+	queue.Clear()
+	assert.Equal(t, 0, queue.Size())
+
+	queue.AppendMany(
+		playable.DummyPlayable{Name: "hello"},
+		playable.DummyPlayable{Name: "bye"},
+		playable.DummyPlayable{Name: "=)"},
+	)
+
+	assert.Equal(t, 3, queue.Size())
+	assert.Equal(t, "hello", queue.All()[0].GetName())
+	assert.Equal(t, "bye", queue.All()[1].GetName())
+	assert.Equal(t, "=)", queue.All()[2].GetName())
 }
+
+// TODO: test events
