@@ -8,8 +8,6 @@ import (
 const (
 	EventAppend = event.EventType("APPEND")
 	EventPop    = event.EventType("POP")
-	//EventEnded   = event.EventType("ENDED")
-	//EventCleared = event.EventType("CLEARED")
 )
 
 type Queue struct {
@@ -26,11 +24,25 @@ func NewQueue() *Queue {
 
 func (q *Queue) Append(item playable.Playable) {
 	q.queue = append(q.queue, item)
-	q.Emit(EventAppend, q, q.Size()-1, item)
+	q.Emit(EventAppend, EventAppendData{
+		Queue:  q,
+		Index:  q.Size() - 1,
+		IsMany: false,
+		Items:  []playable.Playable{item},
+	})
+}
+
+func (q *Queue) AppendMany(items ...playable.Playable) {
+	q.queue = append(q.queue, items...)
+	q.Emit(EventAppend, EventAppendData{
+		Queue:  q,
+		Index:  q.Size() - 1,
+		IsMany: true,
+		Items:  items,
+	})
 }
 
 func (q *Queue) All() []playable.Playable {
-	// TODO: return a "deep copy"?
 	return q.queue
 }
 
@@ -40,7 +52,12 @@ func (q *Queue) AppendAt(index int, item playable.Playable) {
 	tmp = append(tmp, item)
 	tmp = append(tmp, q.queue[index:]...)
 	q.queue = tmp
-	q.Emit(EventAppend, q, index, item)
+	q.Emit(EventAppend, EventAppendData{
+		Queue:  q,
+		Index:  index,
+		IsMany: false,
+		Items:  []playable.Playable{item},
+	})
 }
 
 func (q *Queue) Clear() {
@@ -67,7 +84,7 @@ func (q *Queue) Remove(index int) {
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
 	q.queue = tmp
-	q.Emit(EventPop, q, index)
+	q.Emit(EventPop, EventPopData{Queue: q, Index: index})
 }
 
 func (q *Queue) Size() int {
