@@ -26,6 +26,10 @@ var LyricCommand = command.Command{
 				return
 			}
 			playable := vc.Playing()
+			if playable == nil {
+				ctx.Error("Nothing playing...")
+				return
+			}
 
 			title, artist := playable.GetFullTitle()
 			searchTerms = utils.Fmt("%s %s", title, artist)

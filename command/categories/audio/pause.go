@@ -9,18 +9,22 @@ var PauseCommand = command.Command{
 	Name: "Pause", Aliases: []string{"resume"},
 	Description: "Pause/unpause the queue",
 	Handler: func(ctx *command.CommandContext) {
-		voicer := voicer.GetExistingVoicerForGuild(ctx.GuildID)
-		if voicer == nil {
+		vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
+		if vc == nil {
 			ctx.Error("Bot is not connect to a voice channel")
 			return
 		}
-		playing := voicer.Queue.First()
-		if playing == nil || !playing.CanPause() {
+		playing := vc.Queue.First()
+		if playing == nil {
+			ctx.Error("Nothing playing...")
+			return
+		}
+		if !playing.CanPause() {
 			ctx.Error("Cannot pause the current queue item =(")
 			return
 		}
-		voicer.TogglePause()
-		if voicer.IsPaused() {
+		vc.TogglePause()
+		if vc.IsPaused() {
 			ctx.Success("Paused!")
 			return
 		}
