@@ -91,6 +91,10 @@ func (v *Voicer) Connect() error {
 		return ErrCannotConnect
 	}
 
+	if v.IsConnected() {
+		return nil
+	}
+
 	vc, err := discord.Session.ChannelVoiceJoin(*v.GuildID, *v.ChannelID, false, false)
 	if err != nil {
 		return err

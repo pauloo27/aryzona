@@ -80,10 +80,13 @@ var RadioCommand = command.Command{
 			ctx.Error("You are not in a voice channel")
 			return
 		}
-		if err = vc.Connect(); err != nil {
-			ctx.Error("Cannot connect to your voice channel")
-			return
+		if !vc.IsConnected() {
+			if err = vc.Connect(); err != nil {
+				ctx.Error("Cannot connect to your voice channel")
+				return
+			}
 		}
+
 		utils.Go(func() {
 			if err = vc.AppendToQueue(channel); err != nil {
 				if is, vErr := errore.IsErrore(err); is {
