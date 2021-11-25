@@ -162,7 +162,9 @@ func (v *Voicer) Start() error {
 
 	v.playing = true
 	defer func() {
-		_ = v.Voice.Speaking(false)
+		if v.Voice != nil {
+			_ = v.Voice.Speaking(false)
+		}
 		v.playing = false
 		v.scheduleEmptyQueue()
 	}()
