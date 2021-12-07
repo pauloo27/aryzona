@@ -100,7 +100,6 @@ var RadioCommand = command.Command{
 				}
 				return
 			}
-			ctx.Success("Ok!")
 		})
 	},
 }

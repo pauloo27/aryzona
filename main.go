@@ -65,7 +65,7 @@ func init() {
 
 		_, err = discord.Session.ChannelMessageSendEmbed(c.ID, embed.Build())
 		if err != nil {
-			fmt.Println("shit 2", err)
+			fmt.Println("Cannot log to Discord", err)
 			return
 		}
 	})

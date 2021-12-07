@@ -12,7 +12,7 @@ import (
 
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
-	Description: "Play a video/song from uto2",
+	Description: "Play a video/song from u2b",
 	Arguments: []*command.CommandArgument{
 		{Name: "song", Description: "Search query", Required: true, Type: command.ArgumentText},
 	},
