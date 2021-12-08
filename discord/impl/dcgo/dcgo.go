@@ -65,6 +65,10 @@ func (b DcgoBot) Self() (discord.User, error) {
 	return buildUser(u.ID), nil
 }
 
+func (b DcgoBot) GuildCount() int {
+	return len(b.d.s.State.Guilds)
+}
+
 func (b DcgoBot) Listen(eventType event.EventType, listener interface{}) error {
 	var l interface{}
 	switch eventType {

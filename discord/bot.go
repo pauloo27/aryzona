@@ -27,6 +27,7 @@ type BotAdapter interface {
 	JoinVoiceChannel(guildID, channelID string) (VoiceConnection, error)
 	FindUserVoiceState(guildID string, userID string) (VoiceState, error)
 	UpdatePresence(presence *Presence) error
+	GuildCount() int
 }
 
 func UseImplementation(bot BotAdapter) {
