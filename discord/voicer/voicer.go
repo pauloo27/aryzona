@@ -15,7 +15,7 @@ import (
 type Voicer struct {
 	usable, playing            bool
 	UserID, ChannelID, GuildID *string
-	Voice                      discord.VoiceState
+	Voice                      discord.VoiceConnection
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
@@ -60,7 +60,7 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 	if err != nil {
 		return nil, err
 	}
-	chanID := vc.ChanID()
+	chanID := vc.Channel().ID()
 
 	queue := queue.NewQueue()
 
@@ -177,7 +177,7 @@ func (v *Voicer) Start() error {
 		// play a simple "pre connect" sound
 		v.EncodeSession = dca.EncodeData("./assets/radio_start.wav", false, true)
 		done := make(chan error)
-		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice.Connection(), done)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
 		err := <-done
 		if err != nil && err != io.EOF {
@@ -199,7 +199,7 @@ func (v *Voicer) Start() error {
 		v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
 
 		done := make(chan error)
-		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice.Connection(), done)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
 		err = <-done
 

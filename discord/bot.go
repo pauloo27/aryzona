@@ -24,7 +24,7 @@ type BotAdapter interface {
 	OpenChannelWithUser(userID string) (Channel, error)
 	OpenGuild(guildID string) (Guild, error)
 	Latency() time.Duration
-	JoinVoiceChannel(guildID, channelID string) (VoiceState, error)
+	JoinVoiceChannel(guildID, channelID string) (VoiceConnection, error)
 	FindUserVoiceState(guildID string, userID string) (VoiceState, error)
 	UpdatePresence(presence *Presence) error
 }

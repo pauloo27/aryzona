@@ -146,15 +146,27 @@ func (b DcgoBot) Latency() time.Duration {
 }
 
 func (b DcgoBot) OpenGuild(guildID string) (discord.Guild, error) {
-	return nil, errors.New("not implemented yet")
+	g, err := b.d.s.Guild(guildID)
+	if err != nil {
+		return nil, err
+	}
+	return buildGuild(g.ID), nil
 }
 
-func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceState, error) {
-	return nil, errors.New("not implemented yet")
+func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConnection, error) {
+	vc, err := b.d.s.ChannelVoiceJoin(guildID, channelID, false, false)
+	if err != nil {
+		return nil, err
+	}
+	return buildVoiceConnection(vc), nil
 }
 
-func (b DcgoBot) FindUserVoiceState(guildID string, userID string) (discord.VoiceState, error) {
-	return nil, errors.New("not implemented yet")
+func (b DcgoBot) FindUserVoiceState(guildID, userID string) (discord.VoiceState, error) {
+	state, err := b.d.s.State.VoiceState(guildID, userID)
+	if err != nil {
+		return nil, err
+	}
+	return buildVoiceState(buildVoiceChannel(state.ChannelID, buildGuild(guildID))), nil
 }
 
 func (b DcgoBot) UpdatePresence(presence *discord.Presence) error {
