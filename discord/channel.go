@@ -1,10 +1,10 @@
 package discord
 
-type Channel struct {
-	ID    string
-	Guild *Guild
+type Channel interface {
+	ID() string
+	Guild() Guild
 }
 
-type VoiceChannel struct {
+type VoiceChannel interface {
 	Channel
 }

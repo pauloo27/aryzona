@@ -1,8 +1,8 @@
 package discord
 
-type Message struct {
-	ID      string
-	Author  *User
-	Channel *Channel
-	Content string
+type Message interface {
+	ID() string
+	Author() User
+	Channel() Channel
+	Content() string
 }

@@ -28,7 +28,7 @@ func init() {
 			WithColor(0xff5555).
 			WithTitle(utils.Fmt("Oops! [%s]", level.Name))
 
-		_, err = discord.Bot.SendEmbedMessage(c.ID, embed)
+		_, err = discord.Bot.SendEmbedMessage(c.ID(), embed)
 		if err != nil {
 			fmt.Println("Cannot log to Discord", err)
 			return

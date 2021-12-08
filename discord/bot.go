@@ -16,16 +16,16 @@ type BotAdapter interface {
 	Listen(event event.EventType, handlerFunc interface{}) error
 	Start() error
 	Stop() error
-	Self() (*User, error)
-	SendMessage(channelID string, content string) (*Message, error)
-	SendReplyMessage(message *Message, content string) (*Message, error)
-	SendReplyEmbedMessage(message *Message, embed *Embed) (*Message, error)
-	SendEmbedMessage(channelID string, embed *Embed) (*Message, error)
-	OpenChannelWithUser(userID string) (*Channel, error)
-	OpenGuild(guildID string) (*Guild, error)
+	Self() (User, error)
+	SendMessage(channelID string, content string) (Message, error)
+	SendReplyMessage(message Message, content string) (Message, error)
+	SendReplyEmbedMessage(message Message, embed *Embed) (Message, error)
+	SendEmbedMessage(channelID string, embed *Embed) (Message, error)
+	OpenChannelWithUser(userID string) (Channel, error)
+	OpenGuild(guildID string) (Guild, error)
 	Latency() time.Duration
-	JoinVoiceChannel(guildID, channelID string) (*VoiceChannel, error)
-	FindUserVoiceState(guildID string, userID string) (*VoiceState, error)
+	JoinVoiceChannel(guildID, channelID string) (VoiceChannel, error)
+	FindUserVoiceState(guildID string, userID string) (VoiceState, error)
 	UpdatePresence(presence *Presence) error
 }
 

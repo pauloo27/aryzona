@@ -38,7 +38,7 @@ func ready(bot discord.BotAdapter) {
 	if os.Getenv("DC_BOT_ENV") == "prod" {
 		c, err := discord.OpenChatWithOwner()
 		errore.HandleFatal(err)
-		_, err = bot.SendEmbedMessage(c.ID, createStartedEmbed(0))
+		_, err = bot.SendEmbedMessage(c.ID(), createStartedEmbed(0))
 		errore.HandleFatal(err)
 	}
 }

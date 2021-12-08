@@ -1,5 +1,5 @@
 package discord
 
-type VoiceState struct {
-	ChanID string
+type VoiceState interface {
+	ChanID() string
 }

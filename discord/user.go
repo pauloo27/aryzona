@@ -1,5 +1,5 @@
 package discord
 
-type User struct {
-	ID string
+type User interface {
+	ID() string
 }

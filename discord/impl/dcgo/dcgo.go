@@ -60,11 +60,9 @@ func (b DcgoBot) Stop() error {
 	return b.disconnect()
 }
 
-func (b DcgoBot) Self() (*discord.User, error) {
+func (b DcgoBot) Self() (discord.User, error) {
 	u := b.d.s.State.User
-	return &discord.User{
-		ID: u.ID,
-	}, nil
+	return buildUser(u.ID), nil
 }
 
 func (b DcgoBot) Listen(eventType event.EventType, listener interface{}) error {
@@ -76,20 +74,8 @@ func (b DcgoBot) Listen(eventType event.EventType, listener interface{}) error {
 		}
 	case event.MessageCreated:
 		l = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-			msg := &discord.Message{
-				ID: m.Message.ID,
-				Author: &discord.User{
-					ID: m.Author.ID,
-				},
-				Channel: &discord.Channel{
-					ID: m.ChannelID,
-					Guild: &discord.Guild{
-						ID: m.GuildID,
-					},
-				},
-				Content: m.Content,
-			}
-			listener.(func(discord.BotAdapter, *discord.Message))(b, msg)
+			msg := buildMessage(m.Message.ID, buildChannel(m.ChannelID, buildGuild(m.GuildID)), buildUser(m.Author.ID), m.Content)
+			listener.(func(discord.BotAdapter, discord.Message))(b, msg)
 		}
 	default:
 		return event.ErrEventNotSupported
@@ -104,80 +90,70 @@ func (b DcgoBot) registerListeners() {
 	}
 }
 
-func (b DcgoBot) SendReplyMessage(m *discord.Message, content string) (*discord.Message, error) {
-	msg, err := b.d.s.ChannelMessageSendReply(m.Channel.ID, content, &discordgo.MessageReference{
-		MessageID: m.ID,
-		ChannelID: m.Channel.ID,
-		GuildID:   m.Channel.Guild.ID,
+func (b DcgoBot) SendReplyMessage(m discord.Message, content string) (discord.Message, error) {
+	msg, err := b.d.s.ChannelMessageSendReply(m.Channel().ID(), content, &discordgo.MessageReference{
+		MessageID: m.ID(),
+		ChannelID: m.Channel().ID(),
+		GuildID:   m.Channel().Guild().ID(),
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &discord.Message{
-		ID: msg.ID,
-	}, nil
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
 }
 
-func (b DcgoBot) SendMessage(channelID string, message string) (*discord.Message, error) {
+func (b DcgoBot) SendMessage(channelID string, message string) (discord.Message, error) {
 	msg, err := b.d.s.ChannelMessageSend(channelID, message)
 	if err != nil {
 		return nil, err
 	}
-	return &discord.Message{
-		ID: msg.ID,
-	}, nil
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
 }
 
-func (b DcgoBot) SendReplyEmbedMessage(m *discord.Message, embed *discord.Embed) (*discord.Message, error) {
-	msg, err := b.d.s.ChannelMessageSendComplex(m.Channel.ID, &discordgo.MessageSend{
+func (b DcgoBot) SendReplyEmbedMessage(m discord.Message, embed *discord.Embed) (discord.Message, error) {
+	msg, err := b.d.s.ChannelMessageSendComplex(m.Channel().ID(), &discordgo.MessageSend{
 		Reference: &discordgo.MessageReference{
-			MessageID: m.ID,
-			ChannelID: m.Channel.ID,
-			GuildID:   m.Channel.Guild.ID,
+			MessageID: m.ID(),
+			ChannelID: m.Channel().ID(),
+			GuildID:   m.Channel().Guild().ID(),
 		},
 		Embed: buildEmbed(embed),
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &discord.Message{
-		ID: msg.ID,
-	}, nil
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
 }
 
-func (b DcgoBot) SendEmbedMessage(channelID string, embed *discord.Embed) (*discord.Message, error) {
+func (b DcgoBot) SendEmbedMessage(channelID string, embed *discord.Embed) (discord.Message, error) {
 	msg, err := b.d.s.ChannelMessageSendEmbed(channelID, buildEmbed(embed))
 	if err != nil {
 		return nil, err
 	}
-	return &discord.Message{
-		ID: msg.ID,
-	}, nil
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
 }
 
-func (b DcgoBot) OpenChannelWithUser(userID string) (*discord.Channel, error) {
+func (b DcgoBot) OpenChannelWithUser(userID string) (discord.Channel, error) {
 	c, err := b.d.s.UserChannelCreate(userID)
 	if err != nil {
 		return nil, err
 	}
-	return &discord.Channel{
-		ID: c.ID,
-	}, nil
+	return buildChannel(c.ID, buildGuild(c.GuildID)), nil
 }
 
 func (b DcgoBot) Latency() time.Duration {
 	return b.d.s.HeartbeatLatency()
 }
 
-func (b DcgoBot) OpenGuild(guildID string) (*discord.Guild, error) {
+func (b DcgoBot) OpenGuild(guildID string) (discord.Guild, error) {
 	return nil, errors.New("not implemented yet")
 }
 
-func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (*discord.VoiceChannel, error) {
+func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceChannel, error) {
 	return nil, errors.New("not implemented yet")
 }
 
-func (b DcgoBot) FindUserVoiceState(guildID string, userID string) (*discord.VoiceState, error) {
+func (b DcgoBot) FindUserVoiceState(guildID string, userID string) (discord.VoiceState, error) {
 	return nil, errors.New("not implemented yet")
 }
 
