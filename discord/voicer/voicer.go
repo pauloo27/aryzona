@@ -10,13 +10,12 @@ import (
 	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer/queue"
 	"github.com/Pauloo27/logger"
-	"github.com/bwmarrin/discordgo"
 )
 
 type Voicer struct {
 	usable, playing            bool
 	UserID, ChannelID, GuildID *string
-	Voice                      *discordgo.VoiceConnection
+	Voice                      *discord.VoiceChannel
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
@@ -54,17 +53,16 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 
 	var chanID *string
 
-	g, err := discord.Session.State.Guild(guildID)
+	g, err := discord.Bot.OpenGuild(guildID)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, state := range g.VoiceStates {
-		if state.UserID == userID {
-			chanID = &state.ChannelID
-			break
-		}
+	vc, err := discord.Bot.FindUserVoiceState(g.ID, userID)
+	if err != nil {
+		return nil, err
 	}
+	chanID = &vc.ChanID
 
 	queue := queue.NewQueue()
 
@@ -95,7 +93,7 @@ func (v *Voicer) Connect() error {
 		return nil
 	}
 
-	vc, err := discord.Session.ChannelVoiceJoin(*v.GuildID, *v.ChannelID, false, false)
+	vc, err := discord.Bot.JoinVoiceChannel(*v.GuildID, *v.ChannelID)
 	if err != nil {
 		return err
 	}

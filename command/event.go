@@ -1,9 +1,11 @@
 package command
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/Pauloo27/aryzona/discord"
+)
 
 type Event struct {
 	Reply             func(string) error
-	ReplyEmbed        func(*discordgo.MessageEmbed) error
+	ReplyEmbed        func(*discord.Embed) error
 	GuildID, AuthorID string
 }

@@ -5,6 +5,7 @@ import (
 	"math/big"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/utils"
 )
 
@@ -37,11 +38,11 @@ var RollCommand = command.Command{
 		}
 		luckyNumber := bigLuckyNumber.Int64() + 1
 
-		embed := utils.NewEmbedBuilder().
-			Title(utils.Fmt(":game_die: You got ||  %d  || (click in the black box to reveal)", luckyNumber)).
-			Description(utils.Fmt("You rolled a %d sides\n_Gif by [Tenor](https://tenor.com/)_", sides)).
-			Image(gif)
+		embed := discord.NewEmbed().
+			WithTitle(utils.Fmt(":game_die: You got ||  %d  || (click in the black box to reveal)", luckyNumber)).
+			WithDescription(utils.Fmt("You rolled a %d sides\n_Gif by [Tenor](https://tenor.com/)_", sides)).
+			WithImage(gif)
 
-		ctx.SuccessEmbed(embed.Build())
+		ctx.SuccessEmbed(embed)
 	},
 }

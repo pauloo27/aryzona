@@ -1,11 +1,13 @@
 package utils
 
 import (
-	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/providers/livescore"
-	"github.com/Pauloo27/aryzona/utils"
 	"strconv"
 	"strings"
+
+	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
+	"github.com/Pauloo27/aryzona/providers/livescore"
+	"github.com/Pauloo27/aryzona/utils"
 )
 
 var ScoreCommand = command.Command{
@@ -59,15 +61,14 @@ var ScoreCommand = command.Command{
 			}
 		}
 		ctx.Embed(
-			utils.NewEmbedBuilder().
-				Description(utils.Fmt("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
-				Color(color).
-				Field("Time", match.Time).
-				FieldInline(match.T1.Name, strconv.Itoa(match.T1.Score)).
-				FieldInline(match.T2.Name, strconv.Itoa(match.T2.Score)).
-				Field("ID", match.ID).
-				Description(desc.String()).
-				Build(),
+			discord.NewEmbed().
+				WithDescription(utils.Fmt("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
+				WithColor(color).
+				WithField("Time", match.Time).
+				WithFieldInline(match.T1.Name, strconv.Itoa(match.T1.Score)).
+				WithFieldInline(match.T2.Name, strconv.Itoa(match.T2.Score)).
+				WithField("ID", match.ID).
+				WithDescription(desc.String()),
 		)
 	},
 }

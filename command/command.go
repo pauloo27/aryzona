@@ -1,20 +1,20 @@
 package command
 
 import (
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
-	"github.com/bwmarrin/discordgo"
 )
 
 type CommandHandler func(*CommandContext)
 type CommandPermissionChecker func(*CommandContext) bool
 
 type CommandContext struct {
-	Session           *discordgo.Session
+	Bot               discord.BotAdapter
 	RawArgs           []string
 	Args              []interface{}
 	Reply             func(string) error
-	ReplyEmbed        func(*discordgo.MessageEmbed) error
+	ReplyEmbed        func(*discord.Embed) error
 	AuthorID, GuildID string
 }
 
@@ -85,28 +85,28 @@ func (ctx *CommandContext) ErrorReturning(message string) error {
 	return ctx.Reply(utils.Fmt(":red_square: %s", message))
 }
 
-func (ctx *CommandContext) Embed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) Embed(embed *discord.Embed) {
 	ctx.handleCannotSendMessage(ctx.EmbedReturning(embed))
 }
 
-func (ctx *CommandContext) EmbedReturning(embed *discordgo.MessageEmbed) error {
+func (ctx *CommandContext) EmbedReturning(embed *discord.Embed) error {
 	return ctx.ReplyEmbed(embed)
 }
 
-func (ctx *CommandContext) SuccessEmbed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) SuccessEmbed(embed *discord.Embed) {
 	ctx.handleCannotSendMessage(ctx.SuccessEmbedReturning(embed))
 }
 
-func (ctx *CommandContext) SuccessEmbedReturning(embed *discordgo.MessageEmbed) error {
+func (ctx *CommandContext) SuccessEmbedReturning(embed *discord.Embed) error {
 	embed.Color = 0x50fa7b
 	return ctx.EmbedReturning(embed)
 }
 
-func (ctx *CommandContext) ErrorEmbed(embed *discordgo.MessageEmbed) {
+func (ctx *CommandContext) ErrorEmbed(embed *discord.Embed) {
 	ctx.handleCannotSendMessage(ctx.ErrorEmbedReturning(embed))
 }
 
-func (ctx *CommandContext) ErrorEmbedReturning(embed *discordgo.MessageEmbed) error {
+func (ctx *CommandContext) ErrorEmbedReturning(embed *discord.Embed) error {
 	embed.Color = 0xff5555
 	return ctx.EmbedReturning(embed)
 }

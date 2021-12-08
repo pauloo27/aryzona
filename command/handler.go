@@ -1,14 +1,14 @@
 package command
 
 import (
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
-	"github.com/bwmarrin/discordgo"
 )
 
 func HandleCommand(
-	commandName string, args []string, s *discordgo.Session,
-	event *Event,
+	commandName string, args []string,
+	event *Event, bot discord.BotAdapter,
 ) {
 	command, ok := commandMap[commandName]
 	if !ok {
@@ -16,7 +16,7 @@ func HandleCommand(
 	}
 
 	ctx := &CommandContext{
-		Session:    s,
+		Bot:        bot,
 		RawArgs:    args,
 		Reply:      event.Reply,
 		ReplyEmbed: event.ReplyEmbed,

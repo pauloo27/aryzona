@@ -3,35 +3,36 @@ package discord
 import (
 	"time"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/Pauloo27/aryzona/discord/event"
 )
 
-var Session *discordgo.Session
-var StartedAt time.Time
+var (
+	Bot BotAdapter
+)
 
-func Create(token string) error {
-	var err error
-	Session, err = discordgo.New("Bot " + token)
-	return err
+type BotAdapter interface {
+	Init(token string) error
+	StartedAt() *time.Time
+	Listen(event event.EventType, handlerFunc interface{}) error
+	Start() error
+	Stop() error
+	Self() (*User, error)
+	SendMessage(channelID string, content string) (*Message, error)
+	SendReplyMessage(message *Message, content string) (*Message, error)
+	SendReplyEmbedMessage(message *Message, embed *Embed) (*Message, error)
+	SendEmbedMessage(channelID string, embed *Embed) (*Message, error)
+	OpenChannelWithUser(userID string) (*Channel, error)
+	OpenGuild(guildID string) (*Guild, error)
+	Latency() time.Duration
+	JoinVoiceChannel(guildID, channelID string) (*VoiceChannel, error)
+	FindUserVoiceState(guildID string, userID string) (*VoiceState, error)
+	UpdatePresence(presence *Presence) error
 }
 
-func Connect() error {
-	StartedAt = time.Now()
-	return Session.Open()
+func UseImplementation(bot BotAdapter) {
+	Bot = bot
 }
 
-func Disconnect() error {
-	return Session.Close()
-}
-
-var listeners []interface{}
-
-func Listen(listener interface{}) {
-	listeners = append(listeners, listener)
-}
-
-func RegisterListeners() {
-	for _, listener := range listeners {
-		Session.AddHandler(listener)
-	}
+func CreateBot(token string) error {
+	return Bot.Init(token)
 }

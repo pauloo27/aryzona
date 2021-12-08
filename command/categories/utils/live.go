@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/providers/livescore"
 	"github.com/Pauloo27/aryzona/utils"
 )
@@ -30,10 +31,9 @@ var LiveCommand = command.Command{
 			))
 		}
 		ctx.SuccessEmbed(
-			utils.NewEmbedBuilder().
-				Title("Live matches:").
-				Description(desc.String()).
-				Build(),
+			discord.NewEmbed().
+				WithTitle("Live matches:").
+				WithDescription(desc.String()),
 		)
 	},
 }
