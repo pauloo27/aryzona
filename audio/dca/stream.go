@@ -1,12 +1,12 @@
 package dca
 
 import (
-	"github.com/Pauloo27/aryzona/utils"
 	"io"
 	"sync"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/Pauloo27/aryzona/discord"
+	"github.com/Pauloo27/aryzona/utils"
 )
 
 // based on https://git.notagovernment.agency/ItsClairton/Anny/ which é...
@@ -20,7 +20,7 @@ type OpusReader interface {
 type StreamingSession struct {
 	sync.Mutex
 	source     *EncodeSession
-	connection *discordgo.VoiceConnection
+	connection discord.VoiceConnection
 	running    bool
 	paused     bool
 	finished   bool
@@ -30,7 +30,7 @@ type StreamingSession struct {
 	err      error
 }
 
-func NewStream(source *EncodeSession, vc *discordgo.VoiceConnection, callback chan error) *StreamingSession {
+func NewStream(source *EncodeSession, vc discord.VoiceConnection, callback chan error) *StreamingSession {
 
 	session := &StreamingSession{
 		source:     source,
@@ -102,7 +102,7 @@ func (s *StreamingSession) readNext() error {
 	case <-timeOut.C:
 		timeOut.Stop()
 		return ErrVoiceConnectionClosed
-	case s.connection.OpusSend <- opus:
+	case s.connection.OpusSend() <- opus:
 		timeOut.Stop()
 	}
 	s.Lock()

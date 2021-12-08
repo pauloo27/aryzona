@@ -3,6 +3,7 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/providers/youtube"
 	"github.com/Pauloo27/aryzona/utils"
@@ -50,20 +51,18 @@ var PlayCommand = command.Command{
 			return
 		}
 
-		embed := utils.NewEmbedBuilder().
-			Title(utils.Fmt("Best result for %s:", searchQuery)).
-			Thumbnail(playable.Video.Thumbnails[0].URL).
-			Field("Title", playable.Video.Title).
-			Field("Uploader", playable.Video.Author)
+		embed := discord.NewEmbed().
+			WithTitle(utils.Fmt("Best result for %s:", searchQuery)).
+			WithThumbnail(playable.Video.Thumbnails[0].URL).
+			WithField("Title", playable.Video.Title).
+			WithField("Uploader", playable.Video.Author)
 
 		if playable.Live {
-			embed.Field("Duration", "**🔴 LIVE**")
+			embed.WithField("Duration", "**🔴 LIVE**")
 		} else {
-			embed.Field("Duration", playable.Video.Duration.String())
+			embed.WithField("Duration", playable.Video.Duration.String())
 		}
-		ctx.SuccessEmbed(
-			embed.Build(),
-		)
+		ctx.SuccessEmbed(embed)
 		utils.Go(func() {
 			if err = vc.AppendToQueue(playable); err != nil {
 				if is, vErr := errore.IsErrore(err); is {

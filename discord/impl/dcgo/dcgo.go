@@ -149,7 +149,7 @@ func (b DcgoBot) OpenGuild(guildID string) (discord.Guild, error) {
 	return nil, errors.New("not implemented yet")
 }
 
-func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceChannel, error) {
+func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceState, error) {
 	return nil, errors.New("not implemented yet")
 }
 

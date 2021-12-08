@@ -2,6 +2,7 @@ package audio
 
 import (
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/logger"
@@ -38,9 +39,8 @@ var LyricCommand = command.Command{
 		result, err := lyric.SearchDDG(searchTerms)
 		if err != nil {
 			ctx.ErrorEmbed(
-				utils.NewEmbedBuilder().
-					Description("No results found for " + searchTerms).
-					Build(),
+				discord.NewEmbed().
+					WithDescription("No results found for " + searchTerms),
 			)
 			logger.Error(err)
 			return

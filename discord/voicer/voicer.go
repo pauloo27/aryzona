@@ -15,7 +15,7 @@ import (
 type Voicer struct {
 	usable, playing            bool
 	UserID, ChannelID, GuildID *string
-	Voice                      *discord.VoiceChannel
+	Voice                      discord.VoiceState
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	StreamingSession           *dca.StreamingSession
@@ -51,23 +51,21 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 		}
 	}
 
-	var chanID *string
-
 	g, err := discord.Bot.OpenGuild(guildID)
 	if err != nil {
 		return nil, err
 	}
 
-	vc, err := discord.Bot.FindUserVoiceState(g.ID, userID)
+	vc, err := discord.Bot.FindUserVoiceState(g.ID(), userID)
 	if err != nil {
 		return nil, err
 	}
-	chanID = &vc.ChanID
+	chanID := vc.ChanID()
 
 	queue := queue.NewQueue()
 
 	voicer = &Voicer{
-		UserID: &userID, ChannelID: chanID, GuildID: &guildID, Voice: nil,
+		UserID: &userID, ChannelID: &chanID, GuildID: &guildID, Voice: nil,
 		StreamingSession: nil, EncodeSession: nil,
 		lock:  &sync.Mutex{},
 		Queue: queue, usable: true,
@@ -179,7 +177,7 @@ func (v *Voicer) Start() error {
 		// play a simple "pre connect" sound
 		v.EncodeSession = dca.EncodeData("./assets/radio_start.wav", false, true)
 		done := make(chan error)
-		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice.Connection(), done)
 
 		err := <-done
 		if err != nil && err != io.EOF {
@@ -201,7 +199,7 @@ func (v *Voicer) Start() error {
 		v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
 
 		done := make(chan error)
-		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice.Connection(), done)
 
 		err = <-done
 

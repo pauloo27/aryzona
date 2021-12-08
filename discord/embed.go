@@ -6,11 +6,13 @@ type EmbedField struct {
 }
 
 type Embed struct {
-	Color       int
-	Title       string
-	Description string
-	ImageURL    string
-	Fields      []*EmbedField
+	Color        int
+	Title        string
+	Description  string
+	ImageURL     string
+	ThumbnailURL string
+	Footer       string
+	Fields       []*EmbedField
 }
 
 func NewEmbed() *Embed {
@@ -52,5 +54,15 @@ func (e *Embed) WithField(name, value string) *Embed {
 
 func (e *Embed) WithImage(url string) *Embed {
 	e.ImageURL = url
+	return e
+}
+
+func (e *Embed) WithThumbnail(url string) *Embed {
+	e.ThumbnailURL = url
+	return e
+}
+
+func (e *Embed) WithFooter(text string) *Embed {
+	e.Footer = text
 	return e
 }

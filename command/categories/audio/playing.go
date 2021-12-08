@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/utils"
 )
@@ -27,25 +28,25 @@ var PlayingCommand = command.Command{
 
 		title, artist := playable.GetFullTitle()
 
-		embedBuilder := utils.NewEmbedBuilder().
-			Title("Now playing: "+playable.GetName()).
-			Field("Title", title)
+		embed := discord.NewEmbed().
+			WithTitle("Now playing: "+playable.GetName()).
+			WithField("Title", title)
 
 		if artist != "" {
-			embedBuilder.Field("Artist", artist)
+			embed.WithField("Artist", artist)
 		}
 
-		embedBuilder.Field("Requested by", utils.AsMention(*vc.UserID))
+		embed.WithField("Requested by", discord.AsMention(*vc.UserID))
 		if playable.IsLive() {
-			embedBuilder.Field("Duration", "**🔴 LIVE**")
+			embed.WithField("Duration", "**🔴 LIVE**")
 		} else {
 			position, err := vc.GetPosition()
 			if err == nil {
-				embedBuilder.Field("Position", position.Truncate(time.Second).String())
+				embed.WithField("Position", position.Truncate(time.Second).String())
 			}
 			duration, err := playable.GetDuration()
 			if err == nil {
-				embedBuilder.Field("Duration", duration.String())
+				embed.WithField("Duration", duration.String())
 			}
 		}
 
@@ -67,11 +68,9 @@ var PlayingCommand = command.Command{
 			if len(next) > 10 {
 				sb.WriteString("_... and more ..._")
 			}
-			embedBuilder.Field("**Coming next:**", sb.String())
+			embed.WithField("**Coming next:**", sb.String())
 		}
 
-		ctx.SuccessEmbed(
-			embedBuilder.Build(),
-		)
+		ctx.SuccessEmbed(embed)
 	},
 }

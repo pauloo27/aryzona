@@ -3,6 +3,7 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
+	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/providers/radio"
 	"github.com/Pauloo27/aryzona/utils"
@@ -11,21 +12,21 @@ import (
 )
 
 func listRadios(ctx *command.CommandContext, title string) {
-	embed := utils.NewEmbedBuilder().
-		Title(title)
+	embed := discord.NewEmbed().
+		WithTitle(title)
 
 	for _, channel := range radio.GetRadioList() {
-		embed.FieldInline(channel.ID, channel.Name)
+		embed.WithFieldInline(channel.ID, channel.Name)
 	}
 
-	embed.Footer(
+	embed.WithFooter(
 		utils.Fmt(
 			"Use `%sradio <name>` and `%sradio stop` when you are tired of it!",
 			command.Prefix, command.Prefix,
-		), "",
+		),
 	)
 
-	ctx.SuccessEmbed(embed.Build())
+	ctx.SuccessEmbed(embed)
 }
 
 var RadioCommand = command.Command{
