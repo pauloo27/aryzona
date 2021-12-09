@@ -36,6 +36,7 @@ var PlayCommand = command.Command{
 		searchQuery := ctx.Args[0].(string)
 		resultURL, isPlaylist, err := youtube.GetBestResult(searchQuery)
 		if err != nil {
+			logger.Error(err)
 			ctx.Error("Cannot find what you are looking for")
 			return
 		}
