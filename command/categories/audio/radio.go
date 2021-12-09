@@ -53,6 +53,11 @@ var RadioCommand = command.Command{
 			return
 		}
 
+		if _, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID); err != nil {
+			ctx.Error("You are not in a voice channel")
+			return
+		}
+
 		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)
 		if err != nil {
 			ctx.Error("Cannot create voicer")
@@ -78,7 +83,7 @@ var RadioCommand = command.Command{
 		channel = radio.GetRadioByID(radioID)
 
 		if !vc.CanConnect() {
-			ctx.Error("You are not in a voice channel")
+			ctx.Error("Cannot connect to your voice channel")
 			return
 		}
 		if !vc.IsConnected() {
@@ -88,6 +93,7 @@ var RadioCommand = command.Command{
 			}
 		}
 
+		ctx.Success("Ok!")
 		utils.Go(func() {
 			if err = vc.AppendToQueue(channel); err != nil {
 				if is, vErr := errore.IsErrore(err); is {

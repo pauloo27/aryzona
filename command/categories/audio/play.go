@@ -18,13 +18,18 @@ var PlayCommand = command.Command{
 		{Name: "song", Description: "Search query", Required: true, Type: command.ArgumentText},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		if _, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID); err != nil {
+			ctx.Error("You are not in a voice channel")
+			return
+		}
+
 		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)
 		if err != nil {
 			ctx.Error("Cannot create voicer")
 			return
 		}
 		if !vc.CanConnect() {
-			ctx.Error("You are not in a voice channel")
+			ctx.Error("Cannot connect to your voice channel")
 			return
 		}
 		if !vc.IsConnected() {
@@ -63,6 +68,7 @@ var PlayCommand = command.Command{
 		} else {
 			embed.WithField("Duration", playable.Video.Duration.String())
 		}
+
 		ctx.SuccessEmbed(embed)
 		utils.Go(func() {
 			if err = vc.AppendToQueue(playable); err != nil {
