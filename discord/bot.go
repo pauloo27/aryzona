@@ -28,6 +28,7 @@ type BotAdapter interface {
 	FindUserVoiceState(guildID string, userID string) (VoiceState, error)
 	UpdatePresence(presence *Presence) error
 	GuildCount() int
+	RegisterSlashCommands() error
 }
 
 func UseImplementation(bot BotAdapter) {

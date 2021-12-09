@@ -69,6 +69,10 @@ func (b DcgoBot) GuildCount() int {
 	return len(b.d.s.State.Guilds)
 }
 
+func (b DcgoBot) RegisterSlashCommands() error {
+	return registerCommands(b)
+}
+
 func (b DcgoBot) Listen(eventType event.EventType, listener interface{}) error {
 	var l interface{}
 	switch eventType {

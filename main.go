@@ -54,6 +54,13 @@ func main() {
 
 	command.Prefix = os.Getenv("DC_BOT_PREFIX")
 
+	logger.Info("Registering slash commands handlers...")
+	err = discord.Bot.RegisterSlashCommands()
+	if err != nil {
+		logger.Fatal(err)
+	}
+	logger.Success("Slash commands created!")
+
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)

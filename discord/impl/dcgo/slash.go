@@ -1,4 +1,4 @@
-package slash
+package dcgo
 
 import (
 	"fmt"
@@ -16,7 +16,9 @@ var discordTypeMap = map[*command.CommandArgumentType]discordgo.ApplicationComma
 	command.ArgumentBool:   discordgo.ApplicationCommandOptionBoolean,
 }
 
-func RegisterCommands() error {
+func registerCommands(bot DcgoBot) error {
+	session := bot.d.s
+
 	mustGetChoisesFor := func(arg *command.CommandArgument) (options []*discordgo.ApplicationCommandOptionChoice) {
 		for _, value := range arg.GetValidValues() {
 			options = append(options, &discordgo.ApplicationCommandOptionChoice{
@@ -61,12 +63,12 @@ func RegisterCommands() error {
 
 		slashCommands = append(slashCommands, &slashCommand)
 	}
-	_, err := discord.Session.ApplicationCommandBulkOverwrite(discord.Session.State.User.ID, "", slashCommands)
+	_, err := session.ApplicationCommandBulkOverwrite(session.State.User.ID, "", slashCommands)
 	if err != nil {
 		return err
 	}
 
-	discord.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		commandName := i.ApplicationCommandData().Name
 		_, ok := command.GetCommandMap()[commandName]
 		if !ok {
@@ -98,16 +100,16 @@ func RegisterCommands() error {
 					},
 				})
 			},
-			ReplyEmbed: func(embed *discordgo.MessageEmbed) error {
+			ReplyEmbed: func(embed *discord.Embed) error {
 				return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 					Type: discordgo.InteractionResponseChannelMessageWithSource,
 					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{embed},
+						Embeds: []*discordgo.MessageEmbed{},
 					},
 				})
 			},
 		}
-		command.HandleCommand(commandName, args, s, &event)
+		command.HandleCommand(commandName, args, &event, bot)
 	})
 
 	return nil
