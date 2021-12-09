@@ -6,11 +6,15 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
-var commandMap = map[string]*Command{}
+var (
+	commandMap  = map[string]*Command{}
+	commandList []*Command
+)
 
 var Prefix string
 
 func RegisterCommand(command *Command) {
+	commandList = append(commandList, command)
 	if command.Name == "" {
 		// "lol why dont i put the name of the name in the error message?"
 		// counter: 2
@@ -29,6 +33,12 @@ func RegisterCommand(command *Command) {
 	for _, alias := range command.Aliases {
 		commandMap[strings.ToLower(alias)] = command
 	}
+}
+
+// why a function? I think I did it that way, so the access to the
+// command map was "harder" (the idea is to use RegisterCommand())
+func GetCommandList() []*Command {
+	return commandList
 }
 
 // why a function? I think I did it that way, so the access to the

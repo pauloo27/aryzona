@@ -16,10 +16,7 @@ var HelpCommand = command.Command{
 		sb.WriteString("I'm a open source bot, here's my code: ")
 		sb.WriteString(utils.Fmt("%s\n", os.Getenv("DC_BOT_REMOTE_REPO")))
 		sb.WriteString("List of commands:\n")
-		for alias, cmd := range command.GetCommandMap() {
-			if alias != cmd.Name {
-				continue
-			}
+		for _, cmd := range command.GetCommandList() {
 			var permission string
 			if cmd.Permission != nil {
 				permission = utils.Fmt("(_requires you to... %s_)", cmd.Permission.Name)
