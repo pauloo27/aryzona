@@ -17,6 +17,7 @@ type BotAdapter interface {
 	Start() error
 	Stop() error
 	Self() (User, error)
+	CountUsersInVoiceChannel(vc VoiceChannel) int
 	SendMessage(channelID string, content string) (Message, error)
 	SendReplyMessage(message Message, content string) (Message, error)
 	SendReplyEmbedMessage(message Message, embed *Embed) (Message, error)

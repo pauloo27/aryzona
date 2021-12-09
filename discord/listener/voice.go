@@ -1,33 +1,63 @@
 package listeners
 
-/* TODO
+import (
+	"time"
+
+	"github.com/Pauloo27/aryzona/discord"
+	"github.com/Pauloo27/aryzona/discord/event"
+	"github.com/Pauloo27/aryzona/discord/voicer"
+	"github.com/Pauloo27/aryzona/utils"
+	"github.com/Pauloo27/aryzona/utils/scheduler"
+	"github.com/Pauloo27/logger"
+)
+
 func init() {
-	discord.Listen(VoiceUpdate)
-}
-
-func countUsersInChannel(guildID, channelID string) (count int) {
-	g, err := discord.Session.State.Guild(guildID)
+	err := discord.Bot.Listen(event.VoiceStateUpdated, voiceUpdate)
 	if err != nil {
-		return 0
+		panic(err)
 	}
-	for _, voice := range g.VoiceStates {
-		if voice.ChannelID == channelID {
-			count++
-		}
-	}
-	return
 }
 
-func onConnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Voicer) {
-	if countUsersInChannel(e.GuildID, e.ChannelID) <= 1 {
+func voiceUpdate(bot discord.BotAdapter, user discord.User, prevCh, curCh discord.VoiceChannel) {
+	self, err := bot.Self()
+	if err != nil {
 		return
 	}
 
-	scheduler.Unschedule(utils.Fmt("voice_disconnect_%s", e.GuildID))
+	if self.ID() == user.ID() {
+		return
+	}
+	var v *voicer.Voicer
+	if curCh != nil {
+		v = voicer.GetExistingVoicerForGuild(curCh.Guild().ID())
+	}
+
+	if v == nil || v.ChannelID == nil {
+		return
+	}
+	voicerChan := *v.ChannelID
+
+	if prevCh.ID() == voicerChan && curCh.ID() != prevCh.ID() {
+		onDisconnect(bot, curCh, v)
+		return
+	}
+
+	if curCh.ID() == voicerChan {
+		onConnect(bot, curCh)
+		return
+	}
 }
 
-func onDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer.Voicer) {
-	if countUsersInChannel(e.GuildID, e.ChannelID) > 1 {
+func onConnect(bot discord.BotAdapter, ch discord.VoiceChannel) {
+	if bot.CountUsersInVoiceChannel(ch) <= 1 {
+		return
+	}
+
+	scheduler.Unschedule(utils.Fmt("voice_disconnect_%s", ch.Guild().ID()))
+}
+
+func onDisconnect(bot discord.BotAdapter, ch discord.VoiceChannel, v *voicer.Voicer) {
+	if bot.CountUsersInVoiceChannel(ch) > 1 {
 		return
 	}
 
@@ -40,34 +70,5 @@ func onDisconnect(s *discordgo.Session, e *discordgo.VoiceStateUpdate, v *voicer
 		},
 	)
 
-	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", e.GuildID), task)
+	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", ch.Guild().ID()), task)
 }
-
-func VoiceUpdate(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
-	if s.State.User.ID == e.UserID {
-		return
-	}
-	v := voicer.GetExistingVoicerForGuild(e.GuildID)
-
-	if v == nil || v.ChannelID == nil {
-		return
-	}
-	voicerChan := *v.ChannelID
-
-	var prevChan string
-	if e.BeforeUpdate != nil {
-		prevChan = e.BeforeUpdate.ChannelID
-	}
-	currentChan := e.VoiceState.ChannelID
-
-	if prevChan == voicerChan && currentChan != prevChan {
-		onDisconnect(s, e, v)
-		return
-	}
-
-	if currentChan == voicerChan {
-		onConnect(s, e, v)
-		return
-	}
-}
-*/

@@ -52,6 +52,19 @@ func (b DcgoBot) StartedAt() *time.Time {
 	return b.d.startedAt
 }
 
+func (b DcgoBot) CountUsersInVoiceChannel(ch discord.VoiceChannel) (count int) {
+	g, err := b.d.s.State.Guild(ch.Guild().ID())
+	if err != nil {
+		return 0
+	}
+	for _, voice := range g.VoiceStates {
+		if voice.ChannelID == ch.ID() {
+			count++
+		}
+	}
+	return
+}
+
 func (b DcgoBot) disconnect() error {
 	return b.d.s.Close()
 }
@@ -84,6 +97,18 @@ func (b DcgoBot) Listen(eventType event.EventType, listener interface{}) error {
 		l = func(s *discordgo.Session, m *discordgo.MessageCreate) {
 			msg := buildMessage(m.Message.ID, buildChannel(m.ChannelID, buildGuild(m.GuildID)), buildUser(m.Author.ID), m.Content)
 			listener.(func(discord.BotAdapter, discord.Message))(b, msg)
+		}
+	case event.VoiceStateUpdated:
+		l = func(s *discordgo.Session, e *discordgo.VoiceStateUpdate) {
+			var prevCh, curCh discord.VoiceChannel
+			user := buildUser(e.UserID)
+			if e.BeforeUpdate != nil {
+				prevCh = buildVoiceChannel(e.BeforeUpdate.ChannelID, buildGuild(e.BeforeUpdate.GuildID))
+			}
+			if e.ChannelID != "" {
+				curCh = buildVoiceChannel(e.ChannelID, buildGuild(e.GuildID))
+			}
+			listener.(func(discord.BotAdapter, discord.User, discord.VoiceChannel, discord.VoiceChannel))(b, user, prevCh, curCh)
 		}
 	default:
 		return event.ErrEventNotSupported

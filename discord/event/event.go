@@ -7,6 +7,7 @@ type EventType int
 const (
 	Ready = EventType(iota)
 	MessageCreated
+	VoiceStateUpdated
 )
 
 var (
