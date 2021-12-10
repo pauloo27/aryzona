@@ -2,9 +2,14 @@ package youtube
 
 import (
 	"errors"
+	"fmt"
+	"net/url"
+	"os"
 	"regexp"
 
+	"github.com/Pauloo27/aryzona/utils"
 	"github.com/Pauloo27/searchtube"
+	"github.com/buger/jsonparser"
 )
 
 var (
@@ -18,6 +23,19 @@ var (
 	playlistRegex = regexp.MustCompile(`^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$`)
 )
 
+func getBestUsingFromAPI(searchQuery string) (id string, err error) {
+	apiKey := os.Getenv("YOUTUBE_API_KEY")
+	uri := fmt.Sprintf(
+		"https://www.googleapis.com/youtube/v3/search?q=%s&key=%s&maxResults=1&type=video",
+		url.QueryEscape(searchQuery), url.QueryEscape(apiKey),
+	)
+	buf, err := utils.Get(uri)
+	if err != nil {
+		return "", err
+	}
+	return jsonparser.GetString(buf, "items", "[0]", "id", "videoId")
+}
+
 func GetBestResult(searchQuery string) (url string, isPlaylist bool, err error) {
 	if videoRegex.MatchString(searchQuery) {
 		return searchQuery, false, nil
@@ -25,6 +43,12 @@ func GetBestResult(searchQuery string) (url string, isPlaylist bool, err error) 
 	if playlistRegex.MatchString(searchQuery) {
 		return searchQuery, true, nil
 	}
+
+	id, err := getBestUsingFromAPI(searchQuery)
+	if err == nil {
+		return fmt.Sprintf("https://youtu.be/%s", id), false, err
+	}
+
 	results, err := searchtube.Search(searchQuery, 1)
 	if err != nil {
 		return "", false, err
