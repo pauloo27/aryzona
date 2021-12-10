@@ -33,6 +33,7 @@ var (
 	}
 )
 
+/* #nosec G404 */
 func init() {
 	command.RegisterCategory(Audio)
 	// so, youtube ban apikeys with more than 90 days of inactivity,
