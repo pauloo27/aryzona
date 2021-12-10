@@ -37,7 +37,7 @@ func voiceUpdate(bot discord.BotAdapter, user discord.User, prevCh, curCh discor
 	}
 	voicerChan := *v.ChannelID
 
-	if prevCh.ID() == voicerChan && curCh.ID() != prevCh.ID() {
+	if (prevCh != nil && prevCh.ID() == voicerChan) && (curCh != nil && curCh.ID() != prevCh.ID()) {
 		onDisconnect(bot, curCh, v)
 		return
 	}
