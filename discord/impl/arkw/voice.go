@@ -2,7 +2,6 @@ package arkw
 
 import (
 	"github.com/Pauloo27/aryzona/discord"
-	"github.com/Pauloo27/logger"
 	"github.com/diamondburned/arikawa/v3/voice"
 	"github.com/diamondburned/arikawa/v3/voice/voicegateway"
 )
@@ -46,8 +45,7 @@ type VoiceConnection struct {
 }
 
 func (c VoiceConnection) WriteOpus(b []byte) error {
-	x, err := c.session.Write(b)
-	logger.Debug(x, err)
+	_, err := c.session.Write(b)
 	return err
 }
 
