@@ -9,7 +9,8 @@ import (
 	"github.com/Pauloo27/aryzona/discord/event"
 	dc "github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
-	"github.com/diamondburned/arikawa/v3/session"
+	"github.com/diamondburned/arikawa/v3/state"
+	"github.com/diamondburned/arikawa/v3/voice"
 )
 
 func init() {
@@ -23,7 +24,7 @@ type discordData struct {
 	startedAt *time.Time
 	listeners []interface{}
 	indents   []gateway.Intents
-	s         *session.Session
+	s         *state.State
 }
 
 type ArkwBot struct {
@@ -33,7 +34,7 @@ type ArkwBot struct {
 func (b ArkwBot) Init(token string) error {
 	b.d.token = token
 	var err error
-	b.d.s, err = session.New("Bot " + b.d.token)
+	b.d.s, err = state.New("Bot " + b.d.token)
 	return err
 }
 
@@ -77,7 +78,7 @@ func (b ArkwBot) Self() (discord.User, error) {
 }
 
 func (b ArkwBot) GuildCount() int {
-	v, _ := b.d.s.Guilds(0)
+	v, _ := b.d.s.Guilds()
 	return len(v)
 }
 
@@ -101,6 +102,7 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 		}
 	case event.VoiceStateUpdated:
 		b.d.indents = append(b.d.indents, gateway.IntentGuildVoiceStates)
+		b.d.indents = append(b.d.indents, gateway.IntentGuilds)
 		return nil // FIXME
 	default:
 		return event.ErrEventNotSupported
@@ -200,15 +202,51 @@ func (b ArkwBot) Latency() time.Duration {
 }
 
 func (b ArkwBot) OpenGuild(guildID string) (discord.Guild, error) {
-	return nil, errors.New("not implemented yet")
+	sf, err := dc.ParseSnowflake(guildID)
+	if err != nil {
+		return nil, err
+	}
+	g, err := b.d.s.Guild(dc.GuildID(sf))
+	if err != nil {
+		return nil, err
+	}
+	return buildGuild(g.ID.String()), nil
 }
 
 func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConnection, error) {
-	return nil, errors.New("not implemented yet")
+	vs, err := voice.NewSession(b.d.s)
+	if err != nil {
+		return nil, err
+	}
+	guildSf, err := dc.ParseSnowflake(guildID)
+	if err != nil {
+		return nil, err
+	}
+	channelSf, err := dc.ParseSnowflake(channelID)
+	if err != nil {
+		return nil, err
+	}
+	err = vs.JoinChannel(dc.GuildID(guildSf), dc.ChannelID(channelSf), false, false)
+	if err != nil {
+		return nil, err
+	}
+	return buildVoiceConnection(vs), nil
 }
 
 func (b ArkwBot) FindUserVoiceState(guildID, userID string) (discord.VoiceState, error) {
-	return nil, errors.New("not implemented yet")
+	guildSf, err := dc.ParseSnowflake(guildID)
+	if err != nil {
+		return nil, err
+	}
+	userSf, err := dc.ParseSnowflake(userID)
+	if err != nil {
+		return nil, err
+	}
+	vs, err := b.d.s.VoiceState(dc.GuildID(guildSf), dc.UserID(userSf))
+	if err != nil {
+		return nil, err
+	}
+	return buildVoiceState(buildVoiceChannel(vs.ChannelID.String(), buildGuild(guildID))), nil
 }
 
 func (b ArkwBot) UpdatePresence(presence *discord.Presence) error {
