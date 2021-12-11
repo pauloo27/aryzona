@@ -12,7 +12,7 @@ import (
 	"github.com/joho/godotenv"
 
 	// import discordgo implementation
-	_ "github.com/Pauloo27/aryzona/discord/impl/dcgo"
+	_ "github.com/Pauloo27/aryzona/discord/impl/arkw"
 
 	// import listeners
 	_ "github.com/Pauloo27/aryzona/discord/listener"
@@ -57,7 +57,7 @@ func main() {
 	logger.Info("Registering slash commands handlers...")
 	err = discord.Bot.RegisterSlashCommands()
 	if err != nil {
-		logger.Fatal(err)
+		logger.Error(err)
 	}
 	logger.Success("Slash commands created!")
 
