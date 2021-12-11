@@ -35,6 +35,7 @@ var RollCommand = command.Command{
 		bigLuckyNumber, err := rand.Int(rand.Reader, big.NewInt(int64(sides)))
 		if err != nil {
 			ctx.Error("something went wrong =(")
+			return
 		}
 		luckyNumber := bigLuckyNumber.Int64() + 1
 
