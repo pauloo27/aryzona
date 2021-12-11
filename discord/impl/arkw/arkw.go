@@ -194,6 +194,9 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (discord.Channel, error) {
 		return nil, err
 	}
 	dm, err := b.d.s.CreatePrivateChannel(dc.UserID(sf))
+	if err != nil {
+		return nil, err
+	}
 	return buildChannel(dm.ID.String(), buildGuild("")), nil
 }
 
