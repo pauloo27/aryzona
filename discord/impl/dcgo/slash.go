@@ -104,7 +104,7 @@ func registerCommands(bot DcgoBot) error {
 				return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 					Type: discordgo.InteractionResponseChannelMessageWithSource,
 					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{},
+						Embeds: []*discordgo.MessageEmbed{buildEmbed(embed)},
 					},
 				})
 			},
