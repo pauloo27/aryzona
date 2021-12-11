@@ -96,7 +96,10 @@ func (s *StreamingSession) readNext() error {
 		return err
 	}
 
-	s.connection.WriteOpus(opus)
+	err = s.connection.WriteOpus(opus)
+	if err != nil {
+		return err
+	}
 	s.Lock()
 	s.framesSent++
 	s.Unlock()
