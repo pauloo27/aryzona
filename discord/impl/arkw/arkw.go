@@ -83,7 +83,7 @@ func (b ArkwBot) GuildCount() int {
 }
 
 func (b ArkwBot) RegisterSlashCommands() error {
-	return errors.New("not implemented yet")
+	return registerCommands(b)
 }
 
 func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
