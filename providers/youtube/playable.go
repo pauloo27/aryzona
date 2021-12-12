@@ -23,6 +23,10 @@ func (p YouTubePlayable) IsLive() bool {
 	return p.Live
 }
 
+func (p YouTubePlayable) GetThumbnailURL() (string, error) {
+	return p.Video.Thumbnails[0].URL, nil
+}
+
 func (p YouTubePlayable) GetDuration() (time.Duration, error) {
 	return p.Video.Duration, nil
 }

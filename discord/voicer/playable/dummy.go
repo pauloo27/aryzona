@@ -35,6 +35,10 @@ func (DummyPlayable) GetDirectURL() (string, error) {
 	return "", nil
 }
 
+func (DummyPlayable) GetThumbnailURL() (string, error) {
+	return "", nil
+}
+
 func (t DummyPlayable) GetName() string {
 	return t.Name
 }

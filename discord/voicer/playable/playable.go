@@ -11,4 +11,5 @@ type Playable interface {
 	IsOppus() bool
 	IsLocal() bool
 	GetFullTitle() (title, artist string)
+	GetThumbnailURL() (string, error)
 }

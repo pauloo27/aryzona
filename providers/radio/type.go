@@ -34,6 +34,10 @@ func (c RadioChannel) GetDirectURL() (string, error) {
 	return c.Type.GetDirectURL(c.URL), nil
 }
 
+func (c RadioChannel) GetThumbnailURL() (string, error) {
+	return "", nil
+}
+
 func (c RadioChannel) GetFullTitle() (title, artist string) {
 	directURL, err := c.GetDirectURL()
 	if err != nil {
