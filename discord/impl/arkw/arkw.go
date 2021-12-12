@@ -201,7 +201,7 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (discord.Channel, error) {
 }
 
 func (b ArkwBot) Latency() time.Duration {
-	return 0
+	return b.d.s.PacerLoop.EchoBeat.Time().Sub(b.d.s.PacerLoop.SentBeat.Time())
 }
 
 func (b ArkwBot) OpenGuild(guildID string) (discord.Guild, error) {
