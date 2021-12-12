@@ -93,7 +93,8 @@ var RadioCommand = command.Command{
 			}
 		}
 
-		ctx.Success("Ok!")
+		embed := buildPlayableInfoEmbed(channel, nil).WithTitle("Added to queue: " + channel.GetName())
+		ctx.SuccessEmbed(embed)
 		utils.Go(func() {
 			if err = vc.AppendToQueue(channel); err != nil {
 				if is, vErr := errore.IsErrore(err); is {

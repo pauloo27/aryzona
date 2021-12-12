@@ -2,10 +2,8 @@ package audio
 
 import (
 	"strings"
-	"time"
 
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/utils"
 )
@@ -26,29 +24,7 @@ var PlayingCommand = command.Command{
 			return
 		}
 
-		title, artist := playable.GetFullTitle()
-
-		embed := discord.NewEmbed().
-			WithTitle("Now playing: "+playable.GetName()).
-			WithField("Title", title)
-
-		if artist != "" {
-			embed.WithField("Artist", artist)
-		}
-
-		embed.WithField("Requested by", discord.AsMention(*vc.UserID))
-		if playable.IsLive() {
-			embed.WithField("Duration", "**🔴 LIVE**")
-		} else {
-			position, err := vc.GetPosition()
-			if err == nil {
-				embed.WithField("Position", position.Truncate(time.Second).String())
-			}
-			duration, err := playable.GetDuration()
-			if err == nil {
-				embed.WithField("Duration", duration.String())
-			}
-		}
+		embed := buildPlayableInfoEmbed(playable, vc).WithTitle("Now playing: " + playable.GetName())
 
 		if vc.Queue.Size() > 1 {
 			sb := strings.Builder{}

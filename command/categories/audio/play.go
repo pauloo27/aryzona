@@ -3,7 +3,6 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/audio/dca"
 	"github.com/Pauloo27/aryzona/command"
-	"github.com/Pauloo27/aryzona/discord"
 	"github.com/Pauloo27/aryzona/discord/voicer"
 	"github.com/Pauloo27/aryzona/providers/youtube"
 	"github.com/Pauloo27/aryzona/utils"
@@ -57,17 +56,7 @@ var PlayCommand = command.Command{
 			return
 		}
 
-		embed := discord.NewEmbed().
-			WithTitle(utils.Fmt("Best result for %s:", searchQuery)).
-			WithThumbnail(playable.Video.Thumbnails[0].URL).
-			WithField("Title", playable.Video.Title).
-			WithField("Uploader", playable.Video.Author)
-
-		if playable.Live {
-			embed.WithField("Duration", "**🔴 LIVE**")
-		} else {
-			embed.WithField("Duration", playable.Video.Duration.String())
-		}
+		embed := buildPlayableInfoEmbed(playable, nil).WithTitle("Best result for: " + searchQuery)
 
 		ctx.SuccessEmbed(embed)
 		utils.Go(func() {
