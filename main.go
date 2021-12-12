@@ -57,7 +57,7 @@ func main() {
 	logger.Info("Registering slash commands handlers...")
 	err = discord.Bot.RegisterSlashCommands()
 	if err != nil {
-		logger.Error(err)
+		logger.Fatal(err)
 	}
 	logger.Success("Slash commands created!")
 
