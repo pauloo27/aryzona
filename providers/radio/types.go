@@ -1,6 +1,7 @@
 package radio
 
 import (
+	"html"
 	"io"
 	"net/http"
 	"regexp"
@@ -64,7 +65,7 @@ var LainchanRadio = &RadioType{
 			return
 		}
 		title, _ = jsonparser.GetString(data, "format", "tags", "StreamTitle")
-
+		title = html.UnescapeString(title)
 		return
 	},
 }
