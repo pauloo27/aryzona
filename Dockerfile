@@ -19,7 +19,7 @@ RUN make dist
 
 # STAGE: TARGET
 
-FROM scratch
+FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/aryzona /app/aryzona
 ENTRYPOINT ["/app/aryzona"]
