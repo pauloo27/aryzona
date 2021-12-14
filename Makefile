@@ -1,17 +1,26 @@
 BINARY_NAME = aryzona
-COMMIT_MESSAGE = $(shell git log -1 --pretty=%s | sed "s/'//g; s/\"//g")
-COMMIT_HASH = $(shell git rev-list -1 HEAD)
-LDFLAGS = -X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT_HASH)'
+DOCKER_IMAGE_NAME = aryzonabot
+
 DIST_LDFLAGS = $(LDFLAGS) -w -s
 TEST_COMMAND=go test
 
+# kinda shitty and hacky what of doing that... =(
+COMMIT_MESSAGE = $(shell git log -1 --pretty=%s | sed "s/'//g; s/\"//g")
+COMMIT_HASH = $(shell git rev-list -1 HEAD)
+
+LDFLAGS = -X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT_HASH)'
+
 .PHONY: build
 build:
-	go build -v -ldflags="$(LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
+	CGO_ENABLED=0 go build -v -ldflags="$(LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
 
 .PHONY: run
 run: build
 	./$(BINARY_NAME) 
+
+.PHONY: docker
+docker:
+	docker build -t $(DOCKER_IMAGE_NAME) .
 
 .PHONY: install
 install: build
@@ -28,7 +37,7 @@ tidy:
 # (build but with a smaller binary)
 .PHONY: dist
 dist:
-	go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)"
+	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
 
 # (even smaller binary)
 .PHONY: pack
