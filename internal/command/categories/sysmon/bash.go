@@ -10,7 +10,6 @@ import (
 )
 
 // should i remove it? probably...
-/* #nosec G204 */
 var Bash = command.Command{
 	Name:        "bash",
 	Description: "Eval a bash command",
@@ -22,7 +21,7 @@ var Bash = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
-		cmd := exec.Command("bash", "-c", (ctx.Args[0].(string)))
+		cmd := exec.Command("bash", "-c", (ctx.Args[0].(string))) //#nosec G204
 		buffer, err := cmd.CombinedOutput()
 		output := string(buffer)
 		output = strings.ReplaceAll(output, "`", "\\`")
