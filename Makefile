@@ -1,5 +1,3 @@
-PROJECT_DIR=$(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-
 BINARY_NAME = aryzona
 DOCKER_IMAGE_NAME = aryzonabot
 
@@ -14,7 +12,7 @@ LDFLAGS = -X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build -v -ldflags="$(LDFLAGS)" -o $(PROJECT_DIR)$(BINARY_NAME) $(PROJECT_DIR)cmd/aryzona
+	CGO_ENABLED=0 go build -v -ldflags="$(LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
 
 .PHONY: run
 run: build
@@ -39,7 +37,7 @@ tidy:
 # (build but with a smaller binary)
 .PHONY: dist
 dist:
-	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)" -o $(PROJECT_DIR)$(BINARY_NAME) $(PROJECT_DIR)cmd/aryzona
+	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
 
 # (even smaller binary)
 .PHONY: pack

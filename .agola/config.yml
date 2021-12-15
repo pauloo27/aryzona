@@ -20,9 +20,6 @@ runs:
           - restore_cache:
               keys:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
-          - run:
-              name: info
-              command:  pwd && ls && ls /root/project/
               dest_dir: /root/.cache/go-build
           - run:
               name: build
