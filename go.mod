@@ -11,6 +11,6 @@ require (
 	github.com/diamondburned/arikawa/v3 v3.0.0-rc.3
 	github.com/joho/godotenv v1.3.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
-	github.com/kkdai/youtube/v2 v2.7.5
+	github.com/kkdai/youtube/v2 v2.7.6
 	github.com/stretchr/testify v1.7.0
 )
