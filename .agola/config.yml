@@ -21,9 +21,7 @@ runs:
               keys:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               dest_dir: /root/.cache/go-build
-          - run:
-              name: build
-              command:  make build
+          - run: make build
           - save_to_workspace:
               contents:
                 - source_dir: /root/project/
@@ -55,9 +53,7 @@ runs:
         steps:
           - restore_workspace:
               dest_dir: /
-          - run:
-              name: test
-              command:  make test
+          - run: make test
           - save_cache:
               key: pkg-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               contents:
@@ -90,9 +86,7 @@ runs:
           - run:
               name: install inspect tools
               command: ./.agola/install_tools.sh
-          - run:
-              name: inspect
-              command:  make inspect 
+          - run: make inspect 
           - save_cache:
               key: pkg-cache-staticcheck-{{ year }}-{{ month }}
               contents:
@@ -114,29 +108,33 @@ runs:
         when:
           branch: master
         environment:
-          DEPLOY_USER:
-            from_variable: deployuser
-          DEPLOY_PATH:
-            from_variable: deploypath
-          DEPLOY_HOST:
-              from_variable: deployhost
+          REGISTRY_URL:
+            from_variable: registry-url
+          REGISTRY_TOKEN:
+            from_variable: registry-token
+          REGISTRY_IMAGE:
+            from_variable: registry-image
         depends:
           - test
           - inspect
         runtime:
-          type: pod
-          arch: amd64
           containers:
-            - image: golang:1.17-stretch
+            - image: gcr.io/kaniko-project/executor:debug
+        shell: /busybox/sh
         steps:
           - restore_workspace:
               dest_dir: /
+          - run: mv /root/project/* /workspace/ && mv /root/project/.git /workspace
           - run:
-              name: deploy aryzona assets
-              command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./assets $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+              name: generate docker config
+              command: |
+                cat << EOF > /kaniko/.docker/config.json
+                {
+                  "auths": {
+                    "$REGISTRY_URL": { "auth" : "$REGISTRY_TOKEN" }
+                  }
+                }
+                EOF
           - run:
-              name: deploy aryzona
-              command: scp -B -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./aryzona $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/aryzona-new
-          - run:
-              name: restart bot
-              command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$DEPLOY_USER@$DEPLOY_HOST" ary-restart
+              name: build docker image
+              command: /kaniko/executor --destination $REGISTRY_URL/$REGISTRY_IMAGE --force
