@@ -103,7 +103,7 @@ runs:
                     - misspell
                     - staticcheck
 
-      # Deploy (when the branch is Master)
+      # Deploy (when the branch is master)
       - name: deploy
         when:
           branch: master
