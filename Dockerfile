@@ -20,7 +20,10 @@ RUN make dist
 # STAGE: TARGET
 
 FROM alpine:latest
-WORKDIR /app
-COPY --from=builder /app/aryzona /app/aryzona
 RUN apk add ffmpeg
+
+WORKDIR /app
+COPY --from=builder /app/assets /app/assets
+COPY --from=builder /app/aryzona /app/aryzona
+
 ENTRYPOINT ["/app/aryzona"]
