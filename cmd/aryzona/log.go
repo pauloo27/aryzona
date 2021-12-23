@@ -24,7 +24,7 @@ func init() {
 
 		embed := discord.NewEmbed().
 			WithFieldInline("Message", fmt.Sprintln(params...)).
-			WithDescription(utils.Fmt("```\n%s\n```", string(debug.Stack()))).
+			WithDescription(utils.Fmt("```go\n%s\n```", string(debug.Stack()))).
 			WithColor(0xff5555).
 			WithTitle(utils.Fmt("Oops! [%s]", level.Name))
 
