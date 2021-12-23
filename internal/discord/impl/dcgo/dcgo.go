@@ -26,6 +26,10 @@ type DcgoBot struct {
 	d *discordData
 }
 
+func (b DcgoBot) Implementation() string {
+	return "Discordgo"
+}
+
 func (b DcgoBot) Init(token string) error {
 	b.d.token = token
 	var err error

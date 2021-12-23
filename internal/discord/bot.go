@@ -11,6 +11,7 @@ var (
 )
 
 type BotAdapter interface {
+	Implementation() string
 	Init(token string) error
 	StartedAt() *time.Time
 	Listen(event event.EventType, handlerFunc interface{}) error

@@ -40,7 +40,7 @@ func init() {
 }
 
 func main() {
-	logger.Info("Connecting to Discord...")
+	logger.Infof("Connecting to Discord using implementation %s...", discord.Bot.Implementation())
 	err := discord.CreateBot(os.Getenv("DC_BOT_TOKEN"))
 	if err != nil {
 		logger.Fatal(err)

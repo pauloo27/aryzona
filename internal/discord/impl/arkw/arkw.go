@@ -31,6 +31,10 @@ type ArkwBot struct {
 	d *discordData
 }
 
+func (b ArkwBot) Implementation() string {
+	return "Arikawa"
+}
+
 func (b ArkwBot) Init(token string) error {
 	b.d.token = token
 	var err error
