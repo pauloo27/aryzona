@@ -22,5 +22,5 @@ RUN make dist
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/aryzona /app/aryzona
+RUN apk add ffmpeg
 ENTRYPOINT ["/app/aryzona"]
-
