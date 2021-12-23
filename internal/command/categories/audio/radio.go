@@ -102,8 +102,9 @@ var RadioCommand = command.Command{
 						return
 					}
 					ctx.Error(vErr.Message)
+					logger.Error(vErr.Message)
 				} else {
-					ctx.Error("Cannot play stuff")
+					ctx.Error(utils.Fmt("Cannot play stuff: %v", err))
 					logger.Error(err)
 				}
 				return

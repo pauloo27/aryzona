@@ -52,7 +52,8 @@ var PlayCommand = command.Command{
 
 		playable, err := youtube.AsPlayable(resultURL)
 		if err != nil {
-			ctx.Error("Something went wrong when getting the video to play")
+			ctx.Error(utils.Fmt("Something went wrong when getting the video to play: %v", err))
+			logger.Error(err)
 			return
 		}
 
@@ -66,8 +67,9 @@ var PlayCommand = command.Command{
 						return
 					}
 					ctx.Error(vErr.Message)
+					logger.Error(vErr.Message)
 				} else {
-					ctx.Error("Cannot play stuff")
+					ctx.Error(utils.Fmt("Cannot play stuff: %v", err))
 					logger.Error(err)
 				}
 				return
