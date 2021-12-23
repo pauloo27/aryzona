@@ -4,5 +4,6 @@ services:
   bot:
     container_name: aryzona_bot
     image: aryzonabot:latest
+    hostname: aryhost
     volumes:
       - ./.env:/app/.env
