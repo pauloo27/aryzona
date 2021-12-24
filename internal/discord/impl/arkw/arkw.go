@@ -68,7 +68,20 @@ func (b ArkwBot) StartedAt() *time.Time {
 }
 
 func (b ArkwBot) CountUsersInVoiceChannel(ch discord.VoiceChannel) (count int) {
-	return 0 // TODO:
+	sf, err := dc.ParseSnowflake(ch.Guild().ID())
+	if err != nil {
+		return
+	}
+	states, err := b.d.s.VoiceStates(dc.GuildID(sf))
+	if err != nil {
+		return
+	}
+	for _, state := range states {
+		if state.ChannelID.String() == ch.ID() {
+			count++
+		}
+	}
+	return
 }
 
 func (b ArkwBot) disconnect() error {
