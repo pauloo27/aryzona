@@ -66,4 +66,4 @@ inspect: lint spell gosec staticcheck
 # auto restart bot (using fiber CLI)
 .PHONY: dev
 dev:
-	fiber dev
+	fiber dev -t ./cmd/aryzona
