@@ -10,6 +10,7 @@ import (
 	dc "github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
+	"github.com/diamondburned/arikawa/v3/utils/handler"
 	"github.com/diamondburned/arikawa/v3/voice"
 )
 
@@ -19,10 +20,15 @@ func init() {
 	})
 }
 
+type eventListener struct {
+	preHandler bool
+	handler    interface{}
+}
+
 type discordData struct {
 	token     string
 	startedAt *time.Time
-	listeners []interface{}
+	listeners []*eventListener
 	indents   []gateway.Intents
 	s         *state.State
 }
@@ -62,7 +68,7 @@ func (b ArkwBot) StartedAt() *time.Time {
 }
 
 func (b ArkwBot) CountUsersInVoiceChannel(ch discord.VoiceChannel) (count int) {
-	return 0
+	return 0 // TODO:
 }
 
 func (b ArkwBot) disconnect() error {
@@ -92,6 +98,7 @@ func (b ArkwBot) RegisterSlashCommands() error {
 
 func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 	var l interface{}
+	pre := false
 	switch eventType {
 	case event.Ready:
 		l = func(*gateway.ReadyEvent) {
@@ -105,13 +112,28 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 			listener.(func(discord.BotAdapter, discord.Message))(b, msg)
 		}
 	case event.VoiceStateUpdated:
+		pre = true
 		b.d.indents = append(b.d.indents, gateway.IntentGuildVoiceStates)
 		b.d.indents = append(b.d.indents, gateway.IntentGuilds)
-		return nil // FIXME
+
+		l = func(m *gateway.VoiceStateUpdateEvent) {
+			user := buildUser(m.UserID.String())
+			var prevCh, curCh discord.VoiceChannel
+			if m.ChannelID.IsValid() {
+				curCh = buildVoiceChannel(m.ChannelID.String(), buildGuild(m.GuildID.String()))
+			}
+
+			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
+			if err == nil && voiceState.Channel().ID() != "" {
+				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()))
+			}
+
+			listener.(func(discord.BotAdapter, discord.User, discord.VoiceChannel, discord.VoiceChannel))(b, user, prevCh, curCh)
+		}
 	default:
 		return event.ErrEventNotSupported
 	}
-	b.d.listeners = append(b.d.listeners, l)
+	b.d.listeners = append(b.d.listeners, &eventListener{handler: l, preHandler: pre})
 	return nil
 }
 
@@ -119,8 +141,13 @@ func (b ArkwBot) registerListeners() {
 	for _, intent := range b.d.indents {
 		b.d.s.AddIntents(intent)
 	}
+	b.d.s.PreHandler = handler.New()
 	for _, l := range b.d.listeners {
-		b.d.s.AddHandler(l)
+		if l.preHandler {
+			b.d.s.PreHandler.AddSyncHandler(l.handler)
+		} else {
+			b.d.s.AddHandler(l.handler)
+		}
 	}
 }
 
