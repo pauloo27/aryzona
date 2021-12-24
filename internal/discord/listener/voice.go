@@ -27,25 +27,22 @@ func voiceUpdate(bot discord.BotAdapter, user discord.User, prevCh, curCh discor
 	if self.ID() == user.ID() {
 		return
 	}
-	var v *voicer.Voicer
+
+	if prevCh != nil {
+		v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
+		if v != nil && v.ChannelID != nil && *v.ChannelID == prevCh.ID() {
+			onDisconnect(bot, prevCh, v)
+			return
+		}
+	}
+
 	if curCh != nil {
-		v = voicer.GetExistingVoicerForGuild(curCh.Guild().ID())
+		v := voicer.GetExistingVoicerForGuild(curCh.Guild().ID())
+		if v != nil && v.ChannelID != nil && *v.ChannelID == curCh.ID() {
+			onConnect(bot, curCh)
+		}
 	}
 
-	if v == nil || v.ChannelID == nil {
-		return
-	}
-	voicerChan := *v.ChannelID
-
-	if (prevCh != nil && prevCh.ID() == voicerChan) && (curCh != nil && curCh.ID() != prevCh.ID()) {
-		onDisconnect(bot, curCh, v)
-		return
-	}
-
-	if curCh.ID() == voicerChan {
-		onConnect(bot, curCh)
-		return
-	}
 }
 
 func onConnect(bot discord.BotAdapter, ch discord.VoiceChannel) {
