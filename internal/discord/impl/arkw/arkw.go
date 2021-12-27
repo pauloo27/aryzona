@@ -7,16 +7,22 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
+	"github.com/ReneKroon/ttlcache/v2"
 	dc "github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/diamondburned/arikawa/v3/utils/handler"
 	"github.com/diamondburned/arikawa/v3/voice"
+	"github.com/google/uuid"
 )
 
 func init() {
+	cache := ttlcache.NewCache()
+	cache.SetTTL(1 * time.Minute)
 	discord.UseImplementation(&ArkwBot{
-		d: &discordData{},
+		d: &discordData{
+			prevChannelCache: cache,
+		},
 	})
 }
 
@@ -26,11 +32,12 @@ type eventListener struct {
 }
 
 type discordData struct {
-	token     string
-	startedAt *time.Time
-	listeners []*eventListener
-	indents   []gateway.Intents
-	s         *state.State
+	token            string
+	startedAt        *time.Time
+	listeners        []*eventListener
+	indents          []gateway.Intents
+	s                *state.State
+	prevChannelCache *ttlcache.Cache
 }
 
 type ArkwBot struct {
@@ -125,7 +132,18 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 			listener.(func(discord.BotAdapter, discord.Message))(b, msg)
 		}
 	case event.VoiceStateUpdated:
-		pre = true
+		eventID := uuid.New().String()
+		// add helper listener
+		b.d.listeners = append(b.d.listeners, &eventListener{handler: func(m *gateway.VoiceStateUpdateEvent) {
+			var prevCh discord.VoiceChannel
+			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
+			if err == nil && voiceState.Channel().ID() != "" {
+				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()))
+			}
+			b.d.prevChannelCache.Set(eventID, prevCh)
+		}, preHandler: true})
+
+		pre = false
 		b.d.indents = append(b.d.indents, gateway.IntentGuildVoiceStates)
 		b.d.indents = append(b.d.indents, gateway.IntentGuilds)
 
@@ -135,10 +153,9 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 			if m.ChannelID.IsValid() {
 				curCh = buildVoiceChannel(m.ChannelID.String(), buildGuild(m.GuildID.String()))
 			}
-
-			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
-			if err == nil && voiceState.Channel().ID() != "" {
-				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()))
+			possiblePrevCh, err := b.d.prevChannelCache.Get(eventID)
+			if err == nil {
+				prevCh, _ = possiblePrevCh.(discord.VoiceChannel)
 			}
 
 			listener.(func(discord.BotAdapter, discord.User, discord.VoiceChannel, discord.VoiceChannel))(b, user, prevCh, curCh)
