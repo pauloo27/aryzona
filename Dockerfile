@@ -4,6 +4,8 @@ FROM golang:1.17 as builder
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install --no-install-recommends --yes upx-ucl
+
 # latest commit hash/title is used for building the project
 COPY .git .git
 
@@ -15,7 +17,7 @@ COPY assets assets
 COPY internal internal
 COPY cmd cmd
 
-RUN make dist
+RUN make pack
 
 # STAGE: TARGET
 
