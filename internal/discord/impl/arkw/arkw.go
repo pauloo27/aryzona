@@ -18,7 +18,7 @@ import (
 
 func init() {
 	cache := ttlcache.NewCache()
-	cache.SetTTL(1 * time.Minute)
+	_ = cache.SetTTL(1 * time.Minute)
 	discord.UseImplementation(&ArkwBot{
 		d: &discordData{
 			prevChannelCache: cache,
@@ -140,7 +140,7 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 			if err == nil && voiceState.Channel().ID() != "" {
 				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()))
 			}
-			b.d.prevChannelCache.Set(eventID, prevCh)
+			_ = b.d.prevChannelCache.Set(eventID, prevCh)
 		}, preHandler: true})
 
 		pre = false
