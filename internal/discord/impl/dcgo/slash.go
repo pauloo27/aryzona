@@ -4,22 +4,23 @@ import (
 	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
 
-var discordTypeMap = map[*command.CommandArgumentType]discordgo.ApplicationCommandOptionType{
-	command.ArgumentString: discordgo.ApplicationCommandOptionString,
-	command.ArgumentText:   discordgo.ApplicationCommandOptionString,
-	command.ArgumentInt:    discordgo.ApplicationCommandOptionInteger,
-	command.ArgumentBool:   discordgo.ApplicationCommandOptionBoolean,
+var discordTypeMap = map[*command.CommandParameterType]discordgo.ApplicationCommandOptionType{
+	parameters.ParameterString: discordgo.ApplicationCommandOptionString,
+	parameters.ParameterText:   discordgo.ApplicationCommandOptionString,
+	parameters.ParameterInt:    discordgo.ApplicationCommandOptionInteger,
+	parameters.ParameterBool:   discordgo.ApplicationCommandOptionBoolean,
 }
 
 func registerCommands(bot DcgoBot) error {
 	session := bot.d.s
 
-	mustGetChoisesFor := func(arg *command.CommandArgument) (options []*discordgo.ApplicationCommandOptionChoice) {
+	mustGetChoisesFor := func(arg *command.CommandParameter) (options []*discordgo.ApplicationCommandOptionChoice) {
 		for _, value := range arg.GetValidValues() {
 			options = append(options, &discordgo.ApplicationCommandOptionChoice{
 				Name:  fmt.Sprintf("%v", value),
@@ -29,7 +30,7 @@ func registerCommands(bot DcgoBot) error {
 		return
 	}
 
-	mustGetTypeFor := func(arg *command.CommandArgument) discordgo.ApplicationCommandOptionType {
+	mustGetTypeFor := func(arg *command.CommandParameter) discordgo.ApplicationCommandOptionType {
 		t, found := discordTypeMap[arg.Type]
 		if !found {
 			logger.Fatalf("cannot find discord type for %s", arg.Type.Name)
@@ -51,7 +52,7 @@ func registerCommands(bot DcgoBot) error {
 			Description: cmd.Description,
 		}
 
-		for _, arg := range cmd.Arguments {
+		for _, arg := range cmd.Parameters {
 			slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
 				Name:        arg.Name,
 				Description: arg.Description,

@@ -3,6 +3,7 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/aryzona/internal/utils"
@@ -13,8 +14,8 @@ import (
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
 	Description: "Play a video/song from u2b",
-	Arguments: []*command.CommandArgument{
-		{Name: "song", Description: "Search query", Required: true, Type: command.ArgumentText},
+	Parameters: []*command.CommandParameter{
+		{Name: "song", Description: "Search query", Required: true, Type: parameters.ParameterText},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		if _, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID); err != nil {

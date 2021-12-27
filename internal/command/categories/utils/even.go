@@ -2,15 +2,16 @@ package utils
 
 import (
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 )
 
 var EvenCommand = command.Command{
 	Name: "even", Description: "Check if a number is even or odd",
-	Arguments: []*command.CommandArgument{
+	Parameters: []*command.CommandParameter{
 		{
 			Name:        "number",
 			Description: "number",
-			Type:        command.ArgumentInt,
+			Type:        parameters.ParameterInt,
 			Required:    true,
 		},
 	},

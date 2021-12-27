@@ -50,7 +50,7 @@ func HandleCommand(
 		}
 	}
 
-	values, syntaxError := command.ValidateArguments(args)
+	values, syntaxError := command.ValidateParameters(args)
 	if syntaxError != nil {
 		ctx.Error(syntaxError.Message)
 		return

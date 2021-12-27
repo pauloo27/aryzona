@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/permissions"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
@@ -14,10 +15,10 @@ var Bash = command.Command{
 	Name:        "bash",
 	Description: "Eval a bash command",
 	Permission:  &permissions.MustBeOwner,
-	Arguments: []*command.CommandArgument{
+	Parameters: []*command.CommandParameter{
 		{
 			Name: "command", Description: "command to execute", Required: true,
-			RequiredMessage: "Missing command", Type: command.ArgumentText,
+			RequiredMessage: "Missing command", Type: parameters.ParameterText,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {

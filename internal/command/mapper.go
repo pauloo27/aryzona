@@ -23,9 +23,9 @@ func RegisterCommand(command *Command) {
 	if command.Description == "" {
 		logger.Fatalf("Command %s has no description", command.Name)
 	}
-	for _, arg := range command.Arguments {
+	for _, arg := range command.Parameters {
 		if arg.Name == "" || len(strings.Split(arg.Name, " ")) != 1 {
-			logger.Fatalf("Command %s an invalid argument name (%s)", command.Name, arg.Name)
+			logger.Fatalf("Command %s an invalid parameter name (%s)", command.Name, arg.Name)
 		}
 	}
 

@@ -5,6 +5,7 @@ import (
 	"math/big"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
@@ -14,8 +15,8 @@ var gif = "https://c.tenor.com/KzfDyYrsLngAAAAM/dice-roll.gif"
 var RollCommand = command.Command{
 	Name: "roll", Aliases: []string{"rolar", "dado", "dados", "dice", "rool", "d"},
 	Description: "Roll a dice",
-	Arguments: []*command.CommandArgument{
-		{Name: "sides", Description: "dice sides", Required: false, Type: command.ArgumentInt},
+	Parameters: []*command.CommandParameter{
+		{Name: "sides", Description: "dice sides", Required: false, Type: parameters.ParameterInt},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var sides int

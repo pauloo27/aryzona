@@ -31,29 +31,29 @@ type CommandValidation struct {
 	Checker   CommandValidationChecker
 }
 
-type CommandArgumentTypeParser func(index int, args []string) (interface{}, error)
+type CommandParameterTypeParser func(index int, args []string) (interface{}, error)
 
-type CommandArgumentType struct {
+type CommandParameterType struct {
 	Name   string
-	Parser CommandArgumentTypeParser
+	Parser CommandParameterTypeParser
 }
 
-type CommandArgument struct {
+type CommandParameter struct {
 	Name            string
 	Description     string
-	Type            *CommandArgumentType
+	Type            *CommandParameterType
 	Required        bool
 	RequiredMessage string
 	ValidValues     []interface{}
 	ValidValuesFunc func() []interface{}
 }
 
-func (ca *CommandArgument) GetValidValues() []interface{} {
-	if ca.ValidValues != nil {
-		return ca.ValidValues
+func (param *CommandParameter) GetValidValues() []interface{} {
+	if param.ValidValues != nil {
+		return param.ValidValues
 	}
-	if ca.ValidValuesFunc != nil {
-		return ca.ValidValuesFunc()
+	if param.ValidValuesFunc != nil {
+		return param.ValidValuesFunc()
 	}
 	return nil
 }
@@ -64,7 +64,7 @@ type Command struct {
 	Handler           CommandHandler
 	Permission        *CommandPermission
 	Validations       []*CommandValidation
-	Arguments         []*CommandArgument
+	Parameters        []*CommandParameter
 	category          *CommandCategory
 }
 

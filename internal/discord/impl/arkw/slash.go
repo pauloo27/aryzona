@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/logger"
 
@@ -13,7 +14,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/utils/json/option"
 )
 
-func mustGetIntegerChoises(arg *command.CommandArgument) (choises []dc.IntegerChoice) {
+func mustGetIntegerChoises(arg *command.CommandParameter) (choises []dc.IntegerChoice) {
 	for _, value := range arg.GetValidValues() {
 		choises = append(choises, dc.IntegerChoice{
 			Name:  fmt.Sprintf("%v", value),
@@ -23,7 +24,7 @@ func mustGetIntegerChoises(arg *command.CommandArgument) (choises []dc.IntegerCh
 	return
 }
 
-func mustGetStringChoises(arg *command.CommandArgument) (choises []dc.StringChoice) {
+func mustGetStringChoises(arg *command.CommandParameter) (choises []dc.StringChoice) {
 	for _, value := range arg.GetValidValues() {
 		choises = append(choises, dc.StringChoice{
 			Name:  fmt.Sprintf("%v", value),
@@ -33,23 +34,23 @@ func mustGetStringChoises(arg *command.CommandArgument) (choises []dc.StringChoi
 	return
 }
 
-func mustGetOption(arg *command.CommandArgument) dc.CommandOption {
+func mustGetOption(arg *command.CommandParameter) dc.CommandOption {
 	switch arg.Type {
-	case command.ArgumentString:
+	case parameters.ParameterString:
 		return &dc.StringOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 			Choices: mustGetStringChoises(arg),
 		}
-	case command.ArgumentText:
+	case parameters.ParameterText:
 		return &dc.StringOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 			Choices: mustGetStringChoises(arg),
 		}
-	case command.ArgumentBool:
+	case parameters.ParameterBool:
 		return &dc.BooleanOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 		}
-	case command.ArgumentInt:
+	case parameters.ParameterInt:
 		return &dc.IntegerOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 			Choices: mustGetIntegerChoises(arg),
@@ -77,7 +78,7 @@ func registerCommands(bot ArkwBot) error {
 			Name: cmd.Name, Description: cmd.Description,
 		}
 
-		for _, arg := range cmd.Arguments {
+		for _, arg := range cmd.Parameters {
 			slashCommand.Options = append(
 				slashCommand.Options, mustGetOption(arg),
 			)

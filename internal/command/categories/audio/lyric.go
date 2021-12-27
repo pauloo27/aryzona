@@ -2,6 +2,7 @@ package audio
 
 import (
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/utils"
@@ -12,8 +13,8 @@ import (
 var LyricCommand = command.Command{
 	Name: "lyric", Aliases: []string{"ly", "letra", "letras", "lyrics"},
 	Description: "Show lyric from a song",
-	Arguments: []*command.CommandArgument{
-		{Name: "song", Description: "Search terms", Type: command.ArgumentText, Required: false},
+	Parameters: []*command.CommandParameter{
+		{Name: "song", Description: "Search terms", Type: parameters.ParameterText, Required: false},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var searchTerms string

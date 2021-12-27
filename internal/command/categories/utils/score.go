@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
 	"github.com/Pauloo27/aryzona/internal/utils"
@@ -13,13 +14,13 @@ import (
 var ScoreCommand = command.Command{
 	Name: "score", Description: "Get a game score",
 	Aliases: []string{"placar", "gols"},
-	Arguments: []*command.CommandArgument{
+	Parameters: []*command.CommandParameter{
 		{
 			Name:            "game",
 			Required:        true,
 			RequiredMessage: "Missing the team name or a match id",
 			Description:     "team name or match id",
-			Type:            command.ArgumentString,
+			Type:            parameters.ParameterString,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {

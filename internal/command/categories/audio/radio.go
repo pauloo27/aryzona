@@ -3,6 +3,7 @@ package audio
 import (
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/providers/radio"
@@ -32,12 +33,12 @@ func listRadios(ctx *command.CommandContext, title string) {
 var RadioCommand = command.Command{
 	Name:        "radio",
 	Description: "Plays a pre-defined radio",
-	Arguments: []*command.CommandArgument{
+	Parameters: []*command.CommandParameter{
 		{
 			Name:        "radio",
 			Description: "radio name",
 			Required:    false,
-			Type:        command.ArgumentString,
+			Type:        parameters.ParameterString,
 			ValidValuesFunc: func() []interface{} {
 				ids := []interface{}{}
 				for _, radio := range radio.GetRadioList() {
