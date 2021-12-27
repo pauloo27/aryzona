@@ -96,7 +96,7 @@ func (s *StreamingSession) readNext() error {
 		return err
 	}
 
-	err = s.connection.WriteOpus(opus)
+	_, err = s.connection.WriteOpus(opus)
 	if err != nil {
 		return err
 	}

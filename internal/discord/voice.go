@@ -5,7 +5,7 @@ type VoiceState interface {
 }
 
 type VoiceConnection interface {
-	WriteOpus([]byte) error
+	WriteOpus([]byte) (int, error)
 	Speaking(bool) error
 	Disconnect() error
 }

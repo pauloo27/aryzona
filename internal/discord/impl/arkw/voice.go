@@ -44,9 +44,8 @@ type VoiceConnection struct {
 	session *voice.Session
 }
 
-func (c VoiceConnection) WriteOpus(b []byte) error {
-	_, err := c.session.Write(b)
-	return err
+func (c VoiceConnection) WriteOpus(b []byte) (int, error) {
+	return c.session.Write(b)
 }
 
 func (c VoiceConnection) Speaking(speaking bool) error {

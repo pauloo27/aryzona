@@ -9,9 +9,9 @@ type VoiceConnection struct {
 	connection *discordgo.VoiceConnection
 }
 
-func (c VoiceConnection) WriteOpus(b []byte) error {
+func (c VoiceConnection) WriteOpus(b []byte) (int, error) {
 	c.connection.OpusSend <- b
-	return nil
+	return len(b), nil
 }
 
 func (c VoiceConnection) Speaking(speaking bool) error {
