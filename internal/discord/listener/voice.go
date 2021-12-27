@@ -24,7 +24,14 @@ func voiceUpdate(bot discord.BotAdapter, user discord.User, prevCh, curCh discor
 		return
 	}
 
-	if self.ID() == user.ID() {
+	// stop the voice when the bot is disconnect. Why? Admins can disconnect the
+	// bot from the channel, if we dont handle it, the voicer will never stop.
+	if self.ID() == user.ID() && curCh == nil {
+		v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
+		if v != nil {
+			logger.Debug("bot was disconnected")
+			_ = v.Disconnect()
+		}
 		return
 	}
 
