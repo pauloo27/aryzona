@@ -22,6 +22,7 @@ func HandleCommand(
 		ReplyEmbed: event.ReplyEmbed,
 		AuthorID:   event.AuthorID,
 		GuildID:    event.GuildID,
+		Locals:     make(map[string]interface{}),
 	}
 
 	if command.Permission != nil {

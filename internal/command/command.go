@@ -12,6 +12,7 @@ type CommandPermissionChecker func(*CommandContext) bool
 type CommandContext struct {
 	Bot               discord.BotAdapter
 	RawArgs           []string
+	Locals            map[string]interface{}
 	Args              []interface{}
 	Reply             func(string) error
 	ReplyEmbed        func(*discord.Embed) error
