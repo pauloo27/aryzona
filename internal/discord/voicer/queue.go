@@ -10,10 +10,10 @@ import (
 )
 
 func (v *Voicer) IsPaused() bool {
-	if v.StreamingSession == nil {
+	if v.AudioSession == nil {
 		return false
 	}
-	return v.StreamingSession.Paused()
+	return v.AudioSession.IsPaused()
 }
 
 func (v *Voicer) registerListeners() {
@@ -29,23 +29,23 @@ func (v *Voicer) registerListeners() {
 	v.Queue.On(queue.EventRemove, func(params ...interface{}) {
 		data := params[0].(queue.EventRemoveData)
 		if data.Index == 0 {
-			v.EncodeSession.Cleanup()
+			v.AudioSession.Stop()
 		}
 	})
 }
 
 func (v *Voicer) TogglePause() {
-	if v.StreamingSession == nil {
+	if v.AudioSession == nil {
 		return
 	}
-	v.StreamingSession.TogglePause()
+	v.AudioSession.TogglePause()
 }
 
 func (v *Voicer) Skip() {
-	if v.EncodeSession == nil {
+	if v.AudioSession == nil {
 		return
 	}
-	v.EncodeSession.Cleanup()
+	v.AudioSession.Stop()
 }
 
 func (v *Voicer) Playing() playable.Playable {
