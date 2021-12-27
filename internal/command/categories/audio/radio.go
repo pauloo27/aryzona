@@ -1,6 +1,7 @@
 package audio
 
 import (
+	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
@@ -97,6 +98,9 @@ var RadioCommand = command.Command{
 		utils.Go(func() {
 			if err = vc.AppendToQueue(channel); err != nil {
 				if is, vErr := errore.IsErrore(err); is {
+					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
+						return
+					}
 					ctx.Error(vErr.Message)
 					logger.Error(vErr.Message)
 				} else {

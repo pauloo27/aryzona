@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/audio"
+	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
 	"github.com/Pauloo27/logger"
@@ -17,7 +17,8 @@ type Voicer struct {
 	UserID, ChannelID, GuildID *string
 	Voice                      discord.VoiceConnection
 	Queue                      *queue.Queue
-	AudioSession               *audio.Session
+	EncodeSession              *dca.EncodeSession
+	StreamingSession           *dca.StreamingSession
 	lock                       *sync.Mutex
 }
 
@@ -65,9 +66,9 @@ func NewVoicerForUser(userID, guildID string) (*Voicer, error) {
 
 	voicer = &Voicer{
 		UserID: &userID, ChannelID: &chanID, GuildID: &guildID, Voice: nil,
-		AudioSession: nil,
-		lock:         &sync.Mutex{},
-		Queue:        queue, usable: true,
+		StreamingSession: nil, EncodeSession: nil,
+		lock:  &sync.Mutex{},
+		Queue: queue, usable: true,
 	}
 
 	voicer.registerListeners()
@@ -113,9 +114,11 @@ func (v *Voicer) Disconnect() error {
 		return nil
 	}
 
-	if v.AudioSession != nil {
-		v.AudioSession.Stop()
-		v.AudioSession = nil
+	v.StreamingSession = nil
+
+	if v.EncodeSession != nil {
+		v.EncodeSession.Cleanup()
+		v.EncodeSession = nil
 	}
 
 	var err error
@@ -145,7 +148,7 @@ func (v *Voicer) GetPosition() (time.Duration, error) {
 		// TODO: create an errore?
 		return 0, errors.New("nothing playing")
 	}
-	return v.AudioSession.Position, nil
+	return time.Duration(v.StreamingSession.PlaybackPosition()), nil
 }
 
 func (v *Voicer) Start() error {
@@ -172,18 +175,15 @@ func (v *Voicer) Start() error {
 		return err
 	}
 
-	v.AudioSession = audio.New(v.Voice)
+	// play a simple "pre connect" sound
+	v.EncodeSession = dca.EncodeData("./assets/radio_start.wav", false, true)
+	done := make(chan error)
+	v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
 
-	/*
-			// play a simple "pre connect" sound
-			v.AudioSession = dca.EncodeData("./assets/radio_start.wav", false, true)
-			done := make(chan error)
-			v.StreamingSession = dca.NewStream(v.AudioSession, v.Voice, done)
-		err := <-done
-		if err != nil && err != io.EOF {
-			logger.Error(err)
-		}
-	*/
+	err := <-done
+	if err != nil && err != io.EOF {
+		logger.Error(err)
+	}
 
 	for {
 		playable := v.Queue.First()
@@ -196,7 +196,16 @@ func (v *Voicer) Start() error {
 			return err
 		}
 
-		err = v.AudioSession.PlayURL(url, playable.IsOppus())
+		v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
+
+		if err := v.Voice.Speaking(true); err != nil {
+			return err
+		}
+
+		done := make(chan error)
+		v.StreamingSession = dca.NewStream(v.EncodeSession, v.Voice, done)
+
+		err = <-done
 
 		v.Queue.Remove(0)
 
