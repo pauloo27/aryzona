@@ -4,27 +4,21 @@ import (
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
+	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 var PlayingCommand = command.Command{
 	Name: "playing", Aliases: []string{"np", "nowplaying", "tocando"},
 	Description: "Show what is playing now",
+	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
-		vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
-		if vc == nil {
-			ctx.Error("Bot is not connect to a voice channel")
-			return
-		}
-		playable := vc.Playing()
+		vc := ctx.Locals["vc"].(*voicer.Voicer)
+		playing := ctx.Locals["playing"].(playable.Playable)
 
-		if playable == nil {
-			ctx.Error("Nothing playing...")
-			return
-		}
-
-		embed := buildPlayableInfoEmbed(playable, vc).WithTitle("Now playing: " + playable.GetName())
+		embed := buildPlayableInfoEmbed(playing, vc).WithTitle("Now playing: " + playing.GetName())
 
 		if vc.Queue.Size() > 1 {
 			sb := strings.Builder{}

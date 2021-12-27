@@ -8,6 +8,7 @@ import (
 
 type CommandHandler func(*CommandContext)
 type CommandPermissionChecker func(*CommandContext) bool
+type CommandValidationChecker func(*CommandContext) (bool, string)
 
 type CommandContext struct {
 	Bot               discord.BotAdapter
@@ -22,6 +23,12 @@ type CommandContext struct {
 type CommandPermission struct {
 	Name    string
 	Checker CommandPermissionChecker
+}
+
+type CommandValidation struct {
+	Name      string
+	DependsOn []*CommandValidation
+	Checker   CommandValidationChecker
 }
 
 type CommandArgumentTypeParser func(index int, args []string) (interface{}, error)
@@ -56,6 +63,7 @@ type Command struct {
 	Aliases           []string
 	Handler           CommandHandler
 	Permission        *CommandPermission
+	Validations       []*CommandValidation
 	Arguments         []*CommandArgument
 	category          *CommandCategory
 }

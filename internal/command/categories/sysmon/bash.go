@@ -13,7 +13,7 @@ import (
 var Bash = command.Command{
 	Name:        "bash",
 	Description: "Eval a bash command",
-	Permission:  &permissions.BeOwner,
+	Permission:  &permissions.MustBeOwner,
 	Arguments: []*command.CommandArgument{
 		{
 			Name: "command", Description: "command to execute", Required: true,

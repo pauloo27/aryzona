@@ -2,6 +2,7 @@ package audio
 
 import (
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/logger"
 )
@@ -9,13 +10,11 @@ import (
 var StopCommand = command.Command{
 	Name: "stop", Aliases: []string{"st", "parar", "pare"},
 	Description: "Stop what is playing",
+	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
-		voicer := voicer.GetExistingVoicerForGuild(ctx.GuildID)
-		if voicer == nil {
-			ctx.Error("Bot is not connect to a voice channel")
-			return
-		}
-		err := voicer.Disconnect()
+		vc := ctx.Locals["vc"].(*voicer.Voicer)
+
+		err := vc.Disconnect()
 		if err != nil {
 			logger.Error(err)
 			ctx.Error("Something went wrong when disconnecting...")
