@@ -4,6 +4,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
+	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/aryzona/internal/utils"
@@ -14,26 +15,15 @@ import (
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
 	Description: "Play a video/song from u2b",
+	Validations: []*command.CommandValidation{validations.MustBeOnAValidVoiceChannel},
 	Parameters: []*command.CommandParameter{
 		{Name: "song", Description: "Search query", Required: true, Type: parameters.ParameterText},
 	},
 	Handler: func(ctx *command.CommandContext) {
-		if _, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID); err != nil {
-			ctx.Error("You are not in a voice channel")
-			return
-		}
+		vc := ctx.Locals["vc"].(*voicer.Voicer)
 
-		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)
-		if err != nil {
-			ctx.Error("Cannot create voicer")
-			return
-		}
-		if !vc.CanConnect() {
-			ctx.Error("Cannot connect to your voice channel")
-			return
-		}
 		if !vc.IsConnected() {
-			if err = vc.Connect(); err != nil {
+			if err := vc.Connect(); err != nil {
 				ctx.Error("Cannot connect to your voice channel")
 				return
 			}

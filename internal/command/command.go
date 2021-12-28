@@ -26,9 +26,9 @@ type CommandPermission struct {
 }
 
 type CommandValidation struct {
-	Name      string
-	DependsOn []*CommandValidation
-	Checker   CommandValidationChecker
+	Description string
+	DependsOn   []*CommandValidation
+	Checker     CommandValidationChecker
 }
 
 type CommandParameterTypeParser func(index int, args []string) (interface{}, error)
