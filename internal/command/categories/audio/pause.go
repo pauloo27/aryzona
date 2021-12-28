@@ -8,7 +8,7 @@ import (
 )
 
 var PauseCommand = command.Command{
-	Name: "Pause", Aliases: []string{"resume"},
+	Name: "pause", Aliases: []string{"resume"},
 	Description: "Pause/unpause the queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
