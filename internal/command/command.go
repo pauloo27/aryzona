@@ -12,6 +12,7 @@ type CommandValidationChecker func(*CommandContext) (bool, string)
 
 type CommandContext struct {
 	Bot               discord.BotAdapter
+	Command           *Command
 	RawArgs           []string
 	Locals            map[string]interface{}
 	Args              []interface{}
@@ -63,6 +64,7 @@ type Command struct {
 	Aliases           []string
 	Handler           CommandHandler
 	Permission        *CommandPermission
+	Deferred          bool
 	Validations       []*CommandValidation
 	Parameters        []*CommandParameter
 	category          *CommandCategory

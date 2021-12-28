@@ -34,6 +34,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 var RadioCommand = command.Command{
 	Name:        "radio",
 	Description: "Plays a pre-defined radio",
+	Deferred:    true,
 	Parameters: []*command.CommandParameter{
 		{
 			Name:        "radio",

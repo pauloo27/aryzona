@@ -37,14 +37,14 @@ func messageCreated(bot discord.BotAdapter, m discord.Message) {
 	if len(args) == 1 && args[0] == "" {
 		args = []string{}
 	}
-	event := command.Event{
+	event := command.Adapter{
 		AuthorID: m.Author().ID(),
 		GuildID:  m.Channel().Guild().ID(),
-		Reply: func(msg string) error {
+		Reply: func(ctx *command.CommandContext, msg string) error {
 			_, err := discord.Bot.SendReplyMessage(m, msg)
 			return err
 		},
-		ReplyEmbed: func(embed *discord.Embed) error {
+		ReplyEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
 			_, err := discord.Bot.SendReplyEmbedMessage(m, embed)
 			return err
 		},

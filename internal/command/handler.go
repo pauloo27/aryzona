@@ -8,7 +8,7 @@ import (
 
 func HandleCommand(
 	commandName string, args []string,
-	event *Event, bot discord.BotAdapter,
+	adapter *Adapter, bot discord.BotAdapter,
 ) {
 	command, ok := commandMap[commandName]
 	if !ok {
@@ -16,13 +16,20 @@ func HandleCommand(
 	}
 
 	ctx := &CommandContext{
-		Bot:        bot,
-		RawArgs:    args,
-		Reply:      event.Reply,
-		ReplyEmbed: event.ReplyEmbed,
-		AuthorID:   event.AuthorID,
-		GuildID:    event.GuildID,
-		Locals:     make(map[string]interface{}),
+		Bot:      bot,
+		RawArgs:  args,
+		AuthorID: adapter.AuthorID,
+		GuildID:  adapter.GuildID,
+		Locals:   make(map[string]interface{}),
+		Command:  command,
+	}
+
+	// attach adapter
+	ctx.Reply = func(msg string) error {
+		return adapter.Reply(ctx, msg)
+	}
+	ctx.ReplyEmbed = func(embed *discord.Embed) error {
+		return adapter.ReplyEmbed(ctx, embed)
 	}
 
 	if command.Permission != nil {
@@ -52,6 +59,13 @@ func HandleCommand(
 			logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
 		}
 	}()
+
+	if command.Deferred && adapter.DeferResponse != nil {
+		err := adapter.DeferResponse()
+		if err != nil {
+			logger.Error("Cannot defer response:", err)
+		}
+	}
 
 	command.Handler(ctx)
 }

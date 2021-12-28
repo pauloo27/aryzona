@@ -82,6 +82,35 @@ func registerCommands(bot DcgoBot) error {
 			args = append(args, fmt.Sprintf("%v", option.Value))
 		}
 
+		edit := func(msg string, embed *discord.Embed) error {
+			var embeds []*discordgo.MessageEmbed
+			if embed != nil {
+				embeds = append(embeds, buildEmbed(embed))
+			}
+			_, err := s.InteractionResponseEdit(s.State.User.ID,
+				i.Interaction,
+				&discordgo.WebhookEdit{
+					Embeds:  embeds,
+					Content: msg,
+				},
+			)
+			return err
+		}
+
+		respond := func(msg string, embed *discord.Embed) error {
+			var embeds []*discordgo.MessageEmbed
+			if embed != nil {
+				embeds = append(embeds, buildEmbed(embed))
+			}
+			return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Embeds:  embeds,
+					Content: msg,
+				},
+			})
+		}
+
 		var authorID string
 
 		if i.Member == nil {
@@ -90,24 +119,28 @@ func registerCommands(bot DcgoBot) error {
 			authorID = i.Member.User.ID
 		}
 
-		event := command.Event{
+		event := command.Adapter{
 			AuthorID: authorID,
 			GuildID:  i.GuildID,
-			Reply: func(message string) error {
-				return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Content: message,
+			DeferResponse: func() error {
+				return s.InteractionRespond(
+					i.Interaction,
+					&discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
 					},
-				})
+				)
 			},
-			ReplyEmbed: func(embed *discord.Embed) error {
-				return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Embeds: []*discordgo.MessageEmbed{buildEmbed(embed)},
-					},
-				})
+			Reply: func(ctx *command.CommandContext, msg string) error {
+				if ctx.Command.Deferred {
+					return edit(msg, nil)
+				}
+				return respond(msg, nil)
+			},
+			ReplyEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
+				if ctx.Command.Deferred {
+					return edit("", embed)
+				}
+				return respond("", embed)
 			},
 		}
 		command.HandleCommand(commandName, args, &event, bot)

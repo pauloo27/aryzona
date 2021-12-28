@@ -61,9 +61,9 @@ func mustGetOption(arg *command.CommandParameter) dc.CommandOption {
 }
 
 func registerCommands(bot ArkwBot) error {
-	session := bot.d.s
+	s := bot.d.s
 
-	app, err := session.CurrentApplication()
+	app, err := s.CurrentApplication()
 	if err != nil {
 		return err
 	}
@@ -87,11 +87,37 @@ func registerCommands(bot ArkwBot) error {
 		slashCommands = append(slashCommands, slashCommand)
 	}
 
-	if _, err = session.BulkOverwriteCommands(app.ID, slashCommands); err != nil {
+	if _, err = s.BulkOverwriteCommands(app.ID, slashCommands); err != nil {
 		return err
 	}
 
-	session.AddHandler(func(i *gateway.InteractionCreateEvent) {
+	s.AddHandler(func(i *gateway.InteractionCreateEvent) {
+		edit := func(msg string, embed *discord.Embed) error {
+			var embeds []dc.Embed
+			if embed != nil {
+				embeds = append(embeds, buildEmbed(embed))
+			}
+			_, err := s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
+				Content: option.NewNullableString(msg),
+				Embeds:  &embeds,
+			})
+			return err
+		}
+
+		respond := func(msg string, embed *discord.Embed) error {
+			var embeds []dc.Embed
+			if embed != nil {
+				embeds = append(embeds, buildEmbed(embed))
+			}
+			return s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
+				Type: api.MessageInteractionWithSource,
+				Data: &api.InteractionResponseData{
+					Content: option.NewNullableString(msg),
+					Embeds:  &embeds,
+				},
+			})
+		}
+
 		if data, ok := i.Data.(*dc.CommandInteraction); ok {
 			_, ok := command.GetCommandMap()[data.Name]
 			if !ok {
@@ -104,28 +130,33 @@ func registerCommands(bot ArkwBot) error {
 				args = append(args, option.String())
 			}
 
-			event := command.Event{
+			adapter := command.Adapter{
 				AuthorID: i.Sender().ID.String(),
 				GuildID:  i.GuildID.String(),
-				Reply: func(message string) error {
-					return session.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
-						Type: api.MessageInteractionWithSource,
-						Data: &api.InteractionResponseData{
-							Content: option.NewNullableString(message),
+				DeferResponse: func() error {
+					return s.RespondInteraction(
+						i.ID,
+						i.Token,
+						api.InteractionResponse{
+							Type: api.DeferredMessageInteractionWithSource,
 						},
-					})
+					)
 				},
-				ReplyEmbed: func(e *discord.Embed) error {
-					return session.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
-						Type: api.MessageInteractionWithSource,
-						Data: &api.InteractionResponseData{
-							Embeds: &[]dc.Embed{buildEmbed(e)},
-						},
-					})
+				Reply: func(ctx *command.CommandContext, message string) error {
+					if ctx.Command.Deferred {
+						return edit(message, nil)
+					}
+					return respond(message, nil)
+				},
+				ReplyEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
+					if ctx.Command.Deferred {
+						return edit("", embed)
+					}
+					return respond("", embed)
 				},
 			}
 
-			command.HandleCommand(data.Name, args, &event, bot)
+			command.HandleCommand(data.Name, args, &adapter, bot)
 		}
 	})
 
