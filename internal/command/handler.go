@@ -6,16 +6,6 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
-func runValidation(ctx *CommandContext, validation *CommandValidation) (bool, string) {
-	for _, depends := range validation.DependsOn {
-		ok, msg := runValidation(ctx, depends)
-		if !ok {
-			return ok, msg
-		}
-	}
-	return validation.Checker(ctx)
-}
-
 func HandleCommand(
 	commandName string, args []string,
 	event *Event, bot discord.BotAdapter,
@@ -43,7 +33,7 @@ func HandleCommand(
 	}
 
 	for _, validation := range command.Validations {
-		ok, msg := runValidation(ctx, validation)
+		ok, msg := RunValidation(ctx, validation)
 		if !ok {
 			ctx.Error(msg)
 			return
