@@ -10,6 +10,10 @@ import (
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
+const (
+	maxNextItems = 10
+)
+
 var PlayingCommand = command.Command{
 	Name: "playing", Aliases: []string{"np", "nowplaying", "tocando"},
 	Description: "Show what is playing now",
@@ -24,8 +28,8 @@ var PlayingCommand = command.Command{
 			sb := strings.Builder{}
 			next := vc.Queue.All()[1:]
 			limit := len(next)
-			if len(next) > 10 {
-				limit = 10
+			if len(next) > maxNextItems {
+				limit = maxNextItems
 			}
 			for _, item := range next[:limit] {
 				title, artist := item.GetFullTitle()
@@ -35,7 +39,7 @@ var PlayingCommand = command.Command{
 					sb.WriteString(utils.Fmt("  -> %s - %s\n", artist, title))
 				}
 			}
-			if len(next) > 10 {
+			if len(next) > maxNextItems {
 				sb.WriteString("_... and more ..._")
 			}
 			embed.WithField("**Coming next:**", sb.String())
