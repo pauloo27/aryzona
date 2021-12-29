@@ -1,0 +1,63 @@
+package radio
+
+var (
+	radioMap  = make(map[string]RadioChannel)
+	radioList []RadioChannel
+)
+
+func init() {
+	registerRadios(
+		newYouTubeRadio("lofi", "Lofi: beats to relax/study", "https://youtube.com/watch?v=5qap5aO4i9A"),
+
+		newCidadeRadio(
+			"cidade", "Rádio Cidade", "https://18003.live.streamtheworld.com/RADIOCIDADEAAC.aac",
+		),
+
+		newHunterRadio(
+			"pisadinha", "Rádio Hunter Pisadinha", "https://hls.hunter.fm/pisadinha/320.m3u8",
+		),
+		newHunterRadio(
+			"pop", "Rádio Hunter Pop", "https://hls.hunter.fm/pop/192.m3u8",
+		),
+		newHunterRadio(
+			"rock", "Rádio Hunter Rock", "https://hls.hunter.fm/rock/192.m3u8",
+		),
+		newHunterRadio(
+			"80s", "Rádio Hunter 80s", "https://hls.hunter.fm/80s/192.m3u8",
+		),
+		newHunterRadio(
+			"tropical", "Rádio Hunter Tropical", "https://hls.hunter.fm/tropical/192.m3u8",
+		),
+		newHunterRadio(
+			"lofi2", "Rádio Hunter Lofi", "https://hls.hunter.fm/lofi/192.m3u8",
+		),
+
+		newGloboRadio(
+			"globo-rj", "Rádio Globo RJ", "https://medias.sgr.globo.com/hls/aRGloboRJ/aRGloboRJ.m3u8",
+		),
+		newGloboRadio(
+			"globo-sp", "Rádio Globo SP", "https://medias.sgr.globo.com/hls/aRGloboSP/aRGloboSP.m3u8",
+		),
+
+		newLainchanRadio("cyber", "Swing songs (no ads)", "http://lainon.life:8000/cyberia.mp3"),
+		newLainchanRadio("cafe", "Cafe songs (no ads)", "http://lainon.life:8000/cafe.mp3"),
+		newLainchanRadio("swing", "Swing songs (no ads)", "http://lainon.life:8000/swing.mp3"),
+		// i dont know what to name that one...
+		newLainchanRadio("all", "Everything songs (no ads)", "http://lainon.life:8000/everything.mp3"),
+	)
+}
+
+func registerRadios(radios ...RadioChannel) {
+	for _, radio := range radios {
+		radioList = append(radioList, radio)
+		radioMap[radio.GetID()] = radio
+	}
+}
+
+func GetRadioList() []RadioChannel {
+	return radioList
+}
+
+func GetRadioByID(id string) RadioChannel {
+	return radioMap[id]
+}
