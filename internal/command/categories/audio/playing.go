@@ -16,6 +16,7 @@ const (
 
 var PlayingCommand = command.Command{
 	Name: "playing", Aliases: []string{"np", "nowplaying", "tocando"},
+	Deferred:    true,
 	Description: "Show what is playing now",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
