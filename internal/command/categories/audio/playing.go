@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	maxNextItems = 10
+	maxNextItems = 5
 )
 
 var PlayingCommand = command.Command{

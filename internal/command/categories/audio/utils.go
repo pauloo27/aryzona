@@ -37,5 +37,7 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		}
 	}
 
+	embed.WithFieldInline("Source", playable.GetName())
+
 	return embed
 }
