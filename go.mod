@@ -9,7 +9,7 @@ require (
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
 	github.com/buger/jsonparser v1.1.1
 	github.com/bwmarrin/discordgo v0.23.3-0.20211204170245-092735083ddf
-	github.com/diamondburned/arikawa/v3 v3.0.0-rc.3
+	github.com/diamondburned/arikawa/v3 v3.0.0-rc.4
 	github.com/google/uuid v1.1.2
 	github.com/joho/godotenv v1.4.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
