@@ -50,14 +50,10 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f h1:aMmlzeEZForBN4R5qrtCyGpYqnfAIUscWlDy3nc1aAY=
-github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
 github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d h1:OhREATTr+9JSXkjlcRRX/Wqjaa+l7kik0gFv9IgrhK8=
 github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856 h1:k8zl0zenL6c8jnOkvrv8+JfTD7o7zLxG8qS9gYloJec=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856/go.mod h1:iy94yme2Foi86LomMXphTGQWhG0dxneMLhIA6mlUZ50=
-github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df h1:43+CvjKAxXuBzVxGdydWCzaLrfCEOfVq7JrK0yo564A=
-github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df/go.mod h1:o2/xbhp9ttLLIYpQcf8oApG1h4/qr90zusSvvnRV5VQ=
 github.com/Pauloo27/searchtube v0.0.0-20211210213129-1828077b9033 h1:eX58Og22jPKq39uaz6NdbfBOuJogg57B6YPePJM85l0=
 github.com/Pauloo27/searchtube v0.0.0-20211210213129-1828077b9033/go.mod h1:o2/xbhp9ttLLIYpQcf8oApG1h4/qr90zusSvvnRV5VQ=
 github.com/ReneKroon/ttlcache/v2 v2.11.0 h1:OvlcYFYi941SBN3v9dsDcC2N8vRxyHcCmJb3Vl4QMoM=
@@ -119,8 +115,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/diamondburned/arikawa/v3 v3.0.0-rc.3 h1:Ku3azqmuUJzl1JHCwCdieXFgQ28iDTVkr6BA+H4VfJ0=
 github.com/diamondburned/arikawa/v3 v3.0.0-rc.3/go.mod h1:5jBSNnp82Z/EhsKa6Wk9FsOqSxfVkNZDTDBPOj47LpY=
-github.com/diamondburned/arikawa/v3 v3.0.0-rc.4 h1:n1c4Odgq6HxuZWssbYtF0vX2jKhimad4E/7KlErZ474=
-github.com/diamondburned/arikawa/v3 v3.0.0-rc.4/go.mod h1:5jBSNnp82Z/EhsKa6Wk9FsOqSxfVkNZDTDBPOj47LpY=
 github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91 h1:Izz0+t1Z5nI16/II7vuEo/nHjodOg0p7+OiDpjX5t1E=
 github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
 github.com/dop251/goja v0.0.0-20211211112501-fb27c91c26ed h1:93Xt1lY7ReTv+7uDM6UHe818CEvLLn5HE1gpB7d3MS8=
@@ -221,7 +215,6 @@ github.com/google/pprof v0.0.0-20210601050228-01bbb1931b22/go.mod h1:kpwsk12EmLe
 github.com/google/pprof v0.0.0-20210609004039-a478d1d731e9/go.mod h1:kpwsk12EmLew5upagYY7GY0pfYCcupk39gWOCRROcvE=
 github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1/go.mod h1:kpwsk12EmLew5upagYY7GY0pfYCcupk39gWOCRROcvE=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
-github.com/google/uuid v1.1.2 h1:EVhdT+1Kseyi1/pUmXKaFxYsDNy9RQYkMWRH68J/W7Y=
 github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
@@ -268,8 +261,6 @@ github.com/iancoleman/strcase v0.2.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
-github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
-github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/joho/godotenv v1.4.0 h1:3l4+N6zfMWnkbPEXKng2o2/MR5mSwTrBih4ZEkkz1lg=
 github.com/joho/godotenv v1.4.0/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757 h1:Kyv+zTfWIGRNaz/4+lS+CxvuKVZSKFz/6G8E3BKKBRs=
