@@ -3,7 +3,7 @@ module github.com/Pauloo27/aryzona
 go 1.16
 
 require (
-	github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f
+	github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d
 	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
 	github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df
 	github.com/ReneKroon/ttlcache/v2 v2.11.0

@@ -52,6 +52,8 @@ github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f h1:aMmlzeEZForBN4R5qrtCyGpYqnfAIUscWlDy3nc1aAY=
 github.com/Pauloo27/logger v0.0.0-20211021033456-da9262f8be0f/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
+github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d h1:OhREATTr+9JSXkjlcRRX/Wqjaa+l7kik0gFv9IgrhK8=
+github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d/go.mod h1:pr6tiuqHGzDinqApqqLO7CjzoUXkTM/yq1Pj78Z089Q=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856 h1:k8zl0zenL6c8jnOkvrv8+JfTD7o7zLxG8qS9gYloJec=
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856/go.mod h1:iy94yme2Foi86LomMXphTGQWhG0dxneMLhIA6mlUZ50=
 github.com/Pauloo27/searchtube v0.0.0-20210906000314-0027cd6044df h1:43+CvjKAxXuBzVxGdydWCzaLrfCEOfVq7JrK0yo564A=
