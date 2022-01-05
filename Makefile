@@ -4,7 +4,7 @@ DOCKER_IMAGE_NAME = aryzonabot
 DIST_LDFLAGS = $(LDFLAGS) -w -s
 TEST_COMMAND=go test
 
-# kinda shitty and hacky what of doing that... =(
+# FIXME: kinda shitty and hacky way of doing that... =(
 COMMIT_MESSAGE = $(shell git log -1 --pretty=%s | sed "s/'//g; s/\"//g")
 COMMIT_HASH = $(shell git rev-list -1 HEAD)
 
@@ -12,7 +12,7 @@ LDFLAGS = -X 'main.commitMessage=$(COMMIT_MESSAGE)' -X 'main.commitHash=$(COMMIT
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build -v -ldflags="$(LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
+	CGO_ENABLED=0 go build -v -ldflags="$(LDFLAGS)" -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 .PHONY: run
 run: build
@@ -37,7 +37,7 @@ tidy:
 # (build but with a smaller binary)
 .PHONY: dist
 dist:
-	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)" -o $(BINARY_NAME) ./cmd/aryzona
+	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="$(DIST_LDFLAGS)" -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 # (even smaller binary)
 .PHONY: pack
@@ -66,4 +66,4 @@ inspect: lint spell gosec staticcheck
 # auto restart bot (using fiber CLI)
 .PHONY: dev
 dev:
-	fiber dev -t ./cmd/aryzona
+	fiber dev -t ./cmd/$(BINARY_NAME)
