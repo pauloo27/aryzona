@@ -1,4 +1,4 @@
-package main
+package bootstrap
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
-func init() {
+func listenToLog() {
 	logger.AddLogListener(func(level logger.Level, params ...interface{}) {
 		if discord.Bot.StartedAt() == nil || (level != logger.ERROR && level != logger.FATAL) {
 			return
