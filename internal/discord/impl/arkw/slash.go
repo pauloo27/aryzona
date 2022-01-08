@@ -35,29 +35,25 @@ func mustGetStringChoises(arg *command.CommandParameter) (choises []dc.StringCho
 }
 
 func mustGetOption(arg *command.CommandParameter) dc.CommandOption {
-	switch arg.Type {
-	case parameters.ParameterString:
+	switch arg.Type.BaseType {
+	case parameters.TypeString:
 		return &dc.StringOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 			Choices: mustGetStringChoises(arg),
 		}
-	case parameters.ParameterText:
-		return &dc.StringOption{
-			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
-			Choices: mustGetStringChoises(arg),
-		}
-	case parameters.ParameterBool:
+	case parameters.TypeBool:
 		return &dc.BooleanOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 		}
-	case parameters.ParameterInt:
+	case parameters.TypeInt:
 		return &dc.IntegerOption{
 			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
 			Choices: mustGetIntegerChoises(arg),
 		}
 	default:
-		return &dc.UnknownCommandOption{}
+		logger.Fatalf("cannot find discord type for %s", arg.Type.BaseType.Name)
 	}
+	return nil
 }
 
 func registerCommands(bot ArkwBot) error {

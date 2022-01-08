@@ -34,9 +34,14 @@ type CommandValidation struct {
 
 type CommandParameterTypeParser func(index int, args []string) (interface{}, error)
 
+type BaseType struct {
+	Name string
+}
+
 type CommandParameterType struct {
-	Name   string
-	Parser CommandParameterTypeParser
+	BaseType *BaseType
+	Name     string
+	Parser   CommandParameterTypeParser
 }
 
 type CommandParameter struct {

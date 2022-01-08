@@ -8,28 +8,32 @@ import (
 )
 
 var ParameterText = &command.CommandParameterType{
-	Name: "string",
+	BaseType: TypeString,
+	Name:     "text",
 	Parser: func(index int, args []string) (interface{}, error) {
 		return strings.Join(args[index:], " "), nil
 	},
 }
 
 var ParameterString = &command.CommandParameterType{
-	Name: "string",
+	BaseType: TypeString,
+	Name:     "string",
 	Parser: func(index int, args []string) (interface{}, error) {
 		return args[index], nil
 	},
 }
 
 var ParameterBool = &command.CommandParameterType{
-	Name: "bool",
+	BaseType: TypeBool,
+	Name:     "bool",
 	Parser: func(index int, args []string) (interface{}, error) {
 		return strconv.ParseBool(args[index])
 	},
 }
 
 var ParameterInt = &command.CommandParameterType{
-	Name: "int",
+	BaseType: TypeInt,
+	Name:     "int",
 	Parser: func(index int, args []string) (interface{}, error) {
 		return strconv.Atoi(args[index])
 	},

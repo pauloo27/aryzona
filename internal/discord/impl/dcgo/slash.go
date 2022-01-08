@@ -10,11 +10,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-var discordTypeMap = map[*command.CommandParameterType]discordgo.ApplicationCommandOptionType{
-	parameters.ParameterString: discordgo.ApplicationCommandOptionString,
-	parameters.ParameterText:   discordgo.ApplicationCommandOptionString,
-	parameters.ParameterInt:    discordgo.ApplicationCommandOptionInteger,
-	parameters.ParameterBool:   discordgo.ApplicationCommandOptionBoolean,
+var discordTypeMap = map[*command.BaseType]discordgo.ApplicationCommandOptionType{
+	parameters.TypeString: discordgo.ApplicationCommandOptionString,
+	parameters.TypeInt:    discordgo.ApplicationCommandOptionInteger,
+	parameters.TypeBool:   discordgo.ApplicationCommandOptionBoolean,
 }
 
 func registerCommands(bot DcgoBot) error {
@@ -31,7 +30,7 @@ func registerCommands(bot DcgoBot) error {
 	}
 
 	mustGetTypeFor := func(arg *command.CommandParameter) discordgo.ApplicationCommandOptionType {
-		t, found := discordTypeMap[arg.Type]
+		t, found := discordTypeMap[arg.Type.BaseType]
 		if !found {
 			logger.Fatalf("cannot find discord type for %s", arg.Type.Name)
 		}
