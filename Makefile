@@ -24,7 +24,7 @@ docker:
 
 .PHONY: install
 install: build
-	sudo cp ./$(BINARY_NAME) /usr/bin/
+	sudo cp ./$(BINARY_NAME) /usr/local/bin/
 
 .PHONY: test
 test: 
