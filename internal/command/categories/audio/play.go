@@ -18,7 +18,7 @@ var PlayCommand = command.Command{
 	Deferred:    true,
 	Validations: []*command.CommandValidation{validations.MustBeOnAValidVoiceChannel},
 	Parameters: []*command.CommandParameter{
-		{Name: "song", Description: "Search query", Required: true, Type: parameters.ParameterText},
+		{Name: "song", Description: "Search query or URL", Required: true, Type: parameters.ParameterText},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)

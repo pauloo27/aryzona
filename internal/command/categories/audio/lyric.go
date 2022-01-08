@@ -12,9 +12,9 @@ import (
 
 var LyricCommand = command.Command{
 	Name: "lyric", Aliases: []string{"ly", "letra", "letras", "lyrics"},
-	Description: "Show lyric from a song",
+	Description: "Show a song lyrics",
 	Parameters: []*command.CommandParameter{
-		{Name: "song", Description: "Search terms", Type: parameters.ParameterText, Required: false},
+		{Name: "song", Description: "Search query", Type: parameters.ParameterText, Required: false},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		var searchTerms string
