@@ -1,6 +1,7 @@
 package parameters
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 
@@ -27,7 +28,11 @@ var ParameterBool = &command.CommandParameterType{
 	BaseType: TypeBool,
 	Name:     "bool",
 	Parser: func(index int, args []string) (interface{}, error) {
-		return strconv.ParseBool(args[index])
+		b, err := strconv.ParseBool(args[index])
+		if err != nil {
+			return nil, errors.New("invalid boolean value (expected true or false)")
+		}
+		return b, err
 	},
 }
 
@@ -35,6 +40,10 @@ var ParameterInt = &command.CommandParameterType{
 	BaseType: TypeInt,
 	Name:     "int",
 	Parser: func(index int, args []string) (interface{}, error) {
-		return strconv.Atoi(args[index])
+		i, err := strconv.Atoi(args[index])
+		if err != nil {
+			return nil, errors.New("invalid integer number")
+		}
+		return i, err
 	},
 }
