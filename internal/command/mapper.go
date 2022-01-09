@@ -14,7 +14,6 @@ var (
 var Prefix string
 
 func RegisterCommand(command *Command) {
-	commandList = append(commandList, command)
 	if command.Name == "" {
 		// "lol why dont i put the name of the name in the error message?"
 		// counter: 2
@@ -29,6 +28,7 @@ func RegisterCommand(command *Command) {
 		}
 	}
 
+	commandList = append(commandList, command)
 	commandMap[strings.ToLower(command.Name)] = command
 	for _, alias := range command.Aliases {
 		commandMap[strings.ToLower(alias)] = command
