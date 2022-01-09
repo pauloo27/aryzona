@@ -2,6 +2,7 @@ package dice
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -16,6 +17,7 @@ var (
 	reNotation = regexp.MustCompile(`^(\d+)$|^(\d*)d(\d*)$`)
 
 	ErrInvalidNotation = errors.New("invalid notation")
+	DefaultDice        = &DiceNotation{Dices: 1, Sides: 6}
 )
 
 func parseMatch(match string, defaultValue int) (int, error) {
@@ -23,6 +25,10 @@ func parseMatch(match string, defaultValue int) (int, error) {
 		return defaultValue, nil
 	}
 	return strconv.Atoi(match)
+}
+
+func (d *DiceNotation) String() string {
+	return fmt.Sprintf("%dd%d", d.Dices, d.Sides)
 }
 
 func ParseNotation(str string) (*DiceNotation, error) {
