@@ -71,6 +71,13 @@ func (YouTubePlayable) IsLocal() bool {
 }
 
 func (p YouTubePlayable) IsOpus() bool {
+	if p.video == nil {
+		var err error
+		p.video, err = defaultClient.GetVideo(p.ID)
+		if err != nil {
+			return false
+		}
+	}
 	return p.video.Formats.FindByItag(251) != nil
 }
 
