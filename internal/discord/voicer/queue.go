@@ -57,6 +57,11 @@ func (v *Voicer) AppendToQueue(playable playable.Playable) error {
 	return nil
 }
 
+func (v *Voicer) AppendManyToQueue(playable ...playable.Playable) error {
+	v.Queue.AppendMany(playable...)
+	return nil
+}
+
 func (v *Voicer) scheduleEmptyQueue() {
 	task := scheduler.NewRunLaterTask(30*time.Second, func(params ...interface{}) {
 		if v.IsConnected() {

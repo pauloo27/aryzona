@@ -7,6 +7,7 @@ import "time"
 */
 type DummyPlayable struct {
 	Name, Artist, Title string
+	Duration            time.Duration
 }
 
 var _ Playable = DummyPlayable{}
@@ -27,8 +28,8 @@ func (DummyPlayable) IsLive() bool {
 	return false
 }
 
-func (DummyPlayable) GetDuration() (time.Duration, error) {
-	return 0, nil
+func (d DummyPlayable) GetDuration() (time.Duration, error) {
+	return d.Duration, nil
 }
 
 func (DummyPlayable) GetDirectURL() (string, error) {
@@ -39,10 +40,10 @@ func (DummyPlayable) GetThumbnailURL() (string, error) {
 	return "", nil
 }
 
-func (t DummyPlayable) GetName() string {
-	return t.Name
+func (d DummyPlayable) GetName() string {
+	return d.Name
 }
 
-func (t DummyPlayable) GetFullTitle() (string, string) {
-	return t.Title, t.Artist
+func (d DummyPlayable) GetFullTitle() (string, string) {
+	return d.Title, d.Artist
 }

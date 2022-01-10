@@ -6,6 +6,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
+	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/aryzona/internal/utils/errore"
@@ -29,6 +30,7 @@ var PlayCommand = command.Command{
 				return
 			}
 		}
+
 		searchQuery := ctx.Args[0].(string)
 		resultURL, isPlaylist, err := youtube.GetBestResult(searchQuery)
 		if err != nil {
@@ -37,23 +39,43 @@ var PlayCommand = command.Command{
 			return
 		}
 
+		var playlist youtube.YouTubePlayablePlaylist
+		var result playable.Playable
+
 		if isPlaylist {
-			ctx.Error("Cannot play playlists yet =(")
-			return
+			playlist, err = youtube.GetPlaylist(resultURL)
+			if err != nil {
+				logger.Error(err)
+				ctx.Error("Cannot find what you are looking for")
+				return
+			}
+			result = playable.DummyPlayable{
+				Name:     "YouTube Playlist",
+				Artist:   playlist.Author,
+				Title:    playlist.Title,
+				Duration: playlist.Duration,
+			}
+		} else {
+			result, err = youtube.AsPlayable(resultURL)
+			if err != nil {
+				ctx.Error(utils.Fmt("Something went wrong when getting the video to play: %v", err))
+				logger.Error(err)
+				return
+			}
 		}
 
-		playable, err := youtube.AsPlayable(resultURL)
-		if err != nil {
-			ctx.Error(utils.Fmt("Something went wrong when getting the video to play: %v", err))
-			logger.Error(err)
-			return
-		}
-
-		embed := buildPlayableInfoEmbed(playable, nil).WithTitle("Best result for: " + searchQuery)
-
+		embed := buildPlayableInfoEmbed(result, nil).WithTitle("Best result for: " + searchQuery)
 		ctx.SuccessEmbed(embed)
+
+		var vidsToAppend []playable.Playable
+		if isPlaylist {
+			vidsToAppend = playlist.Videos
+		} else {
+			vidsToAppend = []playable.Playable{result}
+		}
+
 		utils.Go(func() {
-			if err = vc.AppendToQueue(playable); err != nil {
+			if err = vc.AppendManyToQueue(vidsToAppend...); err != nil {
 				if is, vErr := errore.IsErrore(err); is {
 					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
 						return

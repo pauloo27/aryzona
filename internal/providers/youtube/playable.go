@@ -3,12 +3,22 @@ package youtube
 import (
 	"time"
 
+	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/kkdai/youtube/v2"
 )
 
 type YouTubePlayable struct {
-	Video *youtube.Video
-	Live  bool
+	ID, Title, Author, ThumbnailURL string
+	Live                            bool
+	Duration                        time.Duration
+	video                           *youtube.Video
+}
+
+type YouTubePlayablePlaylist struct {
+	Videos        []playable.Playable
+	Duration      time.Duration
+	Title, Author string
 }
 
 func (p YouTubePlayable) CanPause() bool {
@@ -24,11 +34,11 @@ func (p YouTubePlayable) IsLive() bool {
 }
 
 func (p YouTubePlayable) GetThumbnailURL() (string, error) {
-	return p.Video.Thumbnails[0].URL, nil
+	return p.ThumbnailURL, nil
 }
 
 func (p YouTubePlayable) GetDuration() (time.Duration, error) {
-	return p.Video.Duration, nil
+	return p.Duration, nil
 }
 
 func (YouTubePlayable) TogglePause() error {
@@ -36,14 +46,22 @@ func (YouTubePlayable) TogglePause() error {
 }
 
 func (p YouTubePlayable) GetDirectURL() (string, error) {
-	if p.Live {
-		return getLiveURL(p.Video)
+	if p.video == nil {
+		var err error
+		p.video, err = defaultClient.GetVideo(p.ID)
+		if err != nil {
+			return "", err
+		}
 	}
-	return defaultClient.GetStreamURL(p.Video, p.Video.Formats.FindByItag(140))
+	if p.Live {
+		return getLiveURL(p.video)
+	}
+	// TODO: use oppus when possible (251)
+	return defaultClient.GetStreamURL(p.video, p.video.Formats.FindByItag(140))
 }
 
 func (p YouTubePlayable) GetFullTitle() (title string, artist string) {
-	return p.Video.Title, p.Video.Author
+	return p.Title, p.Author
 }
 
 func (YouTubePlayable) IsLocal() bool {
@@ -54,13 +72,49 @@ func (YouTubePlayable) IsOppus() bool {
 	return false
 }
 
+func GetPlaylist(playlistURL string) (YouTubePlayablePlaylist, error) {
+	playlist, err := defaultClient.GetPlaylist(playlistURL)
+	if err != nil {
+		return YouTubePlayablePlaylist{}, err
+	}
+
+	videos := make([]playable.Playable, len(playlist.Videos))
+
+	duration := time.Duration(0)
+
+	for i, vid := range playlist.Videos {
+		duration += vid.Duration
+		videos[i] = YouTubePlayable{
+			ID:           vid.ID,
+			Title:        vid.Title,
+			Author:       vid.Author,
+			Duration:     vid.Duration,
+			Live:         vid.Duration == 0,
+			ThumbnailURL: utils.Fmt("https://img.youtube.com/vi/%s/mqdefault.jpg", vid.ID),
+			video:        nil, // will be lazy loaded
+		}
+	}
+
+	return YouTubePlayablePlaylist{
+		Title:    playlist.Title,
+		Author:   playlist.Author,
+		Videos:   videos,
+		Duration: duration,
+	}, nil
+}
+
 func AsPlayable(videoURL string) (YouTubePlayable, error) {
 	vid, err := defaultClient.GetVideo(GetVideoID(videoURL))
 	if err != nil {
 		return YouTubePlayable{}, err
 	}
 	return YouTubePlayable{
-		Video: vid,
-		Live:  vid.Duration == 0,
+		ID:           vid.ID,
+		Title:        vid.Title,
+		Author:       vid.Author,
+		ThumbnailURL: vid.Thumbnails[0].URL,
+		Duration:     vid.Duration,
+		Live:         vid.Duration == 0,
+		video:        vid,
 	}, nil
 }
