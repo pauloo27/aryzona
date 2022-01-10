@@ -8,17 +8,18 @@ import (
 	"github.com/kkdai/youtube/v2"
 )
 
-type YouTubePlayable struct {
-	ID, Title, Author, ThumbnailURL string
-	Live                            bool
-	Duration                        time.Duration
-	video                           *youtube.Video
-}
-
 type YouTubePlayablePlaylist struct {
 	Videos        []playable.Playable
 	Duration      time.Duration
 	Title, Author string
+}
+
+type YouTubePlayable struct {
+	ID, Title, Author, ThumbnailURL string
+	Live                            bool
+	Duration                        time.Duration
+	opus                            bool
+	video                           *youtube.Video
 }
 
 func (p YouTubePlayable) CanPause() bool {
@@ -56,7 +57,11 @@ func (p YouTubePlayable) GetDirectURL() (string, error) {
 	if p.Live {
 		return getLiveURL(p.video)
 	}
-	// TODO: use oppus when possible (251)
+	format := p.video.Formats.FindByItag(251)
+	if format != nil {
+		p.opus = true
+		return defaultClient.GetStreamURL(p.video, format)
+	}
 	return defaultClient.GetStreamURL(p.video, p.video.Formats.FindByItag(140))
 }
 
@@ -68,8 +73,8 @@ func (YouTubePlayable) IsLocal() bool {
 	return false
 }
 
-func (YouTubePlayable) IsOppus() bool {
-	return false
+func (p YouTubePlayable) IsOppus() bool {
+	return p.opus
 }
 
 func GetPlaylist(playlistURL string) (YouTubePlayablePlaylist, error) {
