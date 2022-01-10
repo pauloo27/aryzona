@@ -18,7 +18,6 @@ type YouTubePlayable struct {
 	ID, Title, Author, ThumbnailURL string
 	Live                            bool
 	Duration                        time.Duration
-	opus                            bool
 	video                           *youtube.Video
 }
 
@@ -57,9 +56,7 @@ func (p YouTubePlayable) GetDirectURL() (string, error) {
 	if p.Live {
 		return getLiveURL(p.video)
 	}
-	format := p.video.Formats.FindByItag(251)
-	if format != nil {
-		p.opus = true
+	if format := p.video.Formats.FindByItag(251); format != nil {
 		return defaultClient.GetStreamURL(p.video, format)
 	}
 	return defaultClient.GetStreamURL(p.video, p.video.Formats.FindByItag(140))
@@ -74,7 +71,7 @@ func (YouTubePlayable) IsLocal() bool {
 }
 
 func (p YouTubePlayable) IsOpus() bool {
-	return p.opus
+	return p.video.Formats.FindByItag(251) != nil
 }
 
 func GetPlaylist(playlistURL string) (YouTubePlayablePlaylist, error) {

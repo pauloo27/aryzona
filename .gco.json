@@ -1,7 +1,7 @@
 {
   "PrefixPack": "text",
   "AskCISkip": true,
-  "Modules": ["cmd", "voicer", "sched", "dcgo", "arkw"],
+  "Modules": ["cmd", "audio", "sched", "dcgo", "arkw"],
   "PreCommit": [
     {
       "Command": "make lint",
