@@ -28,7 +28,7 @@ func (r GloboRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }
 
-func (r GloboRadio) IsOppus() bool {
+func (r GloboRadio) IsOpus() bool {
 	return false
 }
 

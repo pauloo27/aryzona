@@ -73,7 +73,7 @@ func (YouTubePlayable) IsLocal() bool {
 	return false
 }
 
-func (p YouTubePlayable) IsOppus() bool {
+func (p YouTubePlayable) IsOpus() bool {
 	return p.opus
 }
 

@@ -39,8 +39,8 @@ func (r YouTubeRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }
 
-func (r YouTubeRadio) IsOppus() bool {
-	return r.playable.IsOppus()
+func (r YouTubeRadio) IsOpus() bool {
+	return r.playable.IsOpus()
 }
 
 func (r YouTubeRadio) GetDirectURL() (string, error) {

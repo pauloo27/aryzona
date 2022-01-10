@@ -16,7 +16,7 @@ func (DummyPlayable) CanPause() bool {
 	return false
 }
 
-func (DummyPlayable) IsOppus() bool {
+func (DummyPlayable) IsOpus() bool {
 	return true
 }
 

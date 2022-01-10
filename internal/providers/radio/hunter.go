@@ -33,7 +33,7 @@ func (r HunterRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }
 
-func (r HunterRadio) IsOppus() bool {
+func (r HunterRadio) IsOpus() bool {
 	return false
 }
 

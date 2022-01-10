@@ -8,7 +8,7 @@ type Playable interface {
 	GetDuration() (time.Duration, error)
 	GetDirectURL() (string, error)
 	GetName() string
-	IsOppus() bool
+	IsOpus() bool
 	IsLocal() bool
 	GetFullTitle() (title, artist string)
 	GetThumbnailURL() (string, error)

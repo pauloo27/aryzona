@@ -35,7 +35,7 @@ func (r LainchanRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }
 
-func (r LainchanRadio) IsOppus() bool {
+func (r LainchanRadio) IsOpus() bool {
 	return false
 }
 

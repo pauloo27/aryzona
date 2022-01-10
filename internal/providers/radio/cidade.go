@@ -34,7 +34,7 @@ func (r CidadeRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }
 
-func (r CidadeRadio) IsOppus() bool {
+func (r CidadeRadio) IsOpus() bool {
 	return false
 }
 

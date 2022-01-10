@@ -196,7 +196,7 @@ func (v *Voicer) Start() error {
 			return err
 		}
 
-		v.EncodeSession = dca.EncodeData(url, playable.IsOppus(), playable.IsLocal())
+		v.EncodeSession = dca.EncodeData(url, playable.IsOpus(), playable.IsLocal())
 
 		if err := v.Voice.Speaking(true); err != nil {
 			return err
