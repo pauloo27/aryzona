@@ -24,21 +24,21 @@ var remoteFfmpegArgs = []string{
 }
 
 type EncodeSession struct {
-	sync.Mutex
-	path   string
-	reader io.Reader
-
-	running bool
+	buff    bytes.Buffer
 	started time.Time
-	channel chan []byte
+	path    string
+	reader  io.Reader
+
+	err     error
 	process *os.Process
 
 	lastFrame int
-	err       error
-	isOpus    bool
-	isLocal   bool
+	channel   chan []byte
+	sync.Mutex
 
-	buff bytes.Buffer
+	running bool
+	isOpus  bool
+	isLocal bool
 }
 
 func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {

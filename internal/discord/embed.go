@@ -6,13 +6,13 @@ type EmbedField struct {
 }
 
 type Embed struct {
-	Color        int
+	Fields       []*EmbedField
 	Title        string
 	Description  string
 	ImageURL     string
 	ThumbnailURL string
 	Footer       string
-	Fields       []*EmbedField
+	Color        int
 }
 
 func NewEmbed() *Embed {

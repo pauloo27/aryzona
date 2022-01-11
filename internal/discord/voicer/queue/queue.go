@@ -11,8 +11,8 @@ const (
 )
 
 type Queue struct {
-	*event.EventEmitter
 	queue []playable.Playable
+	*event.EventEmitter
 }
 
 func NewQueue() *Queue {

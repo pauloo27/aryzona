@@ -10,15 +10,15 @@ import (
 
 type YouTubePlayablePlaylist struct {
 	Videos        []playable.Playable
-	Duration      time.Duration
 	Title, Author string
+	Duration      time.Duration
 }
 
 type YouTubePlayable struct {
 	ID, Title, Author, ThumbnailURL string
-	Live                            bool
 	Duration                        time.Duration
 	video                           *youtube.Video
+	Live                            bool
 }
 
 func (p YouTubePlayable) CanPause() bool {

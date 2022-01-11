@@ -3,8 +3,8 @@ package dcgo
 import "github.com/Pauloo27/aryzona/internal/discord"
 
 type Message struct {
-	id      string
 	ch      Channel
+	id      string
 	author  User
 	content string
 }

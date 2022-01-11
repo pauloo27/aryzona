@@ -11,14 +11,14 @@ type CommandPermissionChecker func(*CommandContext) bool
 type CommandValidationChecker func(*CommandContext) (bool, string)
 
 type CommandContext struct {
-	Bot               discord.BotAdapter
-	Command           *Command
 	RawArgs           []string
-	Locals            map[string]interface{}
 	Args              []interface{}
+	Bot               discord.BotAdapter
+	AuthorID, GuildID string
+	Locals            map[string]interface{}
 	Reply             func(string) error
 	ReplyEmbed        func(*discord.Embed) error
-	AuthorID, GuildID string
+	Command           *Command
 }
 
 type CommandPermission struct {
@@ -27,8 +27,8 @@ type CommandPermission struct {
 }
 
 type CommandValidation struct {
-	Description string
 	DependsOn   []*CommandValidation
+	Description string
 	Checker     CommandValidationChecker
 }
 
@@ -39,19 +39,19 @@ type BaseType struct {
 }
 
 type CommandParameterType struct {
-	BaseType *BaseType
 	Name     string
+	BaseType *BaseType
 	Parser   CommandParameterTypeParser
 }
 
 type CommandParameter struct {
+	ValidValues     []interface{}
 	Name            string
 	Description     string
-	Type            *CommandParameterType
-	Required        bool
 	RequiredMessage string
-	ValidValues     []interface{}
+	Type            *CommandParameterType
 	ValidValuesFunc func() []interface{}
+	Required        bool
 }
 
 func (param *CommandParameter) GetValidValues() []interface{} {
@@ -65,14 +65,14 @@ func (param *CommandParameter) GetValidValues() []interface{} {
 }
 
 type Command struct {
-	Name, Description string
-	Aliases           []string
-	Handler           CommandHandler
-	Permission        *CommandPermission
-	Deferred          bool
 	Validations       []*CommandValidation
 	Parameters        []*CommandParameter
+	Aliases           []string
+	Name, Description string
+	Handler           CommandHandler
+	Permission        *CommandPermission
 	category          *CommandCategory
+	Deferred          bool
 }
 
 func (c *Command) GetCategory() *CommandCategory {

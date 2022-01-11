@@ -18,8 +18,8 @@ type TeamInfo struct {
 }
 
 type Event struct {
-	Min  int64
 	Text string
+	Min  int64
 	ID   int64
 }
 
@@ -34,9 +34,9 @@ func (t TeamInfo) ColorAsInt() int {
 type MatchInfo struct {
 	Events                            []*Event
 	ID                                string
-	T1, T2                            *TeamInfo
 	Time                              string // time as string? YES
 	CupName, StadiumName, StadiumCity string
+	T1, T2                            *TeamInfo
 }
 
 func parseTeam(id int, data []byte) (*TeamInfo, error) {

@@ -1,7 +1,7 @@
 package command
 
 type CommandCategory struct {
-	Name, Emoji string
 	Commands    []*Command
+	Name, Emoji string
 	OnLoad      func()
 }

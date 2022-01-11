@@ -9,6 +9,6 @@ const (
 )
 
 type Presence struct {
-	Type         PresenceType
 	Title, Extra string
+	Type         PresenceType
 }

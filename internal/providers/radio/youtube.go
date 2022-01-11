@@ -6,8 +6,8 @@ import (
 
 type YouTubeRadio struct {
 	BaseRadio
-	ID, Name, URL string
 	playable      youtube.YouTubePlayable
+	ID, Name, URL string
 }
 
 var _ RadioChannel = &YouTubeRadio{}

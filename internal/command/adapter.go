@@ -5,8 +5,8 @@ import (
 )
 
 type Adapter struct {
+	GuildID, AuthorID string
 	Reply             func(*CommandContext, string) error
 	DeferResponse     func() error
 	ReplyEmbed        func(*CommandContext, *discord.Embed) error
-	GuildID, AuthorID string
 }

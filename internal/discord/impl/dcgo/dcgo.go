@@ -16,10 +16,10 @@ func init() {
 }
 
 type discordData struct {
+	listeners []interface{}
 	token     string
 	s         *discordgo.Session
 	startedAt *time.Time
-	listeners []interface{}
 }
 
 type DcgoBot struct {

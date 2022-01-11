@@ -18,16 +18,17 @@ type OpusReader interface {
 }
 
 type StreamingSession struct {
-	sync.Mutex
-	source     *EncodeSession
 	connection discord.VoiceConnection
-	running    bool
-	paused     bool
-	finished   bool
+	err        error
 	framesSent int
 
+	source *EncodeSession
+
 	callback chan error
-	err      error
+	sync.Mutex
+	running  bool
+	paused   bool
+	finished bool
 }
 
 func NewStream(source *EncodeSession, vc discord.VoiceConnection, callback chan error) *StreamingSession {

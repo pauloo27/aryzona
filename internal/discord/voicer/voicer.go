@@ -13,13 +13,13 @@ import (
 )
 
 type Voicer struct {
-	usable, playing            bool
-	UserID, ChannelID, GuildID *string
 	Voice                      discord.VoiceConnection
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
+	UserID, ChannelID, GuildID *string
 	StreamingSession           *dca.StreamingSession
 	lock                       *sync.Mutex
+	usable, playing            bool
 }
 
 var (

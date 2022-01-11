@@ -10,11 +10,11 @@ import (
 type TaskCallback func(params ...interface{})
 
 type Task struct {
+	LastRunAt             time.Time
+	RunAt                 time.Time
 	Delay                 time.Duration
 	Repeat, RepeatCounter int
 	Callback              TaskCallback
-	LastRunAt             time.Time
-	RunAt                 time.Time
 }
 
 var tasks = make(map[string]*Task)

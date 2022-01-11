@@ -27,15 +27,15 @@ func init() {
 }
 
 type eventListener struct {
-	preHandler bool
 	handler    interface{}
+	preHandler bool
 }
 
 type discordData struct {
-	token            string
-	startedAt        *time.Time
 	listeners        []*eventListener
 	indents          []gateway.Intents
+	token            string
+	startedAt        *time.Time
 	s                *state.State
 	prevChannelCache *ttlcache.Cache
 }
