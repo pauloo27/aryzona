@@ -158,7 +158,7 @@ func (v *Voicer) Start() error {
 
 	v.playing = true
 	defer func() {
-		if v.Voice != nil {
+		if v.Voice != nil && v.usable {
 			_ = v.Voice.Speaking(false)
 		}
 		v.playing = false
@@ -187,7 +187,7 @@ func (v *Voicer) Start() error {
 
 	for {
 		playable := v.Queue.First()
-		if playable == nil {
+		if playable == nil || !v.usable {
 			return nil
 		}
 
