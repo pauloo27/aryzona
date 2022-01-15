@@ -113,7 +113,7 @@ func GetPlaylist(playlistURL string) (YouTubePlayablePlaylist, error) {
 }
 
 func AsPlayable(videoURL string) (YouTubePlayable, error) {
-	vid, err := defaultClient.GetVideo(GetVideoID(videoURL))
+	vid, err := defaultClient.GetVideo(videoURL)
 	if err != nil {
 		return YouTubePlayable{}, err
 	}
