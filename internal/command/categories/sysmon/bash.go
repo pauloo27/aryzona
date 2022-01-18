@@ -1,6 +1,7 @@
 package sysmon
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 
@@ -22,7 +23,7 @@ var Bash = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
-		cmd := exec.Command("bash", "-c", (ctx.Args[0].(string))) //#nosec G204
+		cmd := exec.Command(os.Getenv("DC_BOT_SHELL"), "-c", (ctx.Args[0].(string))) //#nosec G204
 		buffer, err := cmd.CombinedOutput()
 		output := string(buffer)
 		output = strings.ReplaceAll(output, "`", "\\`")
