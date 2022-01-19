@@ -27,7 +27,7 @@ func NewQueue() *Queue {
 
 func (q *Queue) Shuffle() {
 	for i := range q.queue {
-		j := rand.Intn(i + 1)
+		j := rand.Intn(i + 1) //#nosec G404
 		// the top element on the list is the one being played,
 		// there's no need to move it
 		if i == 0 || j == 0 {
