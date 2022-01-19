@@ -1,13 +1,16 @@
 package queue
 
 import (
+	"math/rand"
+
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/utils/event"
 )
 
 const (
-	EventAppend = event.EventType("APPEND")
-	EventRemove = event.EventType("REMOVE")
+	EventAppend  = event.EventType("APPEND")
+	EventRemove  = event.EventType("REMOVE")
+	EventShuffle = event.EventType("SHUFFLE")
 )
 
 type Queue struct {
@@ -20,6 +23,19 @@ func NewQueue() *Queue {
 		queue:        []playable.Playable{},
 		EventEmitter: event.NewEventEmitter(),
 	}
+}
+
+func (q *Queue) Shuffle() {
+	for i := range q.queue {
+		j := rand.Intn(i + 1)
+		// the top element on the list is the one being played,
+		// there's no need to move it
+		if i == 0 || j == 0 {
+			continue
+		}
+		q.queue[i], q.queue[j] = q.queue[j], q.queue[i]
+	}
+	q.Emit(EventShuffle)
 }
 
 func (q *Queue) Append(item playable.Playable) {

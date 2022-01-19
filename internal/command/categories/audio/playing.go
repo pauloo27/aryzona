@@ -43,7 +43,7 @@ var PlayingCommand = command.Command{
 			if len(next) > maxNextItems {
 				sb.WriteString("_... and more ..._")
 			}
-			embed.WithField("**Coming next:**", sb.String())
+			embed.WithField(utils.Fmt("**Coming next (%d):**", len(next)), sb.String())
 		}
 
 		ctx.SuccessEmbed(embed)
