@@ -15,18 +15,18 @@ func TestOwnerPermission(t *testing.T) {
 		AuthorID: "777",
 	}
 
-	os.Setenv("DC_BOT_OWNER_ID", "123")
+	_ = os.Setenv("DC_BOT_OWNER_ID", "123")
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	os.Setenv("DC_BOT_OWNER_ID", "")
+	_ = os.Setenv("DC_BOT_OWNER_ID", "")
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	os.Setenv("DC_BOT_OWNER_ID", "321")
+	_ = os.Setenv("DC_BOT_OWNER_ID", "321")
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	os.Setenv("DC_BOT_OWNER_ID", "7 7 7")
+	_ = os.Setenv("DC_BOT_OWNER_ID", "7 7 7")
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	os.Setenv("DC_BOT_OWNER_ID", "777")
+	_ = os.Setenv("DC_BOT_OWNER_ID", "777")
 	require.True(t, permissions.MustBeOwner.Checker(ctx))
 }

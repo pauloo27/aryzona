@@ -27,7 +27,7 @@ func TestBoolean(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, b, false)
 
-	b, err = parameters.ParameterBool.Parser(0, []string{"invalid"})
+	_, err = parameters.ParameterBool.Parser(0, []string{"invalid"})
 	require.NotNil(t, err)
 }
 
@@ -47,10 +47,10 @@ func TestInt(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, i, 10)
 
-	i, err = parameters.ParameterInt.Parser(0, []string{"hello"})
+	_, err = parameters.ParameterInt.Parser(0, []string{"hello"})
 	require.NotNil(t, err)
 
-	i, err = parameters.ParameterInt.Parser(0, []string{"10.2"})
+	_, err = parameters.ParameterInt.Parser(0, []string{"10.2"})
 	require.NotNil(t, err)
 }
 
