@@ -13,8 +13,6 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
-	github.com/kkdai/youtube/v2 v2.7.7
+	github.com/kkdai/youtube/v2 v2.7.10
 	github.com/stretchr/testify v1.7.0
 )
-
-replace github.com/kkdai/youtube/v2 => github.com/ItsClairton/youtube/v2 v2.7.7-0.20220123230615-c86c1dbf79cf
