@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/utils/errore"
 	"github.com/Pauloo27/logger"
 	"github.com/buger/jsonparser"
 )
@@ -42,7 +41,7 @@ type MatchInfo struct {
 func parseTeam(id int, data []byte) (*TeamInfo, error) {
 	name, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Nm")
 	if err != nil {
-		return nil, errore.Wrap("name", err)
+		return nil, fmt.Errorf("name: %w", err)
 	}
 
 	color, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Shrt", "Bs")
@@ -54,7 +53,7 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 
 	rawScore, err := jsonparser.GetString(data, "Tr"+strconv.Itoa(id))
 	if err != nil {
-		logger.Warn(errore.Wrap("cannot get raw score", err))
+		logger.Warn(fmt.Errorf("cannot get raw score: %w", err))
 	}
 
 	score, err := strconv.Atoi(rawScore)
@@ -69,7 +68,7 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 func parseMatchForListing(data []byte) (*MatchInfo, error) {
 	id, err := jsonparser.GetString(data, "Eid")
 	if err != nil {
-		return nil, errore.Wrap("id", err)
+		return nil, fmt.Errorf("id: %w", err)
 	}
 
 	team1, err := parseTeam(1, data)
@@ -79,7 +78,7 @@ func parseMatchForListing(data []byte) (*MatchInfo, error) {
 
 	team2, err := parseTeam(2, data)
 	if err != nil {
-		return nil, errore.Wrap("team2", err)
+		return nil, fmt.Errorf("team2: %w", err)
 	}
 
 	return &MatchInfo{
@@ -90,12 +89,12 @@ func parseMatchForListing(data []byte) (*MatchInfo, error) {
 func parseMatch(data []byte) (*MatchInfo, error) {
 	id, err := jsonparser.GetString(data, "Eid")
 	if err != nil {
-		return nil, errore.Wrap("id", err)
+		return nil, fmt.Errorf("id: %w", err)
 	}
 
 	time, err := jsonparser.GetString(data, "Eps")
 	if err != nil {
-		return nil, errore.Wrap("time", err)
+		return nil, fmt.Errorf("time: %w", err)
 	}
 
 	cupName, err := jsonparser.GetString(data, "Stg", "Sdn")
@@ -120,7 +119,7 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 
 	team2, err := parseTeam(2, data)
 	if err != nil {
-		return nil, errore.Wrap("team2", err)
+		return nil, fmt.Errorf("team2: %w", err)
 	}
 
 	var events []*Event
@@ -191,11 +190,12 @@ func ListLives() ([]*MatchInfo, error) {
 	}
 	matches := []*MatchInfo{}
 
+	// TODO: refact with GJSON
 	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		_, err0 := jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
 			match, err1 := parseMatchForListing(matchData)
 			if err1 != nil {
-				errore.HandleFatal(err)
+				logger.Fatal(err)
 			} else {
 				matches = append(matches, match)
 			}
@@ -205,7 +205,7 @@ func ListLives() ([]*MatchInfo, error) {
 		}
 	}, "Stages")
 	if err != nil {
-		return nil, errore.Wrap("stages", err)
+		return nil, fmt.Errorf("stages: %w", err)
 	}
 
 	return matches, nil

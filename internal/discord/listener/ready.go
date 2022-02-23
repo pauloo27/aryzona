@@ -10,7 +10,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/providers/animal"
 	"github.com/Pauloo27/aryzona/internal/providers/git"
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/aryzona/internal/utils/errore"
 	"github.com/Pauloo27/logger"
 )
 
@@ -37,9 +36,13 @@ func ready(bot discord.BotAdapter) {
 
 	if os.Getenv("DC_BOT_ENV") == "prod" {
 		c, err := discord.OpenChatWithOwner()
-		errore.HandleFatal(err)
+		if err != nil {
+			logger.Fatal(err)
+		}
 		_, err = bot.SendEmbedMessage(c.ID(), createStartedEmbed(bot.GuildCount()))
-		errore.HandleFatal(err)
+		if err != nil {
+			logger.Fatal(err)
+		}
 	}
 }
 

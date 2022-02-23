@@ -1,6 +1,8 @@
 package audio
 
 import (
+	"errors"
+
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
@@ -9,7 +11,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/aryzona/internal/utils/errore"
 	"github.com/Pauloo27/logger"
 )
 
@@ -76,16 +77,11 @@ var PlayCommand = command.Command{
 
 		utils.Go(func() {
 			if err = vc.AppendManyToQueue(vidsToAppend...); err != nil {
-				if is, vErr := errore.IsErrore(err); is {
-					if vErr.ID == dca.ErrVoiceConnectionClosed.ID {
-						return
-					}
-					ctx.Error(vErr.Message)
-					logger.Error(vErr.Message)
-				} else {
-					ctx.Error(utils.Fmt("Cannot play stuff: %v", err))
-					logger.Error(err)
+				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
+					return
 				}
+				ctx.Error(utils.Fmt("Cannot play stuff: %v", err))
+				logger.Error(err)
 				return
 			}
 		})

@@ -84,7 +84,7 @@ func (v *Voicer) CanConnect() bool {
 
 func (v *Voicer) Connect() error {
 	if !v.CanConnect() {
-		return ErrCannotConnect
+		return errors.New("cannot connect")
 	}
 
 	if v.IsConnected() {
@@ -153,7 +153,7 @@ func (v *Voicer) GetPosition() (time.Duration, error) {
 
 func (v *Voicer) Start() error {
 	if v.IsPlaying() {
-		return ErrAlreadyPlaying
+		return errors.New("already playing")
 	}
 
 	v.playing = true

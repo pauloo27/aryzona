@@ -1,9 +1,6 @@
 package command
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
@@ -52,8 +49,7 @@ func HandleCommand(
 
 	values, syntaxError := command.ValidateParameters(args)
 	if syntaxError != nil {
-		msg := syntaxError.Message
-		msg = fmt.Sprintf("%c%s", strings.ToUpper(msg[0:1])[0], msg[1:])
+		msg := syntaxError.Error()
 		ctx.Error(msg)
 		return
 	}

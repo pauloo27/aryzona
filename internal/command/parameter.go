@@ -1,45 +1,44 @@
 package command
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/aryzona/internal/utils/errore"
 )
 
-func ErrRequiredParameter(param *CommandParameter) *errore.Errore {
+var (
+	ErrRequireParameter    = errors.New("required parameter missing")
+	ErrCannotParseArgument = errors.New("cannot parse argument")
+	ErrInvalidValue        = errors.New("invalid value")
+)
+
+func NewErrRequiredParameter(param *CommandParameter) error {
 	var message string
 	if param != nil {
 		if param.RequiredMessage != "" {
 			message = param.RequiredMessage
 		} else {
-			message = utils.Fmt("Parameter %s (type %s) missing", param.Description, param.Type.Name)
+			message = utils.Fmt("parameter `%s` (type %s) missing", param.Description, param.Type.Name)
 		}
 	}
-	return &errore.Errore{
-		ID:      "REQUIRED_PARAMETER_MISSING",
-		Message: message,
-	}
+	return fmt.Errorf("%w: %s", ErrRequireParameter, message)
 }
 
-func ErrInvalidValue(param *CommandParameter) *errore.Errore {
+func NewErrInvalidValue(param *CommandParameter) error {
 	var message string
 	if param != nil {
-		message = utils.Fmt("Invalid value for %s. Valid  values are: %s", param.Description, param.GetValidValues())
+		message = utils.Fmt("invalid value for `%s`. Valid  values are: `%s`", param.Description, param.GetValidValues())
 	}
-	return &errore.Errore{
-		ID:      "INVALID_VALUE",
-		Message: message,
-	}
+	return fmt.Errorf("%w: %s", ErrInvalidValue, message)
 }
 
-func ErrCannotParseParameter(argument *CommandParameter, err error) *errore.Errore {
+func NewErrCannotParseParameter(argument *CommandParameter, err error) error {
 	var message string
 	if err != nil {
 		message = err.Error()
 	}
-	return &errore.Errore{
-		ID:      "CANNOT_PARSE_ARGUMENT",
-		Message: message,
-	}
+	return fmt.Errorf("%w: %s", ErrCannotParseArgument, message)
 }
 
 /*
@@ -54,7 +53,7 @@ func ErrCannotParseParameter(argument *CommandParameter, err error) *errore.Erro
 
  If no errors are returned, then we are good to go.
 */
-func (command *Command) ValidateParameters(parameters []string) (values []interface{}, syntaxError *errore.Errore) {
+func (command *Command) ValidateParameters(parameters []string) (values []interface{}, syntaxError error) {
 
 	if command.Parameters == nil || len(command.Parameters) == 0 {
 		return
@@ -65,14 +64,14 @@ func (command *Command) ValidateParameters(parameters []string) (values []interf
 	for i, parameter := range command.Parameters {
 		if i >= parametersCount {
 			if parameter.Required {
-				syntaxError = ErrRequiredParameter(parameter)
+				syntaxError = NewErrRequiredParameter(parameter)
 			}
 			break
 		}
 
 		value, err := parameter.Type.Parser(i, parameters)
 		if err != nil {
-			syntaxError = ErrCannotParseParameter(parameter, err)
+			syntaxError = NewErrCannotParseParameter(parameter, err)
 			break
 		}
 
@@ -85,7 +84,7 @@ func (command *Command) ValidateParameters(parameters []string) (values []interf
 				}
 			}
 			if !valid {
-				syntaxError = ErrInvalidValue(parameter)
+				syntaxError = NewErrInvalidValue(parameter)
 				break
 			}
 		}

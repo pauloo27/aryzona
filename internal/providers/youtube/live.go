@@ -1,11 +1,11 @@
 package youtube
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/utils/errore"
 	"github.com/kkdai/youtube/v2"
 )
 
@@ -29,16 +29,15 @@ func getFirstURL(manifestURL string) (string, error) {
 		}
 	}
 
-	return "", errore.Errore{ID: "URL_NOT_FOUND", Message: "URL not found"}
+	return "", errors.New("URL not found in manifest")
 }
 
 func getLiveURL(video *youtube.Video) (string, error) {
 	manifest := video.HLSManifestURL
 	if manifest == "" {
-		return "", errore.Errore{
-			ID:      "HLS_NOT_FOUND",
-			Message: "HLS manifest not found",
-		}
+		return "", errors.New(
+			"HLS manifest not found",
+		)
 	}
 	liveURL, err := getFirstURL(manifest)
 	return liveURL, err
