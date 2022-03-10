@@ -16,3 +16,5 @@ require (
 	github.com/kkdai/youtube/v2 v2.7.10
 	github.com/stretchr/testify v1.7.0
 )
+
+replace github.com/kkdai/youtube/v2 => github.com/ItsClairton/youtube/v2 v2.7.7-0.20220123230615-c86c1dbf79cf
