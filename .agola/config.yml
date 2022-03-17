@@ -10,7 +10,7 @@ runs:
           type: pod
           arch: amd64
           containers:
-            - image: golang:1.17-stretch
+            - image: golang:1.18-stretch
         steps:
           - clone:
           - restore_cache:
@@ -49,7 +49,7 @@ runs:
           type: pod
           arch: amd64
           containers:
-            - image: golang:1.17-stretch
+            - image: golang:1.18-stretch
         steps:
           - restore_workspace:
               dest_dir: /
@@ -71,7 +71,7 @@ runs:
           type: pod
           arch: amd64
           containers:
-            - image: golang:1.17-stretch
+            - image: golang:1.18-stretch
         steps:
           - restore_workspace:
               dest_dir: /
