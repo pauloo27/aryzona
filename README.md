@@ -2,11 +2,9 @@
 
 The one and only Discord Bot that is proudly Flamenguista.
 
-[Agola CI](https://ci.notagovernment.agency/user/Pauloo27/projects/Aryzona.proj)
+[Agola CI](https://ci.db.cafe/user/Pauloo27/projects/aryzona.proj)
 
-[![CI status](https://ci.notagovernment.agency/api/v1alpha/badges/4411af93-d950-4ecb-8154-c251a76a26c6?branch=master)](https://ci.notagovernment.agency/user/Pauloo27/projects/aryzona.proj)
-
-Are you on GitHub? There's a mirror at [Gitea](https://git.notagovernment.agency/Pauloo27/aryzona).
+[![CI status](https://ci.db.cafe/api/v1alpha/badges/187accd5-deac-4593-ae76-3454b052bf5b)](https://ci.db.cafe/user/Pauloo27/projects/aryzona.proj)
 
 ## Features
 
