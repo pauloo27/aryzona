@@ -61,7 +61,7 @@ gosec:
 	gosec -tests ./... 
 
 .PHONY: inspect
-inspect: lint
+inspect: lint spell gosec staticcheck
 
 # auto restart bot (using fiber CLI)
 .PHONY: dev
