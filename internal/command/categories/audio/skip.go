@@ -7,7 +7,7 @@ import (
 )
 
 var SkipCommand = command.Command{
-	Name: "skip", Aliases: []string{"pular", "sk"},
+	Name: "skip", Aliases: []string{"pular", "s", "sh"},
 	Description: "Skip current item in the queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
