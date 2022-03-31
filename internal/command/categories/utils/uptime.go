@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -18,10 +19,18 @@ var UptimeCommand = command.Command{
 		ctx.SuccessEmbed(
 			discord.NewEmbed().
 				WithTitle("Bot uptime").
-				WithField("Uptime", utils.FormatDuration(uptime)).
-				WithField("Implementation", discord.Bot.Implementation()).
-				WithField("Last commit", fmt.Sprintf("%s (%s)", git.CommitMessage, git.CommitHash)).
-				WithField("Started at", discord.Bot.StartedAt().Format("2 Jan, 15:04")),
+				WithField(":timer: Uptime", utils.FormatDuration(uptime)).
+				WithField(":gear: Implementation", discord.Bot.Implementation()).
+				WithField(
+					":floppy_disk: Last commit", fmt.Sprintf("[%s (%s)](%s/commit/%s)",
+						git.CommitMessage, git.CommitHash[:10], git.RemoteRepo, git.CommitHash),
+				).
+				WithField(
+					":computer: System info",
+					utils.Fmt("%s %s %s",
+						runtime.GOOS, runtime.GOARCH, runtime.Version(),
+					)).
+				WithField(":star: Started at", discord.Bot.StartedAt().Format("2 Jan, 15:04")),
 		)
 	},
 }
