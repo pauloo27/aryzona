@@ -23,7 +23,7 @@ func init() {
 func ready(bot discord.BotAdapter) {
 	presence := os.Getenv("DC_BOT_PRESENCE")
 	if presence == "" {
-		presence = utils.Fmt("%s", git.CommitMessage)
+		presence = git.CommitMessage
 	}
 	err := bot.UpdatePresence(&discord.Presence{
 		Title: presence,
