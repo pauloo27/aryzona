@@ -10,7 +10,7 @@ var PingCommand = command.Command{
 	Name: "ping", Description: "Get the bot latency",
 	Aliases: []string{"pong"},
 	Handler: func(ctx *command.CommandContext) {
-		ctx.SuccessEmbedReturning(
+		ctx.SuccessEmbed(
 			discord.NewEmbed().
 				WithTitle(":ping_pong: Pong!").
 				WithFooter("(that's the Bot latency, not yours)").
