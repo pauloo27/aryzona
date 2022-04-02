@@ -23,6 +23,9 @@ func buildEmbed(e *discord.Embed) *discordgo.MessageEmbed {
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: e.ThumbnailURL,
 		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: e.Footer,
+		},
 		Color: e.Color,
 		Image: &discordgo.MessageEmbedImage{
 			URL: e.ImageURL,
