@@ -15,6 +15,7 @@ type CommandContext struct {
 	Args              []interface{}
 	Bot               discord.BotAdapter
 	AuthorID, GuildID string
+	UsedName          string
 	Locals            map[string]interface{}
 	Reply             func(string) error
 	ReplyEmbed        func(*discord.Embed) error

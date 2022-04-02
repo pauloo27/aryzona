@@ -54,8 +54,8 @@ func ListLiveMatches(ctx *command.CommandContext) {
 		discord.NewEmbed().
 			WithTitle("⚽ Live matches:").
 			WithFooter(
-				utils.Fmt("Use `%sscore <match id or team name>` to see details",
-					command.Prefix,
+				utils.Fmt("Use `%s%s <match id or team name>` to see details",
+					command.Prefix, ctx.UsedName,
 				)).
 			WithDescription(desc.String()),
 	)

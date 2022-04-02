@@ -19,6 +19,7 @@ func HandleCommand(
 		Bot:      bot,
 		RawArgs:  args,
 		AuthorID: adapter.AuthorID,
+		UsedName: commandName,
 		GuildID:  adapter.GuildID,
 		Locals:   make(map[string]interface{}),
 		Command:  command,
