@@ -25,7 +25,7 @@ var ScoreCommand = command.Command{
 	},
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 1 {
-			ShowMatchInfop(ctx)
+			ShowMatchInfo(ctx)
 			return
 		}
 		ListLiveMatches(ctx)
@@ -52,12 +52,16 @@ func ListLiveMatches(ctx *command.CommandContext) {
 	}
 	ctx.SuccessEmbed(
 		discord.NewEmbed().
-			WithTitle("Live matches:").
+			WithTitle("⚽ Live matches:").
+			WithFooter(
+				utils.Fmt("Use `%sscore <match id or team name>` to see details",
+					command.Prefix,
+				)).
 			WithDescription(desc.String()),
 	)
 }
 
-func ShowMatchInfop(ctx *command.CommandContext) {
+func ShowMatchInfo(ctx *command.CommandContext) {
 	var match *livescore.MatchInfo
 	teamNameOrID := ctx.Args[0].(string)
 	if _, err := strconv.Atoi(teamNameOrID); err == nil {

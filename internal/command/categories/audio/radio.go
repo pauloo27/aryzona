@@ -79,7 +79,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 
 	embed.WithFooter(
 		utils.Fmt(
-			"Use `%sradio <name>` and `%sstop` when you are tired of it!",
+			"Start a radio with '%sradio <name>' and '%sstop' when you are tired of it!",
 			command.Prefix, command.Prefix,
 		),
 	)

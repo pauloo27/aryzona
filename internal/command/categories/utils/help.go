@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"os"
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -13,10 +12,12 @@ var HelpCommand = command.Command{
 	Aliases: []string{"h"},
 	Handler: func(ctx *command.CommandContext) {
 		sb := strings.Builder{}
-		sb.WriteString("I'm a open source bot, here's my code: ")
-		sb.WriteString(utils.Fmt("%s\n", os.Getenv("DC_BOT_REMOTE_REPO")))
 		sb.WriteString("List of commands:\n")
+		lastCategory := ""
 		for _, cmd := range command.GetCommandList() {
+			if lastCategory != cmd.GetCategory().Name {
+				sb.WriteString(utils.Fmt("\n**%s %s**:\n", cmd.GetCategory().Emoji, cmd.GetCategory().Name))
+			}
 			var permission string
 			if cmd.Permission != nil {
 				permission = utils.Fmt("(_requires you to... %s_)", cmd.Permission.Name)
@@ -26,9 +27,10 @@ var HelpCommand = command.Command{
 				aliases = utils.Fmt("(aka %s)", strings.Join(cmd.Aliases, ", "))
 			}
 			sb.WriteString(utils.Fmt(
-				" - %s `%s%s` %s: **%s** %s\n", cmd.GetCategory().Emoji,
+				" - `%s%s` %s: **%s** %s\n",
 				command.Prefix, cmd.Name, aliases, cmd.Description, permission,
 			))
+			lastCategory = cmd.GetCategory().Name
 		}
 		ctx.Success(sb.String())
 	},
