@@ -29,6 +29,10 @@ func (YouTubePlayable) GetName() string {
 	return "YouTube video"
 }
 
+func (p YouTubePlayable) GetShareURL() string {
+	return utils.Fmt("https://youtu.be/%s", p.video.ID)
+}
+
 func (p YouTubePlayable) IsLive() bool {
 	return p.Live
 }

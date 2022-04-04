@@ -23,7 +23,13 @@ var PlayingCommand = command.Command{
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		playing := ctx.Locals["playing"].(playable.Playable)
 
-		embed := buildPlayableInfoEmbed(playing, vc).WithTitle("Now playing: " + playing.GetName())
+		embed := buildPlayableInfoEmbed(playing, vc).
+			WithTitle("Now playing: " + playing.GetName())
+
+		shareURL := playing.GetShareURL()
+		if shareURL != "" {
+			embed.WithURL(shareURL)
+		}
 
 		if vc.Queue.Size() > 1 {
 			sb := strings.Builder{}

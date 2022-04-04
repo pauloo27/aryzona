@@ -7,6 +7,7 @@ type Playable interface {
 	IsLive() bool
 	GetDuration() (time.Duration, error)
 	GetDirectURL() (string, error)
+	GetShareURL() string
 	GetName() string
 	IsOpus() bool
 	IsLocal() bool

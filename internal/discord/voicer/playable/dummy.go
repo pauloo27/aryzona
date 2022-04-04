@@ -6,8 +6,8 @@ import "time"
 	DummyPlayable is used in tests
 */
 type DummyPlayable struct {
-	Name, Artist, Title string
-	Duration            time.Duration
+	Name, Artist, Title, ShareURL string
+	Duration                      time.Duration
 }
 
 var _ Playable = DummyPlayable{}
@@ -18,6 +18,10 @@ func (DummyPlayable) CanPause() bool {
 
 func (DummyPlayable) IsOpus() bool {
 	return true
+}
+
+func (d DummyPlayable) GetShareURL() string {
+	return d.ShareURL
 }
 
 func (DummyPlayable) IsLocal() bool {
