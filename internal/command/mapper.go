@@ -3,6 +3,7 @@ package command
 import (
 	"strings"
 
+	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -13,18 +14,40 @@ var (
 
 var Prefix string
 
-func RegisterCommand(command *Command) {
+func validateCommand(command *Command) string {
 	if command.Name == "" {
 		// "lol why dont i put the name of the name in the error message?"
-		// counter: 2
-		logger.Fatal("One command has no name")
+		// counter: 3
+		return "One command has no name"
 	}
 	if command.Description == "" {
-		logger.Fatalf("Command %s has no description", command.Name)
+		return utils.Fmt("Command %s has no description", command.Name)
 	}
 	for _, arg := range command.Parameters {
 		if arg.Name == "" || len(strings.Split(arg.Name, " ")) != 1 {
-			logger.Fatalf("Command %s an invalid parameter name (%s)", command.Name, arg.Name)
+			return utils.Fmt("Command %s has an invalid parameter name (%s)", command.Name, arg.Name)
+		}
+	}
+	return ""
+}
+
+func RegisterCommand(command *Command) {
+	errMsg := validateCommand(command)
+	if errMsg != "" {
+		logger.Fatal(errMsg)
+		return
+	}
+
+	for _, subCommand := range command.SubCommands {
+		errMsg := validateCommand(subCommand)
+		if errMsg != "" {
+			logger.Fatalf("sub command %s of %s: ", subCommand.Name, command.Name, errMsg)
+			return
+		}
+		// sub commands cannot have sub commands YET...
+		if subCommand.SubCommands != nil {
+			logger.Fatal("sub command %s of %s has sub commands", subCommand.Name, command.Name)
+			return
 		}
 	}
 
