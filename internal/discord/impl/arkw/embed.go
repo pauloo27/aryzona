@@ -20,6 +20,7 @@ func buildEmbed(e *discord.Embed) dc.Embed {
 	return dc.Embed{
 		Title:       e.Title,
 		Description: e.Description,
+		URL:         e.URL,
 		Thumbnail: &dc.EmbedThumbnail{
 			URL: e.ThumbnailURL,
 		},

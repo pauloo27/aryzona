@@ -13,6 +13,7 @@ type Embed struct {
 	ThumbnailURL string
 	Footer       string
 	Color        int
+	URL          string
 }
 
 func NewEmbed() *Embed {
@@ -59,6 +60,11 @@ func (e *Embed) WithImage(url string) *Embed {
 
 func (e *Embed) WithThumbnail(url string) *Embed {
 	e.ThumbnailURL = url
+	return e
+}
+
+func (e *Embed) WithURL(url string) *Embed {
+	e.URL = url
 	return e
 }
 
