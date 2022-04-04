@@ -6,6 +6,76 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
+func executeCommand(
+	command *Command, ctx *CommandContext,
+	adapter *Adapter, bot discord.BotAdapter,
+) {
+	if command.Permission != nil {
+		if !command.Permission.Checker(ctx) {
+			ctx.Error(utils.Fmt("This command requires `%s`", command.Permission.Name))
+			return
+		}
+	}
+
+	for _, validation := range command.Validations {
+		ok, msg := RunValidation(ctx, validation)
+		if !ok {
+			ctx.Error(msg)
+			return
+		}
+	}
+
+	values, syntaxError := command.ValidateParameters(ctx.RawArgs)
+	if syntaxError != nil {
+		msg := syntaxError.Error()
+		ctx.Error(msg)
+		return
+	}
+	ctx.Args = values
+
+	defer func() {
+		if err := recover(); err != nil {
+			logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
+		}
+	}()
+
+	if command.Deferred && adapter.DeferResponse != nil {
+		err := adapter.DeferResponse()
+		if err != nil {
+			logger.Error("Cannot defer response:", err)
+		}
+	}
+
+	if command.SubCommands == nil || (len(ctx.RawArgs) == 0 && command.Handler != nil) {
+		command.Handler(ctx)
+	} else {
+		var subCommandNames []string
+		for _, subCommand := range command.SubCommands {
+			subCommandNames = append(subCommandNames, subCommand.Name)
+		}
+		if len(ctx.RawArgs) == 0 {
+			ctx.Error(utils.Fmt("Missing sub command. Available sub commands: %v", subCommandNames))
+			return
+		}
+		subCommandName := ctx.RawArgs[0]
+		for _, subCommand := range command.SubCommands {
+			if subCommand.Name == subCommandName {
+				ctx.RawArgs = ctx.RawArgs[1:]
+				executeCommand(subCommand, ctx, adapter, bot)
+				return
+			}
+			for _, alias := range subCommand.Aliases {
+				if alias == subCommandName {
+					ctx.RawArgs = ctx.RawArgs[1:]
+					executeCommand(subCommand, ctx, adapter, bot)
+					return
+				}
+			}
+		}
+		ctx.Error(utils.Fmt("Unknown sub command. Available sub commands: %v", subCommandNames))
+	}
+}
+
 func HandleCommand(
 	commandName string, args []string,
 	adapter *Adapter, bot discord.BotAdapter,
@@ -33,41 +103,5 @@ func HandleCommand(
 		return adapter.ReplyEmbed(ctx, embed)
 	}
 
-	if command.Permission != nil {
-		if !command.Permission.Checker(ctx) {
-			ctx.Error(utils.Fmt("This command requires `%s`", command.Permission.Name))
-			return
-		}
-	}
-
-	for _, validation := range command.Validations {
-		ok, msg := RunValidation(ctx, validation)
-		if !ok {
-			ctx.Error(msg)
-			return
-		}
-	}
-
-	values, syntaxError := command.ValidateParameters(args)
-	if syntaxError != nil {
-		msg := syntaxError.Error()
-		ctx.Error(msg)
-		return
-	}
-	ctx.Args = values
-
-	defer func() {
-		if err := recover(); err != nil {
-			logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
-		}
-	}()
-
-	if command.Deferred && adapter.DeferResponse != nil {
-		err := adapter.DeferResponse()
-		if err != nil {
-			logger.Error("Cannot defer response:", err)
-		}
-	}
-
-	command.Handler(ctx)
+	executeCommand(command, ctx, adapter, bot)
 }

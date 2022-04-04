@@ -69,6 +69,7 @@ type Command struct {
 	Validations       []*CommandValidation
 	Parameters        []*CommandParameter
 	Aliases           []string
+	SubCommands       []*Command
 	Name, Description string
 	Handler           CommandHandler
 	Permission        *CommandPermission
