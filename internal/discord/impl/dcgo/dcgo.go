@@ -191,7 +191,7 @@ func (b DcgoBot) OpenGuild(guildID string) (discord.Guild, error) {
 }
 
 func (b DcgoBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConnection, error) {
-	vc, err := b.d.s.ChannelVoiceJoin(guildID, channelID, false, false)
+	vc, err := b.d.s.ChannelVoiceJoin(guildID, channelID, false, true)
 	if err != nil {
 		return nil, err
 	}

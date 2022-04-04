@@ -290,7 +290,7 @@ func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConne
 	if err != nil {
 		return nil, err
 	}
-	err = vs.JoinChannel(dc.GuildID(guildSf), dc.ChannelID(channelSf), false, false)
+	err = vs.JoinChannel(dc.GuildID(guildSf), dc.ChannelID(channelSf), false, true)
 	if err != nil {
 		return nil, err
 	}
