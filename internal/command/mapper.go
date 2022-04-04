@@ -41,12 +41,12 @@ func RegisterCommand(command *Command) {
 	for _, subCommand := range command.SubCommands {
 		errMsg := validateCommand(subCommand)
 		if errMsg != "" {
-			logger.Fatalf("sub command %s of %s: ", subCommand.Name, command.Name, errMsg)
+			logger.Fatalf("sub command %s of %s: %v", subCommand.Name, command.Name, errMsg)
 			return
 		}
 		// sub commands cannot have sub commands YET...
 		if subCommand.SubCommands != nil {
-			logger.Fatal("sub command %s of %s has sub commands", subCommand.Name, command.Name)
+			logger.Fatalf("sub command %s of %s has sub commands", subCommand.Name, command.Name)
 			return
 		}
 	}
