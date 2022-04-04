@@ -51,6 +51,26 @@ func registerCommands(bot DcgoBot) error {
 			Description: cmd.Description,
 		}
 
+		if cmd.SubCommands != nil {
+			for _, subCmd := range cmd.SubCommands {
+				slashCommandOptions := []*discordgo.ApplicationCommandOption{}
+				for _, arg := range subCmd.Parameters {
+					slashCommandOptions = append(slashCommandOptions, &discordgo.ApplicationCommandOption{
+						Name:        arg.Name,
+						Description: arg.Description,
+						Type:        mustGetTypeFor(arg),
+						Choices:     mustGetChoisesFor(arg),
+					})
+				}
+				slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
+					Name:        subCmd.Name,
+					Description: subCmd.Description,
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options:     slashCommandOptions,
+				})
+			}
+		}
+
 		for _, arg := range cmd.Parameters {
 			slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
 				Name:        arg.Name,
@@ -78,6 +98,13 @@ func registerCommands(bot DcgoBot) error {
 
 		var args []string
 		for _, option := range i.ApplicationCommandData().Options {
+			if option.Type == discordgo.ApplicationCommandOptionSubCommand {
+				args = append(args, option.Name)
+				for _, subCommandOption := range option.Options {
+					args = append(args, fmt.Sprintf("%v", subCommandOption.Value))
+				}
+				break
+			}
 			args = append(args, fmt.Sprintf("%v", option.Value))
 		}
 
