@@ -17,6 +17,20 @@ func Fmt(format string, v ...interface{}) string {
 	return fmt.Sprintf(format, v...)
 }
 
+func PadRigth(source, padStr string, minLength int) string {
+	if len(source) >= minLength {
+		return source
+	}
+	return source + strings.Repeat(padStr, minLength-len(source))
+}
+
+func PadLeft(source, padStr string, minLength int) string {
+	if len(source) >= minLength {
+		return source
+	}
+	return strings.Repeat(padStr, minLength-len(source)) + source
+}
+
 func FormatDuration(duration time.Duration) string {
 	seconds := int(duration.Seconds())
 	if seconds < 60 {
