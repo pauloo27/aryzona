@@ -56,6 +56,28 @@ func mustGetOption(arg *command.CommandParameter) dc.CommandOption {
 	return nil
 }
 
+func mustGetOptionValue(arg *command.CommandParameter) dc.CommandOptionValue {
+	switch arg.Type.BaseType {
+	case parameters.TypeString:
+		return &dc.StringOption{
+			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
+			Choices: mustGetStringChoises(arg),
+		}
+	case parameters.TypeBool:
+		return &dc.BooleanOption{
+			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
+		}
+	case parameters.TypeInt:
+		return &dc.IntegerOption{
+			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
+			Choices: mustGetIntegerChoises(arg),
+		}
+	default:
+		logger.Fatalf("cannot find discord type for %s", arg.Type.BaseType.Name)
+	}
+	return nil
+}
+
 func registerCommands(bot ArkwBot) error {
 	s := bot.d.s
 
@@ -72,6 +94,21 @@ func registerCommands(bot ArkwBot) error {
 
 		slashCommand := dc.Command{
 			Name: cmd.Name, Description: cmd.Description,
+		}
+
+		for _, subCmd := range cmd.SubCommands {
+			subCmdOptions := []dc.CommandOptionValue{}
+			for _, subCmdParam := range subCmd.Parameters {
+				subCmdOptions = append(subCmdOptions, mustGetOptionValue(subCmdParam))
+			}
+			slashCommand.Options = append(
+				slashCommand.Options,
+				&dc.SubcommandOption{
+					OptionName:  subCmd.Name,
+					Description: subCmd.Description,
+					Options:     subCmdOptions,
+				},
+			)
 		}
 
 		for _, arg := range cmd.Parameters {
