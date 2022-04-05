@@ -8,7 +8,7 @@ require (
 	github.com/Pauloo27/searchtube v0.0.0-20211210213129-1828077b9033
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
 	github.com/buger/jsonparser v1.1.1
-	github.com/bwmarrin/discordgo v0.23.3-0.20211204170245-092735083ddf
+	github.com/bwmarrin/discordgo v0.24.0
 	github.com/diamondburned/arikawa/v3 v3.0.0-rc.3
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
