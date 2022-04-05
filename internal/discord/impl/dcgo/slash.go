@@ -60,6 +60,7 @@ func registerCommands(bot DcgoBot) error {
 						Description: arg.Description,
 						Type:        mustGetTypeFor(arg),
 						Choices:     mustGetChoisesFor(arg),
+						Required:    arg.Required,
 					})
 				}
 				slashCommand.Options = append(slashCommand.Options, &discordgo.ApplicationCommandOption{
