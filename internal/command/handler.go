@@ -10,6 +10,13 @@ func executeCommand(
 	command *Command, ctx *CommandContext,
 	adapter *Adapter, bot discord.BotAdapter,
 ) {
+	if command.Deferred && adapter.DeferResponse != nil {
+		err := adapter.DeferResponse()
+		if err != nil {
+			logger.Error("Cannot defer response:", err)
+		}
+	}
+
 	if command.Permission != nil {
 		if !command.Permission.Checker(ctx) {
 			ctx.Error(utils.Fmt("This command requires `%s`", command.Permission.Name))
@@ -38,13 +45,6 @@ func executeCommand(
 			logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
 		}
 	}()
-
-	if command.Deferred && adapter.DeferResponse != nil {
-		err := adapter.DeferResponse()
-		if err != nil {
-			logger.Error("Cannot defer response:", err)
-		}
-	}
 
 	if command.SubCommands == nil || (len(ctx.RawArgs) == 0 && command.Handler != nil) {
 		command.Handler(ctx)
