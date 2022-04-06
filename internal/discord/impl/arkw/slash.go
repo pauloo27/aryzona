@@ -152,14 +152,22 @@ func registerCommands(bot ArkwBot) error {
 		}
 
 		if data, ok := i.Data.(*dc.CommandInteraction); ok {
-			_, ok := command.GetCommandMap()[data.Name]
+			cmd, ok := command.GetCommandMap()[data.Name]
 			if !ok {
 				logger.Error("Invalid slash command interaction received:", data.Name)
 				return
 			}
 
 			var args []string
-			for _, option := range data.Options {
+			for i, option := range data.Options {
+				if i == 0 && cmd.SubCommands != nil {
+					args = append(args, option.Name)
+					for _, subCommandOption := range option.Options {
+						args = append(args, fmt.Sprintf("%v", subCommandOption.Value))
+					}
+					break
+				}
+
 				args = append(args, option.String())
 			}
 
