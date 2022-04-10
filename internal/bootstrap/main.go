@@ -20,7 +20,6 @@ import (
 
 	// import all command categories
 	_ "github.com/Pauloo27/aryzona/internal/command/categories/audio"
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/sysmon"
 	_ "github.com/Pauloo27/aryzona/internal/command/categories/utils"
 )
 
