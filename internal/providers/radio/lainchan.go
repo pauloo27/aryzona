@@ -3,8 +3,8 @@ package radio
 import (
 	"html"
 
-	"github.com/Pauloo27/aryzona/internal/providers/ffmpeg"
-	"github.com/buger/jsonparser"
+	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/tidwall/gjson"
 )
 
 type LainchanRadio struct {
@@ -44,11 +44,23 @@ func (r LainchanRadio) GetDirectURL() (string, error) {
 }
 
 func (r LainchanRadio) GetFullTitle() (title, artist string) {
-	data, err := ffmpeg.GetStreamMetadata(r.URL)
+	data, err := utils.Get("https://lainon.life/radio/status-json.xsl")
 	if err != nil {
 		return
 	}
-	title, _ = jsonparser.GetString(data, "format", "tags", "StreamTitle")
-	title = html.UnescapeString(title)
+
+	result := gjson.GetBytes(data, "icestats.source")
+	result.ForEach(func(key, value gjson.Result) bool {
+		if value.Get("listenurl").String() == r.URL {
+			title = html.UnescapeString(
+				value.Get("title").String(),
+			)
+			artist = html.UnescapeString(
+				value.Get("artist").String(),
+			)
+			return false
+		}
+		return true
+	})
 	return
 }
