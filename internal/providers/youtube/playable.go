@@ -30,6 +30,13 @@ func (YouTubePlayable) GetName() string {
 }
 
 func (p YouTubePlayable) GetShareURL() string {
+	if p.video == nil {
+		var err error
+		p.video, err = defaultClient.GetVideo(p.ID)
+		if err != nil {
+			return ""
+		}
+	}
 	return utils.Fmt("https://youtu.be/%s", p.video.ID)
 }
 
