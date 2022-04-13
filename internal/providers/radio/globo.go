@@ -24,6 +24,10 @@ func (r GloboRadio) GetName() string {
 	return r.Name
 }
 
+func (r GloboRadio) GetShareURL() string {
+	return ""
+}
+
 func (r GloboRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }

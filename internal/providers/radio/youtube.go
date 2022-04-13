@@ -35,6 +35,10 @@ func (r YouTubeRadio) GetName() string {
 	return r.Name
 }
 
+func (r YouTubeRadio) GetShareURL() string {
+	return r.playable.GetShareURL()
+}
+
 func (r YouTubeRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }

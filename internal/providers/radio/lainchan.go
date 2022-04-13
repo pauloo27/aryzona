@@ -31,6 +31,10 @@ func (r LainchanRadio) GetName() string {
 	return r.Name
 }
 
+func (r LainchanRadio) GetShareURL() string {
+	return "https://lainchan.org/radio"
+}
+
 func (r LainchanRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }

@@ -1,6 +1,9 @@
 package radio
 
 import (
+	"fmt"
+	"regexp"
+
 	"github.com/Pauloo27/aryzona/internal/providers/ffmpeg"
 	"github.com/buger/jsonparser"
 )
@@ -11,6 +14,10 @@ type HunterRadio struct {
 }
 
 var _ RadioChannel = &HunterRadio{}
+
+var (
+	hunterIDRe = regexp.MustCompile(`^https:\/\/hls\.hunter\.fm\/(\w+)\/\w+.m3u8$`)
+)
 
 func newHunterRadio(id, name, url string) HunterRadio {
 	return HunterRadio{
@@ -27,6 +34,15 @@ func (r HunterRadio) GetID() string {
 
 func (r HunterRadio) GetName() string {
 	return r.Name
+}
+
+func (r HunterRadio) GetShareURL() string {
+	matches := hunterIDRe.FindStringSubmatch(r.URL)
+	if len(matches) == 0 {
+		return ""
+	}
+	hunterID := matches[1]
+	return fmt.Sprintf("https://hunter.fm/%s/", hunterID)
 }
 
 func (r HunterRadio) GetThumbnailURL() (string, error) {

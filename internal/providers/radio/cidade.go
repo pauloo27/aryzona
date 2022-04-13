@@ -30,6 +30,10 @@ func (r CidadeRadio) GetName() string {
 	return r.Name
 }
 
+func (r CidadeRadio) GetShareURL() string {
+	return "https://radiocidade.fm/"
+}
+
 func (r CidadeRadio) GetThumbnailURL() (string, error) {
 	return "", nil
 }

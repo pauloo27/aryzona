@@ -22,10 +22,6 @@ func (c BaseRadio) IsLive() bool {
 	return true
 }
 
-func (c BaseRadio) GetShareURL() string {
-	return ""
-}
-
 func (BaseRadio) GetDuration() (time.Duration, error) {
 	return 0, nil
 }
