@@ -26,11 +26,6 @@ var PlayingCommand = command.Command{
 		embed := buildPlayableInfoEmbed(playing, vc).
 			WithTitle("Now playing: " + playing.GetName())
 
-		shareURL := playing.GetShareURL()
-		if shareURL != "" {
-			embed.WithURL(shareURL)
-		}
-
 		if vc.Queue.Size() > 1 {
 			sb := strings.Builder{}
 			next := vc.Queue.All()[1:]

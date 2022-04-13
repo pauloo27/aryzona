@@ -14,6 +14,11 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 	embed := discord.NewEmbed().
 		WithField("Title", title)
 
+	shareURL := playable.GetShareURL()
+	if shareURL != "" {
+		embed.WithURL(shareURL)
+	}
+
 	if artist != "" {
 		embed.WithFieldInline("Artist", artist)
 	}
