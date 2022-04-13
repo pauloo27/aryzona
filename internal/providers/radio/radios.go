@@ -21,7 +21,16 @@ func init() {
 			"pop", "Rádio Hunter Pop", "https://hls.hunter.fm/pop/192.m3u8",
 		),
 		newHunterRadio(
+			"pop2k", "Rádio Hunter Pop 2k", "https://hls.hunter.fm/pop2k/192.m3u8",
+		),
+		newHunterRadio(
 			"rock", "Rádio Hunter Rock", "https://hls.hunter.fm/rock/192.m3u8",
+		),
+		newHunterRadio(
+			"sertanejo", "Rádio Hunter Sertanejo", "https://hls.hunter.fm/sertanejo/192.m3u8",
+		),
+		newHunterRadio(
+			"smash", "Rádio Hunter Smash", "https://hls.hunter.fm/smash/192.m3u8",
 		),
 		newHunterRadio(
 			"80s", "Rádio Hunter 80s", "https://hls.hunter.fm/80s/192.m3u8",
