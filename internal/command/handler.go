@@ -1,6 +1,8 @@
 package command
 
 import (
+	"time"
+
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
@@ -86,13 +88,14 @@ func HandleCommand(
 	}
 
 	ctx := &CommandContext{
-		Bot:      bot,
-		RawArgs:  args,
-		AuthorID: adapter.AuthorID,
-		UsedName: commandName,
-		GuildID:  adapter.GuildID,
-		Locals:   make(map[string]interface{}),
-		Command:  command,
+		Bot:       bot,
+		RawArgs:   args,
+		AuthorID:  adapter.AuthorID,
+		UsedName:  commandName,
+		GuildID:   adapter.GuildID,
+		Locals:    make(map[string]interface{}),
+		Command:   command,
+		startDate: time.Now(),
 	}
 
 	// attach adapter

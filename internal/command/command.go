@@ -1,6 +1,9 @@
 package command
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
@@ -11,6 +14,7 @@ type CommandPermissionChecker func(*CommandContext) bool
 type CommandValidationChecker func(*CommandContext) (bool, string)
 
 type CommandContext struct {
+	startDate         time.Time
 	RawArgs           []string
 	Args              []interface{}
 	Bot               discord.BotAdapter
@@ -108,6 +112,13 @@ func (ctx *CommandContext) Embed(embed *discord.Embed) {
 }
 
 func (ctx *CommandContext) EmbedReturning(embed *discord.Embed) error {
+	processTime := time.Since(ctx.startDate).Truncate(time.Second)
+	duration := fmt.Sprintf("Took %v", processTime)
+	if embed.Footer != "" {
+		embed.Footer = fmt.Sprintf("%s • %s", embed.Footer, duration)
+	} else {
+		embed.Footer = duration
+	}
 	return ctx.ReplyEmbed(embed)
 }
 
