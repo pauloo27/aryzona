@@ -34,8 +34,9 @@ var HelpCommand = command.Command{
 }
 
 func listCommands(ctx *command.CommandContext) {
+	embed := discord.NewEmbed()
 	sb := strings.Builder{}
-	sb.WriteString("List of commands:\n")
+	embed.WithTitle("List of commands")
 	lastCategory := ""
 	for _, cmd := range command.GetCommandList() {
 		if lastCategory != cmd.GetCategory().Name {
@@ -55,12 +56,12 @@ func listCommands(ctx *command.CommandContext) {
 		))
 		lastCategory = cmd.GetCategory().Name
 	}
-	sb.WriteString(
-		fmt.Sprintf("\n_For more information on a command, use `%s%s <command>`_",
+	embed.WithFooter(
+		fmt.Sprintf("For more information on a command, use `%s%s <command>`",
 			command.Prefix, ctx.UsedName,
 		),
 	)
-	ctx.Success(sb.String())
+	ctx.SuccessEmbed(embed.WithDescription(sb.String()))
 }
 
 func helpForCommand(ctx *command.CommandContext) {
