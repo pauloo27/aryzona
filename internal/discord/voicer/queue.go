@@ -1,11 +1,11 @@
 package voicer
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/aryzona/internal/utils/scheduler"
 )
 
@@ -21,7 +21,7 @@ func (v *Voicer) registerListeners() {
 		if v.IsPlaying() {
 			return
 		}
-		scheduler.Unschedule(utils.Fmt("empty_queue_%s", *v.GuildID))
+		scheduler.Unschedule(fmt.Sprintf("empty_queue_%s", *v.GuildID))
 		_ = v.Start()
 	}
 	v.Queue.On(queue.EventAppend, start)
@@ -68,5 +68,5 @@ func (v *Voicer) scheduleEmptyQueue() {
 			_ = v.Disconnect()
 		}
 	})
-	scheduler.Schedule(utils.Fmt("empty_queue_%s", *v.GuildID), task)
+	scheduler.Schedule(fmt.Sprintf("empty_queue_%s", *v.GuildID), task)
 }

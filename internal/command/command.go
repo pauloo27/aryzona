@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -96,7 +95,7 @@ func (ctx *CommandContext) Success(message string) {
 }
 
 func (ctx *CommandContext) SuccessReturning(message string) error {
-	return ctx.Reply(utils.Fmt(":green_square: %s", message))
+	return ctx.Reply(fmt.Sprintf(":green_square: %s", message))
 }
 
 func (ctx *CommandContext) Error(message string) {
@@ -104,7 +103,7 @@ func (ctx *CommandContext) Error(message string) {
 }
 
 func (ctx *CommandContext) ErrorReturning(message string) error {
-	return ctx.Reply(utils.Fmt(":red_square: %s", message))
+	return ctx.Reply(fmt.Sprintf(":red_square: %s", message))
 }
 
 func (ctx *CommandContext) Embed(embed *discord.Embed) {

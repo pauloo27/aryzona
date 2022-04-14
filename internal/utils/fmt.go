@@ -13,10 +13,6 @@ func Pluralize(i int, singular, plural string) string {
 	return plural
 }
 
-func Fmt(format string, v ...interface{}) string {
-	return fmt.Sprintf(format, v...)
-}
-
 func PadRigth(source, padStr string, minLength int) string {
 	if len(source) >= minLength {
 		return source
@@ -45,10 +41,10 @@ func FormatDuration(duration time.Duration) string {
 		if i == 0 {
 			return ""
 		}
-		return Fmt("%d %s", i, Pluralize(i, singular, plural))
+		return fmt.Sprintf("%d %s", i, Pluralize(i, singular, plural))
 	}
 
-	return strings.TrimSpace(Fmt(
+	return strings.TrimSpace(fmt.Sprintf(
 		"%s %s %s",
 		stringfy(days, "day", "days"),
 		stringfy(hours, "hour", "hours"),

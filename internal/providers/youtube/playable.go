@@ -1,10 +1,10 @@
 package youtube
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/kkdai/youtube/v2"
 )
 
@@ -37,7 +37,7 @@ func (p YouTubePlayable) GetShareURL() string {
 			return ""
 		}
 	}
-	return utils.Fmt("https://youtu.be/%s", p.video.ID)
+	return fmt.Sprintf("https://youtu.be/%s", p.video.ID)
 }
 
 func (p YouTubePlayable) IsLive() bool {
@@ -110,7 +110,7 @@ func GetPlaylist(playlistURL string) (YouTubePlayablePlaylist, error) {
 			Author:       vid.Author,
 			Duration:     vid.Duration,
 			Live:         vid.Duration == 0,
-			ThumbnailURL: utils.Fmt("https://img.youtube.com/vi/%s/mqdefault.jpg", vid.ID),
+			ThumbnailURL: fmt.Sprintf("https://img.youtube.com/vi/%s/mqdefault.jpg", vid.ID),
 			video:        nil, // will be lazy loaded
 		}
 	}

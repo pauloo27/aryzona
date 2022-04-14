@@ -1,10 +1,10 @@
 package command
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -21,7 +21,7 @@ func executeCommand(
 
 	if command.Permission != nil {
 		if !command.Permission.Checker(ctx) {
-			ctx.Error(utils.Fmt("This command requires `%s`", command.Permission.Name))
+			ctx.Error(fmt.Sprintf("This command requires `%s`", command.Permission.Name))
 			return
 		}
 	}
@@ -56,7 +56,7 @@ func executeCommand(
 			subCommandNames = append(subCommandNames, subCommand.Name)
 		}
 		if len(ctx.RawArgs) == 0 {
-			ctx.Error(utils.Fmt("Missing sub command. Available sub commands: %v", subCommandNames))
+			ctx.Error(fmt.Sprintf("Missing sub command. Available sub commands: %v", subCommandNames))
 			return
 		}
 		subCommandName := ctx.RawArgs[0]
@@ -74,7 +74,7 @@ func executeCommand(
 				}
 			}
 		}
-		ctx.Error(utils.Fmt("Unknown sub command. Available sub commands: %v", subCommandNames))
+		ctx.Error(fmt.Sprintf("Unknown sub command. Available sub commands: %v", subCommandNames))
 	}
 }
 

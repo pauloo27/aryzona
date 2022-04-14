@@ -22,7 +22,7 @@ var UptimeCommand = command.Command{
 			WithField(":gear: Implementation", discord.Bot.Implementation()).
 			WithField(
 				":computer: System info",
-				utils.Fmt("%s %s %s",
+				fmt.Sprintf("%s %s %s",
 					runtime.GOOS, runtime.GOARCH, runtime.Version(),
 				)).
 			WithField(":star: Started at", discord.Bot.StartedAt().Format("2 Jan, 15:04"))

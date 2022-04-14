@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/providers/animal"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 var DogCommand = command.Command{
@@ -12,7 +13,7 @@ var DogCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomDog()
 		if err != nil {
-			ctx.Error(utils.Fmt("An error occurred:\n %v", err))
+			ctx.Error(fmt.Sprintf("An error occurred:\n %v", err))
 			return
 		}
 		ctx.Success(url)

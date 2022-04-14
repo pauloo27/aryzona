@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -8,7 +9,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 var ScoreCommand = command.Command{
@@ -44,7 +44,7 @@ func ListLiveMatches(ctx *command.CommandContext) {
 	}
 	desc := strings.Builder{}
 	for _, match := range matches {
-		desc.WriteString(utils.Fmt("**%s** ||(%d) x (%d)|| **%s**: _%s_\n",
+		desc.WriteString(fmt.Sprintf("**%s** ||(%d) x (%d)|| **%s**: _%s_\n",
 			match.T1.Name, match.T1.Score,
 			match.T2.Score, match.T2.Name,
 			match.ID,
@@ -54,7 +54,7 @@ func ListLiveMatches(ctx *command.CommandContext) {
 		discord.NewEmbed().
 			WithTitle("⚽ Live matches:").
 			WithFooter(
-				utils.Fmt("Use `%s%s <match id or team name>` to see details",
+				fmt.Sprintf("Use `%s%s <match id or team name>` to see details",
 					command.Prefix, ctx.UsedName,
 				)).
 			WithDescription(desc.String()),
@@ -96,7 +96,7 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 		for _, event := range match.Events {
 			text := event.Text
 
-			desc.WriteString(utils.Fmt(" -> %d' %s\n", event.Min, text))
+			desc.WriteString(fmt.Sprintf(" -> %d' %s\n", event.Min, text))
 		}
 	}
 
@@ -107,7 +107,7 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 
 	ctx.Embed(
 		discord.NewEmbed().
-			WithDescription(utils.Fmt("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
+			WithDescription(fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
 			WithColor(color).
 			WithField("Time", match.Time).
 			WithFieldInline(match.T1.Name, strconv.Itoa(match.T1.Score)).

@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 var PingCommand = command.Command{
@@ -36,7 +37,7 @@ func formatAPILatency(bot discord.BotAdapter) string {
 	} else {
 		icon = "🔴"
 	}
-	return utils.Fmt(
+	return fmt.Sprintf(
 		"%s %d ms",
 		icon,
 		ms,

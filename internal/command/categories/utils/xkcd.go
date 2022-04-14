@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
@@ -56,11 +58,11 @@ func sendComic(ctx *command.CommandContext, comic *xkcd.Comic, err error) {
 
 	ctx.SuccessEmbed(
 		discord.NewEmbed().
-			WithTitle(utils.Fmt(
+			WithTitle(fmt.Sprintf(
 				"#%d - %s (%s/%s/%s)", comic.Num, comic.SafeTitle,
 				comic.Year, utils.PadLeft(comic.Month, "0", 2), utils.PadLeft(comic.Day, "0", 2)),
 			).
-			WithURL(utils.Fmt("https://www.explainxkcd.com/wiki/index.php/%d", comic.Num)).
+			WithURL(fmt.Sprintf("https://www.explainxkcd.com/wiki/index.php/%d", comic.Num)).
 			WithImage(comic.Img).
 			WithFooter(comic.Alt),
 	)

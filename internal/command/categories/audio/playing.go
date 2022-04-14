@@ -1,13 +1,13 @@
 package audio
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 const (
@@ -36,15 +36,15 @@ var PlayingCommand = command.Command{
 			for _, item := range next[:limit] {
 				title, artist := item.GetFullTitle()
 				if artist == "" {
-					sb.WriteString(utils.Fmt("  -> %s\n", title))
+					sb.WriteString(fmt.Sprintf("  -> %s\n", title))
 				} else {
-					sb.WriteString(utils.Fmt("  -> %s - %s\n", artist, title))
+					sb.WriteString(fmt.Sprintf("  -> %s - %s\n", artist, title))
 				}
 			}
 			if len(next) > maxNextItems {
 				sb.WriteString("_... and more ..._")
 			}
-			embed.WithField(utils.Fmt("**Coming next (%d):**", len(next)), sb.String())
+			embed.WithField(fmt.Sprintf("**Coming next (%d):**", len(next)), sb.String())
 		}
 
 		ctx.SuccessEmbed(embed)

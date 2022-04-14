@@ -1,6 +1,7 @@
 package listeners
 
 import (
+	"fmt"
 	"os"
 	"os/user"
 	"strconv"
@@ -9,7 +10,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/providers/animal"
 	"github.com/Pauloo27/aryzona/internal/providers/git"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -64,9 +64,9 @@ func createStartedEmbed(guildCount int) *discord.Embed {
 	}
 
 	return discord.NewEmbed().
-		WithTitle(utils.Fmt("I've just started as %s@%s", userName, hostName)).
+		WithTitle(fmt.Sprintf("I've just started as %s@%s", userName, hostName)).
 		WithColor(0xC0FFEE).
 		WithImage(dogImage).
 		WithField("Guild count", strconv.Itoa(guildCount)).
-		WithField("Last commit", utils.Fmt("**[%s](%s/commit/%s)**", git.CommitMessage, git.RemoteRepo, git.CommitHash))
+		WithField("Last commit", fmt.Sprintf("**[%s](%s/commit/%s)**", git.CommitMessage, git.RemoteRepo, git.CommitHash))
 }

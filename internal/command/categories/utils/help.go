@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -38,24 +39,24 @@ func listCommands(ctx *command.CommandContext) {
 	lastCategory := ""
 	for _, cmd := range command.GetCommandList() {
 		if lastCategory != cmd.GetCategory().Name {
-			sb.WriteString(utils.Fmt("\n**%s %s**:\n", cmd.GetCategory().Emoji, cmd.GetCategory().Name))
+			sb.WriteString(fmt.Sprintf("\n**%s %s**:\n", cmd.GetCategory().Emoji, cmd.GetCategory().Name))
 		}
 		var permission string
 		if cmd.Permission != nil {
-			permission = utils.Fmt("(_requires you to... %s_)", cmd.Permission.Name)
+			permission = fmt.Sprintf("(_requires you to... %s_)", cmd.Permission.Name)
 		}
 		var aliases string
 		if len(cmd.Aliases) > 0 {
-			aliases = utils.Fmt("(aka %s)", strings.Join(cmd.Aliases, ", "))
+			aliases = fmt.Sprintf("(aka %s)", strings.Join(cmd.Aliases, ", "))
 		}
-		sb.WriteString(utils.Fmt(
+		sb.WriteString(fmt.Sprintf(
 			" - `%s%s` %s: **%s** %s\n",
 			command.Prefix, cmd.Name, aliases, cmd.Description, permission,
 		))
 		lastCategory = cmd.GetCategory().Name
 	}
 	sb.WriteString(
-		utils.Fmt("\n_For more information on a command, use `%s%s <command>`_",
+		fmt.Sprintf("\n_For more information on a command, use `%s%s <command>`_",
 			command.Prefix, ctx.UsedName,
 		),
 	)
@@ -89,12 +90,12 @@ func helpForCommand(ctx *command.CommandContext) {
 
 	fullCommandName := rootCmd.Name
 	if rootCmd != cmd {
-		fullCommandName = utils.Fmt("%s %s", rootCmd.Name, cmd.Name)
+		fullCommandName = fmt.Sprintf("%s %s", rootCmd.Name, cmd.Name)
 	}
 
 	embed := discord.NewEmbed().
 		WithTitle(fullCommandName).
-		WithField("Category", utils.Fmt("%s %s", rootCmd.GetCategory().Emoji, rootCmd.GetCategory().Name)).
+		WithField("Category", fmt.Sprintf("%s %s", rootCmd.GetCategory().Emoji, rootCmd.GetCategory().Name)).
 		WithDescription(cmd.Description)
 
 	if cmd.Aliases != nil {
@@ -134,7 +135,7 @@ func helpForCommand(ctx *command.CommandContext) {
 			"Parameters",
 			strings.Join(
 				slice.Map(cmd.Parameters, func(param *command.CommandParameter) string {
-					return utils.Fmt("%s: %s (%s)",
+					return fmt.Sprintf("%s: %s (%s)",
 						param.Name, param.Description,
 						utils.ConditionalString(param.Required, "required", "not required"))
 				}),

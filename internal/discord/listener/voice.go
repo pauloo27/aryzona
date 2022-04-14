@@ -1,12 +1,12 @@
 package listeners
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/aryzona/internal/utils/scheduler"
 	"github.com/Pauloo27/logger"
 )
@@ -58,7 +58,7 @@ func onConnect(bot discord.BotAdapter, ch discord.VoiceChannel) {
 		return
 	}
 
-	scheduler.Unschedule(utils.Fmt("voice_disconnect_%s", ch.Guild().ID()))
+	scheduler.Unschedule(fmt.Sprintf("voice_disconnect_%s", ch.Guild().ID()))
 }
 
 func onDisconnect(bot discord.BotAdapter, ch discord.VoiceChannel, v *voicer.Voicer) {
@@ -75,5 +75,5 @@ func onDisconnect(bot discord.BotAdapter, ch discord.VoiceChannel, v *voicer.Voi
 		},
 	)
 
-	scheduler.Schedule(utils.Fmt("voice_disconnect_%s", ch.Guild().ID()), task)
+	scheduler.Schedule(fmt.Sprintf("voice_disconnect_%s", ch.Guild().ID()), task)
 }

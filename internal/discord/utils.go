@@ -1,13 +1,12 @@
 package discord
 
 import (
+	"fmt"
 	"os"
-
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 func AsMention(userID string) string {
-	return utils.Fmt("<@%s>", userID)
+	return fmt.Sprintf("<@%s>", userID)
 }
 
 func OpenChatWithOwner() (Channel, error) {

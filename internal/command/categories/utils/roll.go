@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/rand"
 	"errors"
+	"fmt"
 	"math/big"
 
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -45,9 +46,9 @@ var RollCommand = command.Command{
 		}
 
 		embed := discord.NewEmbed().
-			WithTitle(utils.Fmt(":game_die: You got %d", result)).
+			WithTitle(fmt.Sprintf(":game_die: You got %d", result)).
 			WithDescription(
-				utils.Fmt("You rolled %s (%d %s with %d %s)\n%v -> %d\n_Gif by [Tenor](https://tenor.com/)_",
+				fmt.Sprintf("You rolled %s (%d %s with %d %s)\n%v -> %d\n_Gif by [Tenor](https://tenor.com/)_",
 					d.String(),
 					d.Dices, utils.Pluralize(d.Dices, "dice", "dices"),
 					d.Sides, utils.Pluralize(d.Sides, "side", "sides"),

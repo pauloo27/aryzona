@@ -2,6 +2,7 @@ package audio
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -61,7 +62,7 @@ var RadioCommand = command.Command{
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
-				ctx.Error(utils.Fmt("Cannot play stuff: %v", err))
+				ctx.Error(fmt.Sprintf("Cannot play stuff: %v", err))
 				logger.Error(err)
 				return
 			}
@@ -78,7 +79,7 @@ func listRadios(ctx *command.CommandContext, title string) {
 	}
 
 	embed.WithFooter(
-		utils.Fmt(
+		fmt.Sprintf(
 			"Start a radio with '%s%s <name>' and '%sstop' when you are tired of it!",
 			command.Prefix, ctx.UsedName, command.Prefix,
 		),

@@ -5,7 +5,6 @@ import (
 	"runtime/debug"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -24,9 +23,9 @@ func listenToLog() {
 
 		embed := discord.NewEmbed().
 			WithFieldInline("Message", fmt.Sprintln(params...)).
-			WithDescription(utils.Fmt("```go\n%s\n```", string(debug.Stack()))).
+			WithDescription(fmt.Sprintf("```go\n%s\n```", string(debug.Stack()))).
 			WithColor(0xff5555).
-			WithTitle(utils.Fmt("Oops! [%s]", level.Name))
+			WithTitle(fmt.Sprintf("Oops! [%s]", level.Name))
 
 		_, err = discord.Bot.SendEmbedMessage(c.ID(), embed)
 		if err != nil {

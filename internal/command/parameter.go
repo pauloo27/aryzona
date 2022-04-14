@@ -3,8 +3,6 @@ package command
 import (
 	"errors"
 	"fmt"
-
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 var (
@@ -19,7 +17,7 @@ func NewErrRequiredParameter(param *CommandParameter) error {
 		if param.RequiredMessage != "" {
 			message = param.RequiredMessage
 		} else {
-			message = utils.Fmt("parameter `%s` (type %s) missing", param.Description, param.Type.Name)
+			message = fmt.Sprintf("parameter `%s` (type %s) missing", param.Description, param.Type.Name)
 		}
 	}
 	return fmt.Errorf("%w: %s", ErrRequireParameter, message)
@@ -28,7 +26,7 @@ func NewErrRequiredParameter(param *CommandParameter) error {
 func NewErrInvalidValue(param *CommandParameter) error {
 	var message string
 	if param != nil {
-		message = utils.Fmt("invalid value for `%s`. Valid  values are: `%s`", param.Description, param.GetValidValues())
+		message = fmt.Sprintf("invalid value for `%s`. Valid  values are: `%s`", param.Description, param.GetValidValues())
 	}
 	return fmt.Errorf("%w: %s", ErrInvalidValue, message)
 }

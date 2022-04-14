@@ -1,9 +1,9 @@
 package command
 
 import (
+	"fmt"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -21,11 +21,11 @@ func validateCommand(command *Command) string {
 		return "One command has no name"
 	}
 	if command.Description == "" {
-		return utils.Fmt("Command %s has no description", command.Name)
+		return fmt.Sprintf("Command %s has no description", command.Name)
 	}
 	for _, arg := range command.Parameters {
 		if arg.Name == "" || len(strings.Split(arg.Name, " ")) != 1 {
-			return utils.Fmt("Command %s has an invalid parameter name (%s)", command.Name, arg.Name)
+			return fmt.Sprintf("Command %s has an invalid parameter name (%s)", command.Name, arg.Name)
 		}
 	}
 	return ""

@@ -2,6 +2,7 @@ package audio
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -59,7 +60,7 @@ var PlayCommand = command.Command{
 		} else {
 			result, err = youtube.AsPlayable(resultURL)
 			if err != nil {
-				ctx.Error(utils.Fmt("Something went wrong when getting the video to play: %v", err))
+				ctx.Error(fmt.Sprintf("Something went wrong when getting the video to play: %v", err))
 				logger.Error(err)
 				return
 			}
@@ -80,7 +81,7 @@ var PlayCommand = command.Command{
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
-				ctx.Error(utils.Fmt("Cannot play stuff: %v", err))
+				ctx.Error(fmt.Sprintf("Cannot play stuff: %v", err))
 				logger.Error(err)
 				return
 			}
