@@ -95,7 +95,7 @@ func (ctx *CommandContext) Success(message string) {
 }
 
 func (ctx *CommandContext) SuccessReturning(message string) error {
-	return ctx.Reply(fmt.Sprintf(":green_square: %s", message))
+	return ctx.SuccessEmbedReturning(discord.NewEmbed().WithDescription(message))
 }
 
 func (ctx *CommandContext) Error(message string) {
@@ -103,7 +103,7 @@ func (ctx *CommandContext) Error(message string) {
 }
 
 func (ctx *CommandContext) ErrorReturning(message string) error {
-	return ctx.Reply(fmt.Sprintf(":red_square: %s", message))
+	return ctx.ErrorEmbedReturning(discord.NewEmbed().WithDescription(message))
 }
 
 func (ctx *CommandContext) Embed(embed *discord.Embed) {
