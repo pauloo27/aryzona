@@ -47,6 +47,6 @@ var LyricCommand = command.Command{
 			logger.Error(err)
 			return
 		}
-		ctx.Success(result)
+		_ = ctx.Reply(result)
 	},
 }
