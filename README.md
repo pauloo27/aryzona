@@ -11,9 +11,8 @@ The one and only Discord Bot that is proudly Flamenguista.
 - play Flamengo's matches live (using the `!radio globo-rj`)
 - fetch live soccer scores (`!live`)
 - random animals (`!dog`, `!cat`, `!fox`)
-- run bash commands in the host (`!bash`)
 - play radios: lofi, rock, pisadinha, pop, cafe, swing and more (`!radio`)
-- play youtube videos (`!play`, but just sometimes cuz we respect the law)
+- play youtube videos (`!play`)
 - and a few more stuff
 
 ## How to add to your server
