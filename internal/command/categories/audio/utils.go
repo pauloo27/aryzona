@@ -1,11 +1,12 @@
 package audio
 
 import (
-	"time"
+	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *discord.Embed {
@@ -23,6 +24,8 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		embed.WithFieldInline("Artist", artist)
 	}
 
+	embed.WithFieldInline("Source", playable.GetName())
+
 	thumbnailURL, err := playable.GetThumbnailURL()
 	if err == nil && thumbnailURL != "" {
 		embed.WithThumbnail(thumbnailURL)
@@ -31,18 +34,20 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 	if playable.IsLive() {
 		embed.WithFieldInline("Duration", "**🔴 LIVE**")
 	} else {
-		if vc != nil {
-			if position, err := vc.GetPosition(); err == nil {
-				embed.WithFieldInline("Position", position.Truncate(time.Second).String())
-			}
-		}
-		duration, err := playable.GetDuration()
-		if err == nil {
-			embed.WithFieldInline("Duration", duration.String())
+		position, posErr := vc.GetPosition()
+		duration, durErr := playable.GetDuration()
+
+		if posErr == nil && durErr == nil {
+			embed.WithField("Duration", fmt.Sprintf("%s/%s",
+				utils.ShortDuration(position),
+				utils.ShortDuration(duration),
+			))
+		} else if durErr == nil {
+			embed.WithField("Duration", utils.ShortDuration(duration))
+		} else if posErr == nil {
+			embed.WithField("Position", utils.ShortDuration(position))
 		}
 	}
-
-	embed.WithFieldInline("Source", playable.GetName())
 
 	return embed
 }

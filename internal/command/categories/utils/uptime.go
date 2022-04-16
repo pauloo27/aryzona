@@ -18,7 +18,7 @@ var UptimeCommand = command.Command{
 		uptime := time.Since(*discord.Bot.StartedAt())
 		embed := discord.NewEmbed().
 			WithTitle("Bot uptime").
-			WithField(":timer: Uptime", utils.FormatDuration(uptime)).
+			WithField(":timer: Uptime", utils.DurationAsText(uptime)).
 			WithField(":gear: Implementation", discord.Bot.Implementation()).
 			WithField(
 				":computer: System info",

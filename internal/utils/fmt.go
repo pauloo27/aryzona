@@ -27,7 +27,21 @@ func PadLeft(source, padStr string, minLength int) string {
 	return strings.Repeat(padStr, minLength-len(source)) + source
 }
 
-func FormatDuration(duration time.Duration) string {
+func ShortDuration(duration time.Duration) string {
+	durationSec := int(duration.Seconds())
+
+	hours := durationSec / 3600
+	minutes := (durationSec % 3600) / 60
+	seconds := durationSec % 60
+
+	if hours != 0 {
+		return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+	}
+
+	return fmt.Sprintf("%02d:%02d", minutes, seconds)
+}
+
+func DurationAsText(duration time.Duration) string {
 	seconds := int(duration.Seconds())
 	if seconds < 60 {
 		return "less than a minute"
