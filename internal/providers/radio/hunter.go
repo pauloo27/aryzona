@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/Pauloo27/aryzona/internal/providers/ffmpeg"
-	"github.com/buger/jsonparser"
+	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/tidwall/gjson"
 )
 
 type HunterRadio struct {
@@ -58,11 +58,26 @@ func (r HunterRadio) GetDirectURL() (string, error) {
 }
 
 func (r HunterRadio) GetFullTitle() (title, artist string) {
-	data, err := ffmpeg.GetStreamMetadata(r.URL)
+	matches := hunterIDRe.FindStringSubmatch(r.URL)
+	if len(matches) == 0 {
+		return
+	}
+	hunterID := matches[1]
+
+	data, err := utils.Get("https://api.hunter.fm/stations/")
 	if err != nil {
 		return
 	}
-	title, _ = jsonparser.GetString(data, "streams", "[0]", "tags", "title")
-	artist, _ = jsonparser.GetString(data, "streams", "[0]", "tags", "artist")
+
+	result := gjson.ParseBytes(data)
+	result.ForEach(func(key, value gjson.Result) bool {
+		if value.Get("url").String() == hunterID {
+			title = value.Get("live.now.name").String()
+			artist = value.Get("live.now.singers.0").String()
+			return false
+		}
+		return true
+	})
+
 	return
 }
