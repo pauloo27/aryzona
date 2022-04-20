@@ -23,7 +23,7 @@ func NewCache[T any](resolve func(string) (T, time.Duration)) *Cache[T] {
 func (c *Cache[T]) Get(key string) (entry CacheEntry[T], cached bool) {
 	entry, found := c.store[key]
 	if found {
-		if time.Since(entry.CachedAt) > entry.TTL {
+		if time.Since(entry.CachedAt) <= entry.TTL {
 			return entry, true
 		}
 	}
