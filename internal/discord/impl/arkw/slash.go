@@ -197,7 +197,7 @@ func registerCommands(bot ArkwBot) error {
 				},
 			}
 
-			command.HandleCommand(data.Name, args, &adapter, bot)
+			command.HandleCommand(data.Name, args, &adapter, bot, command.CommandTriggerSlash)
 		}
 	})
 

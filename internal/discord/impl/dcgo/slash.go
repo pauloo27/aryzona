@@ -170,7 +170,7 @@ func registerCommands(bot DcgoBot) error {
 				return respond("", embed)
 			},
 		}
-		command.HandleCommand(commandName, args, &event, bot)
+		command.HandleCommand(commandName, args, &event, bot, command.CommandTriggerSlash)
 	})
 
 	return nil

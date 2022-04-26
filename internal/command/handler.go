@@ -81,6 +81,7 @@ func executeCommand(
 func HandleCommand(
 	commandName string, args []string,
 	adapter *Adapter, bot discord.BotAdapter,
+	trigger CommandTrigger,
 ) {
 	command, ok := commandMap[commandName]
 	if !ok {
@@ -96,6 +97,7 @@ func HandleCommand(
 		Locals:    make(map[string]interface{}),
 		Command:   command,
 		startDate: time.Now(),
+		Trigger:   trigger,
 	}
 
 	// attach adapter

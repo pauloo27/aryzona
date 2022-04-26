@@ -50,5 +50,5 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 			return err
 		},
 	}
-	command.HandleCommand(strings.ToLower(rawCommand), args, &event, bot)
+	command.HandleCommand(strings.ToLower(rawCommand), args, &event, bot, command.CommandTriggerMessage)
 }

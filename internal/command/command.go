@@ -12,6 +12,13 @@ type CommandHandler func(*CommandContext)
 type CommandPermissionChecker func(*CommandContext) bool
 type CommandValidationChecker func(*CommandContext) (bool, string)
 
+type CommandTrigger string
+
+const (
+	CommandTriggerSlash   CommandTrigger = "SLASH"
+	CommandTriggerMessage CommandTrigger = "MESSAGE"
+)
+
 type CommandContext struct {
 	startDate         time.Time
 	RawArgs           []string
@@ -23,6 +30,7 @@ type CommandContext struct {
 	Reply             func(string) error
 	ReplyEmbed        func(*discord.Embed) error
 	Command           *Command
+	Trigger           CommandTrigger
 }
 
 type CommandPermission struct {
