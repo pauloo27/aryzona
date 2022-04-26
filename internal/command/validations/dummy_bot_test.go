@@ -61,7 +61,7 @@ func (DummyBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.
 	return nil, nil
 }
 
-func (DummyBot) OpenChannelWithUser(userID string) (model.Channel, error) {
+func (DummyBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 	return nil, nil
 }
 func (DummyBot) OpenGuild(guildID string) (model.Guild, error) {

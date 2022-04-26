@@ -1,10 +1,19 @@
 package model
 
-type Channel interface {
+type ChannelType string
+
+const (
+	ChannelTypeGuild  ChannelType = "GUILD"
+	ChannelTypeDirect ChannelType = "DIRECT"
+)
+
+type TextChannel interface {
 	ID() string
 	Guild() Guild
+	Type() ChannelType
 }
 
 type VoiceChannel interface {
-	Channel
+	ID() string
+	Guild() Guild
 }

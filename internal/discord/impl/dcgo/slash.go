@@ -6,6 +6,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 	"github.com/bwmarrin/discordgo"
 )
@@ -170,7 +171,13 @@ func registerCommands(bot DcgoBot) error {
 				return respond("", embed)
 			},
 		}
-		command.HandleCommand(commandName, args, &event, bot, command.CommandTriggerSlash)
+		cType := model.ChannelTypeGuild
+		if i.GuildID == "" {
+			cType = model.ChannelTypeDirect
+		}
+		command.HandleCommand(commandName, args, &event, bot, command.CommandTriggerSlash,
+			buildChannel(i.ChannelID, buildGuild(i.GuildID), cType),
+		)
 	})
 
 	return nil

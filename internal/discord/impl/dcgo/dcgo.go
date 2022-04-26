@@ -100,7 +100,11 @@ func (b DcgoBot) Listen(eventType event.EventType, listener interface{}) error {
 		}
 	case event.MessageCreated:
 		l = func(s *discordgo.Session, m *discordgo.MessageCreate) {
-			msg := buildMessage(m.Message.ID, buildChannel(m.ChannelID, buildGuild(m.GuildID)), buildUser(m.Author.ID), m.Content)
+			cType := model.ChannelTypeGuild
+			if m.GuildID == "" {
+				cType = model.ChannelTypeDirect
+			}
+			msg := buildMessage(m.Message.ID, buildChannel(m.ChannelID, buildGuild(m.GuildID), cType), buildUser(m.Author.ID), m.Content)
 			listener.(func(discord.BotAdapter, model.Message))(b, msg)
 		}
 	case event.VoiceStateUpdated:
@@ -137,7 +141,11 @@ func (b DcgoBot) SendReplyMessage(m model.Message, content string) (model.Messag
 	if err != nil {
 		return nil, err
 	}
-	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
+	cType := model.ChannelTypeGuild
+	if msg.GuildID == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
 }
 
 func (b DcgoBot) SendMessage(channelID string, message string) (model.Message, error) {
@@ -145,7 +153,11 @@ func (b DcgoBot) SendMessage(channelID string, message string) (model.Message, e
 	if err != nil {
 		return nil, err
 	}
-	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
+	cType := model.ChannelTypeGuild
+	if msg.GuildID == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
 }
 
 func (b DcgoBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (model.Message, error) {
@@ -160,7 +172,11 @@ func (b DcgoBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (m
 	if err != nil {
 		return nil, err
 	}
-	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
+	cType := model.ChannelTypeGuild
+	if msg.GuildID == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
 }
 
 func (b DcgoBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.Message, error) {
@@ -168,15 +184,19 @@ func (b DcgoBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model
 	if err != nil {
 		return nil, err
 	}
-	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID)), buildUser(msg.Author.ID), msg.Content), nil
+	cType := model.ChannelTypeGuild
+	if msg.GuildID == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
 }
 
-func (b DcgoBot) OpenChannelWithUser(userID string) (model.Channel, error) {
+func (b DcgoBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 	c, err := b.d.s.UserChannelCreate(userID)
 	if err != nil {
 		return nil, err
 	}
-	return buildChannel(c.ID, buildGuild(c.GuildID)), nil
+	return buildChannel(c.ID, buildGuild(c.GuildID), model.ChannelTypeDirect), nil
 }
 
 func (b DcgoBot) Latency() time.Duration {

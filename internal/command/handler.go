@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 )
 
@@ -81,7 +82,7 @@ func executeCommand(
 func HandleCommand(
 	commandName string, args []string,
 	adapter *Adapter, bot discord.BotAdapter,
-	trigger CommandTrigger,
+	trigger CommandTrigger, channel model.TextChannel,
 ) {
 	command, ok := commandMap[commandName]
 	if !ok {
@@ -98,6 +99,7 @@ func HandleCommand(
 		Command:   command,
 		startDate: time.Now(),
 		Trigger:   trigger,
+		Channel:   channel,
 	}
 
 	// attach adapter

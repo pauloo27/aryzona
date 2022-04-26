@@ -129,7 +129,11 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 		b.d.indents = append(b.d.indents, gateway.IntentGuildMessages)
 		b.d.indents = append(b.d.indents, gateway.IntentDirectMessages)
 		l = func(m *gateway.MessageCreateEvent) {
-			msg := buildMessage(m.ID.String(), buildChannel(m.ChannelID.String(), buildGuild(m.GuildID.String())), buildUser(m.Author.ID.String()), m.Content)
+			cType := model.ChannelTypeGuild
+			if m.GuildID.String() == "" {
+				cType = model.ChannelTypeDirect
+			}
+			msg := buildMessage(m.ID.String(), buildChannel(m.ChannelID.String(), buildGuild(m.GuildID.String()), cType), buildUser(m.Author.ID.String()), m.Content)
 			listener.(func(discord.BotAdapter, model.Message))(b, msg)
 		}
 	case event.VoiceStateUpdated:
@@ -137,9 +141,13 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 		// add helper listener
 		b.d.listeners = append(b.d.listeners, &eventListener{handler: func(m *gateway.VoiceStateUpdateEvent) {
 			var prevCh model.VoiceChannel
+			cType := model.ChannelTypeGuild
+			if prevCh.Guild().ID() == "" {
+				cType = model.ChannelTypeDirect
+			}
 			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
 			if err == nil && voiceState.Channel().ID() != "" {
-				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()))
+				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()), cType)
 			}
 			_ = b.d.prevChannelCache.Set(eventID, prevCh)
 		}, preHandler: true})
@@ -191,8 +199,12 @@ func (b ArkwBot) SendReplyMessage(m model.Message, content string) (model.Messag
 	if err != nil {
 		return nil, err
 	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
 	return buildMessage(
-		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String())),
+		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
 		content,
 	), nil
@@ -207,8 +219,12 @@ func (b ArkwBot) SendMessage(channelID string, message string) (model.Message, e
 	if err != nil {
 		return nil, err
 	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
 	return buildMessage(
-		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String())),
+		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
 		message,
 	), nil
@@ -227,8 +243,12 @@ func (b ArkwBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (m
 	if err != nil {
 		return nil, err
 	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
 	return buildMessage(
-		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String())),
+		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
 		msg.Content,
 	), nil
@@ -243,14 +263,18 @@ func (b ArkwBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model
 	if err != nil {
 		return nil, err
 	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
 	return buildMessage(
-		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String())),
+		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
 		msg.Content,
 	), nil
 }
 
-func (b ArkwBot) OpenChannelWithUser(userID string) (model.Channel, error) {
+func (b ArkwBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 	sf, err := dc.ParseSnowflake(userID)
 	if err != nil {
 		return nil, err
@@ -259,7 +283,7 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (model.Channel, error) {
 	if err != nil {
 		return nil, err
 	}
-	return buildChannel(dm.ID.String(), buildGuild("")), nil
+	return buildChannel(dm.ID.String(), buildGuild(""), model.ChannelTypeDirect), nil
 }
 
 func (b ArkwBot) Latency() time.Duration {

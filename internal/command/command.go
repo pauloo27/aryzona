@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 )
 
@@ -24,6 +25,7 @@ type CommandContext struct {
 	RawArgs           []string
 	Args              []interface{}
 	Bot               discord.BotAdapter
+	Channel           model.TextChannel
 	AuthorID, GuildID string
 	UsedName          string
 	Locals            map[string]interface{}

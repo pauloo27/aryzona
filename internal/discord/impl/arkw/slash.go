@@ -6,6 +6,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 
 	"github.com/diamondburned/arikawa/v3/api"
@@ -197,7 +198,15 @@ func registerCommands(bot ArkwBot) error {
 				},
 			}
 
-			command.HandleCommand(data.Name, args, &adapter, bot, command.CommandTriggerSlash)
+			cType := model.ChannelTypeGuild
+			if i.GuildID.String() == "" {
+				cType = model.ChannelTypeDirect
+			}
+
+			command.HandleCommand(
+				data.Name, args, &adapter, bot, command.CommandTriggerSlash,
+				buildChannel(i.ChannelID.String(), buildGuild(i.GuildID.String()), cType),
+			)
 		}
 	})
 

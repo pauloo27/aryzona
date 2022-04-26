@@ -19,7 +19,7 @@ func (m Message) Content() string {
 	return m.content
 }
 
-func (m Message) Channel() model.Channel {
+func (m Message) Channel() model.TextChannel {
 	return m.ch
 }
 

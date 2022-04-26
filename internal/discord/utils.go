@@ -11,6 +11,6 @@ func AsMention(userID string) string {
 	return fmt.Sprintf("<@%s>", userID)
 }
 
-func OpenChatWithOwner() (model.Channel, error) {
+func OpenChatWithOwner() (model.TextChannel, error) {
 	return Bot.OpenChannelWithUser(os.Getenv("DC_BOT_OWNER_ID"))
 }
