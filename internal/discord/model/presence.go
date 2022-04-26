@@ -1,4 +1,4 @@
-package discord
+package model
 
 type PresenceType int
 

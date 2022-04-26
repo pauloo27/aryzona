@@ -1,4 +1,4 @@
-package discord
+package model
 
 type Channel interface {
 	ID() string

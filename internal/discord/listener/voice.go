@@ -6,6 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/utils/scheduler"
 	"github.com/Pauloo27/logger"
@@ -18,7 +19,7 @@ func init() {
 	}
 }
 
-func voiceUpdate(bot discord.BotAdapter, user discord.User, prevCh, curCh discord.VoiceChannel) {
+func voiceUpdate(bot discord.BotAdapter, user model.User, prevCh, curCh model.VoiceChannel) {
 	self, err := bot.Self()
 	if err != nil {
 		return
@@ -53,7 +54,7 @@ func voiceUpdate(bot discord.BotAdapter, user discord.User, prevCh, curCh discor
 
 }
 
-func onConnect(bot discord.BotAdapter, ch discord.VoiceChannel) {
+func onConnect(bot discord.BotAdapter, ch model.VoiceChannel) {
 	if bot.CountUsersInVoiceChannel(ch) <= 1 {
 		return
 	}
@@ -61,7 +62,7 @@ func onConnect(bot discord.BotAdapter, ch discord.VoiceChannel) {
 	scheduler.Unschedule(fmt.Sprintf("voice_disconnect_%s", ch.Guild().ID()))
 }
 
-func onDisconnect(bot discord.BotAdapter, ch discord.VoiceChannel, v *voicer.Voicer) {
+func onDisconnect(bot discord.BotAdapter, ch model.VoiceChannel, v *voicer.Voicer) {
 	if bot.CountUsersInVoiceChannel(ch) > 1 {
 		return
 	}

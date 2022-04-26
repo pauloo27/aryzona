@@ -1,7 +1,7 @@
 package dcgo
 
 import (
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -37,7 +37,7 @@ func (c VoiceChannel) ID() string {
 	return c.id
 }
 
-func (c VoiceChannel) Guild() discord.Guild {
+func (c VoiceChannel) Guild() model.Guild {
 	return c.guild
 }
 
@@ -52,7 +52,7 @@ type VoiceState struct {
 	channel VoiceChannel
 }
 
-func (c VoiceState) Channel() discord.VoiceChannel {
+func (c VoiceState) Channel() model.VoiceChannel {
 	return c.channel
 }
 

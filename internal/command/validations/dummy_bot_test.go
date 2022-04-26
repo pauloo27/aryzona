@@ -5,6 +5,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 )
 
 type DummyBot struct {
@@ -36,34 +37,34 @@ func (DummyBot) Stop() error {
 	return nil
 }
 
-func (DummyBot) Self() (discord.User, error) {
+func (DummyBot) Self() (model.User, error) {
 	return nil, nil
 }
 
-func (DummyBot) CountUsersInVoiceChannel(vc discord.VoiceChannel) int {
+func (DummyBot) CountUsersInVoiceChannel(vc model.VoiceChannel) int {
 	return 0
 }
 
-func (DummyBot) SendMessage(channelID string, content string) (discord.Message, error) {
+func (DummyBot) SendMessage(channelID string, content string) (model.Message, error) {
 	return nil, nil
 }
 
-func (DummyBot) SendReplyMessage(message discord.Message, content string) (discord.Message, error) {
+func (DummyBot) SendReplyMessage(message model.Message, content string) (model.Message, error) {
 	return nil, nil
 }
 
-func (DummyBot) SendReplyEmbedMessage(message discord.Message, embed *discord.Embed) (discord.Message, error) {
+func (DummyBot) SendReplyEmbedMessage(message model.Message, embed *discord.Embed) (model.Message, error) {
 	return nil, nil
 }
 
-func (DummyBot) SendEmbedMessage(channelID string, embed *discord.Embed) (discord.Message, error) {
+func (DummyBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.Message, error) {
 	return nil, nil
 }
 
-func (DummyBot) OpenChannelWithUser(userID string) (discord.Channel, error) {
+func (DummyBot) OpenChannelWithUser(userID string) (model.Channel, error) {
 	return nil, nil
 }
-func (DummyBot) OpenGuild(guildID string) (discord.Guild, error) {
+func (DummyBot) OpenGuild(guildID string) (model.Guild, error) {
 	return Guild{}, nil
 }
 
@@ -71,15 +72,15 @@ func (DummyBot) Latency() time.Duration {
 	return time.Second * 20
 }
 
-func (DummyBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConnection, error) {
+func (DummyBot) JoinVoiceChannel(guildID, channelID string) (model.VoiceConnection, error) {
 	return nil, nil
 }
 
-func (DummyBot) FindUserVoiceState(guildID string, userID string) (discord.VoiceState, error) {
+func (DummyBot) FindUserVoiceState(guildID string, userID string) (model.VoiceState, error) {
 	return VoiceState{}, nil
 }
 
-func (DummyBot) UpdatePresence(presence *discord.Presence) error {
+func (DummyBot) UpdatePresence(presence *model.Presence) error {
 	return nil
 }
 
@@ -94,7 +95,7 @@ func (DummyBot) RegisterSlashCommands() error {
 type VoiceState struct {
 }
 
-func (VoiceState) Channel() discord.VoiceChannel {
+func (VoiceState) Channel() model.VoiceChannel {
 	return VoiceChannel{}
 }
 
@@ -112,6 +113,6 @@ func (VoiceChannel) ID() string {
 	return "12335"
 }
 
-func (VoiceChannel) Guild() discord.Guild {
+func (VoiceChannel) Guild() model.Guild {
 	return Guild{}
 }

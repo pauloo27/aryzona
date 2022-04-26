@@ -7,6 +7,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/ReneKroon/ttlcache/v2"
 	dc "github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
@@ -74,7 +75,7 @@ func (b ArkwBot) StartedAt() *time.Time {
 	return b.d.startedAt
 }
 
-func (b ArkwBot) CountUsersInVoiceChannel(ch discord.VoiceChannel) (count int) {
+func (b ArkwBot) CountUsersInVoiceChannel(ch model.VoiceChannel) (count int) {
 	sf, err := dc.ParseSnowflake(ch.Guild().ID())
 	if err != nil {
 		return
@@ -99,7 +100,7 @@ func (b ArkwBot) Stop() error {
 	return b.disconnect()
 }
 
-func (b ArkwBot) Self() (discord.User, error) {
+func (b ArkwBot) Self() (model.User, error) {
 	u, err := b.d.s.Me()
 	if err != nil {
 		return nil, err
@@ -129,13 +130,13 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 		b.d.indents = append(b.d.indents, gateway.IntentDirectMessages)
 		l = func(m *gateway.MessageCreateEvent) {
 			msg := buildMessage(m.ID.String(), buildChannel(m.ChannelID.String(), buildGuild(m.GuildID.String())), buildUser(m.Author.ID.String()), m.Content)
-			listener.(func(discord.BotAdapter, discord.Message))(b, msg)
+			listener.(func(discord.BotAdapter, model.Message))(b, msg)
 		}
 	case event.VoiceStateUpdated:
 		eventID := uuid.New().String()
 		// add helper listener
 		b.d.listeners = append(b.d.listeners, &eventListener{handler: func(m *gateway.VoiceStateUpdateEvent) {
-			var prevCh discord.VoiceChannel
+			var prevCh model.VoiceChannel
 			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
 			if err == nil && voiceState.Channel().ID() != "" {
 				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()))
@@ -149,16 +150,16 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 
 		l = func(m *gateway.VoiceStateUpdateEvent) {
 			user := buildUser(m.UserID.String())
-			var prevCh, curCh discord.VoiceChannel
+			var prevCh, curCh model.VoiceChannel
 			if m.ChannelID.IsValid() {
 				curCh = buildVoiceChannel(m.ChannelID.String(), buildGuild(m.GuildID.String()))
 			}
 			possiblePrevCh, err := b.d.prevChannelCache.Get(eventID)
 			if err == nil {
-				prevCh, _ = possiblePrevCh.(discord.VoiceChannel)
+				prevCh, _ = possiblePrevCh.(model.VoiceChannel)
 			}
 
-			listener.(func(discord.BotAdapter, discord.User, discord.VoiceChannel, discord.VoiceChannel))(b, user, prevCh, curCh)
+			listener.(func(discord.BotAdapter, model.User, model.VoiceChannel, model.VoiceChannel))(b, user, prevCh, curCh)
 		}
 	default:
 		return event.ErrEventNotSupported
@@ -181,7 +182,7 @@ func (b ArkwBot) registerListeners() {
 	}
 }
 
-func (b ArkwBot) SendReplyMessage(m discord.Message, content string) (discord.Message, error) {
+func (b ArkwBot) SendReplyMessage(m model.Message, content string) (model.Message, error) {
 	sf, err := dc.ParseSnowflake(m.Channel().ID())
 	if err != nil {
 		return nil, err
@@ -197,7 +198,7 @@ func (b ArkwBot) SendReplyMessage(m discord.Message, content string) (discord.Me
 	), nil
 }
 
-func (b ArkwBot) SendMessage(channelID string, message string) (discord.Message, error) {
+func (b ArkwBot) SendMessage(channelID string, message string) (model.Message, error) {
 	sf, err := dc.ParseSnowflake(channelID)
 	if err != nil {
 		return nil, err
@@ -213,7 +214,7 @@ func (b ArkwBot) SendMessage(channelID string, message string) (discord.Message,
 	), nil
 }
 
-func (b ArkwBot) SendReplyEmbedMessage(m discord.Message, embed *discord.Embed) (discord.Message, error) {
+func (b ArkwBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (model.Message, error) {
 	chSf, err := dc.ParseSnowflake(m.Channel().ID())
 	if err != nil {
 		return nil, err
@@ -233,7 +234,7 @@ func (b ArkwBot) SendReplyEmbedMessage(m discord.Message, embed *discord.Embed) 
 	), nil
 }
 
-func (b ArkwBot) SendEmbedMessage(channelID string, embed *discord.Embed) (discord.Message, error) {
+func (b ArkwBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.Message, error) {
 	sf, err := dc.ParseSnowflake(channelID)
 	if err != nil {
 		return nil, err
@@ -249,7 +250,7 @@ func (b ArkwBot) SendEmbedMessage(channelID string, embed *discord.Embed) (disco
 	), nil
 }
 
-func (b ArkwBot) OpenChannelWithUser(userID string) (discord.Channel, error) {
+func (b ArkwBot) OpenChannelWithUser(userID string) (model.Channel, error) {
 	sf, err := dc.ParseSnowflake(userID)
 	if err != nil {
 		return nil, err
@@ -265,7 +266,7 @@ func (b ArkwBot) Latency() time.Duration {
 	return b.d.s.PacerLoop.EchoBeat.Time().Sub(b.d.s.PacerLoop.SentBeat.Time())
 }
 
-func (b ArkwBot) OpenGuild(guildID string) (discord.Guild, error) {
+func (b ArkwBot) OpenGuild(guildID string) (model.Guild, error) {
 	sf, err := dc.ParseSnowflake(guildID)
 	if err != nil {
 		return nil, err
@@ -277,7 +278,7 @@ func (b ArkwBot) OpenGuild(guildID string) (discord.Guild, error) {
 	return buildGuild(g.ID.String()), nil
 }
 
-func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConnection, error) {
+func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (model.VoiceConnection, error) {
 	vs, err := voice.NewSession(b.d.s)
 	if err != nil {
 		return nil, err
@@ -297,7 +298,7 @@ func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (discord.VoiceConne
 	return buildVoiceConnection(vs), nil
 }
 
-func (b ArkwBot) FindUserVoiceState(guildID, userID string) (discord.VoiceState, error) {
+func (b ArkwBot) FindUserVoiceState(guildID, userID string) (model.VoiceState, error) {
 	guildSf, err := dc.ParseSnowflake(guildID)
 	if err != nil {
 		return nil, err
@@ -313,14 +314,14 @@ func (b ArkwBot) FindUserVoiceState(guildID, userID string) (discord.VoiceState,
 	return buildVoiceState(buildVoiceChannel(vs.ChannelID.String(), buildGuild(guildID))), nil
 }
 
-func (b ArkwBot) UpdatePresence(presence *discord.Presence) error {
+func (b ArkwBot) UpdatePresence(presence *model.Presence) error {
 	var ty dc.ActivityType
 	switch presence.Type {
-	case discord.PresencePlaying:
+	case model.PresencePlaying:
 		ty = dc.GameActivity
-	case discord.PresenceListening:
+	case model.PresenceListening:
 		ty = dc.ListeningActivity
-	case discord.PresenceStreaming:
+	case model.PresenceStreaming:
 		ty = dc.StreamingActivity
 	default:
 		return errors.New("invalid presence type")

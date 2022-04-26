@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
@@ -18,7 +18,7 @@ type OpusReader interface {
 }
 
 type StreamingSession struct {
-	connection discord.VoiceConnection
+	connection model.VoiceConnection
 	err        error
 	framesSent int
 
@@ -31,7 +31,7 @@ type StreamingSession struct {
 	finished bool
 }
 
-func NewStream(source *EncodeSession, vc discord.VoiceConnection, callback chan error) *StreamingSession {
+func NewStream(source *EncodeSession, vc model.VoiceConnection, callback chan error) *StreamingSession {
 
 	session := &StreamingSession{
 		source:     source,

@@ -1,6 +1,8 @@
 package arkw
 
-import "github.com/Pauloo27/aryzona/internal/discord"
+import (
+	"github.com/Pauloo27/aryzona/internal/discord/model"
+)
 
 type Message struct {
 	ch      Channel
@@ -17,11 +19,11 @@ func (m Message) Content() string {
 	return m.content
 }
 
-func (m Message) Channel() discord.Channel {
+func (m Message) Channel() model.Channel {
 	return m.ch
 }
 
-func (m Message) Author() discord.User {
+func (m Message) Author() model.User {
 	return m.author
 }
 

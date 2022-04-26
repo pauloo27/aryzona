@@ -8,6 +8,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/animal"
 	"github.com/Pauloo27/aryzona/internal/providers/git"
 	"github.com/Pauloo27/logger"
@@ -25,9 +26,9 @@ func ready(bot discord.BotAdapter) {
 	if presence == "" {
 		presence = git.CommitMessage
 	}
-	err := bot.UpdatePresence(&discord.Presence{
+	err := bot.UpdatePresence(&model.Presence{
 		Title: presence,
-		Type:  discord.PresenceStreaming,
+		Type:  model.PresenceStreaming,
 		Extra: "https://twitch.tv/gaules",
 	})
 	if err != nil {

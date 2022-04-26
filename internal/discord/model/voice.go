@@ -1,4 +1,4 @@
-package discord
+package model
 
 type VoiceState interface {
 	Channel() VoiceChannel

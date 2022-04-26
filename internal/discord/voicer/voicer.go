@@ -8,12 +8,13 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
 	"github.com/Pauloo27/logger"
 )
 
 type Voicer struct {
-	Voice                      discord.VoiceConnection
+	Voice                      model.VoiceConnection
 	Queue                      *queue.Queue
 	EncodeSession              *dca.EncodeSession
 	UserID, ChannelID, GuildID *string

@@ -6,6 +6,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 )
 
@@ -16,7 +17,7 @@ func init() {
 	}
 }
 
-func messageCreated(bot discord.BotAdapter, m discord.Message) {
+func messageCreated(bot discord.BotAdapter, m model.Message) {
 	self, err := bot.Self()
 	if err != nil {
 		return
