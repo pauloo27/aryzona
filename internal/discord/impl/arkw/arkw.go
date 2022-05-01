@@ -141,12 +141,12 @@ func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
 		// add helper listener
 		b.d.listeners = append(b.d.listeners, &eventListener{handler: func(m *gateway.VoiceStateUpdateEvent) {
 			var prevCh model.VoiceChannel
-			cType := model.ChannelTypeGuild
-			if prevCh.Guild().ID() == "" {
-				cType = model.ChannelTypeDirect
-			}
 			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
 			if err == nil && voiceState.Channel().ID() != "" {
+				cType := model.ChannelTypeGuild
+				if voiceState.Channel().Guild().ID() == "" {
+					cType = model.ChannelTypeDirect
+				}
 				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()), cType)
 			}
 			_ = b.d.prevChannelCache.Set(eventID, prevCh)
