@@ -4,7 +4,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/logger"
 )
 
 var StopCommand = command.Command{
@@ -16,7 +15,6 @@ var StopCommand = command.Command{
 
 		err := vc.Disconnect()
 		if err != nil {
-			logger.Error(err)
 			ctx.Error("Something went wrong when disconnecting...")
 			return
 		}

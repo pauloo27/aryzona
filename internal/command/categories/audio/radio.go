@@ -12,7 +12,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/providers/radio"
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/logger"
 )
 
 var RadioCommand = command.Command{
@@ -63,7 +62,6 @@ var RadioCommand = command.Command{
 					return
 				}
 				ctx.Error(fmt.Sprintf("Cannot play stuff: %v", err))
-				logger.Error(err)
 				return
 			}
 		})

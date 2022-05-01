@@ -7,7 +7,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/lyric"
 )
 
@@ -44,7 +43,6 @@ var LyricCommand = command.Command{
 				discord.NewEmbed().
 					WithDescription("No results found for " + searchTerms),
 			)
-			logger.Error(err)
 			return
 		}
 		_ = ctx.Reply(result)

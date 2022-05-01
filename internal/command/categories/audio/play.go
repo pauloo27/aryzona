@@ -12,7 +12,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/logger"
 )
 
 var PlayCommand = command.Command{
@@ -36,7 +35,6 @@ var PlayCommand = command.Command{
 		searchQuery := ctx.Args[0].(string)
 		resultURL, isPlaylist, err := youtube.GetBestResult(searchQuery)
 		if err != nil {
-			logger.Error(err)
 			ctx.Error("Cannot find what you are looking for")
 			return
 		}
@@ -47,7 +45,6 @@ var PlayCommand = command.Command{
 		if isPlaylist {
 			playlist, err = youtube.GetPlaylist(resultURL)
 			if err != nil {
-				logger.Error(err)
 				ctx.Error("Cannot find what you are looking for")
 				return
 			}
@@ -61,7 +58,6 @@ var PlayCommand = command.Command{
 			result, err = youtube.AsPlayable(resultURL)
 			if err != nil {
 				ctx.Error(fmt.Sprintf("Something went wrong when getting the video to play: %v", err))
-				logger.Error(err)
 				return
 			}
 		}
@@ -82,7 +78,6 @@ var PlayCommand = command.Command{
 					return
 				}
 				ctx.Error(fmt.Sprintf("Cannot play stuff: %v", err))
-				logger.Error(err)
 				return
 			}
 		})
