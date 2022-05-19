@@ -17,9 +17,10 @@ type TeamInfo struct {
 }
 
 type Event struct {
-	Text string
-	Min  int64
-	ID   int64
+	Text     string
+	Min      int64
+	ExtraMin int64
+	Type     int64
 }
 
 func (t TeamInfo) ColorAsInt() int {
@@ -31,11 +32,11 @@ func (t TeamInfo) ColorAsInt() int {
 }
 
 type MatchInfo struct {
-	Events                            []*Event
-	ID                                string
-	Time                              string // time as string? YES
-	CupName, StadiumName, StadiumCity string
 	T1, T2                            *TeamInfo
+	ID                                string
+	CupName, StadiumName, StadiumCity string
+	Time                              string // time as string? YES
+	Events                            []*Event
 }
 
 func parseTeam(id int, data []byte) (*TeamInfo, error) {
@@ -128,11 +129,13 @@ func parseMatch(data []byte) (*MatchInfo, error) {
 		text, _ := jsonparser.GetString(value, "Txt")
 		id, _ := jsonparser.GetInt(value, "IT")
 		min, _ := jsonparser.GetInt(value, "Min")
+		extraMin, _ := jsonparser.GetInt(value, "MinEx")
 
 		event := Event{
-			Text: text,
-			ID:   id,
-			Min:  min,
+			Text:     text,
+			Type:     id,
+			Min:      min,
+			ExtraMin: extraMin,
 		}
 		events = append(events, &event)
 	}, "Com")

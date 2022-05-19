@@ -94,9 +94,20 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 	desc := strings.Builder{}
 	if len(match.Events) > 0 {
 		for _, event := range match.Events {
+
+			prefix, found := eventTypePrefixes[event.Type]
+			if !found {
+				continue
+			}
+
 			text := event.Text
 
-			desc.WriteString(fmt.Sprintf(" -> %d' %s\n", event.Min, text))
+			extraTime := ""
+			if event.ExtraMin != 0 {
+				extraTime = fmt.Sprintf("+%d", event.ExtraMin)
+			}
+
+			desc.WriteString(fmt.Sprintf(" -> %d'%s %s %s\n", event.Min, extraTime, prefix, text))
 		}
 	}
 
@@ -115,4 +126,12 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 			WithField("ID", match.ID).
 			WithDescription(descStr),
 	)
+}
+
+var eventTypePrefixes = map[int64]string{
+	43: "🟡",
+	// TODO: red card???
+	36: "⚽",
+	3:  "🔄",
+	22: "👋",
 }
