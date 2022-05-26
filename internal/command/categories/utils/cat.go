@@ -5,6 +5,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/providers/animal"
+	"github.com/Pauloo27/logger"
 )
 
 var CatCommand = command.Command{
@@ -16,6 +17,8 @@ var CatCommand = command.Command{
 			ctx.Error(fmt.Sprintf("An error occurred:\n %v", err))
 			return
 		}
-		ctx.Success(url)
+		if ctx.Reply(url) != nil {
+			logger.Error(url)
+		}
 	},
 }
