@@ -116,13 +116,27 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 		descStr = descStr[:4093] + "..."
 	}
 
+	var t1Score, t2Score string
+
+	if match.T1.Score != -1 {
+		t1Score = strconv.Itoa(match.T1.Score)
+	} else {
+		t1Score = "_"
+	}
+
+	if match.T2.Score != -1 {
+		t2Score = strconv.Itoa(match.T2.Score)
+	} else {
+		t2Score = "_"
+	}
+
 	ctx.Embed(
 		discord.NewEmbed().
 			WithDescription(fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
 			WithColor(color).
 			WithField("Time", match.Time).
-			WithFieldInline(match.T1.Name, strconv.Itoa(match.T1.Score)).
-			WithFieldInline(match.T2.Name, strconv.Itoa(match.T2.Score)).
+			WithFieldInline(match.T1.Name, t1Score).
+			WithFieldInline(match.T2.Name, t2Score).
 			WithField("ID", match.ID).
 			WithDescription(descStr),
 	)
