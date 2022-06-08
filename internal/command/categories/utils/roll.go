@@ -1,16 +1,15 @@
 package utils
 
 import (
-	"crypto/rand"
 	"errors"
 	"fmt"
-	"math/big"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/providers/dice"
 	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/utils/rnd"
 )
 
 const (
@@ -36,11 +35,13 @@ var RollCommand = command.Command{
 		result := 0
 
 		for i := 0; i < d.Dices; i++ {
-			luckyNumber, err := roll(d.Sides)
+			luckyNumber, err := rnd.Rnd(d.Sides)
 			if err != nil {
 				ctx.Error("something went wrong =(")
 				return
 			}
+			// +1 since the dice starts at 1
+			luckyNumber++
 			result += luckyNumber
 			numbers[i] = luckyNumber
 		}
@@ -82,11 +83,3 @@ var (
 		},
 	}
 )
-
-func roll(sides int) (int, error) {
-	bigLuckyNumber, err := rand.Int(rand.Reader, big.NewInt(int64(sides)))
-	if err != nil {
-		return 0, err
-	}
-	return int(bigLuckyNumber.Int64() + 1), nil
-}
