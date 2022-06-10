@@ -26,7 +26,7 @@ require (
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91 // indirect
-	github.com/dop251/goja v0.0.0-20211211112501-fb27c91c26ed // indirect
+	github.com/dop251/goja v0.0.0-20220516123900-4418d4575a41 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/gorilla/schema v1.2.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -47,4 +47,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/kkdai/youtube/v2 => github.com/ItsClairton/youtube/v2 v2.7.7-0.20220123230615-c86c1dbf79cf
+replace github.com/kkdai/youtube/v2 => github.com/ItsClairton/youtube/v2 v2.7.7-0.20220610163135-5e6c6831c1e3
