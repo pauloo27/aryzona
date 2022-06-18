@@ -27,6 +27,9 @@ func validateCommand(command *Command) string {
 		if arg.Name == "" || len(strings.Split(arg.Name, " ")) != 1 {
 			return fmt.Sprintf("Command %s has an invalid parameter name (%s)", command.Name, arg.Name)
 		}
+		if arg.Type == nil {
+			return fmt.Sprintf("Command %s has an invalid parameter type (nil)", command.Name)
+		}
 	}
 	return ""
 }
