@@ -48,10 +48,6 @@ pack: dist
 lint:
 	revive -formatter friendly -config revive.toml ./...
 
-.PHONY: spell
-spell:
-	misspell -error ./**
-
 .PHONY: staticcheck
 staticcheck:
 	staticcheck ./...
@@ -61,7 +57,7 @@ gosec:
 	gosec -tests ./... 
 
 .PHONY: inspect
-inspect: lint spell gosec staticcheck
+inspect: lint gosec staticcheck
 
 # auto restart bot (using fiber CLI)
 .PHONY: dev
