@@ -7,13 +7,17 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/providers/news"
+	"github.com/Pauloo27/logger"
 )
 
 type NewsFactory func() (*news.NewsFeed, error)
 
 var (
 	Sources = map[string]NewsFactory{
-		"thn": news.GetTHNFeed,
+		"thn":             news.GetTHNFeed,
+		"cnn-world":       news.GetCNNWorldFeed,
+		"cnn-tech":        news.GetCNNTechFeed,
+		"cnn-top-stories": news.GetCNNTopStoriesFeed,
 	}
 )
 
@@ -53,10 +57,14 @@ var NewsCommand = command.Command{
 
 		for _, entry := range news.Entries[:10] {
 			shortDescription := entry.Description
-			if len(shortDescription) > 200 {
-				shortDescription = shortDescription[:197] + "..."
+			if len(shortDescription) > 100 {
+				shortDescription = shortDescription[:97] + "..."
 			}
-			postedAt := entry.PostedAt.Format("02/01/2006")
+			logger.Debug("title:", entry.Title)
+			var postedAt string
+			if entry.PostedAt != nil {
+				postedAt = entry.PostedAt.Format("2006-01-02")
+			}
 			embed.WithField(entry.Title, fmt.Sprintf("%s | %v | %s", shortDescription, postedAt, entry.URL))
 		}
 
