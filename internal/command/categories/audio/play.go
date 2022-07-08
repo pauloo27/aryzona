@@ -62,7 +62,7 @@ var PlayCommand = command.Command{
 			}
 		}
 
-		embed := buildPlayableInfoEmbed(result, nil).WithTitle("Best result for: " + searchQuery)
+		embed := buildPlayableInfoEmbed(result, vc).WithTitle("Best result for: " + searchQuery)
 		ctx.SuccessEmbed(embed)
 
 		var vidsToAppend []playable.Playable

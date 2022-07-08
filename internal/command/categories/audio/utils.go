@@ -50,7 +50,7 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		}
 	}
 
-	if vc.IsPaused() {
+	if vc != nil && vc.IsPaused() {
 		embed.WithField(
 			"Warning",
 			fmt.Sprintf("Song is **paused**, use **%sresume**", command.Prefix),
