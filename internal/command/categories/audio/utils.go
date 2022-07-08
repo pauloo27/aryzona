@@ -3,6 +3,7 @@ package audio
 import (
 	"fmt"
 
+	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
@@ -47,6 +48,13 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		} else if posErr == nil {
 			embed.WithField("Position", utils.ShortDuration(position))
 		}
+	}
+
+	if vc.IsPaused() {
+		embed.WithField(
+			"Warning",
+			fmt.Sprintf("Song is **paused**, use **%sresume**", command.Prefix),
+		)
 	}
 
 	return embed
