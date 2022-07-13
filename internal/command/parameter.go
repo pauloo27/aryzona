@@ -14,8 +14,11 @@ var (
 func NewErrRequiredParameter(param *CommandParameter) error {
 	var message string
 	if param != nil {
+		validValues := param.GetValidValues()
 		if param.RequiredMessage != "" {
 			message = param.RequiredMessage
+		} else if validValues != nil {
+			message = fmt.Sprintf("parameter `%s` (type %s, valid values are: `%v`) missing", param.Description, param.Type.Name, validValues)
 		} else {
 			message = fmt.Sprintf("parameter `%s` (type %s) missing", param.Description, param.Type.Name)
 		}
@@ -26,7 +29,7 @@ func NewErrRequiredParameter(param *CommandParameter) error {
 func NewErrInvalidValue(param *CommandParameter) error {
 	var message string
 	if param != nil {
-		message = fmt.Sprintf("invalid value for `%s`. Valid  values are: `%s`", param.Description, param.GetValidValues())
+		message = fmt.Sprintf("invalid value for `%s`. Valid  values are: `%v`", param.Description, param.GetValidValues())
 	}
 	return fmt.Errorf("%w: %s", ErrInvalidValue, message)
 }
