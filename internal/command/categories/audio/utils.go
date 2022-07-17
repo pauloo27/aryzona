@@ -38,7 +38,7 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		position, posErr := vc.GetPosition()
 		duration, durErr := playable.GetDuration()
 
-		if posErr == nil && durErr == nil {
+		if playable == vc.Playing() && posErr == nil && durErr == nil {
 			embed.WithField("Duration", fmt.Sprintf("%s/%s",
 				utils.ShortDuration(position),
 				utils.ShortDuration(duration),
