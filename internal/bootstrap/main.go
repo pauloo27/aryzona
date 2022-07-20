@@ -53,6 +53,8 @@ func Start(commitHash, commitMessage string) {
 	}
 	logger.Success("Slash commands created!")
 
+	logger.Success("Up and running!")
+
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
