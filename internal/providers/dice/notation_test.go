@@ -10,15 +10,6 @@ import (
 )
 
 // reference: https://en.wikipedia.org/wiki/Dice_notation
-
-// TODO:
-// 2d
-// 2d20-1
-// 2d20+1
-// 2d20-L
-// 2d20-A
-// 2d20-H
-
 func parseAndCheck(t *testing.T, str string, ok bool, expectedDices, expectedSides int) {
 	should := "Should"
 	if !ok {
