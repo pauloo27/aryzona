@@ -11,32 +11,32 @@ import (
 func TestGetCNNTopStoriesFeed(t *testing.T) {
 	feed, err := news.GetCNNTopStoriesFeed()
 	require.Nil(t, err)
-	assert.Equal(t, feed.Title, "CNN.com - RSS Channel - HP Hero")
-	assert.Equal(t, feed.Description, "CNN.com delivers up-to-the-minute news and information on the latest top stories, weather, entertainment, politics and more.")
-	assert.Equal(t, feed.Author, "Unknown") // =(
-	assert.Equal(t, feed.URL, "https://www.cnn.com/index.html")
-	assert.Equal(t, feed.ThumbnailURL, "http://i2.cdn.turner.com/cnn/2015/images/09/24/cnn.digital.png")
+	assert.Equal(t, "CNN.com - RSS Channel - HP Hero", feed.Title)
+	assert.Equal(t, "CNN.com delivers up-to-the-minute news and information on the latest top stories, weather, entertainment, politics and more.", feed.Description)
+	assert.Equal(t, "Unknown", feed.Author) // =(
+	assert.Equal(t, "https://www.cnn.com/index.html", feed.URL)
+	assert.Equal(t, "http://i2.cdn.turner.com/cnn/2015/images/09/24/cnn.digital.png", feed.ThumbnailURL)
 	assert.NotEmpty(t, feed.Entries)
 }
 
 func TestGetCNNWorldFeed(t *testing.T) {
 	feed, err := news.GetCNNWorldFeed()
 	require.Nil(t, err)
-	assert.Equal(t, feed.Title, "CNN.com - RSS Channel - World")
-	assert.Equal(t, feed.Description, "CNN.com delivers up-to-the-minute news and information on the latest top stories, weather, entertainment, politics and more.")
-	assert.Equal(t, feed.Author, "Unknown") // =(
-	assert.Equal(t, feed.URL, "https://www.cnn.com/world/index.html")
-	assert.Equal(t, feed.ThumbnailURL, "http://i2.cdn.turner.com/cnn/2015/images/09/24/cnn.digital.png")
+	assert.Equal(t, "CNN.com - RSS Channel - World", feed.Title)
+	assert.Equal(t, "CNN.com delivers up-to-the-minute news and information on the latest top stories, weather, entertainment, politics and more.", feed.Description)
+	assert.Equal(t, "Unknown", feed.Author) // =(
+	assert.Equal(t, "https://www.cnn.com/world/index.html", feed.URL)
+	assert.Equal(t, "http://i2.cdn.turner.com/cnn/2015/images/09/24/cnn.digital.png", feed.ThumbnailURL)
 	assert.NotEmpty(t, feed.Entries)
 }
 
 func TestGetCNNTechFeed(t *testing.T) {
 	feed, err := news.GetCNNTechFeed()
 	require.Nil(t, err)
-	assert.Equal(t, feed.Title, "CNN.com - RSS Channel - App Tech Section")
-	assert.Equal(t, feed.Description, "CNN.com delivers up-to-the-minute news and information on the latest top stories, weather, entertainment, politics and more.")
-	assert.Equal(t, feed.Author, "Unknown") // =(
-	assert.Equal(t, feed.URL, "https://www.cnn.com/app-tech-section/index.html")
-	assert.Equal(t, feed.ThumbnailURL, "http://i2.cdn.turner.com/cnn/2015/images/09/24/cnn.digital.png")
+	assert.Equal(t, "CNN.com - RSS Channel - App Tech Section", feed.Title)
+	assert.Equal(t, "CNN.com delivers up-to-the-minute news and information on the latest top stories, weather, entertainment, politics and more.", feed.Description)
+	assert.Equal(t, "Unknown", feed.Author) // =(
+	assert.Equal(t, "https://www.cnn.com/app-tech-section/index.html", feed.URL)
+	assert.Equal(t, "http://i2.cdn.turner.com/cnn/2015/images/09/24/cnn.digital.png", feed.ThumbnailURL)
 	assert.NotEmpty(t, feed.Entries)
 }
