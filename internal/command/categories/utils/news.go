@@ -7,7 +7,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/providers/news"
-	"github.com/Pauloo27/logger"
 )
 
 type NewsFactory func() (*news.NewsFeed, error)
@@ -60,7 +59,6 @@ var NewsCommand = command.Command{
 			if len(shortDescription) > 100 {
 				shortDescription = shortDescription[:97] + "..."
 			}
-			logger.Debug("title:", entry.Title)
 			var postedAt string
 			if entry.PostedAt != nil {
 				postedAt = entry.PostedAt.Format("2006-01-02")

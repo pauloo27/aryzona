@@ -6,12 +6,12 @@
     {
       "Command": "make lint",
       "ExitOnFail": true,
-      "Ask": false
+      "Ask": true
     },
     {
       "Command": "make inspect",
       "ExitOnFail": true,
-      "Ask": false
+      "Ask": true
     }
   ]
 }

@@ -31,7 +31,6 @@ func voiceUpdate(bot discord.BotAdapter, user model.User, prevCh, curCh model.Vo
 	if self.ID() == user.ID() && curCh == nil {
 		v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
 		if v != nil {
-			logger.Debug("bot was disconnected")
 			_ = v.Disconnect()
 		}
 		return

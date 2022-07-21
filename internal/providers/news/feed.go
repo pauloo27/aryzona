@@ -75,7 +75,7 @@ func ParseFeed(feedURL string) (*NewsFeed, error) {
 		Description:  feed.Description,
 		URL:          feed.Link,
 		Author:       feedAuthor,
-		ThumbnailURL: feed.Image.URL,
+		ThumbnailURL: thumbnailURL,
 		Entries:      entries,
 	}, nil
 }
