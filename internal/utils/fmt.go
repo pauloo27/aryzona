@@ -44,7 +44,7 @@ func ShortDuration(duration time.Duration) string {
 func DurationAsText(duration time.Duration) string {
 	seconds := int(duration.Seconds())
 	if seconds < 60 {
-		return "less than a minute"
+		return "Less than a minute"
 	}
 
 	days := seconds / 86400
