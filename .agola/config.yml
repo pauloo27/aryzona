@@ -141,4 +141,4 @@ runs:
               name: build docker image
               command:  |
                 export COMMIT=$(cat /workspace/commit.txt)
-                /kaniko/executor --destination $REGISTRY_URL/$REGISTRY_IMAGE:$COMMIT --force
+                /kaniko/executor --destination $REGISTRY_URL/$REGISTRY_IMAGE:$COMMIT --destination $REGISTRY_URL/$REGISTRY_IMAGE:latest --force
