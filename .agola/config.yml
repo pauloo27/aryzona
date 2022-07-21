@@ -21,6 +21,8 @@ runs:
               keys:
                 - build-cache-sum-{{ md5sum "go.sum" }}-{{ year }}-{{ month }}
               dest_dir: /root/.cache/go-build
+          # the deploy step does not have git, so let's save it for later...
+          - run: git rev-list -1 HEAD --abbrev-commit > /root/project/commit.txt
           - run: make build
           - save_to_workspace:
               contents:
@@ -137,4 +139,6 @@ runs:
                 EOF
           - run:
               name: build docker image
-              command: /kaniko/executor --destination $REGISTRY_URL/$REGISTRY_IMAGE --force
+              command:  |
+                export COMMIT=$(cat /workspace/commit.txt)
+                /kaniko/executor --destination $REGISTRY_URL/$REGISTRY_IMAGE:$COMMIT --force
