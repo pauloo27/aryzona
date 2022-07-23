@@ -9,6 +9,7 @@ var Utils = command.CommandCategory{
 		&PingCommand, &UptimeCommand, &HelpCommand, &DogCommand, &CatCommand,
 		&FoxCommand, &SourceCommand, &XkcdCommand, &ScoreCommand,
 		&EvenCommand, &RollCommand, &DrawCommand, &NewsCommand, &UUIDCommand,
+		&CPFCommand, &CNPJCommand,
 	},
 }
 
