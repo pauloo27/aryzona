@@ -1,4 +1,4 @@
-package utils
+package animals
 
 import (
 	"fmt"
@@ -8,16 +8,17 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
-var FoxCommand = command.Command{
-	Name: "fox", Description: "Get a cute fox",
-	Aliases: []string{"floof", "firefox", "ff"},
+var DogCommand = command.Command{
+	Name: "dog", Description: "Get a cute dog",
+	Aliases: []string{"woof", "doggo"},
 	Handler: func(ctx *command.CommandContext) {
-		url, err := animal.GetRandomFox()
+		url, err := animal.GetRandomDog()
 		if err != nil {
 			ctx.Error(fmt.Sprintf("An error occurred:\n %v", err))
+			return
 		}
 		if ctx.Reply(url) != nil {
-			logger.Error(url)
+			logger.Error(err)
 		}
 	},
 }

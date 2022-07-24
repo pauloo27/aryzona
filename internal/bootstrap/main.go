@@ -19,8 +19,11 @@ import (
 	_ "github.com/Pauloo27/aryzona/internal/utils/scheduler"
 
 	// import all command categories
+	_ "github.com/Pauloo27/aryzona/internal/command/categories/animals"
 	_ "github.com/Pauloo27/aryzona/internal/command/categories/audio"
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/utils"
+	_ "github.com/Pauloo27/aryzona/internal/command/categories/bot"
+	_ "github.com/Pauloo27/aryzona/internal/command/categories/fun"
+	_ "github.com/Pauloo27/aryzona/internal/command/categories/tools"
 )
 
 func preStart(commitHash, commitMessage string) {

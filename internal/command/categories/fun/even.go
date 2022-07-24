@@ -1,4 +1,4 @@
-package utils
+package fun
 
 import (
 	"github.com/Pauloo27/aryzona/internal/command"
