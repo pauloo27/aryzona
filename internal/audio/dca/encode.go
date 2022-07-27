@@ -74,7 +74,7 @@ func (e *EncodeSession) run() error {
 		"-i", e.path,
 		"-acodec", utils.ConditionalString(e.isOpus, "copy", "libopus"),
 		"-analyzeduration", "0",
-		"-loglevel", "0",
+		"-loglevel", "error",
 		"-map", "0:a",
 		"-f", "ogg",
 		"-ar", "48000",
@@ -104,7 +104,8 @@ func (e *EncodeSession) run() error {
 		return err
 	}
 
-	ffmpeg.Stderr = os.Stdout
+	var stderr bytes.Buffer
+	ffmpeg.Stderr = &stderr
 
 	err = ffmpeg.Start()
 	if err != nil {
@@ -127,12 +128,20 @@ func (e *EncodeSession) run() error {
 	wg.Wait()
 	err = ffmpeg.Wait()
 	if err != nil {
+
 		if err.Error() != "signal: killed" {
-			logger.Error(err)
-			e.Lock()
-			e.err = err
-			e.Unlock()
+			message := err.Error()
+
+			loggedErr := stderr.String()
+			if loggedErr != "" {
+				message += ": " + loggedErr
+			}
+			logger.Error(message)
 		}
+
+		e.Lock()
+		e.err = err
+		e.Unlock()
 	}
 	return nil
 }
