@@ -59,7 +59,7 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 
 	score, err := strconv.Atoi(rawScore)
 	if err != nil {
-		score = -1
+		score = 0
 		//return nil, errore.Wrap("score", err)
 	}
 
