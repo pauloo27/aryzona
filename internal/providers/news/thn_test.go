@@ -11,8 +11,8 @@ import (
 func TestGetTHNFeed(t *testing.T) {
 	feed, err := news.GetTHNFeed()
 	require.Nil(t, err)
-	assert.Equal(t, "The Hacker News - Most Trusted Cyber Security and Computer Security Analysis", feed.Title)
-	assert.Equal(t, "The Hacker News is the most trusted, widely-read, independent infosec source of the latest hacking news, cyber attacks, computer security, network security, and cybersecurity for ethical hackers, penetration testers, and information technology professionals.", feed.Description)
+	assert.Equal(t, "The Hacker News", feed.Title)
+	assert.Equal(t, "Most trusted, widely-read independent cybersecurity news source for everyone; supported by hackers and IT professionals — Send TIPs to admin@thehackernews.com", feed.Description)
 	assert.Equal(t, "Swati Khandelwal", feed.Author)
 	assert.Equal(t, "https://thehackernews.com/", feed.URL)
 	assert.Equal(t, "", feed.ThumbnailURL)
