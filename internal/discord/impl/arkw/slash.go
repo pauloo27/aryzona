@@ -52,7 +52,7 @@ func mustGetOption(arg *command.CommandParameter) dc.CommandOption {
 			Choices: mustGetIntegerChoises(arg),
 		}
 	default:
-		logger.Fatalf("cannot find discord type for %s", arg.Type.BaseType.Name)
+		logger.Fatalf("Cannot find discord type for %s", arg.Type.BaseType.Name)
 	}
 	return nil
 }
@@ -74,7 +74,7 @@ func mustGetOptionValue(arg *command.CommandParameter) dc.CommandOptionValue {
 			Choices: mustGetIntegerChoises(arg),
 		}
 	default:
-		logger.Fatalf("cannot find discord type for %s", arg.Type.BaseType.Name)
+		logger.Fatalf("Cannot find discord type for %s", arg.Type.BaseType.Name)
 	}
 	return nil
 }

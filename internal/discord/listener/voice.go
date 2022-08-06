@@ -70,7 +70,7 @@ func onDisconnect(bot discord.BotAdapter, ch model.VoiceChannel, v *voicer.Voice
 		30*time.Second,
 		func(params ...interface{}) {
 			if err := v.Disconnect(); err != nil {
-				logger.Errorf("cannot disconnect empty channel: %v", err)
+				logger.Errorf("Cannot disconnect empty channel: %v", err)
 			}
 		},
 	)

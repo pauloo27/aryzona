@@ -33,7 +33,7 @@ func registerCommands(bot DcgoBot) error {
 	mustGetTypeFor := func(arg *command.CommandParameter) discordgo.ApplicationCommandOptionType {
 		t, found := discordTypeMap[arg.Type.BaseType]
 		if !found {
-			logger.Fatalf("cannot find discord type for %s", arg.Type.Name)
+			logger.Fatalf("Cannot find discord type for %s", arg.Type.Name)
 		}
 		return t
 	}
