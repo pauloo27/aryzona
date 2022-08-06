@@ -52,10 +52,7 @@ func parseTeam(id int, data []byte) (*TeamInfo, error) {
 		color = "ffffff"
 	}
 
-	rawScore, err := jsonparser.GetString(data, "Tr"+strconv.Itoa(id))
-	if err != nil {
-		logger.Warn(fmt.Errorf("cannot get raw score: %w", err))
-	}
+	rawScore, _ := jsonparser.GetString(data, "Tr"+strconv.Itoa(id))
 
 	score, err := strconv.Atoi(rawScore)
 	if err != nil {
@@ -72,6 +69,11 @@ func parseMatchForListing(data []byte) (*MatchInfo, error) {
 		return nil, fmt.Errorf("id: %w", err)
 	}
 
+	time, err := jsonparser.GetString(data, "Eps")
+	if err != nil {
+		return nil, fmt.Errorf("time: %w", err)
+	}
+
 	team1, err := parseTeam(1, data)
 	if err != nil {
 		logger.Error("team1", err)
@@ -84,6 +86,7 @@ func parseMatchForListing(data []byte) (*MatchInfo, error) {
 
 	return &MatchInfo{
 		ID: id, T1: team1, T2: team2,
+		Time: time,
 	}, nil
 }
 

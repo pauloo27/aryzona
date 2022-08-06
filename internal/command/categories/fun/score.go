@@ -44,17 +44,17 @@ func ListLiveMatches(ctx *command.CommandContext) {
 	}
 	desc := strings.Builder{}
 	for _, match := range matches {
-		desc.WriteString(fmt.Sprintf("**%s** ||(%d) x (%d)|| **%s**: _%s_\n",
+		desc.WriteString(fmt.Sprintf("%s **%s** ||(%d) x (%d)|| **%s**\n",
+			match.Time,
 			match.T1.Name, match.T1.Score,
 			match.T2.Score, match.T2.Name,
-			match.ID,
 		))
 	}
 	ctx.SuccessEmbed(
 		discord.NewEmbed().
 			WithTitle("⚽ Live matches:").
 			WithFooter(
-				fmt.Sprintf("Use `%s%s <match id or team name>` to see details",
+				fmt.Sprintf("Use `%s%s <team name>` to see details",
 					command.Prefix, ctx.UsedName,
 				)).
 			WithDescription(desc.String()),
@@ -137,7 +137,6 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 			WithField("Time", match.Time).
 			WithFieldInline(match.T1.Name, t1Score).
 			WithFieldInline(match.T2.Name, t2Score).
-			WithField("ID", match.ID).
 			WithDescription(descStr),
 	)
 }
