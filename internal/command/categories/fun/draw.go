@@ -33,7 +33,7 @@ var DrawCommand = command.Command{
 				WithTitle("Draw").
 				WithDescription(
 					fmt.Sprintf(
-						"Picking a random value from _%s_:\n\nMy pick is **%s**",
+						"Picking a random thing from _%s_:\n\nMy pick is **%s**",
 						ctx.Args[0], things[n],
 					),
 				),
