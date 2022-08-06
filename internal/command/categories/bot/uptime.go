@@ -28,7 +28,7 @@ var UptimeCommand = command.Command{
 			WithField(":timer: Uptime", utils.DurationAsText(uptime)).
 			WithField(":gear: Implementation", discord.Bot.Implementation()).
 			WithField(
-				":computer: Host info info",
+				":computer: Host info",
 				fmt.Sprintf("Compiled with **%s (%s)**, running on a **%s %s%s**",
 					runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH, extraHostInfo,
 				)).
