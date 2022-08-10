@@ -3,6 +3,7 @@ package radio
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/tidwall/gjson"
@@ -73,7 +74,29 @@ func (r HunterRadio) GetFullTitle() (title, artist string) {
 	result.ForEach(func(key, value gjson.Result) bool {
 		if value.Get("url").String() == hunterID {
 			title = value.Get("live.now.name").String()
-			artist = value.Get("live.now.singers.0").String()
+
+			artists := value.Get("live.now.singers").Array()
+			feats := value.Get("live.now.feats").Array()
+
+			sb := strings.Builder{}
+			for i, a := range artists {
+				if i != 0 {
+					sb.WriteString(", ")
+				}
+				sb.WriteString(a.String())
+			}
+
+			if feats != nil {
+				sb.WriteString(" feat. ")
+				for i, f := range feats {
+					if i != 0 {
+						sb.WriteString(", ")
+					}
+					sb.WriteString(f.String())
+				}
+			}
+
+			artist = sb.String()
 			return false
 		}
 		return true
