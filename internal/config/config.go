@@ -1,12 +1,12 @@
 package config
 
 type BotConfig struct {
-	Prefix        string `yaml:"prefix"`
-	Token         string `yaml:"token"`
-	OwnerID       string `yaml:"owner_id"`
-	DonateMessage string `yaml:"donate_message"`
-	Env           string `yaml:"env"`
-	Presence      string `yaml:"presence"`
-	GitRepoURL    string `yaml:"git_repo_url"`
-	YoutubeAPIKey string `yaml:"youtube_api_key"`
+	Prefix        string `json:"prefix"`
+	Token         string `json:"token"`
+	OwnerID       string `json:"owner_id"`
+	DonateMessage string `json:"donate_message"`
+	Env           string `json:"env"`
+	Presence      string `json:"presence"`
+	GitRepoURL    string `json:"git_repo_url"`
+	YoutubeAPIKey string `json:"youtube_api_key"`
 }
