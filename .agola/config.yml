@@ -108,7 +108,9 @@ runs:
       # Deploy (when the branch is master)
       - name: deploy
         when:
-          branch: master
+          branch: 
+            - master
+            - dev
         environment:
           REGISTRY_URL:
             from_variable: registry-url
