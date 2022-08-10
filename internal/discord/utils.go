@@ -2,8 +2,8 @@ package discord
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 )
 
@@ -12,5 +12,5 @@ func AsMention(userID string) string {
 }
 
 func OpenChatWithOwner() (model.TextChannel, error) {
-	return Bot.OpenChannelWithUser(os.Getenv("DC_BOT_OWNER_ID"))
+	return Bot.OpenChannelWithUser(config.Config.OwnerID)
 }

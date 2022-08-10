@@ -23,9 +23,9 @@ Aryzona is not public yet.
 
 _The bot is written in GoLang, so you need the Go compiler._
 
-Create a `.env` file and copy the content of the `.env.default` file into it.
+Create a `config.yml` file and copy the content of the `config.example.yml` file into it.
 
-Then, change the values.
+Then, fill the config with proper values.
 
 To start the bot, run `make run` or `go run .`.
 

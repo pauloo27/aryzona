@@ -6,6 +6,7 @@ import (
 	"os/user"
 	"strconv"
 
+	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
@@ -22,7 +23,7 @@ func init() {
 }
 
 func ready(bot discord.BotAdapter) {
-	presence := os.Getenv("DC_BOT_PRESENCE")
+	presence := config.Config.Presence
 	if presence == "" {
 		presence = git.CommitMessage
 	}
@@ -35,7 +36,7 @@ func ready(bot discord.BotAdapter) {
 		logger.Error(err)
 	}
 
-	if os.Getenv("DC_BOT_ENV") == "prod" {
+	if config.Config.Env == "prod" {
 		c, err := discord.OpenChatWithOwner()
 		if err != nil {
 			logger.Fatal(err)

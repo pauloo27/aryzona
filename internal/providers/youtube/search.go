@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"os"
 
+	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/searchtube"
 	"github.com/buger/jsonparser"
 )
 
 func searchWithAPI(searchQuery string) (id string, err error) {
-	apiKey := os.Getenv("DC_BOT_YOUTUBE_API_KEY")
+	apiKey := config.Config.YoutubeAPIKey
 	uri := fmt.Sprintf(
 		"https://www.googleapis.com/youtube/v3/search?q=%s&key=%s&maxResults=1&type=video",
 		url.QueryEscape(searchQuery), url.QueryEscape(apiKey),

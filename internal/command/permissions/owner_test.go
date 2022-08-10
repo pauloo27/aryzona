@@ -1,11 +1,11 @@
 package permissions_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/permissions"
+	"github.com/Pauloo27/aryzona/internal/config"
 
 	"github.com/stretchr/testify/require"
 )
@@ -15,18 +15,18 @@ func TestOwnerPermission(t *testing.T) {
 		AuthorID: "777",
 	}
 
-	_ = os.Setenv("DC_BOT_OWNER_ID", "123")
+	config.Config.OwnerID = "123"
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	_ = os.Setenv("DC_BOT_OWNER_ID", "")
+	config.Config.OwnerID = ""
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	_ = os.Setenv("DC_BOT_OWNER_ID", "321")
+	config.Config.OwnerID = "321"
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	_ = os.Setenv("DC_BOT_OWNER_ID", "7 7 7")
+	config.Config.OwnerID = "7 7 7"
 	require.False(t, permissions.MustBeOwner.Checker(ctx))
 
-	_ = os.Setenv("DC_BOT_OWNER_ID", "777")
+	config.Config.OwnerID = "777"
 	require.True(t, permissions.MustBeOwner.Checker(ctx))
 }

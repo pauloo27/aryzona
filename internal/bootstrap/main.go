@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/logger"
 
@@ -27,7 +28,11 @@ import (
 )
 
 func preStart(commitHash, commitMessage string) {
-	loadEnv()
+	_, err := config.Load()
+	if err != nil {
+		logger.Fatal("Cannot load config", err)
+	}
+
 	loadGitInfo(commitHash, commitMessage)
 	listenToLog()
 }
@@ -36,7 +41,7 @@ func Start(commitHash, commitMessage string) {
 	preStart(commitHash, commitMessage)
 
 	logger.Infof("Connecting to Discord using implementation %s...", discord.Bot.Implementation())
-	err := discord.CreateBot(os.Getenv("DC_BOT_TOKEN"))
+	err := discord.CreateBot(config.Config.Token)
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -47,7 +52,7 @@ func Start(commitHash, commitMessage string) {
 	}
 	logger.Success("Connected to discord")
 
-	command.Prefix = os.Getenv("DC_BOT_PREFIX")
+	command.Prefix = config.Config.Prefix
 
 	logger.Info("Registering slash commands handlers...")
 	err = discord.Bot.RegisterSlashCommands()

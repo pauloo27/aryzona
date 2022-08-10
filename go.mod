@@ -10,8 +10,8 @@ require (
 	github.com/buger/jsonparser v1.1.1
 	github.com/bwmarrin/discordgo v0.24.0
 	github.com/diamondburned/arikawa/v3 v3.0.0-rc.3
+	github.com/ghodss/yaml v1.0.0
 	github.com/google/uuid v1.3.0
-	github.com/joho/godotenv v1.4.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
 	github.com/kkdai/youtube/v2 v2.7.10
 	github.com/mmcdole/gofeed v1.1.3
@@ -44,6 +44,7 @@ require (
 	golang.org/x/sys v0.0.0-20211214234402-4825e8c3871d // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
