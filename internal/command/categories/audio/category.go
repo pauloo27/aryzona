@@ -12,3 +12,7 @@ var Audio = command.CommandCategory{
 		&SkipCommand, &PauseCommand, &ShuffleCommand,
 	},
 }
+
+func init() {
+	command.RegisterCategory(Audio)
+}
