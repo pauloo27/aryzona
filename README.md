@@ -13,6 +13,7 @@ The one and only Discord Bot that is proudly Flamenguista.
 - random animals (`!dog`, `!cat`, `!fox`)
 - play radios: lofi, rock, pisadinha, pop, cafe, swing and more (`!radio`)
 - play youtube videos (`!play`)
+- xkcd (`!xkcd latest`, `!xkcd random`)
 - and a few more stuff
 
 ## How to add to your server
