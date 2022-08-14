@@ -34,6 +34,20 @@ func (v *Voicer) registerListeners() {
 	})
 }
 
+func (v *Voicer) Pause() {
+	if v.StreamingSession == nil {
+		return
+	}
+	v.StreamingSession.Pause()
+}
+
+func (v *Voicer) Resume() {
+	if v.StreamingSession == nil {
+		return
+	}
+	v.StreamingSession.Resume()
+}
+
 func (v *Voicer) TogglePause() {
 	if v.StreamingSession == nil {
 		return

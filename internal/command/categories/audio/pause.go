@@ -1,6 +1,8 @@
 package audio
 
 import (
+	"fmt"
+
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
@@ -8,8 +10,8 @@ import (
 )
 
 var PauseCommand = command.Command{
-	Name: "pause", Aliases: []string{"resume"},
-	Description: "Pause/unpause the queue",
+	Name:        "pause",
+	Description: "Pause the queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
@@ -20,11 +22,11 @@ var PauseCommand = command.Command{
 			return
 		}
 
-		vc.TogglePause()
 		if vc.IsPaused() {
-			ctx.Success("Paused!")
+			ctx.Error("The queue is already paused")
 			return
 		}
-		ctx.Success("Resumed!")
+		vc.Pause()
+		ctx.Success(fmt.Sprintf("Paused! Use `%sresume` to resume the queue.", command.Prefix))
 	},
 }

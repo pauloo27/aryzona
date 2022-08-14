@@ -115,21 +115,30 @@ func (s *StreamingSession) PlaybackPosition() int {
 	return time
 }
 
-func (s *StreamingSession) TogglePause() {
-	s.Lock()
+func (s *StreamingSession) Pause() {
+	s.paused = true
+}
 
+func (s *StreamingSession) Resume() {
+	s.Lock()
+	defer s.Unlock()
+	if !s.paused {
+		return
+	}
+	s.paused = false
+	utils.Go(s.stream)
+}
+
+func (s *StreamingSession) TogglePause() {
 	if s.finished {
-		s.Unlock()
 		return
 	}
 
-	isPaused := !(s.paused)
-
-	s.paused = isPaused
-	if !isPaused {
-		utils.Go(s.stream)
+	if s.paused {
+		s.Resume()
+	} else {
+		s.Pause()
 	}
-	s.Unlock()
 }
 
 func (s *StreamingSession) Finished() (bool, error) {
