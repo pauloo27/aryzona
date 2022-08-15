@@ -47,7 +47,6 @@ func RegisterCommand(command *Command) {
 			logger.Fatalf("sub command %s of %s: %v", subCommand.Name, command.Name, errMsg)
 			return
 		}
-		// sub commands cannot have sub commands YET...
 		if subCommand.SubCommands != nil {
 			logger.Fatalf("sub command %s of %s has sub commands", subCommand.Name, command.Name)
 			return
@@ -61,14 +60,10 @@ func RegisterCommand(command *Command) {
 	}
 }
 
-// why a function? I think I did it that way, so the access to the
-// command map was "harder" (the idea is to use RegisterCommand())
 func GetCommandList() []*Command {
 	return commandList
 }
 
-// why a function? I think I did it that way, so the access to the
-// command map was "harder" (the idea is to use RegisterCommand())
 func GetCommandMap() map[string]*Command {
 	return commandMap
 }

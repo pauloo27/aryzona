@@ -8,10 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetByNuM(t *testing.T) {
-	// yeah so there's a change of the response be changed.
-	// I rather hope to it to happen after i am dead
-	// (or at least be while i am able to fix the test) than not testing
+func TestGetByNum(t *testing.T) {
+	// yeah so if there's a change in the response, the test needs to be changed.
 
 	t.Run("get the first one", func(t *testing.T) {
 		comic, err := xkcd.GetByNum(1)
@@ -48,8 +46,8 @@ func TestRandom(t *testing.T) {
 	t.Run("get a random one", func(t *testing.T) {
 		comic, err := xkcd.GetRandom()
 		require.Nil(t, err)
-		// maybe there's a comig without a title or a img, which might be not a
-		// god thing (if you are me from the future coming here to fix the test,
+		// maybe there's a comic without a title or a img, which might be not a
+		// good thing (if you are me from the future coming here to fix the test,
 		// remember to fix the GetLatest test too cuz i used the same stupid asserts).
 		assert.NotEqual(t, 0, comic.Num)
 		assert.NotEqual(t, "", comic.Img)
