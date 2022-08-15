@@ -27,17 +27,11 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		return
 	}
 
-	if !strings.HasPrefix(m.Content(), command.Prefix) {
+	rawCommand, args, ok := parseCommand(self, m.Content())
+	if !ok {
 		return
 	}
 
-	rawCommand := strings.TrimPrefix(strings.Split(m.Content(), " ")[0], command.Prefix)
-	args := strings.Split(
-		strings.TrimPrefix(strings.TrimPrefix(m.Content(), command.Prefix+rawCommand), " "), " ",
-	)
-	if len(args) == 1 && args[0] == "" {
-		args = []string{}
-	}
 	event := command.Adapter{
 		AuthorID: m.Author().ID(),
 		GuildID:  m.Channel().Guild().ID(),
@@ -54,4 +48,25 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		strings.ToLower(rawCommand), args, &event, bot, command.CommandTriggerMessage,
 		m.Channel(),
 	)
+}
+
+func parseCommand(self model.User, content string) (rawCommand string, args []string, ok bool) {
+	rawCommand, args, ok = parseCommandForPrefix(command.Prefix, content)
+	if ok {
+		return
+	}
+	// check for "@bot command"
+	return parseCommandForPrefix(discord.AsMention(self.ID())+" ", content)
+}
+
+func parseCommandForPrefix(prefix string, content string) (rawCommand string, args []string, ok bool) {
+	if !strings.HasPrefix(content, prefix) {
+		return
+	}
+
+	ok = true
+	parts := strings.Split(strings.TrimPrefix(content, prefix), " ")
+	rawCommand = parts[0]
+	args = parts[1:]
+	return
 }
