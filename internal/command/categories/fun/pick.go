@@ -10,9 +10,9 @@ import (
 	"github.com/Pauloo27/aryzona/internal/utils/rnd"
 )
 
-var DrawCommand = command.Command{
-	Name: "draw", Description: "Draw a random thing",
-	Aliases: []string{"sorteio", "sortear"},
+var PickCommand = command.Command{
+	Name: "pick", Description: "Pick a random thing",
+	Aliases: []string{"sorteio", "sortear", "draw"},
 	Parameters: []*command.CommandParameter{
 		{
 			Name:        "things",
@@ -30,7 +30,7 @@ var DrawCommand = command.Command{
 		}
 		ctx.SuccessEmbed(
 			discord.NewEmbed().
-				WithTitle("Draw").
+				WithTitle("Pick").
 				WithDescription(
 					fmt.Sprintf(
 						"Picking a random thing from _%s_:\n\nMy pick is **%s**",
