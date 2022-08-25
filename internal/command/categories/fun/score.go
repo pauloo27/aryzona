@@ -143,7 +143,8 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 
 var eventTypePrefixes = map[int64]string{
 	43: "🟡",
-	// TODO: red card???
+	44: "🔴", // one straight red card
+	45: "🔴", // two red cards
 	36: "⚽",
 	3:  "🔄",
 	22: "👋",

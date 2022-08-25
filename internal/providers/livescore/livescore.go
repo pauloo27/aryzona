@@ -11,6 +11,8 @@ import (
 	"github.com/buger/jsonparser"
 )
 
+// this code could use some refactoring...
+
 type TeamInfo struct {
 	Name, Color string
 	Score       int
