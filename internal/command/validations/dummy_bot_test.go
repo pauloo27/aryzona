@@ -17,6 +17,10 @@ func (DummyBot) Implementation() string {
 	return "Dummy Bot"
 }
 
+func (DummyBot) GetMember(guildID, memberID string) (model.Member, error) {
+	return nil, nil
+}
+
 func (DummyBot) Init(token string) error {
 	return nil
 }

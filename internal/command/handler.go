@@ -90,6 +90,7 @@ func HandleCommand(
 	}
 
 	ctx := &CommandContext{
+		Member:    adapter.Member,
 		Bot:       bot,
 		RawArgs:   args,
 		AuthorID:  adapter.AuthorID,

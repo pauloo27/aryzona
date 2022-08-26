@@ -25,6 +25,7 @@ type CommandContext struct {
 	RawArgs           []string
 	Args              []interface{}
 	Bot               discord.BotAdapter
+	Member            model.Member
 	Channel           model.TextChannel
 	AuthorID, GuildID string
 	UsedName          string

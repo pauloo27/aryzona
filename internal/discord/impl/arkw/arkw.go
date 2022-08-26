@@ -338,6 +338,33 @@ func (b ArkwBot) FindUserVoiceState(guildID, userID string) (model.VoiceState, e
 	return buildVoiceState(buildVoiceChannel(vs.ChannelID.String(), buildGuild(guildID))), nil
 }
 
+func (b ArkwBot) GetMember(guildID, userID string) (model.Member, error) {
+	guildSf, err := dc.ParseSnowflake(guildID)
+	if err != nil {
+		return nil, err
+	}
+	userSf, err := dc.ParseSnowflake(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	m, err := b.d.s.Member(dc.GuildID(guildSf), dc.UserID(userSf))
+	if err != nil {
+		return nil, err
+	}
+
+	var roles []model.Role
+	for _, r := range m.RoleIDs {
+		role, err := b.d.s.Role(dc.GuildID(guildSf), r)
+		if err != nil {
+			return nil, err
+		}
+		roles = append(roles, buildRole(role))
+	}
+
+	return buildMember(roles), nil
+}
+
 func (b ArkwBot) UpdatePresence(presence *model.Presence) error {
 	var ty dc.ActivityType
 	switch presence.Type {

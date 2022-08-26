@@ -32,8 +32,19 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		return
 	}
 
+	var member model.Member
+
+	if m.Channel().Guild().ID() != "" {
+		m, err := bot.GetMember(m.Channel().Guild().ID(), m.Author().ID())
+		if err != nil {
+			return
+		}
+		member = m
+	}
+
 	event := command.Adapter{
 		AuthorID: m.Author().ID(),
+		Member:   member,
 		GuildID:  m.Channel().Guild().ID(),
 		Reply: func(ctx *command.CommandContext, msg string) error {
 			_, err := discord.Bot.SendReplyMessage(m, msg)

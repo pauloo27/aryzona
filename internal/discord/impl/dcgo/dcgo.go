@@ -227,6 +227,10 @@ func (b DcgoBot) FindUserVoiceState(guildID, userID string) (model.VoiceState, e
 	return buildVoiceState(buildVoiceChannel(state.ChannelID, buildGuild(guildID))), nil
 }
 
+func (b DcgoBot) GetMember(guilID, userID string) (model.Member, error) {
+	return nil, errors.New("not implemented yet")
+}
+
 func (b DcgoBot) UpdatePresence(presence *model.Presence) error {
 	switch presence.Type {
 	case model.PresencePlaying:
