@@ -228,7 +228,20 @@ func (b DcgoBot) FindUserVoiceState(guildID, userID string) (model.VoiceState, e
 }
 
 func (b DcgoBot) GetMember(guilID, userID string) (model.Member, error) {
-	return nil, errors.New("not implemented yet")
+	m, err := b.d.s.GuildMember(guilID, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var roles []model.Role
+	for _, roleID := range m.Roles {
+		role, err := b.d.s.State.Role(guilID, roleID)
+		if err != nil {
+			return nil, err
+		}
+		roles = append(roles, buildRole(role))
+	}
+	return buildMember(roles), nil
 }
 
 func (b DcgoBot) UpdatePresence(presence *model.Presence) error {
