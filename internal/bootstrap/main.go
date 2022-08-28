@@ -10,8 +10,8 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/logger"
 
-	// import arikawa implementation
-	_ "github.com/Pauloo27/aryzona/internal/discord/impl/arkw"
+	// import dcgo implementation
+	_ "github.com/Pauloo27/aryzona/internal/discord/impl/dcgo"
 
 	// import listeners
 	_ "github.com/Pauloo27/aryzona/internal/discord/listener"
