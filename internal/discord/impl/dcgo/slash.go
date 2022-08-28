@@ -115,11 +115,11 @@ func registerCommands(bot DcgoBot) error {
 			if embed != nil {
 				embeds = append(embeds, buildEmbed(embed))
 			}
-			_, err := s.InteractionResponseEdit(s.State.User.ID,
+			_, err := s.InteractionResponseEdit(
 				i.Interaction,
 				&discordgo.WebhookEdit{
-					Embeds:  embeds,
-					Content: msg,
+					Embeds:  &embeds,
+					Content: &msg,
 				},
 			)
 			return err
