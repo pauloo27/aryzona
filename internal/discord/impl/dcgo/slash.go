@@ -147,7 +147,18 @@ func registerCommands(bot DcgoBot) error {
 			authorID = i.Member.User.ID
 		}
 
+		var member model.Member
+
+		if i.GuildID != "" {
+			m, err := bot.GetMember(i.GuildID, authorID)
+			if err != nil {
+				return
+			}
+			member = m
+		}
+
 		event := command.Adapter{
+			Member:   member,
 			AuthorID: authorID,
 			GuildID:  i.GuildID,
 			DeferResponse: func() error {

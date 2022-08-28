@@ -172,7 +172,18 @@ func registerCommands(bot ArkwBot) error {
 				args = append(args, option.String())
 			}
 
+			var member model.Member
+
+			if !i.GuildID.IsNull() {
+				m, err := bot.GetMember(i.GuildID.String(), i.SenderID().String())
+				if err != nil {
+					return
+				}
+				member = m
+			}
+
 			adapter := command.Adapter{
+				Member:   member,
 				AuthorID: i.Sender().ID.String(),
 				GuildID:  i.GuildID.String(),
 				DeferResponse: func() error {
