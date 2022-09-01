@@ -139,11 +139,3 @@ const (
 		PermissionChangeNickname |
 		PermissionViewAuditLog
 )
-
-func (p Permissions) Has(perm Permissions) bool {
-	return HasFlag(uint64(p), uint64(perm))
-}
-
-func HasFlag(flag, has uint64) bool {
-	return flag&has == has
-}
