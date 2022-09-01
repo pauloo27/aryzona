@@ -28,7 +28,7 @@ install: build
 
 .PHONY: test
 test: 
-	$(TEST_COMMAND) -cover -parallel 5 -failfast  ./... 
+	$(TEST_COMMAND) -cover -parallel 5 -failfast -count=1 ./... 
 
 .PHONY: tidy
 tidy:
