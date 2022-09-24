@@ -12,15 +12,15 @@ import (
 )
 
 var ScoreCommand = command.Command{
-	Name: "score", Description: "Show live matches score",
-	Aliases: []string{"placar", "gols", "live", "scores"},
+	Name: "score", Description: "Show matches score",
+	Aliases: []string{"placar", "gols", "scores"},
 	Parameters: []*command.CommandParameter{
 		{
 			Name:            "game",
 			Required:        false,
 			RequiredMessage: "Missing the team name or a match id",
 			Description:     "team name or match id",
-			Type:            parameters.ParameterString,
+			Type:            parameters.ParameterText,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
@@ -71,7 +71,7 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 			return
 		}
 	} else {
-		match, err = livescore.FetchMatchInfoByTeamName(strings.Join(ctx.RawArgs, " "))
+		match, err = livescore.FetchMatchInfoByTeamName(teamNameOrID)
 		if err != nil {
 			ctx.Error(err.Error())
 			return
@@ -137,6 +137,7 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 			WithField("Time", match.Time).
 			WithFieldInline(match.T1.Name, t1Score).
 			WithFieldInline(match.T2.Name, t2Score).
+			WithFooter(fmt.Sprintf("Use `%slive %s` to get live updates", command.Prefix, teamNameOrID)).
 			WithDescription(descStr),
 	)
 }
