@@ -9,6 +9,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/ReneKroon/ttlcache/v2"
+	"github.com/diamondburned/arikawa/v3/api"
 	dc "github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
@@ -16,6 +17,8 @@ import (
 	"github.com/diamondburned/arikawa/v3/voice"
 	"github.com/google/uuid"
 )
+
+var _ discord.BotAdapter = ArkwBot{}
 
 func init() {
 	cache := ttlcache.NewCache()
@@ -207,6 +210,56 @@ func (b ArkwBot) SendReplyMessage(m model.Message, content string) (model.Messag
 		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
 		content,
+	), nil
+}
+
+func (b ArkwBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
+	sf, err := dc.ParseSnowflake(message.Channel().ID())
+	if err != nil {
+		return nil, err
+	}
+	msgSf, err := dc.ParseSnowflake(message.ID())
+	if err != nil {
+		return nil, err
+	}
+	msg, err := b.d.s.EditMessage(dc.ChannelID(sf), dc.MessageID(msgSf), newContent)
+	if err != nil {
+		return nil, err
+	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(
+		msg.ID.String(), buildChannel(message.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
+		buildUser(msg.Author.ID.String()),
+		newContent,
+	), nil
+}
+
+func (b ArkwBot) EditMessageEmbed(message model.Message, newEmbed *discord.Embed) (model.Message, error) {
+	sf, err := dc.ParseSnowflake(message.Channel().ID())
+	if err != nil {
+		return nil, err
+	}
+	msgSf, err := dc.ParseSnowflake(message.ID())
+	if err != nil {
+		return nil, err
+	}
+	msg, err := b.d.s.EditMessageComplex(dc.ChannelID(sf), dc.MessageID(msgSf), api.EditMessageData{
+		Embeds: &[]dc.Embed{buildEmbed(newEmbed)},
+	})
+	if err != nil {
+		return nil, err
+	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(
+		msg.ID.String(), buildChannel(message.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
+		buildUser(msg.Author.ID.String()),
+		msg.Content,
 	), nil
 }
 

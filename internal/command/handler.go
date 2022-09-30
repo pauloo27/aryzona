@@ -110,6 +110,12 @@ func HandleCommand(
 	ctx.ReplyEmbed = func(embed *discord.Embed) error {
 		return adapter.ReplyEmbed(ctx, embed)
 	}
+	ctx.Edit = func(msg string) error {
+		return adapter.Edit(ctx, msg)
+	}
+	ctx.EditEmbed = func(embed *discord.Embed) error {
+		return adapter.EditEmbed(ctx, embed)
+	}
 
 	executeCommand(command, ctx, adapter, bot)
 }

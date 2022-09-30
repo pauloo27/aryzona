@@ -25,7 +25,7 @@ var ScoreCommand = command.Command{
 	},
 	Handler: func(ctx *command.CommandContext) {
 		if len(ctx.Args) == 1 {
-			ShowMatchInfo(ctx)
+			showMatchInfo(ctx)
 			return
 		}
 		ListLiveMatches(ctx)
@@ -61,7 +61,7 @@ func ListLiveMatches(ctx *command.CommandContext) {
 	)
 }
 
-func ShowMatchInfo(ctx *command.CommandContext) {
+func showMatchInfo(ctx *command.CommandContext) {
 	var match *livescore.MatchInfo
 	teamNameOrID := ctx.Args[0].(string)
 	if _, err := strconv.Atoi(teamNameOrID); err == nil {
@@ -82,6 +82,13 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 		}
 	}
 
+	embed := BuildMatchEmbed(match).
+		WithFooter(fmt.Sprintf("Use `%slive %s` to get live updates", command.Prefix, teamNameOrID))
+
+	ctx.Embed(embed)
+}
+
+func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 	var color int
 	if match.T1.Score == match.T2.Score {
 		color = 0xC0FFEE
@@ -130,16 +137,13 @@ func ShowMatchInfo(ctx *command.CommandContext) {
 		t2Score = "_"
 	}
 
-	ctx.Embed(
-		discord.NewEmbed().
-			WithDescription(fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
-			WithColor(color).
-			WithField("Time", match.Time).
-			WithFieldInline(match.T1.Name, t1Score).
-			WithFieldInline(match.T2.Name, t2Score).
-			WithFooter(fmt.Sprintf("Use `%slive %s` to get live updates", command.Prefix, teamNameOrID)).
-			WithDescription(descStr),
-	)
+	return discord.NewEmbed().
+		WithDescription(fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
+		WithColor(color).
+		WithField("Time", match.Time).
+		WithFieldInline(match.T1.Name, t1Score).
+		WithFieldInline(match.T2.Name, t2Score).
+		WithDescription(descStr)
 }
 
 var eventTypePrefixes = map[int64]string{

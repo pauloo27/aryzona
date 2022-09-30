@@ -10,6 +10,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+var _ discord.BotAdapter = DcgoBot{}
+
 func init() {
 	discord.UseImplementation(&DcgoBot{
 		d: &discordData{},
@@ -179,8 +181,32 @@ func (b DcgoBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (m
 	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
 }
 
+func (b DcgoBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
+	msg, err := b.d.s.ChannelMessageEdit(message.Channel().ID(), message.ID(), newContent)
+	if err != nil {
+		return nil, err
+	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
+}
+
 func (b DcgoBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.Message, error) {
 	msg, err := b.d.s.ChannelMessageSendEmbed(channelID, buildEmbed(embed))
+	if err != nil {
+		return nil, err
+	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(msg.ID, buildChannel(msg.ChannelID, buildGuild(msg.GuildID), cType), buildUser(msg.Author.ID), msg.Content), nil
+}
+
+func (b DcgoBot) EditMessageEmbed(message model.Message, embed *discord.Embed) (model.Message, error) {
+	msg, err := b.d.s.ChannelMessageEditEmbed(message.Channel().ID(), message.ID(), buildEmbed(embed))
 	if err != nil {
 		return nil, err
 	}

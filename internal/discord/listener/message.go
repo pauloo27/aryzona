@@ -42,16 +42,28 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		member = m
 	}
 
+	var lastSentMessage model.Message
+
 	event := command.Adapter{
 		AuthorID: m.Author().ID(),
 		Member:   member,
 		GuildID:  m.Channel().Guild().ID(),
 		Reply: func(ctx *command.CommandContext, msg string) error {
-			_, err := discord.Bot.SendReplyMessage(m, msg)
+			var err error
+			lastSentMessage, err = discord.Bot.SendReplyMessage(m, msg)
 			return err
 		},
 		ReplyEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
-			_, err := discord.Bot.SendReplyEmbedMessage(m, embed)
+			var err error
+			lastSentMessage, err = discord.Bot.SendReplyEmbedMessage(m, embed)
+			return err
+		},
+		Edit: func(ctx *command.CommandContext, msg string) error {
+			_, err := discord.Bot.EditMessageContent(lastSentMessage, msg)
+			return err
+		},
+		EditEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
+			_, err := discord.Bot.EditMessageEmbed(lastSentMessage, embed)
 			return err
 		},
 	}

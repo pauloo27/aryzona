@@ -25,6 +25,8 @@ type BotAdapter interface {
 	SendReplyMessage(message model.Message, content string) (model.Message, error)
 	SendReplyEmbedMessage(message model.Message, embed *Embed) (model.Message, error)
 	SendEmbedMessage(channelID string, embed *Embed) (model.Message, error)
+	EditMessageContent(message model.Message, newContent string) (model.Message, error)
+	EditMessageEmbed(message model.Message, embed *Embed) (model.Message, error)
 	OpenChannelWithUser(userID string) (model.TextChannel, error)
 	OpenGuild(guildID string) (model.Guild, error)
 	Latency() time.Duration

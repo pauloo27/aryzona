@@ -13,6 +13,14 @@ type DummyBot struct {
 
 var _ discord.BotAdapter = DummyBot{}
 
+func (DummyBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
+	return nil, nil
+}
+
+func (DummyBot) EditMessageEmbed(message model.Message, embed *discord.Embed) (model.Message, error) {
+	return nil, nil
+}
+
 func (DummyBot) Implementation() string {
 	return "Dummy Bot"
 }
