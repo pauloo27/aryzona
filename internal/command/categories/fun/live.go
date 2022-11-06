@@ -1,23 +1,16 @@
 package fun
 
 import (
-	"fmt"
+	"errors"
 	"strconv"
-	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 const (
 	maxFollowPerUser = 3
-)
-
-var (
-	// TODO: make sure something will remove stuff from memory
-	userFollows = make(map[string]int)
 )
 
 var LiveCommand = command.Command{
@@ -54,54 +47,23 @@ var LiveCommand = command.Command{
 			}
 		}
 
-		if match.Time == "FT" {
-			ctx.Error("Match already finished")
+		liveMatch, err := livescore.GetLiveMatch(match.ID)
+		if errors.Is(err, livescore.ErrMatchHasFinished) {
+			ctx.Error("Match has finished")
 			return
 		}
-
-		if userFollows[ctx.AuthorID] >= maxFollowPerUser {
-			ctx.Error(
-				fmt.Sprintf(
-					"You cannot follow more than 3 matches, you can `%sunfollow` some match to follow another one",
-					command.Prefix,
-				),
-			)
-			return
-		}
-
-		userFollows[ctx.AuthorID]++
 
 		embed := BuildMatchEmbed(match)
-		err := ctx.ReplyEmbed(embed)
-		if err != nil {
-			// TODO: cancel fetcher? (only if the only one using it)
-			ctx.Error("Something went wrong")
-			return
-		}
+		ctx.Embed(embed)
 
-		utils.Go(func() {
-			for {
-				time.Sleep(60 * time.Second)
-				match, err := livescore.FetchMatchInfo(match.ID)
-				if err != nil {
-					ctx.Error(err.Error())
-					return
-				}
-				if match.Time == "FT" {
-					userFollows[ctx.AuthorID]--
-					if userFollows[ctx.AuthorID] <= 0 {
-						delete(userFollows, ctx.AuthorID)
-					}
-					return
-				}
-				embed := BuildMatchEmbed(match)
-				err = ctx.EditEmbed(embed)
-				if err != nil {
-					// TODO: cancel fetcher? (only if the only one using it)
-					ctx.Error("Something went wrong")
-					return
-				}
+		liveMatch.AddListener(func(match *livescore.LiveMatch, err error) {
+			if err != nil {
+				ctx.Error(err.Error())
+				return
 			}
+			embed := BuildMatchEmbed(match.CurrentData)
+			// TODO: remove handler
+			_ = ctx.EditEmbed(embed)
 		})
 	},
 }
