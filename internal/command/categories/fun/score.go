@@ -62,24 +62,16 @@ func ListLiveMatches(ctx *command.CommandContext) {
 }
 
 func showMatchInfo(ctx *command.CommandContext) {
-	var match *livescore.MatchInfo
 	teamNameOrID := ctx.Args[0].(string)
-	if _, err := strconv.Atoi(teamNameOrID); err == nil {
-		match, err = livescore.FetchMatchInfo(teamNameOrID)
-		if err != nil {
-			ctx.Error(err.Error())
-			return
-		}
-	} else {
-		match, err = livescore.FetchMatchInfoByTeamName(teamNameOrID)
-		if err != nil {
-			ctx.Error(err.Error())
-			return
-		}
-		if match == nil {
-			ctx.Error("Match not found")
-			return
-		}
+	match, err := getMatchByTeamNameOrID(teamNameOrID)
+
+	if err != nil {
+		ctx.Error(err.Error())
+		return
+	}
+	if match == nil {
+		ctx.Error("Match not found")
+		return
 	}
 
 	embed := BuildMatchEmbed(match).

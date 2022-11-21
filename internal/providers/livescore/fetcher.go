@@ -13,13 +13,14 @@ type LiveMatch struct {
 	MatchID      string
 	CurrentData  *MatchInfo
 	PreviousData *MatchInfo
-	Listeners    []ListenerFn
+	Listeners    map[string]ListenerFn
 }
 
 // errors
 var (
 	ErrMatchAlreadyFollowed = errors.New("match already followed")
 	ErrMatchHasFinished     = errors.New("match has finished")
+	ErrListenerNotFound     = errors.New("listener not found")
 )
 
 var (
@@ -64,6 +65,7 @@ func followMatch(id string) (*LiveMatch, error) {
 		MatchID:      id,
 		CurrentData:  match,
 		PreviousData: nil,
+		Listeners:    make(map[string]ListenerFn),
 	}
 
 	return followedMatches[id], nil
@@ -97,6 +99,18 @@ func updateLiveMatch(liveMatch *LiveMatch) {
 	}
 }
 
-func (liveMatch *LiveMatch) AddListener(listener ListenerFn) {
-	liveMatch.Listeners = append(liveMatch.Listeners, listener)
+func (liveMatch *LiveMatch) AddListener(id string, listener ListenerFn) {
+	liveMatch.Listeners[id] = listener
+}
+
+func (liveMatch *LiveMatch) RemoveListener(id string) error {
+	_, found := liveMatch.Listeners[id]
+	if !found {
+		return ErrListenerNotFound
+	}
+	delete(liveMatch.Listeners, id)
+	if len(liveMatch.Listeners) == 0 {
+		UnfollowMatch(liveMatch.MatchID)
+	}
+	return nil
 }
