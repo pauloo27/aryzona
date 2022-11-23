@@ -6,6 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 )
@@ -22,8 +23,9 @@ var PlayingCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		playing := ctx.Locals["playing"].(playable.Playable)
+		requesterID := ctx.Locals["requesterID"].(string)
 
-		embed := buildPlayableInfoEmbed(playing, vc).
+		embed := buildPlayableInfoEmbed(playing, vc, requesterID).
 			WithTitle("Now playing: " + playing.GetName())
 
 		if vc.Queue.Size() > 1 {
@@ -34,11 +36,13 @@ var PlayingCommand = command.Command{
 				limit = maxNextItems
 			}
 			for _, item := range next[:limit] {
-				title, artist := item.GetFullTitle()
+				playable := item.Playable
+				title, artist := playable.GetFullTitle()
+				requester := discord.AsMention(item.Requester)
 				if artist == "" {
-					sb.WriteString(fmt.Sprintf("  -> %s\n", title))
+					sb.WriteString(fmt.Sprintf("  -> %s _requested by %s_\n", title, requester))
 				} else {
-					sb.WriteString(fmt.Sprintf("  -> %s - %s\n", artist, title))
+					sb.WriteString(fmt.Sprintf("  -> %s - %s _requested by %s_\n", artist, title, requester))
 				}
 			}
 			if len(next) > maxNextItems {

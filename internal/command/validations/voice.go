@@ -22,12 +22,12 @@ var MustBePlaying = &command.CommandValidation{
 	DependsOn:   []*command.CommandValidation{MustHaveVoicerOnGuild},
 	Checker: func(ctx *command.CommandContext) (bool, string) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
-		playing := vc.Playing()
-
-		if playing == nil {
+		item := vc.Playing()
+		if item == nil {
 			return false, "Nothing playing"
 		}
-		ctx.Locals["playing"] = playing
+		ctx.Locals["playing"] = item.Playable
+		ctx.Locals["requesterID"] = item.Requester
 
 		return true, ""
 	},

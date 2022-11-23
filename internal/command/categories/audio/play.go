@@ -62,7 +62,7 @@ var PlayCommand = command.Command{
 			}
 		}
 
-		embed := buildPlayableInfoEmbed(result, vc).WithTitle("Best result for: " + searchQuery)
+		embed := buildPlayableInfoEmbed(result, vc, ctx.AuthorID).WithTitle("Best result for: " + searchQuery)
 		ctx.SuccessEmbed(embed)
 
 		var vidsToAppend []playable.Playable
@@ -73,7 +73,7 @@ var PlayCommand = command.Command{
 		}
 
 		utils.Go(func() {
-			if err = vc.AppendManyToQueue(vidsToAppend...); err != nil {
+			if err = vc.AppendManyToQueue(ctx.AuthorID, vidsToAppend...); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}

@@ -186,10 +186,11 @@ func (v *Voicer) Start() error {
 	}
 
 	for {
-		playable := v.Queue.First()
-		if playable == nil || !v.usable {
+		entry := v.Queue.First()
+		if entry == nil || !v.usable {
 			return nil
 		}
+		playable := entry.Playable
 
 		url, err := playable.GetDirectURL()
 		if err != nil {

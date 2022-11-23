@@ -13,14 +13,19 @@ const (
 	EventShuffle = event.EventType("SHUFFLE")
 )
 
+type QueueEntry struct {
+	Playable  playable.Playable
+	Requester string
+}
+
 type Queue struct {
-	queue []playable.Playable
+	queue []*QueueEntry
 	*event.EventEmitter
 }
 
 func NewQueue() *Queue {
 	return &Queue{
-		queue:        []playable.Playable{},
+		queue:        []*QueueEntry{},
 		EventEmitter: event.NewEventEmitter(),
 	}
 }
@@ -38,17 +43,17 @@ func (q *Queue) Shuffle() {
 	q.Emit(EventShuffle)
 }
 
-func (q *Queue) Append(item playable.Playable) {
+func (q *Queue) Append(item *QueueEntry) {
 	q.queue = append(q.queue, item)
 	q.Emit(EventAppend, EventAppendData{
 		Queue:  q,
 		Index:  q.Size() - 1,
 		IsMany: false,
-		Items:  []playable.Playable{item},
+		Items:  []*QueueEntry{item},
 	})
 }
 
-func (q *Queue) AppendMany(items ...playable.Playable) {
+func (q *Queue) AppendMany(items ...*QueueEntry) {
 	q.queue = append(q.queue, items...)
 	q.Emit(EventAppend, EventAppendData{
 		Queue:  q,
@@ -58,12 +63,12 @@ func (q *Queue) AppendMany(items ...playable.Playable) {
 	})
 }
 
-func (q *Queue) All() []playable.Playable {
+func (q *Queue) All() []*QueueEntry {
 	return q.queue
 }
 
-func (q *Queue) AppendAt(index int, item playable.Playable) {
-	var tmp []playable.Playable
+func (q *Queue) AppendAt(index int, item *QueueEntry) {
+	var tmp []*QueueEntry
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, item)
 	tmp = append(tmp, q.queue[index:]...)
@@ -72,20 +77,20 @@ func (q *Queue) AppendAt(index int, item playable.Playable) {
 		Queue:  q,
 		Index:  index,
 		IsMany: false,
-		Items:  []playable.Playable{item},
+		Items:  []*QueueEntry{item},
 	})
 }
 
 func (q *Queue) Clear() {
-	var tmp []playable.Playable
+	var tmp []*QueueEntry
 	q.queue = tmp
 }
 
-func (q *Queue) ItemAt(index int) playable.Playable {
+func (q *Queue) ItemAt(index int) *QueueEntry {
 	return q.queue[index]
 }
 
-func (q *Queue) First() playable.Playable {
+func (q *Queue) First() *QueueEntry {
 	if q.Size() == 0 {
 		return nil
 	}
@@ -96,7 +101,7 @@ func (q *Queue) Remove(index int) {
 	if q.Size() == 0 {
 		return
 	}
-	var tmp []playable.Playable
+	var tmp []*QueueEntry
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
 	q.queue = tmp
