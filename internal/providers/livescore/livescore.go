@@ -4,152 +4,32 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 
-	"github.com/Pauloo27/logger"
-	"github.com/buger/jsonparser"
+	"github.com/tidwall/gjson"
 )
 
-// this code could use some refactoring...
+const (
+	baseAssetURL = "https://lsm-static-prod.livescore.com/high"
+)
 
 type TeamInfo struct {
-	Name, Color string
-	Score       int
+	Name, ImgURL string
 }
 
 type Event struct {
-	Text     string
-	Min      int64
-	ExtraMin int64
-	Type     int64
-}
-
-func (t TeamInfo) ColorAsInt() int {
-	color, err := strconv.ParseInt(t.Color, 16, 32)
-	if err != nil {
-		return 0
-	}
-	return int(color)
+	PlayerName   string
+	Minute, Half int
+	Type         EventType
 }
 
 type MatchInfo struct {
 	T1, T2                            *TeamInfo
+	T1Score, T2Score                  int
 	ID                                string
 	CupName, StadiumName, StadiumCity string
-	Time                              string // time as string? YES
+	Time                              string // FIXME: time as string? NO!
 	Events                            []*Event
-}
-
-func parseTeam(id int, data []byte) (*TeamInfo, error) {
-	name, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Nm")
-	if err != nil {
-		return nil, fmt.Errorf("name: %w", err)
-	}
-
-	color, err := jsonparser.GetString(data, ("T" + strconv.Itoa(id)), "[0]", "Shrt", "Bs")
-
-	// sometimes the color is not defined... so lets use white as fallback
-	if err != nil {
-		color = "ffffff"
-	}
-
-	rawScore, _ := jsonparser.GetString(data, "Tr"+strconv.Itoa(id))
-
-	score, err := strconv.Atoi(rawScore)
-	if err != nil {
-		score = 0
-		//return nil, errore.Wrap("score", err)
-	}
-
-	return &TeamInfo{name, color, score}, nil
-}
-
-func parseMatchForListing(data []byte) (*MatchInfo, error) {
-	id, err := jsonparser.GetString(data, "Eid")
-	if err != nil {
-		return nil, fmt.Errorf("id: %w", err)
-	}
-
-	time, err := jsonparser.GetString(data, "Eps")
-	if err != nil {
-		return nil, fmt.Errorf("time: %w", err)
-	}
-
-	team1, err := parseTeam(1, data)
-	if err != nil {
-		logger.Error("team1", err)
-	}
-
-	team2, err := parseTeam(2, data)
-	if err != nil {
-		return nil, fmt.Errorf("team2: %w", err)
-	}
-
-	return &MatchInfo{
-		ID: id, T1: team1, T2: team2,
-		Time: time,
-	}, nil
-}
-
-func parseMatch(data []byte) (*MatchInfo, error) {
-	id, err := jsonparser.GetString(data, "Eid")
-	if err != nil {
-		return nil, fmt.Errorf("id: %w", err)
-	}
-
-	time, err := jsonparser.GetString(data, "Eps")
-	if err != nil {
-		return nil, fmt.Errorf("time: %w", err)
-	}
-
-	cupName, err := jsonparser.GetString(data, "Stg", "Sdn")
-	if err != nil {
-		cupName = "Stree game"
-	}
-
-	stadiumName, err := jsonparser.GetString(data, "Vnm")
-	if err != nil {
-		stadiumName = "Somewhere"
-	}
-
-	stadiumCity, err := jsonparser.GetString(data, "VCity")
-	if err != nil {
-		stadiumCity = "Earth"
-	}
-
-	team1, err := parseTeam(1, data)
-	if err != nil {
-		logger.Error("team1", err)
-	}
-
-	team2, err := parseTeam(2, data)
-	if err != nil {
-		return nil, fmt.Errorf("team2: %w", err)
-	}
-
-	var events []*Event
-
-	_, _ = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
-		text, _ := jsonparser.GetString(value, "Txt")
-		id, _ := jsonparser.GetInt(value, "IT")
-		min, _ := jsonparser.GetInt(value, "Min")
-		extraMin, _ := jsonparser.GetInt(value, "MinEx")
-
-		event := Event{
-			Text:     text,
-			Type:     id,
-			Min:      min,
-			ExtraMin: extraMin,
-		}
-		events = append(events, &event)
-	}, "Com")
-
-	return &MatchInfo{
-		ID: id, T1: team1, T2: team2, Time: time, CupName: cupName,
-		StadiumName: stadiumName, StadiumCity: stadiumCity,
-		Events: events,
-	}, nil
 }
 
 func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
@@ -164,6 +44,35 @@ func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
 		}
 	}
 	return nil, nil
+}
+
+func ListLives() ([]*MatchInfo, error) {
+	endpoint := "https://prod-public-api.livescore.com/v1/api/react/live/soccer/-3.00"
+
+	res, err := http.Get(endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	matches := []*MatchInfo{}
+
+	parsedData := gjson.ParseBytes(data)
+
+	// stages are like "world cup", "brasileirão", etc
+	stages := parsedData.Get("Stages").Array()
+
+	for _, stage := range stages {
+		stageMatches := stage.Get("Events").Array()
+		for _, match := range stageMatches {
+			matches = append(matches, parseMatchForListing(match))
+		}
+	}
+
+	return matches, nil
 }
 
 /* #nosec GG107 */
@@ -181,40 +90,70 @@ func FetchMatchInfo(matchID string) (*MatchInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	return parseMatch(data)
+
+	parsedData := gjson.ParseBytes(data)
+
+	return parseMatch(parsedData)
 }
 
-func ListLives() ([]*MatchInfo, error) {
-	endpoint := "https://prod-public-api.livescore.com/v1/api/react/live/soccer/-3.00"
-
-	res, err := http.Get(endpoint)
-	if err != nil {
-		return nil, err
+func parseMatchForListing(match gjson.Result) *MatchInfo {
+	return &MatchInfo{
+		ID:      match.Get("Eid").String(),
+		Time:    match.Get("Eps").String(),
+		T1Score: int(match.Get("Tr1").Int()),
+		T2Score: int(match.Get("Tr2").Int()),
+		T1:      parseTeam(match.Get("T1.0")),
+		T2:      parseTeam(match.Get("T2.0")),
 	}
+}
 
-	data, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
+func parseMatch(match gjson.Result) (*MatchInfo, error) {
+	// TODO: subs
+	return &MatchInfo{
+		ID:          match.Get("Eid").String(),
+		T1Score:     int(match.Get("Tr1").Int()),
+		T2Score:     int(match.Get("Tr2").Int()),
+		Time:        match.Get("Eps").String(),
+		StadiumName: match.Get("Vnm").String(),
+		StadiumCity: match.Get("VCity").String(),
+		CupName:     strings.TrimSpace(match.Get("Stg.Cnm").String() + " " + match.Get("Stg.Sdn").String()),
+		Events:      parseEvents(match),
+		T1:          parseTeam(match.Get("T1.0")),
+		T2:          parseTeam(match.Get("T2.0")),
+	}, nil
+}
+
+func parseTeam(team gjson.Result) *TeamInfo {
+	return &TeamInfo{
+		Name:   team.Get("Nm").String(),
+		ImgURL: fmt.Sprintf("%s/%s", baseAssetURL, team.Get("Img")),
 	}
-	matches := []*MatchInfo{}
+}
 
-	// TODO: refact with GJSON
-	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
-		_, err0 := jsonparser.ArrayEach(value, func(matchData []byte, dataType jsonparser.ValueType, offset int, err error) {
-			match, err1 := parseMatchForListing(matchData)
-			if err1 != nil {
-				logger.Fatal(err)
-			} else {
-				matches = append(matches, match)
-			}
-		}, "Events")
-		if err0 != nil {
-			logger.Error(err)
+func parseEvents(matchData gjson.Result) []*Event {
+	var events []*Event
+	for half := 1; half <= 2; half++ {
+		for _, event := range matchData.Get(fmt.Sprintf("Incs.%d", half)).Array() {
+			events = append(events, parseEvent(half, event)...)
 		}
-	}, "Stages")
-	if err != nil {
-		return nil, fmt.Errorf("stages: %w", err)
 	}
+	return events
+}
 
-	return matches, nil
+func parseEvent(half int, data gjson.Result) []*Event {
+	eventWithSubEvents := []*Event{}
+	it := data.Get("IT")
+	subEvents := data.Get("Incs")
+	if subEvents.Exists() {
+		for _, subEvent := range subEvents.Array() {
+			eventWithSubEvents = append(eventWithSubEvents, parseEvent(half, subEvent)...)
+		}
+	}
+	eventWithSubEvents = append(eventWithSubEvents, &Event{
+		PlayerName: data.Get("Pn").String(),
+		Minute:     int(data.Get("Min").Int()),
+		Type:       EventType(it.Int()),
+		Half:       half,
+	})
+	return eventWithSubEvents
 }

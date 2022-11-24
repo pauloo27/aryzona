@@ -46,8 +46,8 @@ func ListLiveMatches(ctx *command.CommandContext) {
 	for _, match := range matches {
 		desc.WriteString(fmt.Sprintf("%s **%s** ||(%d) x (%d)|| **%s**\n",
 			match.Time,
-			match.T1.Name, match.T1.Score,
-			match.T2.Score, match.T2.Name,
+			match.T1.Name, match.T1Score,
+			match.T2Score, match.T2.Name,
 		))
 	}
 	ctx.SuccessEmbed(
@@ -81,16 +81,8 @@ func showMatchInfo(ctx *command.CommandContext) {
 }
 
 func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
-	var color int
-	if match.T1.Score == match.T2.Score {
-		color = 0xC0FFEE
-	} else if match.T1.Score > match.T2.Score {
-		color = match.T1.ColorAsInt()
-	} else {
-		color = match.T2.ColorAsInt()
-	}
-
 	desc := strings.Builder{}
+
 	if len(match.Events) > 0 {
 		for _, event := range match.Events {
 
@@ -99,14 +91,7 @@ func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 				continue
 			}
 
-			text := event.Text
-
-			extraTime := ""
-			if event.ExtraMin != 0 {
-				extraTime = fmt.Sprintf("+%d", event.ExtraMin)
-			}
-
-			desc.WriteString(fmt.Sprintf(" -> %d'%s %s %s\n", event.Min, extraTime, prefix, text))
+			desc.WriteString(fmt.Sprintf(" -> %d' %s %s\n", event.Minute, prefix, event.PlayerName))
 		}
 	}
 
@@ -117,32 +102,30 @@ func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 
 	var t1Score, t2Score string
 
-	if match.T1.Score != -1 {
-		t1Score = strconv.Itoa(match.T1.Score)
+	if match.T1Score != -1 {
+		t1Score = strconv.Itoa(match.T1Score)
 	} else {
 		t1Score = "_"
 	}
 
-	if match.T2.Score != -1 {
-		t2Score = strconv.Itoa(match.T2.Score)
+	if match.T2Score != -1 {
+		t2Score = strconv.Itoa(match.T2Score)
 	} else {
 		t2Score = "_"
 	}
 
 	return discord.NewEmbed().
-		WithDescription(fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
-		WithColor(color).
+		WithColor(0xC0FFEE).
+		WithField("Match", fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
 		WithField("Time", match.Time).
 		WithFieldInline(match.T1.Name, t1Score).
 		WithFieldInline(match.T2.Name, t2Score).
 		WithDescription(descStr)
 }
 
-var eventTypePrefixes = map[int64]string{
-	43: "🟡",
-	44: "🔴", // one straight red card
-	45: "🔴", // two red cards
-	36: "⚽",
-	3:  "🔄",
-	22: "👋",
+var eventTypePrefixes = map[livescore.EventType]string{
+	livescore.EventTypeYellowCard:       "🟡",
+	livescore.EventTypeDoubleYellowCard: "🟡+🟡=🔴",
+	livescore.EventTypeRedCard:          "🔴",
+	livescore.EventTypeGoal:             "⚽",
 }
