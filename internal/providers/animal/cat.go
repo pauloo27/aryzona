@@ -2,7 +2,7 @@ package animal
 
 import (
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/buger/jsonparser"
+	"github.com/tidwall/gjson"
 )
 
 func GetRandomCat() (string, error) {
@@ -11,5 +11,5 @@ func GetRandomCat() (string, error) {
 		return "", err
 	}
 
-	return jsonparser.GetString(json, "file")
+	return gjson.GetBytes(json, "file").String(), nil
 }

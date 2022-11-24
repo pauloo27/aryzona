@@ -8,7 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/searchtube"
-	"github.com/buger/jsonparser"
+	"github.com/tidwall/gjson"
 )
 
 func searchWithAPI(searchQuery string) (id string, err error) {
@@ -21,7 +21,7 @@ func searchWithAPI(searchQuery string) (id string, err error) {
 	if err != nil {
 		return "", err
 	}
-	return jsonparser.GetString(buf, "items", "[0]", "id", "videoId")
+	return gjson.GetBytes(buf, "items.0.id.videoId").String(), nil
 }
 
 func GetBestResult(searchQuery string) (url string, isPlaylist bool, err error) {
