@@ -3,7 +3,6 @@ package livescore
 import (
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
 
 	"github.com/tidwall/gjson"
@@ -49,7 +48,7 @@ func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
 func ListLives() ([]*MatchInfo, error) {
 	endpoint := "https://prod-public-api.livescore.com/v1/api/react/live/soccer/-3.00"
 
-	res, err := http.Get(endpoint)
+	res, err := httpClient.Get(endpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +78,7 @@ func ListLives() ([]*MatchInfo, error) {
 func FetchMatchInfo(matchID string) (*MatchInfo, error) {
 	endpoint := fmt.Sprintf("https://prod-public-api.livescore.com/v1/api/react/match-x/soccer/%s/-3", matchID)
 
-	res, err := http.Get(endpoint)
+	res, err := httpClient.Get(endpoint)
 	if err != nil {
 		return nil, err
 	}
