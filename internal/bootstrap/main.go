@@ -55,7 +55,7 @@ func Start(commitHash, commitMessage string) {
 	command.Prefix = config.Config.Prefix
 
 	logger.Info("Registering slash commands handlers...")
-	//err = discord.Bot.RegisterSlashCommands()
+	err = discord.Bot.RegisterSlashCommands()
 	if err != nil {
 		logger.Fatal(err)
 	}
