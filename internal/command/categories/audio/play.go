@@ -30,6 +30,12 @@ var PlayCommand = command.Command{
 				ctx.Error("Cannot connect to your voice channel")
 				return
 			}
+		} else {
+			authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
+			if !found || *(vc.ChannelID) != authorVoiceChannelID.(string) {
+				ctx.Error("You are not in the right voice channel")
+				return
+			}
 		}
 
 		searchQuery := ctx.Args[0].(string)

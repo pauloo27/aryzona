@@ -36,9 +36,11 @@ var MustBePlaying = &command.CommandValidation{
 var MustBeOnVoiceChannel = &command.CommandValidation{
 	Description: "be connected to a voice channel",
 	Checker: func(ctx *command.CommandContext) (bool, string) {
-		if _, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID); err != nil {
+		voiceState, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID)
+		if err != nil {
 			return false, "You are not in a voice channel"
 		}
+		ctx.Locals["authorVoiceChannelID"] = voiceState.Channel().ID()
 		return true, ""
 	},
 }
