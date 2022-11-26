@@ -2,6 +2,7 @@ package audio
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
@@ -32,6 +33,23 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		embed.WithThumbnail(thumbnailURL)
 	}
 
+	eta := calcETA(playable, vc)
+
+	if eta == -1 {
+		embed.WithFieldInline(
+			"Will play",
+			"_Never_",
+		)
+	} else if eta != 0 {
+		embed.WithFieldInline(
+			"Will play",
+			fmt.Sprintf(
+				"in %s",
+				utils.DurationAsDetailedDiffText(eta),
+			),
+		)
+	}
+
 	if playable.IsLive() {
 		embed.WithFieldInline("Duration", "**🔴 LIVE**")
 	} else {
@@ -58,4 +76,28 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 	}
 
 	return embed
+}
+
+func calcETA(playable playable.Playable, vc *voicer.Voicer) time.Duration {
+	if vc == nil {
+		return 0
+	}
+
+	var eta time.Duration
+	for i, entry := range vc.Queue.All() {
+		if entry == playable {
+			break
+		}
+		if entry.IsLive() {
+			return -1
+		}
+
+		duration, _ := entry.GetDuration()
+		if i == 0 {
+			position, _ := vc.GetPosition()
+			duration -= position
+		}
+		eta += duration
+	}
+	return eta
 }

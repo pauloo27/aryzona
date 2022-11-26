@@ -65,3 +65,30 @@ func DurationAsText(duration time.Duration) string {
 		stringfy(minutes, "minute", "minutes"),
 	))
 }
+
+func DurationAsDetailedDiffText(duration time.Duration) string {
+	totalSeconds := int(duration.Seconds())
+	if totalSeconds == 0 {
+		return "Now"
+	}
+
+	days := totalSeconds / 86400
+	hours := (totalSeconds % 86400) / 3600
+	minutes := (totalSeconds % 3600) / 60
+	seconds := totalSeconds % 60
+
+	stringfy := func(i int, singular, plural string) string {
+		if i == 0 {
+			return ""
+		}
+		return fmt.Sprintf("%d %s", i, Pluralize(i, singular, plural))
+	}
+
+	return strings.TrimSpace(fmt.Sprintf(
+		"%s %s %s %s",
+		stringfy(days, "day", "days"),
+		stringfy(hours, "hour", "hours"),
+		stringfy(minutes, "minute", "minutes"),
+		stringfy(seconds, "second", "seconds"),
+	))
+}

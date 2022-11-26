@@ -62,8 +62,9 @@ var PlayCommand = command.Command{
 			}
 		}
 
-		embed := buildPlayableInfoEmbed(result, vc).WithTitle("Best result for: " + searchQuery)
-		ctx.SuccessEmbed(embed)
+		ctx.SuccessEmbed(
+			buildPlayableInfoEmbed(result, vc).WithTitle("Best result for: " + searchQuery),
+		)
 
 		var vidsToAppend []playable.Playable
 		if isPlaylist {
