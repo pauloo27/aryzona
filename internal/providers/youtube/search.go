@@ -7,7 +7,6 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/logger"
 	"github.com/Pauloo27/searchtube"
 	"github.com/tidwall/gjson"
 )
@@ -38,7 +37,6 @@ func GetBestResult(searchQuery string) (url string, isPlaylist bool, err error) 
 	if err == nil {
 		return searchQuery, false, nil
 	}
-	logger.Debug("Err", err)
 
 	id, err := searchWithAPI(searchQuery)
 	if err == nil {
