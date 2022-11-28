@@ -32,8 +32,8 @@ type CommandContext struct {
 	Locals            map[string]interface{}
 	Reply             func(string) error
 	ReplyEmbed        func(*discord.Embed) error
-	Edit             func(string) error
-	EditEmbed        func(*discord.Embed) error
+	Edit              func(string) error
+	EditEmbed         func(*discord.Embed) error
 	Command           *Command
 	Trigger           CommandTrigger
 }
