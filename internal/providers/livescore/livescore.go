@@ -10,6 +10,7 @@ import (
 
 const (
 	baseAssetURL = "https://lsm-static-prod.livescore.com/high"
+	baseAPIURL   = "https://prod-public-api.livescore.com/v1/api/react"
 )
 
 type TeamInfo struct {
@@ -46,7 +47,7 @@ func FetchMatchInfoByTeamName(teamName string) (*MatchInfo, error) {
 }
 
 func ListLives() ([]*MatchInfo, error) {
-	endpoint := "https://prod-public-api.livescore.com/v1/api/react/live/soccer/-3.00"
+	endpoint := fmt.Sprintf("%s/live/soccer/-3.00", baseAPIURL)
 
 	res, err := httpClient.Get(endpoint)
 	if err != nil {
@@ -76,7 +77,7 @@ func ListLives() ([]*MatchInfo, error) {
 
 /* #nosec GG107 */
 func FetchMatchInfo(matchID string) (*MatchInfo, error) {
-	endpoint := fmt.Sprintf("https://prod-public-api.livescore.com/v1/api/react/match-x/soccer/%s/-3", matchID)
+	endpoint := fmt.Sprintf("%s/match-x/soccer/%s/-3", baseAPIURL, matchID)
 
 	res, err := httpClient.Get(endpoint)
 	if err != nil {
