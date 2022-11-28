@@ -1,8 +1,6 @@
 package fun
 
 import (
-	"fmt"
-
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/providers/joke"
 	"github.com/Pauloo27/logger"
@@ -17,7 +15,6 @@ var JokeCommand = command.Command{
 			logger.Error(err)
 			return
 		}
-		jokeStr := fmt.Sprintf("%s\n\n%s", joke.Setup, joke.Punchline)
-		ctx.Success(jokeStr)
+		ctx.Successf("%s\n\n%s", joke.Setup, joke.Punchline)
 	},
 }

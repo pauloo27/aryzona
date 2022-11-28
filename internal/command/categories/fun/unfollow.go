@@ -1,8 +1,6 @@
 package fun
 
 import (
-	"fmt"
-
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
@@ -30,7 +28,7 @@ var UnFollowCommand = command.Command{
 			for _, matchID := range userFollowedMatcheIDs[authorID] {
 				liveMatch, err := livescore.GetLiveMatch(matchID)
 				if err != nil {
-					ctx.Error(fmt.Sprintf("Something went wrong: %v", err))
+					ctx.Errorf("Something went wrong: %v", err)
 					return
 				}
 				_ = liveMatch.RemoveListener(getListenerID(authorID, matchID))
@@ -41,7 +39,7 @@ var UnFollowCommand = command.Command{
 			teamNameOrID := ctx.Args[0].(string)
 			match, err := getMatchByTeamNameOrID(teamNameOrID)
 			if err != nil {
-				ctx.Error(fmt.Sprintf("Something went wrong: %v", err))
+				ctx.Errorf("Something went wrong: %v", err)
 				return
 			}
 			if match == nil {
@@ -50,7 +48,7 @@ var UnFollowCommand = command.Command{
 			}
 			liveMatch, err := livescore.GetLiveMatch(match.ID)
 			if err != nil {
-				ctx.Error(fmt.Sprintf("Something went wrong: %v", err))
+				ctx.Errorf("Something went wrong: %v", err)
 				return
 			}
 			err = liveMatch.RemoveListener(getListenerID(authorID, match.ID))
@@ -59,7 +57,7 @@ var UnFollowCommand = command.Command{
 				return
 			}
 			removeUserFollow(authorID, match.ID)
-			ctx.Success(fmt.Sprintf("Unfollowed match %s x %s", match.T1.Name, match.T2.Name))
+			ctx.Successf("Unfollowed match %s x %s", match.T1.Name, match.T2.Name)
 		}
 	},
 }

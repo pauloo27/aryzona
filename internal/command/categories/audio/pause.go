@@ -1,8 +1,6 @@
 package audio
 
 import (
-	"fmt"
-
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
@@ -27,6 +25,6 @@ var PauseCommand = command.Command{
 			return
 		}
 		vc.Pause()
-		ctx.Success(fmt.Sprintf("Paused! Use `%sresume` to resume the queue.", command.Prefix))
+		ctx.Successf("Paused! Use `%sresume` to resume the queue.", command.Prefix)
 	},
 }

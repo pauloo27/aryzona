@@ -68,7 +68,7 @@ var RadioCommand = command.Command{
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
-				ctx.Error(fmt.Sprintf("Cannot play stuff: %v", err))
+				ctx.Errorf("Cannot play stuff: %v", err)
 				return
 			}
 		})

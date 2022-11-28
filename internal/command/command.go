@@ -107,12 +107,20 @@ func (ctx *CommandContext) Success(message string) {
 	ctx.handleCannotSendMessage(ctx.SuccessReturning(message))
 }
 
+func (ctx *CommandContext) Successf(format string, a ...any) {
+	ctx.Success(fmt.Sprintf(format, a...))
+}
+
 func (ctx *CommandContext) SuccessReturning(message string) error {
 	return ctx.SuccessEmbedReturning(discord.NewEmbed().WithDescription(message))
 }
 
 func (ctx *CommandContext) Error(message string) {
 	ctx.handleCannotSendMessage(ctx.ErrorReturning(message))
+}
+
+func (ctx *CommandContext) Errorf(format string, a ...any) {
+	ctx.Error(fmt.Sprintf(format, a...))
 }
 
 func (ctx *CommandContext) ErrorReturning(message string) error {

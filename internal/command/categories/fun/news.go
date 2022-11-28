@@ -46,7 +46,7 @@ var NewsCommand = command.Command{
 		source := ctx.Args[0].(string)
 		news, err := Sources[source]()
 		if err != nil {
-			ctx.Error(fmt.Sprintf("Error getting news: %s", err))
+			ctx.Errorf("Error getting news: %s", err)
 			return
 		}
 		embed := discord.NewEmbed().

@@ -5,7 +5,6 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/lyric"
 )
@@ -39,10 +38,7 @@ var LyricCommand = command.Command{
 
 		result, err := lyric.SearchDDG(searchTerms)
 		if err != nil {
-			ctx.ErrorEmbed(
-				discord.NewEmbed().
-					WithDescription("No results found for " + searchTerms),
-			)
+			ctx.Errorf("No results found for %s", searchTerms)
 			return
 		}
 		_ = ctx.Reply(result)

@@ -35,7 +35,7 @@ var FollowCommand = command.Command{
 		teamNameOrID := ctx.Args[0].(string)
 		match, err := getMatchByTeamNameOrID(teamNameOrID)
 		if err != nil {
-			ctx.Error(fmt.Sprintf("Something went wrong: %v", err))
+			ctx.Errorf("Something went wrong: %v", err)
 			return
 		}
 
@@ -51,12 +51,10 @@ var FollowCommand = command.Command{
 		}
 
 		if len(userFollowedMatcheIDs[ctx.AuthorID]) >= maxFollowPerUser {
-			ctx.Error(
-				fmt.Sprintf(
-					"You can only follow %d matches at the same time. You can use `%sunfollow` to unfollow a match",
-					maxFollowPerUser,
-					command.Prefix,
-				),
+			ctx.Errorf(
+				"You can only follow %d matches at the same time. You can use `%sunfollow` to unfollow a match",
+				maxFollowPerUser,
+				command.Prefix,
 			)
 			return
 		}
