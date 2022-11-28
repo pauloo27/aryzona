@@ -87,13 +87,13 @@ func registerCommands(bot ArkwBot) error {
 		return err
 	}
 
-	var slashCommands []dc.Command
+	var slashCommands []api.CreateCommandData
 	for key, cmd := range command.GetCommandMap() {
 		if key != cmd.Name {
 			continue
 		}
 
-		slashCommand := dc.Command{
+		slashCommand := api.CreateCommandData{
 			Name: cmd.Name, Description: cmd.Description,
 		}
 

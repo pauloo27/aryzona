@@ -1,6 +1,8 @@
 package arkw
 
 import (
+	"context"
+
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/diamondburned/arikawa/v3/voice"
 	"github.com/diamondburned/arikawa/v3/voice/voicegateway"
@@ -50,13 +52,13 @@ func (c VoiceConnection) WriteOpus(b []byte) (int, error) {
 
 func (c VoiceConnection) Speaking(speaking bool) error {
 	if speaking {
-		return c.session.Speaking(voicegateway.Microphone)
+		return c.session.Speaking(context.Background(), voicegateway.Microphone)
 	}
-	return c.session.Speaking(voicegateway.NotSpeaking)
+	return c.session.Speaking(context.Background(), voicegateway.NotSpeaking)
 }
 
 func (c VoiceConnection) Disconnect() error {
-	return c.session.Leave()
+	return c.session.Leave(context.Background())
 }
 
 func buildVoiceConnection(session *voice.Session) VoiceConnection {

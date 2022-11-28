@@ -54,9 +54,8 @@ func (b ArkwBot) Implementation() string {
 
 func (b ArkwBot) Init(token string) error {
 	b.d.token = token
-	var err error
-	b.d.s, err = state.New("Bot " + b.d.token)
-	return err
+	b.d.s = state.New("Bot " + b.d.token)
+	return nil
 }
 
 func (b ArkwBot) connect() error {
@@ -340,7 +339,7 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 }
 
 func (b ArkwBot) Latency() time.Duration {
-	return b.d.s.PacerLoop.EchoBeat.Time().Sub(b.d.s.PacerLoop.SentBeat.Time())
+	return b.d.s.Gateway().Latency()
 }
 
 func (b ArkwBot) OpenGuild(guildID string) (model.Guild, error) {
@@ -360,15 +359,11 @@ func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (model.VoiceConnect
 	if err != nil {
 		return nil, err
 	}
-	guildSf, err := dc.ParseSnowflake(guildID)
-	if err != nil {
-		return nil, err
-	}
 	channelSf, err := dc.ParseSnowflake(channelID)
 	if err != nil {
 		return nil, err
 	}
-	err = vs.JoinChannel(dc.GuildID(guildSf), dc.ChannelID(channelSf), false, true)
+	err = vs.JoinChannel(context.Background(), dc.ChannelID(channelSf), false, true)
 	if err != nil {
 		return nil, err
 	}
@@ -430,7 +425,7 @@ func (b ArkwBot) UpdatePresence(presence *model.Presence) error {
 	default:
 		return errors.New("invalid presence type")
 	}
-	return b.d.s.UpdateStatus(gateway.UpdateStatusData{
+	return b.d.s.Gateway().Send(context.Background(), &gateway.UpdatePresenceCommand{
 		Activities: []dc.Activity{
 			{Name: presence.Title, URL: presence.Extra, Type: ty},
 		},
