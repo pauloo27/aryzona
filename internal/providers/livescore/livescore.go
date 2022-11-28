@@ -21,6 +21,7 @@ type Event struct {
 	PlayerName   string
 	Minute, Half int
 	Type         EventType
+	Team         *TeamInfo
 }
 
 type MatchInfo struct {
@@ -108,7 +109,8 @@ func parseMatchForListing(match gjson.Result) *MatchInfo {
 }
 
 func parseMatch(match gjson.Result) (*MatchInfo, error) {
-	// TODO: subs
+	team1 := parseTeam(match.Get("T1.0"))
+	team2 := parseTeam(match.Get("T2.0"))
 	return &MatchInfo{
 		ID:          match.Get("Eid").String(),
 		T1Score:     int(match.Get("Tr1").Int()),
@@ -117,9 +119,9 @@ func parseMatch(match gjson.Result) (*MatchInfo, error) {
 		StadiumName: match.Get("Vnm").String(),
 		StadiumCity: match.Get("VCity").String(),
 		CupName:     strings.TrimSpace(match.Get("Stg.Cnm").String() + " " + match.Get("Stg.Sdn").String()),
-		Events:      parseEvents(match),
-		T1:          parseTeam(match.Get("T1.0")),
-		T2:          parseTeam(match.Get("T2.0")),
+		T1:          team1,
+		T2:          team2,
+		Events:      parseEvents(team1, team2, match),
 	}, nil
 }
 
@@ -130,30 +132,40 @@ func parseTeam(team gjson.Result) *TeamInfo {
 	}
 }
 
-func parseEvents(matchData gjson.Result) []*Event {
+func parseEvents(team1, team2 *TeamInfo, matchData gjson.Result) []*Event {
 	var events []*Event
 	for half := 1; half <= 2; half++ {
 		for _, event := range matchData.Get(fmt.Sprintf("Incs.%d", half)).Array() {
-			events = append(events, parseEvent(half, event)...)
+			events = append(events, parseEvent(half, team1, team2, event)...)
 		}
 	}
 	return events
 }
 
-func parseEvent(half int, data gjson.Result) []*Event {
+func parseEvent(half int, team1, team2 *TeamInfo, data gjson.Result) []*Event {
 	eventWithSubEvents := []*Event{}
 	it := data.Get("IT")
 	subEvents := data.Get("Incs")
 	if subEvents.Exists() {
 		for _, subEvent := range subEvents.Array() {
-			eventWithSubEvents = append(eventWithSubEvents, parseEvent(half, subEvent)...)
+			eventWithSubEvents = append(eventWithSubEvents, parseEvent(half, team1, team2, subEvent)...)
 		}
 	}
+
+	teamID := int(data.Get("Nm").Int())
+	var team *TeamInfo
+	if teamID == 1 {
+		team = team1
+	} else {
+		team = team2
+	}
+
 	eventWithSubEvents = append(eventWithSubEvents, &Event{
 		PlayerName: data.Get("Pn").String(),
 		Minute:     int(data.Get("Min").Int()),
 		Type:       EventType(it.Int()),
 		Half:       half,
+		Team:       team,
 	})
 	return eventWithSubEvents
 }

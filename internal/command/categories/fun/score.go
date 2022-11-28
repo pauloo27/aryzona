@@ -91,7 +91,7 @@ func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 				continue
 			}
 
-			desc.WriteString(fmt.Sprintf(" -> %d' %s %s\n", event.Minute, prefix, event.PlayerName))
+			desc.WriteString(fmt.Sprintf(" -> %d' %s [%s] %s\n", event.Minute, prefix, event.Team.Name, event.PlayerName))
 		}
 	}
 
