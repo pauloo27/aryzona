@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+/* #nosec G114 */
 func StartHTTPServer() {
 	if config.Config.HTTPServerPort == 0 {
 		logger.Warn("HTTP server disabled")
