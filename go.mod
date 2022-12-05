@@ -10,6 +10,7 @@ require (
 	github.com/bwmarrin/discordgo v0.26.0
 	github.com/diamondburned/arikawa/v3 v3.1.0
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/google/uuid v1.3.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
 	github.com/kkdai/youtube/v2 v2.7.10

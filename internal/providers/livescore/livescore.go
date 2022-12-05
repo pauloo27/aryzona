@@ -169,3 +169,7 @@ func parseEvent(half int, team1, team2 *TeamInfo, data gjson.Result) []*Event {
 	})
 	return eventWithSubEvents
 }
+
+func GetTeamImgURL(id string) string {
+	return fmt.Sprintf("%s/enet/%s.png", baseAssetURL, id)
+}
