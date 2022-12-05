@@ -128,4 +128,5 @@ var eventTypePrefixes = map[livescore.EventType]string{
 	livescore.EventTypeDoubleYellowCard: "🟡+🟡=🔴",
 	livescore.EventTypeRedCard:          "🔴",
 	livescore.EventTypeGoal:             "⚽",
+	livescore.EventTypePenaltyGoal:      "⚽(P)",
 }
