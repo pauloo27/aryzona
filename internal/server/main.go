@@ -24,7 +24,7 @@ func StartHTTPServer() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/soccer/banner-{t1}-{t2}.jpg", renderBanner)
+	r.Get("/soccer/banner-{t1}-{t2}.png", renderBanner)
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.HTTPServerPort), r)
 	if err != nil {
