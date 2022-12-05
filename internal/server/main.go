@@ -23,6 +23,7 @@ func StartHTTPServer() {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Logger)
 
 	r.Get("/soccer/banner-{t1}-{t2}.png", renderBanner)
 
