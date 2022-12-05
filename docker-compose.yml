@@ -5,5 +5,7 @@ services:
     container_name: aryzona_bot
     image: aryzonabot:latest
     hostname: aryhost
+    ports:
+      - 8099:8099
     volumes:
       - ./.env:/app/.env
