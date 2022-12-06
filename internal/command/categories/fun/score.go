@@ -118,6 +118,7 @@ func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 		WithColor(0xC0FFEE).
 		WithField("Match", fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
 		WithField("Time", match.Time).
+		WithImage(match.GetBannerURL()).
 		WithFieldInline(match.T1.Name, t1Score).
 		WithFieldInline(match.T2.Name, t2Score).
 		WithDescription(descStr)

@@ -5,6 +5,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/Pauloo27/aryzona/internal/config"
 	"github.com/tidwall/gjson"
 )
 
@@ -14,7 +15,7 @@ const (
 )
 
 type TeamInfo struct {
-	Name, ImgURL string
+	Name, ImgURL, ImgID string
 }
 
 type Event struct {
@@ -129,6 +130,7 @@ func parseTeam(team gjson.Result) *TeamInfo {
 	return &TeamInfo{
 		Name:   team.Get("Nm").String(),
 		ImgURL: fmt.Sprintf("%s/%s", baseAssetURL, team.Get("Img")),
+		ImgID:  team.Get("Pids.1.0").String(),
 	}
 }
 
@@ -168,6 +170,13 @@ func parseEvent(half int, team1, team2 *TeamInfo, data gjson.Result) []*Event {
 		Team:       team,
 	})
 	return eventWithSubEvents
+}
+
+func (m *MatchInfo) GetBannerURL() string {
+	if m.T1.ImgID == "" || m.T2.ImgID == "" {
+		return ""
+	}
+	return fmt.Sprintf("%s/soccer/banner-%s-%s.png", config.Config.HTTPServerExternalURL, m.T1.ImgID, m.T2.ImgID)
 }
 
 func GetTeamImgURL(id string) string {
