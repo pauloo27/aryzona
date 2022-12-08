@@ -15,7 +15,7 @@ import (
 
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
-	Description: "Play a video/song from u2b",
+	Description: "Play a video/song from youtube",
 	Deferred:    true,
 	Validations: []*command.CommandValidation{validations.MustBeOnAValidVoiceChannel},
 	Parameters: []*command.CommandParameter{

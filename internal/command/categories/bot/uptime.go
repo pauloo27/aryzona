@@ -15,13 +15,6 @@ var UptimeCommand = command.Command{
 	Name: "uptime", Description: "Tell how long the bot is running",
 	Aliases: []string{"up"},
 	Handler: func(ctx *command.CommandContext) {
-		isDocker := utils.IsDocker()
-
-		extraHostInfo := ""
-		if isDocker {
-			extraHostInfo = " (docker)"
-		}
-
 		uptime := time.Since(*discord.Bot.StartedAt())
 		embed := discord.NewEmbed().
 			WithTitle("Bot uptime").
@@ -30,7 +23,12 @@ var UptimeCommand = command.Command{
 			WithField(
 				":computer: Host info",
 				fmt.Sprintf("Compiled with **%s (%s)**, running on a **%s %s%s**",
-					runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH, extraHostInfo,
+					runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH,
+					utils.ConditionalString(
+						utils.IsDocker(),
+						" (docker)",
+						"",
+					),
 				)).
 			WithField(":star: Started at", discord.Bot.StartedAt().Format("2 Jan, 15:04"))
 
