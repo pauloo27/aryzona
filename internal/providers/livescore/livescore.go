@@ -19,10 +19,10 @@ type TeamInfo struct {
 }
 
 type Event struct {
-	PlayerName   string
-	Minute, Half int
-	Type         EventType
-	Team         *TeamInfo
+	PlayerName                string
+	Minute, ExtraMinute, Half int
+	Type                      EventType
+	Team                      *TeamInfo
 }
 
 type MatchInfo struct {
@@ -136,7 +136,9 @@ func parseTeam(team gjson.Result) *TeamInfo {
 
 func parseEvents(team1, team2 *TeamInfo, matchData gjson.Result) []*Event {
 	var events []*Event
-	for half := 1; half <= 2; half++ {
+	// 3 halfs? yes, 2 normal time and over time
+	// 4th half is penalties, not implemented yet
+	for half := 1; half <= 3; half++ {
 		for _, event := range matchData.Get(fmt.Sprintf("Incs.%d", half)).Array() {
 			events = append(events, parseEvent(half, team1, team2, event)...)
 		}
@@ -163,11 +165,12 @@ func parseEvent(half int, team1, team2 *TeamInfo, data gjson.Result) []*Event {
 	}
 
 	eventWithSubEvents = append(eventWithSubEvents, &Event{
-		PlayerName: data.Get("Pn").String(),
-		Minute:     int(data.Get("Min").Int()),
-		Type:       EventType(it.Int()),
-		Half:       half,
-		Team:       team,
+		PlayerName:  data.Get("Pn").String(),
+		Minute:      int(data.Get("Min").Int()),
+		ExtraMinute: int(data.Get("MinEx").Int()),
+		Type:        EventType(it.Int()),
+		Half:        half,
+		Team:        team,
 	})
 	return eventWithSubEvents
 }

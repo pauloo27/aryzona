@@ -74,24 +74,28 @@ func showMatchInfo(ctx *command.CommandContext) {
 		return
 	}
 
-	embed := BuildMatchEmbed(match).
+	embed := buildMatchEmbed(match).
 		WithFooter(fmt.Sprintf("Use `%slive %s` to get live updates", command.Prefix, teamNameOrID))
 
 	ctx.Embed(embed)
 }
 
-func BuildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
+func buildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 	desc := strings.Builder{}
 
 	if len(match.Events) > 0 {
 		for _, event := range match.Events {
-
 			prefix, found := eventTypePrefixes[event.Type]
 			if !found {
 				continue
 			}
 
-			desc.WriteString(fmt.Sprintf(" -> %d' %s [%s] %s\n", event.Minute, prefix, event.Team.Name, event.PlayerName))
+			eventTime := strconv.Itoa(event.Minute)
+			if event.ExtraMinute != 0 {
+				eventTime += fmt.Sprintf("+%d", event.ExtraMinute)
+			}
+
+			desc.WriteString(fmt.Sprintf(" -> %s' %s [%s] %s\n", eventTime, prefix, event.Team.Name, event.PlayerName))
 		}
 	}
 
@@ -129,5 +133,6 @@ var eventTypePrefixes = map[livescore.EventType]string{
 	livescore.EventTypeDoubleYellowCard: "🟡+🟡=🔴",
 	livescore.EventTypeRedCard:          "🔴",
 	livescore.EventTypeGoal:             "⚽",
+	livescore.EventTypeOvertimeGoal:     "⚽",
 	livescore.EventTypePenaltyGoal:      "⚽(P)",
 }
