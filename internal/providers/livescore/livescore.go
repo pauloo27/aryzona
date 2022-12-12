@@ -18,7 +18,12 @@ type TeamInfo struct {
 	Name, ImgURL, ImgID string
 }
 
+type Score struct {
+	T1Score, T2Score int
+}
+
 type Event struct {
+	Score
 	PlayerName                string
 	Minute, ExtraMinute, Half int
 	Type                      EventType
@@ -26,8 +31,8 @@ type Event struct {
 }
 
 type MatchInfo struct {
+	Score
 	T1, T2                            *TeamInfo
-	T1Score, T2Score                  int
 	ID                                string
 	CupName, StadiumName, StadiumCity string
 	Time                              string // FIXME: time as string? NO!
@@ -100,22 +105,27 @@ func FetchMatchInfo(matchID string) (*MatchInfo, error) {
 
 func parseMatchForListing(match gjson.Result) *MatchInfo {
 	return &MatchInfo{
-		ID:      match.Get("Eid").String(),
-		Time:    match.Get("Eps").String(),
-		T1Score: int(match.Get("Tr1").Int()),
-		T2Score: int(match.Get("Tr2").Int()),
-		T1:      parseTeam(match.Get("T1.0")),
-		T2:      parseTeam(match.Get("T2.0")),
+		ID:   match.Get("Eid").String(),
+		Time: match.Get("Eps").String(),
+		Score: Score{
+			T1Score: int(match.Get("Tr1").Int()),
+			T2Score: int(match.Get("Tr2").Int()),
+		},
+		T1: parseTeam(match.Get("T1.0")),
+		T2: parseTeam(match.Get("T2.0")),
 	}
 }
 
 func parseMatch(match gjson.Result) (*MatchInfo, error) {
 	team1 := parseTeam(match.Get("T1.0"))
 	team2 := parseTeam(match.Get("T2.0"))
+
 	return &MatchInfo{
-		ID:          match.Get("Eid").String(),
-		T1Score:     int(match.Get("Tr1").Int()),
-		T2Score:     int(match.Get("Tr2").Int()),
+		ID: match.Get("Eid").String(),
+		Score: Score{
+			T1Score: int(match.Get("Tr1").Int()),
+			T2Score: int(match.Get("Tr2").Int()),
+		},
 		Time:        match.Get("Eps").String(),
 		StadiumName: match.Get("Vnm").String(),
 		StadiumCity: match.Get("VCity").String(),
@@ -136,9 +146,10 @@ func parseTeam(team gjson.Result) *TeamInfo {
 
 func parseEvents(team1, team2 *TeamInfo, matchData gjson.Result) []*Event {
 	var events []*Event
-	// 3 halfs? yes, 2 normal time and over time
-	// 4th half is penalties, not implemented yet
-	for half := 1; half <= 3; half++ {
+	// 1 and 2 halfs are normal hafs.
+	// 3 is over time.
+	// 4 is penalties.
+	for half := 1; half <= 4; half++ {
 		for _, event := range matchData.Get(fmt.Sprintf("Incs.%d", half)).Array() {
 			events = append(events, parseEvent(half, team1, team2, event)...)
 		}
@@ -168,9 +179,13 @@ func parseEvent(half int, team1, team2 *TeamInfo, data gjson.Result) []*Event {
 		PlayerName:  data.Get("Pn").String(),
 		Minute:      int(data.Get("Min").Int()),
 		ExtraMinute: int(data.Get("MinEx").Int()),
-		Type:        EventType(it.Int()),
-		Half:        half,
-		Team:        team,
+		Score: Score{
+			T1Score: int(data.Get("Sc.0").Int()),
+			T2Score: int(data.Get("Sc.1").Int()),
+		},
+		Type: EventType(it.Int()),
+		Half: half,
+		Team: team,
 	})
 	return eventWithSubEvents
 }

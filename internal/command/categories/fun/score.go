@@ -90,12 +90,16 @@ func buildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 				continue
 			}
 
-			eventTime := strconv.Itoa(event.Minute)
-			if event.ExtraMinute != 0 {
-				eventTime += fmt.Sprintf("+%d", event.ExtraMinute)
+			var eventTime string
+			if event.Half == 4 {
+				eventTime = "Pen"
+			} else if event.ExtraMinute != 0 {
+				eventTime += fmt.Sprintf("%d+%d'", event.Minute, event.ExtraMinute)
+			} else {
+				eventTime += fmt.Sprintf("%d'", event.Minute)
 			}
 
-			desc.WriteString(fmt.Sprintf(" -> %s' %s [%s] %s\n", eventTime, prefix, event.Team.Name, event.PlayerName))
+			desc.WriteString(fmt.Sprintf(" -> %s %s [%s] %s\n", eventTime, prefix, event.Team.Name, event.PlayerName))
 		}
 	}
 
@@ -134,5 +138,7 @@ var eventTypePrefixes = map[livescore.EventType]string{
 	livescore.EventTypeRedCard:          "🔴",
 	livescore.EventTypeGoal:             "⚽",
 	livescore.EventTypeOvertimeGoal:     "⚽",
-	livescore.EventTypePenaltyGoal:      "⚽(P)",
+	livescore.EventTypeFoulPenaltyGoal:  "⚽",
+	livescore.EventTypePenaltyGoal:      "✅",
+	livescore.EventTypePenaltyMissed:    "❌",
 }
