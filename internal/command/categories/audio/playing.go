@@ -51,9 +51,9 @@ var PlayingCommand = command.Command{
 				title, artist := playable.GetFullTitle()
 				requester := discord.AsMention(item.Requester)
 				if artist == "" {
-					sb.WriteString(fmt.Sprintf("  -> %s _requested by %s (playing %s)_\n", title, requester, etaStr))
+					sb.WriteString(fmt.Sprintf("  -> %s _requested by %s (playing in %s)_\n", title, requester, etaStr))
 				} else {
-					sb.WriteString(fmt.Sprintf("  -> %s - %s _requested by %s (playing %s)_\n", artist, title, requester, etaStr))
+					sb.WriteString(fmt.Sprintf("  -> %s - %s _requested by %s (playing in %s)_\n", artist, title, requester, etaStr))
 				}
 			}
 			if len(next) > maxNextItems {
