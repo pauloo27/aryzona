@@ -6,6 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/utils"
@@ -23,8 +24,9 @@ var PlayingCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		playing := ctx.Locals["playing"].(playable.Playable)
+		requesterID := ctx.Locals["requesterID"].(string)
 
-		embed := buildPlayableInfoEmbed(playing, vc).
+		embed := buildPlayableInfoEmbed(playing, vc, requesterID).
 			WithTitle("Now playing: " + playing.GetName())
 
 		if vc.Queue.Size() > 1 {
@@ -37,25 +39,21 @@ var PlayingCommand = command.Command{
 
 			for _, item := range next[:limit] {
 				var etaStr string
+				playable := item.Playable
 
-				eta := calcETA(item, vc)
+				eta := calcETA(playable, vc)
 				if eta == -1 {
 					etaStr = "_Never_"
 				} else {
 					etaStr = utils.DurationAsDetailedDiffText(eta)
 				}
 
-				title, artist := item.GetFullTitle()
+				title, artist := playable.GetFullTitle()
+				requester := discord.AsMention(item.Requester)
 				if artist == "" {
-					sb.WriteString(fmt.Sprintf("  -> %s (playing %s)\n", title, etaStr))
+					sb.WriteString(fmt.Sprintf("  -> %s _requested by %s (playing %s)_\n", title, requester, etaStr))
 				} else {
-					sb.WriteString(
-						fmt.Sprintf("  -> %s - %s (playing %s)\n",
-							artist,
-							title,
-							etaStr,
-						),
-					)
+					sb.WriteString(fmt.Sprintf("  -> %s - %s _requested by %s (playing %s)_\n", artist, title, requester, etaStr))
 				}
 			}
 			if len(next) > maxNextItems {

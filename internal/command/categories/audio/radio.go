@@ -59,12 +59,11 @@ var RadioCommand = command.Command{
 				return
 			}
 		}
-
-		embed := buildPlayableInfoEmbed(channel, nil).WithTitle("Added to queue: " + channel.GetName())
+		embed := buildPlayableInfoEmbed(channel, nil, ctx.AuthorID).WithTitle("Added to queue: " + channel.GetName())
 		ctx.SuccessEmbed(embed)
 
 		utils.Go(func() {
-			if err := vc.AppendToQueue(channel); err != nil {
+			if err := vc.AppendToQueue(ctx.AuthorID, channel); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}

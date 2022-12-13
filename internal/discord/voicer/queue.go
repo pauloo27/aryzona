@@ -62,17 +62,27 @@ func (v *Voicer) Skip() {
 	v.EncodeSession.Cleanup()
 }
 
-func (v *Voicer) Playing() playable.Playable {
+func (v *Voicer) Playing() *queue.QueueEntry {
 	return v.Queue.First()
 }
 
-func (v *Voicer) AppendToQueue(playable playable.Playable) error {
-	v.Queue.Append(playable)
+func (v *Voicer) AppendToQueue(requesterID string, playable playable.Playable) error {
+	v.Queue.Append(&queue.QueueEntry{
+		Playable:  playable,
+		Requester: requesterID,
+	})
 	return nil
 }
 
-func (v *Voicer) AppendManyToQueue(playable ...playable.Playable) error {
-	v.Queue.AppendMany(playable...)
+func (v *Voicer) AppendManyToQueue(requesterID string, playable ...playable.Playable) error {
+	var entries []*queue.QueueEntry
+	for _, p := range playable {
+		entries = append(entries, &queue.QueueEntry{
+			Playable:  p,
+			Requester: requesterID,
+		})
+	}
+	v.Queue.AppendMany(entries...)
 	return nil
 }
 

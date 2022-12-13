@@ -11,7 +11,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
-func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *discord.Embed {
+func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, requesterID string) *discord.Embed {
 	title, artist := playable.GetFullTitle()
 
 	embed := discord.NewEmbed().
@@ -56,7 +56,7 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		position, posErr := vc.GetPosition()
 		duration, durErr := playable.GetDuration()
 
-		if playable == vc.Playing() && posErr == nil && durErr == nil {
+		if vc.Playing() != nil && playable == vc.Playing().Playable && posErr == nil && durErr == nil {
 			embed.WithField("Duration", fmt.Sprintf("%s/%s",
 				utils.ShortDuration(position),
 				utils.ShortDuration(duration),
@@ -66,6 +66,10 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer) *disc
 		} else if posErr == nil {
 			embed.WithField("Position", utils.ShortDuration(position))
 		}
+	}
+
+	if requesterID != "" {
+		embed.WithFieldInline("Requested by", discord.AsMention(requesterID))
 	}
 
 	if vc != nil && vc.IsPaused() {
@@ -85,14 +89,14 @@ func calcETA(playable playable.Playable, vc *voicer.Voicer) time.Duration {
 
 	var eta time.Duration
 	for i, entry := range vc.Queue.All() {
-		if entry == playable {
+		if entry.Playable == playable {
 			break
 		}
-		if entry.IsLive() {
+		if entry.Playable.IsLive() {
 			return -1
 		}
 
-		duration, _ := entry.GetDuration()
+		duration, _ := entry.Playable.GetDuration()
 		if i == 0 {
 			position, _ := vc.GetPosition()
 			duration -= position
