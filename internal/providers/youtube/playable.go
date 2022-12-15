@@ -4,15 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/kkdai/youtube/v2"
 )
-
-type YouTubePlayablePlaylist struct {
-	Videos        []playable.Playable
-	Title, Author string
-	Duration      time.Duration
-}
 
 type YouTubePlayable struct {
 	ID, Title, Author, ThumbnailURL string
@@ -90,37 +83,6 @@ func (p YouTubePlayable) IsOpus() bool {
 		}
 	}
 	return p.video.Formats.FindByItag(251) != nil
-}
-
-func GetPlaylist(playlistURL string) (YouTubePlayablePlaylist, error) {
-	playlist, err := defaultClient.GetPlaylist(playlistURL)
-	if err != nil {
-		return YouTubePlayablePlaylist{}, err
-	}
-
-	videos := make([]playable.Playable, len(playlist.Videos))
-
-	duration := time.Duration(0)
-
-	for i, vid := range playlist.Videos {
-		duration += vid.Duration
-		videos[i] = YouTubePlayable{
-			ID:           vid.ID,
-			Title:        vid.Title,
-			Author:       vid.Author,
-			Duration:     vid.Duration,
-			Live:         vid.Duration == 0,
-			ThumbnailURL: fmt.Sprintf("https://img.youtube.com/vi/%s/mqdefault.jpg", vid.ID),
-			video:        nil, // will be lazy loaded
-		}
-	}
-
-	return YouTubePlayablePlaylist{
-		Title:    playlist.Title,
-		Author:   playlist.Author,
-		Videos:   videos,
-		Duration: duration,
-	}, nil
 }
 
 func AsPlayable(videoURL string) (YouTubePlayable, error) {
