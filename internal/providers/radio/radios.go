@@ -8,6 +8,7 @@ var (
 func init() {
 	registerRadios(
 		newYouTubeRadio("lofi", "Lofi: beats to relax/study", "https://www.youtube.com/watch?v=jfKfPfyJRdk"),
+		newYouTubeRadio("coffee", "coffee shop radio", "https://www.youtube.com/watch?v=-5KAN9_CzSA"),
 		newYouTubeRadio("techno", "Techno: Rave Radio 24/7", "https://www.youtube.com/watch?v=6Irus3d5f0E"),
 
 		newCidadeRadio(
