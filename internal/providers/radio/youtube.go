@@ -2,6 +2,7 @@ package radio
 
 import (
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
+	"github.com/Pauloo27/logger"
 )
 
 type YouTubeRadio struct {
@@ -12,11 +13,11 @@ type YouTubeRadio struct {
 
 var _ RadioChannel = &YouTubeRadio{}
 
-func newYouTubeRadio(id, name, url string) YouTubeRadio {
+func newYouTubeRadio(id, name, url string) RadioChannel {
 	playable, err := youtube.AsPlayable(url)
 	if err != nil {
-		// FIXME
-		panic(err)
+		logger.Errorf("Error while creating YouTube radio %s: %s", name, err)
+		return nil
 	}
 	return YouTubeRadio{
 		ID:        id,
