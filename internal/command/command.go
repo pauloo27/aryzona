@@ -7,6 +7,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
+	"github.com/matoous/go-nanoid/v2"
 )
 
 type CommandHandler func(*CommandContext)
@@ -21,27 +22,32 @@ const (
 )
 
 const (
+	InteractionBaseIDLength = 10
+)
+
+const (
 	SuccessEmbedColor = 0x50fa7b
 	ErrorEmbedColor   = 0xff5555
 )
 
 type CommandContext struct {
-	startDate         time.Time
-	RawArgs           []string
-	Args              []interface{}
-	Bot               discord.BotAdapter
-	Member            model.Member
-	Channel           model.TextChannel
-	AuthorID, GuildID string
-	UsedName          string
-	Locals            map[string]interface{}
-	Reply             func(string) error
-	ReplyEmbed        func(*model.Embed) error
-	ReplyComplex      func(*model.ComplexMessage) error
-	Edit              func(string) error
-	EditEmbed         func(*model.Embed) error
-	Command           *Command
-	Trigger           CommandTrigger
+	interactionHandler func(id string)
+	startDate          time.Time
+	RawArgs            []string
+	Args               []interface{}
+	Bot                discord.BotAdapter
+	Member             model.Member
+	Channel            model.TextChannel
+	AuthorID, GuildID  string
+	UsedName           string
+	Locals             map[string]interface{}
+	Reply              func(string) error
+	ReplyEmbed         func(*model.Embed) error
+	ReplyComplex       func(*model.ComplexMessage) error
+	Edit               func(string) error
+	EditEmbed          func(*model.Embed) error
+	Command            *Command
+	Trigger            CommandTrigger
 }
 
 type CommandPermission struct {
@@ -168,4 +174,20 @@ func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	} else {
 		embed.Footer = duration
 	}
+}
+
+func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler func(id string)) (baseID string, err error) {
+	for {
+		baseID, err = gonanoid.New(InteractionBaseIDLength)
+		if err != nil {
+			logger.Error(err)
+			return "", err
+		}
+		if _, found := commandInteractionMap[baseID]; !found {
+			break
+		}
+	}
+	ctx.interactionHandler = interactionHandler
+	commandInteractionMap[baseID] = ctx
+	return baseID, nil
 }

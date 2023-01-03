@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	commandMap  = map[string]*Command{}
-	commandList []*Command
+	commandMap            = map[string]*Command{}
+	commandInteractionMap = map[string]*CommandContext{}
+	commandList           []*Command
 )
 
 var Prefix string

@@ -157,7 +157,10 @@ func registerCommands(bot ArkwBot) error {
 			return err
 		}
 
-		if data, ok := i.Data.(*dc.CommandInteraction); ok {
+		switch data := i.Data.(type) {
+		case dc.ComponentInteraction:
+			command.HandleInteraction(string(data.ID()))
+		case *dc.CommandInteraction:
 			cmd, ok := command.GetCommandMap()[data.Name]
 			if !ok {
 				logger.Error("Invalid slash command interaction received:", data.Name)

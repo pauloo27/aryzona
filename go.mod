@@ -6,13 +6,13 @@ require (
 	github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d
 	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
-	github.com/bwmarrin/discordgo v0.26.0
 	github.com/diamondburned/arikawa/v3 v3.1.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/google/uuid v1.3.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
 	github.com/kkdai/youtube/v2 v2.7.10
+	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.14.0

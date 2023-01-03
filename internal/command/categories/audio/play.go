@@ -106,6 +106,8 @@ func handleSingleResult(result *youtube.SearchResult) (toPlay []playable.Playabl
 }
 
 func handleMultipleResults(ctx *command.CommandContext, results []*youtube.SearchResult) (toPlay []playable.Playable, displayResult playable.Playable) {
+	selection := make(chan int)
+
 	embed := model.NewEmbed().
 		WithColor(command.SuccessEmbedColor).
 		WithTitle("Multiple results found, please select one")
@@ -133,6 +135,12 @@ func handleMultipleResults(ctx *command.CommandContext, results []*youtube.Searc
 
 	ctx.AddCommandDuration(embed)
 
+	baseID, err := ctx.RegisterInteractionHandler(handleInteraction(ctx, selection))
+	if err != nil {
+		ctx.Error("Something went wrong")
+		return
+	}
+
 	var components []model.MessageComponent
 
 	for i := range results {
@@ -140,17 +148,33 @@ func handleMultipleResults(ctx *command.CommandContext, results []*youtube.Searc
 			components,
 			model.ButtonComponent{
 				Label: fmt.Sprintf("%d", i+1),
-				ID:    fmt.Sprintf("play-%d", i+1),
+				ID:    fmt.Sprintf("%s-play-%d", baseID, i+1),
 				Style: model.PrimaryButtonStyle,
 			},
 		)
 	}
 
-	// TODO: handle response
+	// TODO: send proper response
 	// TODO: add a timeout
-	ctx.ReplyComplex(&model.ComplexMessage{
+	err = ctx.ReplyComplex(&model.ComplexMessage{
 		Embeds:     []*model.Embed{embed},
 		Components: components,
 	})
-	return nil, nil
+
+	if err != nil {
+		return nil, nil
+	}
+
+	result := results[<-selection]
+	displayResult = result.ToPlayable()[0]
+	toPlay = []playable.Playable{displayResult}
+	return
+}
+
+func handleInteraction(ctx *command.CommandContext, selection chan<- int) func(string) {
+	return func(id string) {
+		indexStr := id[len(id)-1] - '0'
+		index := int(indexStr)
+		selection <- index - 1
+	}
 }

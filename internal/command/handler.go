@@ -121,3 +121,14 @@ func HandleCommand(
 
 	executeCommand(command, ctx, adapter, bot)
 }
+
+func HandleInteraction(id string) {
+	baseID := id[:10]
+	ctx, ok := commandInteractionMap[baseID]
+	if !ok {
+		logger.Error("Cannot find interaction adapter for id", baseID)
+		return
+	}
+	ctx.interactionHandler(id)
+	delete(commandInteractionMap, baseID)
+}
