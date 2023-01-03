@@ -17,7 +17,7 @@ func (DummyBot) EditMessageContent(message model.Message, newContent string) (mo
 	return nil, nil
 }
 
-func (DummyBot) EditMessageEmbed(message model.Message, embed *discord.Embed) (model.Message, error) {
+func (DummyBot) EditMessageEmbed(message model.Message, embed *model.Embed) (model.Message, error) {
 	return nil, nil
 }
 
@@ -65,11 +65,15 @@ func (DummyBot) SendReplyMessage(message model.Message, content string) (model.M
 	return nil, nil
 }
 
-func (DummyBot) SendReplyEmbedMessage(message model.Message, embed *discord.Embed) (model.Message, error) {
+func (DummyBot) SendReplyEmbedMessage(message model.Message, embed *model.Embed) (model.Message, error) {
 	return nil, nil
 }
 
-func (DummyBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.Message, error) {
+func (DummyBot) SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error) {
+	return nil, nil
+}
+
+func (DummyBot) SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error) {
 	return nil, nil
 }
 

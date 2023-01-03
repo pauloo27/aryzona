@@ -1,4 +1,4 @@
-package discord
+package model
 
 type EmbedField struct {
 	Name, Value string

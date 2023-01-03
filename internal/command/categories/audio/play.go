@@ -2,15 +2,25 @@ package audio
 
 import (
 	"errors"
+	"fmt"
+	"strings"
+	"time"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/logger"
+)
+
+const (
+	maxSearchResults = 5
+	selectionTimeout = 10 * time.Second
 )
 
 var PlayCommand = command.Command{
@@ -38,47 +48,36 @@ var PlayCommand = command.Command{
 		}
 
 		searchQuery := ctx.Args[0].(string)
-		resultURL, isPlaylist, err := youtube.GetBestResult(searchQuery)
-		if err != nil {
-			ctx.Error("Cannot find what you are looking for")
+		results, err := youtube.SearchFor(searchQuery, maxSearchResults)
+		if err != nil || len(results) == 0 {
+			ctx.Error("Cannot search for this song")
+			logger.Warnf("Error searching for %s: %v", searchQuery, err)
 			return
 		}
 
-		var playlist youtube.YouTubePlayablePlaylist
-		var result playable.Playable
+		// what should be added to the queue, since we support playlists...
+		// it needs to be a list of playable
+		var toPlay []playable.Playable
+		// single result, it's info's used for the "Now playing" message
+		var displayResult playable.Playable
 
-		if isPlaylist {
-			playlist, err = youtube.GetPlaylist(resultURL)
-			if err != nil {
-				ctx.Error("Cannot find what you are looking for")
-				return
-			}
-			result = playable.DummyPlayable{
-				Name:     "YouTube Playlist",
-				Artist:   playlist.Author,
-				Title:    playlist.Title,
-				Duration: playlist.Duration,
-			}
+		if len(results) > 1 {
+			toPlay, displayResult = handleMultipleResults(ctx, results)
 		} else {
-			result, err = youtube.AsPlayable(resultURL)
-			if err != nil {
-				ctx.Errorf("Something went wrong when getting the video to play: %v", err)
-				return
-			}
+			toPlay, displayResult = handleSingleResult(results[0])
 		}
 
-		embed := buildPlayableInfoEmbed(result, vc, ctx.AuthorID).WithTitle("Best result for: " + searchQuery)
-		ctx.SuccessEmbed(embed)
-
-		var vidsToAppend []playable.Playable
-		if isPlaylist {
-			vidsToAppend = playlist.Videos
-		} else {
-			vidsToAppend = []playable.Playable{result}
+		if toPlay == nil {
+			ctx.Error("Something went wrong =(")
+			return
 		}
+
+		ctx.SuccessEmbed(
+			buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID).WithTitle("Best result for: " + searchQuery),
+		)
 
 		utils.Go(func() {
-			if err = vc.AppendManyToQueue(ctx.AuthorID, vidsToAppend...); err != nil {
+			if err = vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
@@ -87,4 +86,71 @@ var PlayCommand = command.Command{
 			}
 		})
 	},
+}
+
+func handleSingleResult(result *youtube.SearchResult) (toPlay []playable.Playable, displayResult playable.Playable) {
+	toPlay = result.ToPlayable()
+
+	if result.IsPlaylist() {
+		displayResult = playable.DummyPlayable{
+			Name:     "YouTube Playlist",
+			Artist:   result.Author,
+			Title:    result.Title,
+			Duration: result.Duration,
+		}
+	} else {
+		displayResult = toPlay[0]
+	}
+
+	return
+}
+
+func handleMultipleResults(ctx *command.CommandContext, results []*youtube.SearchResult) (toPlay []playable.Playable, displayResult playable.Playable) {
+	embed := model.NewEmbed().
+		WithColor(command.SuccessEmbedColor).
+		WithTitle("Multiple results found, please select one")
+
+	sb := strings.Builder{}
+	for i, result := range results {
+		sb.WriteString(
+			fmt.Sprintf(
+				" - %s **%s** from %s (*%s*)\n",
+				utils.Emojify(i+1),
+				result.Title,
+				result.Author,
+				utils.ShortDuration(result.Duration),
+			),
+		)
+	}
+	sb.WriteString(
+		fmt.Sprintf(
+			"\n\n**If you fail to select one in %d seconds, the first result will be selected**",
+			selectionTimeout/time.Second,
+		),
+	)
+
+	embed.WithDescription(sb.String())
+
+	ctx.AddCommandDuration(embed)
+
+	var components []model.MessageComponent
+
+	for i := range results {
+		components = append(
+			components,
+			model.ButtonComponent{
+				Label: fmt.Sprintf("%d", i+1),
+				ID:    fmt.Sprintf("play-%d", i+1),
+				Style: model.PrimaryButtonStyle,
+			},
+		)
+	}
+
+	// TODO: handle response
+	// TODO: add a timeout
+	ctx.ReplyComplex(&model.ComplexMessage{
+		Embeds:     []*model.Embed{embed},
+		Components: components,
+	})
+	return nil, nil
 }

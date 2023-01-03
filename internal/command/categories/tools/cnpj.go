@@ -5,7 +5,7 @@ import (
 	"regexp"
 
 	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
@@ -22,7 +22,7 @@ var CNPJCommand = command.Command{
 		)
 
 		ctx.SuccessEmbed(
-			discord.NewEmbed().
+			model.NewEmbed().
 				WithTitle("CNPJ").
 				WithField("Without mask", cnpj).
 				WithField("With mask", maskedCNPJ),

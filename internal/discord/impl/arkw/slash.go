@@ -5,7 +5,6 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 
@@ -126,30 +125,36 @@ func registerCommands(bot ArkwBot) error {
 	}
 
 	s.AddHandler(func(i *gateway.InteractionCreateEvent) {
-		edit := func(msg string, embed *discord.Embed) error {
+		respond := func(message *model.ComplexMessage) error {
 			var embeds []dc.Embed
-			if embed != nil {
-				embeds = append(embeds, buildEmbed(embed))
-			}
-			_, err := s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
-				Content: option.NewNullableString(msg),
-				Embeds:  &embeds,
-			})
-			return err
-		}
-
-		respond := func(msg string, embed *discord.Embed) error {
-			var embeds []dc.Embed
-			if embed != nil {
+			if len(message.Embeds) > 0 {
+				embed := message.Embeds[0]
 				embeds = append(embeds, buildEmbed(embed))
 			}
 			return s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
 				Type: api.MessageInteractionWithSource,
 				Data: &api.InteractionResponseData{
-					Content: option.NewNullableString(msg),
+					Content: option.NewNullableString(message.Content),
 					Embeds:  &embeds,
 				},
 			})
+		}
+
+		edit := func(message *model.ComplexMessage) error {
+			var embeds []dc.Embed
+			if len(message.Embeds) > 0 {
+				embed := message.Embeds[0]
+				embeds = append(embeds, buildEmbed(embed))
+			}
+			components := buildComponents(message.Components)
+			row := dc.ActionRowComponent(components)
+
+			_, err := s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
+				Content:    option.NewNullableString(message.Content),
+				Embeds:     &embeds,
+				Components: dc.ComponentsPtr(&row),
+			})
+			return err
 		}
 
 		if data, ok := i.Data.(*dc.CommandInteraction); ok {
@@ -195,17 +200,23 @@ func registerCommands(bot ArkwBot) error {
 						},
 					)
 				},
+				ReplyComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+					if ctx.Command.Deferred {
+						return edit(message)
+					}
+					return respond(message)
+				},
 				Reply: func(ctx *command.CommandContext, message string) error {
 					if ctx.Command.Deferred {
-						return edit(message, nil)
+						return edit(&model.ComplexMessage{Content: message})
 					}
-					return respond(message, nil)
+					return respond(&model.ComplexMessage{Content: message})
 				},
-				ReplyEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
+				ReplyEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
 					if ctx.Command.Deferred {
-						return edit("", embed)
+						return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
 					}
-					return respond("", embed)
+					return respond(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
 				},
 			}
 

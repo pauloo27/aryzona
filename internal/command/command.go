@@ -20,6 +20,11 @@ const (
 	CommandTriggerMessage CommandTrigger = "MESSAGE"
 )
 
+const (
+	SuccessEmbedColor = 0x50fa7b
+	ErrorEmbedColor   = 0xff5555
+)
+
 type CommandContext struct {
 	startDate         time.Time
 	RawArgs           []string
@@ -31,9 +36,10 @@ type CommandContext struct {
 	UsedName          string
 	Locals            map[string]interface{}
 	Reply             func(string) error
-	ReplyEmbed        func(*discord.Embed) error
+	ReplyEmbed        func(*model.Embed) error
+	ReplyComplex      func(*model.ComplexMessage) error
 	Edit              func(string) error
-	EditEmbed         func(*discord.Embed) error
+	EditEmbed         func(*model.Embed) error
 	Command           *Command
 	Trigger           CommandTrigger
 }
@@ -112,7 +118,7 @@ func (ctx *CommandContext) Successf(format string, a ...any) {
 }
 
 func (ctx *CommandContext) SuccessReturning(message string) error {
-	return ctx.SuccessEmbedReturning(discord.NewEmbed().WithDescription(message))
+	return ctx.SuccessEmbedReturning(model.NewEmbed().WithDescription(message))
 }
 
 func (ctx *CommandContext) Error(message string) {
@@ -124,14 +130,37 @@ func (ctx *CommandContext) Errorf(format string, a ...any) {
 }
 
 func (ctx *CommandContext) ErrorReturning(message string) error {
-	return ctx.ErrorEmbedReturning(discord.NewEmbed().WithDescription(message))
+	return ctx.ErrorEmbedReturning(model.NewEmbed().WithDescription(message))
 }
 
-func (ctx *CommandContext) Embed(embed *discord.Embed) {
+func (ctx *CommandContext) Embed(embed *model.Embed) {
 	ctx.handleCannotSendMessage(ctx.EmbedReturning(embed))
 }
 
-func (ctx *CommandContext) EmbedReturning(embed *discord.Embed) error {
+func (ctx *CommandContext) EmbedReturning(embed *model.Embed) error {
+	ctx.AddCommandDuration(embed)
+	return ctx.ReplyEmbed(embed)
+}
+
+func (ctx *CommandContext) SuccessEmbed(embed *model.Embed) {
+	ctx.handleCannotSendMessage(ctx.SuccessEmbedReturning(embed))
+}
+
+func (ctx *CommandContext) SuccessEmbedReturning(embed *model.Embed) error {
+	embed.Color = SuccessEmbedColor
+	return ctx.EmbedReturning(embed)
+}
+
+func (ctx *CommandContext) ErrorEmbed(embed *model.Embed) {
+	ctx.handleCannotSendMessage(ctx.ErrorEmbedReturning(embed))
+}
+
+func (ctx *CommandContext) ErrorEmbedReturning(embed *model.Embed) error {
+	embed.Color = ErrorEmbedColor
+	return ctx.EmbedReturning(embed)
+}
+
+func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	processTime := time.Since(ctx.startDate).Truncate(time.Second)
 	duration := fmt.Sprintf("Took %v", processTime)
 	if embed.Footer != "" {
@@ -139,23 +168,4 @@ func (ctx *CommandContext) EmbedReturning(embed *discord.Embed) error {
 	} else {
 		embed.Footer = duration
 	}
-	return ctx.ReplyEmbed(embed)
-}
-
-func (ctx *CommandContext) SuccessEmbed(embed *discord.Embed) {
-	ctx.handleCannotSendMessage(ctx.SuccessEmbedReturning(embed))
-}
-
-func (ctx *CommandContext) SuccessEmbedReturning(embed *discord.Embed) error {
-	embed.Color = 0x50fa7b
-	return ctx.EmbedReturning(embed)
-}
-
-func (ctx *CommandContext) ErrorEmbed(embed *discord.Embed) {
-	ctx.handleCannotSendMessage(ctx.ErrorEmbedReturning(embed))
-}
-
-func (ctx *CommandContext) ErrorEmbedReturning(embed *discord.Embed) error {
-	embed.Color = 0xff5555
-	return ctx.EmbedReturning(embed)
 }

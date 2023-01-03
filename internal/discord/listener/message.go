@@ -53,16 +53,24 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 			lastSentMessage, err = discord.Bot.SendReplyMessage(m, msg)
 			return err
 		},
-		ReplyEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
+		ReplyEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
 			var err error
 			lastSentMessage, err = discord.Bot.SendReplyEmbedMessage(m, embed)
+			return err
+		},
+		ReplyComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+			var err error
+			if message.ReplyTo == nil {
+				message.ReplyTo = m
+			}
+			lastSentMessage, err = discord.Bot.SendComplexMessage(ctx.Channel.ID(), message)
 			return err
 		},
 		Edit: func(ctx *command.CommandContext, msg string) error {
 			_, err := discord.Bot.EditMessageContent(lastSentMessage, msg)
 			return err
 		},
-		EditEmbed: func(ctx *command.CommandContext, embed *discord.Embed) error {
+		EditEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
 			_, err := discord.Bot.EditMessageEmbed(lastSentMessage, embed)
 			return err
 		},

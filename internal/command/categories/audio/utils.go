@@ -6,15 +6,16 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
-func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, requesterID string) *discord.Embed {
+func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, requesterID string) *model.Embed {
 	title, artist := playable.GetFullTitle()
 
-	embed := discord.NewEmbed().
+	embed := model.NewEmbed().
 		WithField("Title", title)
 
 	shareURL := playable.GetShareURL()

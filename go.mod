@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d
 	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
-	github.com/Pauloo27/searchtube v0.0.0-20211210213129-1828077b9033
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
 	github.com/bwmarrin/discordgo v0.26.0
 	github.com/diamondburned/arikawa/v3 v3.1.0
@@ -24,7 +23,6 @@ require (
 	github.com/anaskhan96/soup v1.2.4 // indirect
 	github.com/andybalholm/cascadia v1.1.0 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
-	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91 // indirect
 	github.com/dop251/goja v0.0.0-20220516123900-4418d4575a41 // indirect

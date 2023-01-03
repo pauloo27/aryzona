@@ -7,6 +7,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/git"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
@@ -16,7 +17,7 @@ var UptimeCommand = command.Command{
 	Aliases: []string{"up"},
 	Handler: func(ctx *command.CommandContext) {
 		uptime := time.Since(*discord.Bot.StartedAt())
-		embed := discord.NewEmbed().
+		embed := model.NewEmbed().
 			WithTitle("Bot uptime").
 			WithField(":timer: Uptime", utils.DurationAsText(uptime)).
 			WithField(":gear: Implementation", discord.Bot.Implementation()).
