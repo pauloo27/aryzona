@@ -2,11 +2,15 @@ package audio
 
 import (
 	"errors"
+	"fmt"
+	"strings"
+	"time"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
@@ -16,6 +20,7 @@ import (
 
 const (
 	maxSearchResults = 5
+	selectionTimeout = 10 * time.Second
 )
 
 var PlayCommand = command.Command{
@@ -57,8 +62,7 @@ var PlayCommand = command.Command{
 		var displayResult playable.Playable
 
 		if len(results) > 1 {
-			ctx.Successf("Found %d results, please choose one", len(results))
-			return
+			toPlay, displayResult = handleMultipleResults(ctx, results)
 		} else {
 			toPlay, displayResult = handleSingleResult(results[0])
 		}
@@ -99,4 +103,54 @@ func handleSingleResult(result *youtube.SearchResult) (toPlay []playable.Playabl
 	}
 
 	return
+}
+
+func handleMultipleResults(ctx *command.CommandContext, results []*youtube.SearchResult) (toPlay []playable.Playable, displayResult playable.Playable) {
+	embed := model.NewEmbed().
+		WithColor(command.SuccessEmbedColor).
+		WithTitle("Multiple results found, please select one")
+
+	sb := strings.Builder{}
+	for i, result := range results {
+		sb.WriteString(
+			fmt.Sprintf(
+				" - %s **%s** from %s (*%s*)\n",
+				utils.Emojify(i+1),
+				result.Title,
+				result.Author,
+				utils.ShortDuration(result.Duration),
+			),
+		)
+	}
+	sb.WriteString(
+		fmt.Sprintf(
+			"\n\n**If you fail to select one in %d seconds, the first result will be selected**",
+			selectionTimeout/time.Second,
+		),
+	)
+
+	embed.WithDescription(sb.String())
+
+	ctx.AddCommandDuration(embed)
+
+	var components []model.MessageComponent
+
+	for i := range results {
+		components = append(
+			components,
+			model.ButtonComponent{
+				Label: fmt.Sprintf("%d", i+1),
+				ID:    fmt.Sprintf("play-%d", i+1),
+				Style: model.PrimaryButtonStyle,
+			},
+		)
+	}
+
+	// TODO: handle response
+	// TODO: add a timeout
+	ctx.ReplyComplex(&model.ComplexMessage{
+		Embeds:     []*model.Embed{embed},
+		Components: components,
+	})
+	return nil, nil
 }

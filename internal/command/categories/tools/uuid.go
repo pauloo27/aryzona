@@ -2,7 +2,7 @@ package tools
 
 import (
 	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/google/uuid"
 )
 
@@ -12,7 +12,7 @@ var UUIDCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		id := uuid.New()
 		ctx.SuccessEmbed(
-			discord.NewEmbed().
+			model.NewEmbed().
 				WithTitle("UUID v4").
 				WithDescription(id.String()),
 		)

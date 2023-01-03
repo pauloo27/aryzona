@@ -22,11 +22,12 @@ type BotAdapter interface {
 	GetMember(guildID, userID string) (model.Member, error)
 	CountUsersInVoiceChannel(vc model.VoiceChannel) int
 	SendMessage(channelID string, content string) (model.Message, error)
+	SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error)
 	SendReplyMessage(message model.Message, content string) (model.Message, error)
-	SendReplyEmbedMessage(message model.Message, embed *Embed) (model.Message, error)
-	SendEmbedMessage(channelID string, embed *Embed) (model.Message, error)
+	SendReplyEmbedMessage(message model.Message, embed *model.Embed) (model.Message, error)
+	SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error)
 	EditMessageContent(message model.Message, newContent string) (model.Message, error)
-	EditMessageEmbed(message model.Message, embed *Embed) (model.Message, error)
+	EditMessageEmbed(message model.Message, embed *model.Embed) (model.Message, error)
 	OpenChannelWithUser(userID string) (model.TextChannel, error)
 	OpenGuild(guildID string) (model.Guild, error)
 	Latency() time.Duration

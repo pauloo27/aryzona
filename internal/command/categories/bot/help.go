@@ -6,7 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/aryzona/internal/utils/slice"
 )
@@ -34,7 +34,7 @@ var HelpCommand = command.Command{
 }
 
 func listCommands(ctx *command.CommandContext) {
-	embed := discord.NewEmbed()
+	embed := model.NewEmbed()
 	sb := strings.Builder{}
 	embed.WithTitle("List of commands")
 	lastCategory := ""
@@ -94,7 +94,7 @@ func helpForCommand(ctx *command.CommandContext) {
 		fullCommandName = fmt.Sprintf("%s %s", rootCmd.Name, cmd.Name)
 	}
 
-	embed := discord.NewEmbed().
+	embed := model.NewEmbed().
 		WithTitle(fullCommandName).
 		WithField("Category", fmt.Sprintf("%s %s", rootCmd.GetCategory().Emoji, rootCmd.GetCategory().Name)).
 		WithDescription(cmd.Description)

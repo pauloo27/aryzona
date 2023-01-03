@@ -5,6 +5,7 @@ import (
 	"runtime/debug"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/logger"
 )
 
@@ -21,7 +22,7 @@ func listenToLog() {
 			return
 		}
 
-		embed := discord.NewEmbed().
+		embed := model.NewEmbed().
 			WithFieldInline("Message", fmt.Sprintln(params...)).
 			WithDescription(fmt.Sprintf("```go\n%s\n```", string(debug.Stack()))).
 			WithColor(0xff5555).

@@ -8,7 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/providers/radio"
 	"github.com/Pauloo27/aryzona/internal/utils"
@@ -75,7 +75,7 @@ var RadioCommand = command.Command{
 }
 
 func listRadios(ctx *command.CommandContext, title string) {
-	embed := discord.NewEmbed().
+	embed := model.NewEmbed().
 		WithTitle(title)
 
 	for _, channel := range radio.GetRadioList() {

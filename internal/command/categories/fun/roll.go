@@ -6,7 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/dice"
 	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/aryzona/internal/utils/rnd"
@@ -46,7 +46,7 @@ var RollCommand = command.Command{
 			numbers[i] = luckyNumber
 		}
 
-		embed := discord.NewEmbed().
+		embed := model.NewEmbed().
 			WithTitle(fmt.Sprintf(":game_die: You got %d", result)).
 			WithDescription(
 				fmt.Sprintf("You rolled %s (%d %s with %d %s)\n%v -> %d\n_Gif by [Tenor](https://tenor.com/)_",

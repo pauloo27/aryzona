@@ -5,7 +5,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/xkcd"
 	"github.com/Pauloo27/aryzona/internal/utils"
 )
@@ -57,7 +57,7 @@ func sendComic(ctx *command.CommandContext, comic *xkcd.Comic, err error) {
 	}
 
 	ctx.SuccessEmbed(
-		discord.NewEmbed().
+		model.NewEmbed().
 			WithTitle(fmt.Sprintf(
 				"#%d - %s (%s/%s/%s)", comic.Num, comic.SafeTitle,
 				comic.Year, utils.PadLeft(comic.Month, "0", 2), utils.PadLeft(comic.Day, "0", 2)),

@@ -5,7 +5,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/news"
 )
 
@@ -49,7 +49,7 @@ var NewsCommand = command.Command{
 			ctx.Errorf("Error getting news: %s", err)
 			return
 		}
-		embed := discord.NewEmbed().
+		embed := model.NewEmbed().
 			WithTitle(fmt.Sprintf("News - %s by %s", news.Title, news.Author)).
 			WithDescription(news.Description).
 			WithImage(news.ThumbnailURL)

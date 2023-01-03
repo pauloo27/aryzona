@@ -7,7 +7,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
 )
 
@@ -51,7 +51,7 @@ func ListLiveMatches(ctx *command.CommandContext) {
 		))
 	}
 	ctx.SuccessEmbed(
-		discord.NewEmbed().
+		model.NewEmbed().
 			WithTitle("⚽ Live matches:").
 			WithFooter(
 				fmt.Sprintf("Use `%s%s <team name>` to see details",
@@ -80,7 +80,7 @@ func showMatchInfo(ctx *command.CommandContext) {
 	ctx.Embed(embed)
 }
 
-func buildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
+func buildMatchEmbed(match *livescore.MatchInfo) *model.Embed {
 	desc := strings.Builder{}
 
 	if len(match.Events) > 0 {
@@ -122,7 +122,7 @@ func buildMatchEmbed(match *livescore.MatchInfo) *discord.Embed {
 		t2Score = "_"
 	}
 
-	return discord.NewEmbed().
+	return model.NewEmbed().
 		WithColor(0xC0FFEE).
 		WithField("Match", fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
 		WithField("Time", match.Time).

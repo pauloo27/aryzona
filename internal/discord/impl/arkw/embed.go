@@ -1,11 +1,11 @@
 package arkw
 
 import (
-	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 	dc "github.com/diamondburned/arikawa/v3/discord"
 )
 
-func buildEmbedFields(fields []*discord.EmbedField) (dcgoFields []dc.EmbedField) {
+func buildEmbedFields(fields []*model.EmbedField) (dcgoFields []dc.EmbedField) {
 	for _, field := range fields {
 		dcgoFields = append(dcgoFields, dc.EmbedField{
 			Name:   field.Name,
@@ -16,7 +16,7 @@ func buildEmbedFields(fields []*discord.EmbedField) (dcgoFields []dc.EmbedField)
 	return
 }
 
-func buildEmbed(e *discord.Embed) dc.Embed {
+func buildEmbed(e *model.Embed) dc.Embed {
 	return dc.Embed{
 		Title:       e.Title,
 		Description: e.Description,

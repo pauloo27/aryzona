@@ -48,7 +48,7 @@ func ready(bot discord.BotAdapter) {
 	}
 }
 
-func createStartedEmbed(guildCount int) *discord.Embed {
+func createStartedEmbed(guildCount int) *model.Embed {
 	dogImage, err := animal.GetRandomDogImage()
 	if err != nil {
 		dogImage = "https://http.cat/500"
@@ -65,7 +65,7 @@ func createStartedEmbed(guildCount int) *discord.Embed {
 		hostName = "??"
 	}
 
-	return discord.NewEmbed().
+	return model.NewEmbed().
 		WithTitle(fmt.Sprintf("I've just started as %s@%s", userName, hostName)).
 		WithColor(0xC0FFEE).
 		WithImage(dogImage).

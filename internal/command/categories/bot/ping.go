@@ -5,6 +5,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
+	"github.com/Pauloo27/aryzona/internal/discord/model"
 )
 
 var PingCommand = command.Command{
@@ -12,7 +13,7 @@ var PingCommand = command.Command{
 	Aliases: []string{"pong"},
 	Handler: func(ctx *command.CommandContext) {
 		ctx.SuccessEmbed(
-			discord.NewEmbed().
+			model.NewEmbed().
 				WithTitle(":ping_pong: Pong!").
 				WithFooter("(that's the Bot latency, not yours)").
 				WithField(

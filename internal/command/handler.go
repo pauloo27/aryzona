@@ -106,14 +106,17 @@ func HandleCommand(
 	ctx.Reply = func(msg string) error {
 		return adapter.Reply(ctx, msg)
 	}
-	ctx.ReplyEmbed = func(embed *discord.Embed) error {
+	ctx.ReplyEmbed = func(embed *model.Embed) error {
 		return adapter.ReplyEmbed(ctx, embed)
 	}
 	ctx.Edit = func(msg string) error {
 		return adapter.Edit(ctx, msg)
 	}
-	ctx.EditEmbed = func(embed *discord.Embed) error {
+	ctx.EditEmbed = func(embed *model.Embed) error {
 		return adapter.EditEmbed(ctx, embed)
+	}
+	ctx.ReplyComplex = func(data *model.ComplexMessage) error {
+		return adapter.ReplyComplex(ctx, data)
 	}
 
 	executeCommand(command, ctx, adapter, bot)

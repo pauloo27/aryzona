@@ -192,6 +192,60 @@ func (b ArkwBot) registerListeners() {
 	}
 }
 
+func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error) {
+	channelSf, err := dc.ParseSnowflake(channelID)
+	if err != nil {
+		return nil, err
+	}
+	var embeds []dc.Embed
+
+	for _, embed := range message.Embeds {
+		embeds = append(embeds, buildEmbed(embed))
+	}
+
+	var refMessage *dc.MessageReference
+
+	if message.ReplyTo != nil {
+		refMessageSf, err := dc.ParseSnowflake(message.ReplyTo.ID())
+		if err != nil {
+			return nil, err
+		}
+
+		guildSf, err := dc.ParseSnowflake(message.ReplyTo.Channel().Guild().ID())
+		if err != nil {
+			return nil, err
+		}
+
+		refMessage = &dc.MessageReference{
+			MessageID: dc.MessageID(refMessageSf),
+			ChannelID: dc.ChannelID(channelSf),
+			GuildID:   dc.GuildID(guildSf),
+		}
+	}
+
+	components := buildComponents(message.Components)
+	row := dc.ActionRowComponent(components)
+
+	msg, err := b.d.s.SendMessageComplex(dc.ChannelID(channelSf), api.SendMessageData{
+		Content:    message.Content,
+		Embeds:     embeds,
+		Reference:  refMessage,
+		Components: dc.ContainerComponents{&row},
+	})
+	if err != nil {
+		return nil, err
+	}
+	cType := model.ChannelTypeGuild
+	if msg.GuildID.String() == "" {
+		cType = model.ChannelTypeDirect
+	}
+	return buildMessage(
+		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
+		buildUser(msg.Author.ID.String()),
+		message.Content,
+	), nil
+}
+
 func (b ArkwBot) SendReplyMessage(m model.Message, content string) (model.Message, error) {
 	sf, err := dc.ParseSnowflake(m.Channel().ID())
 	if err != nil {
@@ -236,7 +290,7 @@ func (b ArkwBot) EditMessageContent(message model.Message, newContent string) (m
 	), nil
 }
 
-func (b ArkwBot) EditMessageEmbed(message model.Message, newEmbed *discord.Embed) (model.Message, error) {
+func (b ArkwBot) EditMessageEmbed(message model.Message, newEmbed *model.Embed) (model.Message, error) {
 	sf, err := dc.ParseSnowflake(message.Channel().ID())
 	if err != nil {
 		return nil, err
@@ -282,7 +336,7 @@ func (b ArkwBot) SendMessage(channelID string, message string) (model.Message, e
 	), nil
 }
 
-func (b ArkwBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (model.Message, error) {
+func (b ArkwBot) SendReplyEmbedMessage(m model.Message, embed *model.Embed) (model.Message, error) {
 	chSf, err := dc.ParseSnowflake(m.Channel().ID())
 	if err != nil {
 		return nil, err
@@ -306,7 +360,7 @@ func (b ArkwBot) SendReplyEmbedMessage(m model.Message, embed *discord.Embed) (m
 	), nil
 }
 
-func (b ArkwBot) SendEmbedMessage(channelID string, embed *discord.Embed) (model.Message, error) {
+func (b ArkwBot) SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error) {
 	sf, err := dc.ParseSnowflake(channelID)
 	if err != nil {
 		return nil, err

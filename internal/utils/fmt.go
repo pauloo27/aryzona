@@ -92,3 +92,27 @@ func DurationAsDetailedDiffText(duration time.Duration) string {
 		stringfy(seconds, "second", "seconds"),
 	))
 }
+
+func Emojify(i int) string {
+	if i < 10 {
+		return numberEmojis[i]
+	}
+	sb := strings.Builder{}
+	for _, c := range fmt.Sprintf("%d", i) {
+		sb.WriteString(numberEmojis[int(c-'0')])
+	}
+	return sb.String()
+}
+
+var numberEmojis = map[int]string{
+	0: "0️⃣",
+	1: "1️⃣",
+	2: "2️⃣",
+	3: "3️⃣",
+	4: "4️⃣",
+	5: "5️⃣",
+	6: "6️⃣",
+	7: "7️⃣",
+	8: "8️⃣",
+	9: "9️⃣",
+}
