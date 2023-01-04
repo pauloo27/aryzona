@@ -170,7 +170,6 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 		)
 	}
 
-	// TODO: add a timeout
 	err = ctx.ReplyComplex(&model.ComplexMessage{
 		Embeds:     []*model.Embed{embed},
 		Components: components,
