@@ -17,6 +17,10 @@ func (DummyBot) EditMessageContent(message model.Message, newContent string) (mo
 	return nil, nil
 }
 
+func (DummyBot) EditComplexMessage(message model.Message, newMessage *model.ComplexMessage) (model.Message, error) {
+	return nil, nil
+}
+
 func (DummyBot) EditMessageEmbed(message model.Message, embed *model.Embed) (model.Message, error) {
 	return nil, nil
 }

@@ -23,6 +23,7 @@ type BotAdapter interface {
 	CountUsersInVoiceChannel(vc model.VoiceChannel) int
 	SendMessage(channelID string, content string) (model.Message, error)
 	SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error)
+	EditComplexMessage(message model.Message, newMessage *model.ComplexMessage) (model.Message, error)
 	SendReplyMessage(message model.Message, content string) (model.Message, error)
 	SendReplyEmbedMessage(message model.Message, embed *model.Embed) (model.Message, error)
 	SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error)

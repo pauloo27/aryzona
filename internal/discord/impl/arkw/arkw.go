@@ -14,6 +14,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/diamondburned/arikawa/v3/utils/handler"
+	"github.com/diamondburned/arikawa/v3/utils/json/option"
 	"github.com/diamondburned/arikawa/v3/voice"
 	"github.com/google/uuid"
 )
@@ -243,6 +244,51 @@ func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMess
 		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
 		message.Content,
+	), nil
+}
+
+func (b ArkwBot) EditComplexMessage(m model.Message, newMessage *model.ComplexMessage) (model.Message, error) {
+	msgSf, err := dc.ParseSnowflake(m.ID())
+	if err != nil {
+		return nil, err
+	}
+	var embeds []dc.Embed
+
+	for _, embed := range newMessage.Embeds {
+		embeds = append(embeds, buildEmbed(embed))
+	}
+
+	channelSf, err := dc.ParseSnowflake(m.Channel().ID())
+	if err != nil {
+		return nil, err
+	}
+
+	var embedsPtr *[]dc.Embed
+	if len(embeds) > 0 {
+		embedsPtr = &embeds
+	}
+
+	components := buildComponents(newMessage.Components)
+	row := dc.ActionRowComponent(components)
+
+	var componentsPtr *dc.ContainerComponents
+	if len(components) > 0 {
+		componentsPtr = &dc.ContainerComponents{&row}
+	}
+
+	msg, err := b.d.s.EditMessageComplex(dc.ChannelID(channelSf), dc.MessageID(msgSf), api.EditMessageData{
+		Content:    option.NewNullableString(newMessage.Content),
+		Embeds:     embedsPtr,
+		Components: componentsPtr,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return buildMessage(
+		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String()), m.Channel().Type()),
+		buildUser(msg.Author.ID.String()),
+		newMessage.Content,
 	), nil
 }
 

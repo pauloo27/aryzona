@@ -159,7 +159,37 @@ func registerCommands(bot ArkwBot) error {
 
 		switch data := i.Data.(type) {
 		case dc.ComponentInteraction:
-			command.HandleInteraction(string(data.ID()))
+			newMessage := command.HandleInteraction(string(data.ID()))
+			var embeds []dc.Embed
+
+			for _, embed := range newMessage.Embeds {
+				embeds = append(embeds, buildEmbed(embed))
+			}
+
+			var embedsPtr *[]dc.Embed
+			if len(embeds) > 0 {
+				embedsPtr = &embeds
+			}
+
+			components := buildComponents(newMessage.Components)
+			row := dc.ActionRowComponent(components)
+
+			var componentsPtr *dc.ContainerComponents
+			if len(components) > 0 {
+				componentsPtr = &dc.ContainerComponents{&row}
+			}
+
+			err := s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
+				Type: api.UpdateMessage,
+				Data: &api.InteractionResponseData{
+					Content:    option.NewNullableString(newMessage.Content),
+					Embeds:     embedsPtr,
+					Components: componentsPtr,
+				},
+			})
+			if err != nil {
+				logger.Error(err)
+			}
 		case *dc.CommandInteraction:
 			cmd, ok := command.GetCommandMap()[data.Name]
 			if !ok {

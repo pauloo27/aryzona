@@ -58,23 +58,17 @@ var PlayCommand = command.Command{
 		// what should be added to the queue, since we support playlists...
 		// it needs to be a list of playable
 		var toPlay []playable.Playable
-		// single result, it's info's used for the "Now playing" message
-		var displayResult playable.Playable
 
 		if len(results) > 1 {
-			toPlay, displayResult = handleMultipleResults(ctx, results)
+			toPlay = handleMultipleResults(ctx, vc, searchQuery, results)
 		} else {
-			toPlay, displayResult = handleSingleResult(results[0])
+			toPlay = handleSingleResult(ctx, vc, searchQuery, results[0])
 		}
 
 		if toPlay == nil {
 			ctx.Error("Something went wrong =(")
 			return
 		}
-
-		ctx.SuccessEmbed(
-			buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID).WithTitle("Best result for: " + searchQuery),
-		)
 
 		utils.Go(func() {
 			if err = vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
@@ -88,8 +82,10 @@ var PlayCommand = command.Command{
 	},
 }
 
-func handleSingleResult(result *youtube.SearchResult) (toPlay []playable.Playable, displayResult playable.Playable) {
+func handleSingleResult(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, result *youtube.SearchResult) (toPlay []playable.Playable) {
 	toPlay = result.ToPlayable()
+
+	var displayResult playable.Playable
 
 	if result.IsPlaylist() {
 		displayResult = playable.DummyPlayable{
@@ -102,11 +98,16 @@ func handleSingleResult(result *youtube.SearchResult) (toPlay []playable.Playabl
 		displayResult = toPlay[0]
 	}
 
+	ctx.SuccessEmbed(
+		buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID).WithTitle("Best result for: " + searchQuery),
+	)
+
 	return
 }
 
-func handleMultipleResults(ctx *command.CommandContext, results []*youtube.SearchResult) (toPlay []playable.Playable, displayResult playable.Playable) {
-	selection := make(chan int)
+func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, results []*youtube.SearchResult) []playable.Playable {
+	selection := make(chan playable.Playable)
+	var components []model.MessageComponent
 
 	embed := model.NewEmbed().
 		WithColor(command.SuccessEmbedColor).
@@ -135,13 +136,38 @@ func handleMultipleResults(ctx *command.CommandContext, results []*youtube.Searc
 
 	ctx.AddCommandDuration(embed)
 
-	baseID, err := ctx.RegisterInteractionHandler(handleInteraction(ctx, selection))
+	baseID, err := ctx.RegisterInteractionHandler(
+		func(id string) *model.ComplexMessage {
+			indexStr := id[len(id)-1] - '0'
+			index := int(indexStr) - 1
+			result := results[index].ToPlayable()[0]
+			selection <- result
+
+			disabledComponents := make([]model.MessageComponent, len(components))
+			for i, component := range components {
+				buttonComponent := component.(model.ButtonComponent)
+				buttonComponent.Disabled = true
+				if i != index {
+					buttonComponent.Style = model.SecondaryButtonStyle
+				}
+				disabledComponents[i] = buttonComponent
+			}
+
+			return &model.ComplexMessage{
+				Components: disabledComponents,
+				Embeds: []*model.Embed{
+					buildPlayableInfoEmbed(result, vc, ctx.AuthorID).
+						WithTitle("Selected result for: " + searchQuery),
+				},
+			}
+
+		},
+	)
+
 	if err != nil {
 		ctx.Error("Something went wrong")
-		return
+		return nil
 	}
-
-	var components []model.MessageComponent
 
 	for i := range results {
 		components = append(
@@ -154,7 +180,6 @@ func handleMultipleResults(ctx *command.CommandContext, results []*youtube.Searc
 		)
 	}
 
-	// TODO: send proper response
 	// TODO: add a timeout
 	err = ctx.ReplyComplex(&model.ComplexMessage{
 		Embeds:     []*model.Embed{embed},
@@ -162,19 +187,8 @@ func handleMultipleResults(ctx *command.CommandContext, results []*youtube.Searc
 	})
 
 	if err != nil {
-		return nil, nil
+		return nil
 	}
 
-	result := results[<-selection]
-	displayResult = result.ToPlayable()[0]
-	toPlay = []playable.Playable{displayResult}
-	return
-}
-
-func handleInteraction(ctx *command.CommandContext, selection chan<- int) func(string) {
-	return func(id string) {
-		indexStr := id[len(id)-1] - '0'
-		index := int(indexStr)
-		selection <- index - 1
-	}
+	return []playable.Playable{<-selection}
 }

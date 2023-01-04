@@ -74,6 +74,10 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 			_, err := discord.Bot.EditMessageEmbed(lastSentMessage, embed)
 			return err
 		},
+		EditComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+			_, err := discord.Bot.EditComplexMessage(lastSentMessage, message)
+			return err
+		},
 	}
 	command.HandleCommand(
 		strings.ToLower(rawCommand), args, &event, bot, command.CommandTriggerMessage,

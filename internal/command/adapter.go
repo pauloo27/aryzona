@@ -12,5 +12,6 @@ type Adapter struct {
 	ReplyEmbed        func(*CommandContext, *model.Embed) error
 	ReplyComplex      func(*CommandContext, *model.ComplexMessage) error
 	EditEmbed         func(*CommandContext, *model.Embed) error
+	EditComplex       func(*CommandContext, *model.ComplexMessage) error
 	Member            model.Member
 }

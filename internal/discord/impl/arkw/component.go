@@ -16,6 +16,7 @@ func buildComponents(components []model.MessageComponent) []dc.InteractiveCompon
 				CustomID: dc.ComponentID(t.ID),
 				Emoji:    &dc.ComponentEmoji{Name: t.Emoji},
 				Style:    style(t.Style),
+				Disabled: t.Disabled,
 			}
 		}
 	}
