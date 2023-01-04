@@ -251,6 +251,15 @@ func registerCommands(bot ArkwBot) error {
 					}
 					return respond(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
 				},
+				EditComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+					return edit(message)
+				},
+				Edit: func(ctx *command.CommandContext, message string) error {
+					return edit(&model.ComplexMessage{Content: message})
+				},
+				EditEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
+					return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
+				},
 			}
 
 			cType := model.ChannelTypeGuild

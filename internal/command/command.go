@@ -28,6 +28,7 @@ const (
 const (
 	SuccessEmbedColor = 0x50fa7b
 	ErrorEmbedColor   = 0xff5555
+	PendingEmbedColor = 0x00add8
 )
 
 type CommandContext struct {

@@ -110,7 +110,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 	var components []model.MessageComponent
 
 	embed := model.NewEmbed().
-		WithColor(command.SuccessEmbedColor).
+		WithColor(command.PendingEmbedColor).
 		WithTitle("Multiple results found, please select one")
 
 	sb := strings.Builder{}
@@ -143,24 +143,14 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 			result := results[index].ToPlayable()[0]
 			selection <- result
 
-			disabledComponents := make([]model.MessageComponent, len(components))
-			for i, component := range components {
-				buttonComponent := component.(model.ButtonComponent)
-				buttonComponent.Disabled = true
-				if i != index {
-					buttonComponent.Style = model.SecondaryButtonStyle
-				}
-				disabledComponents[i] = buttonComponent
-			}
-
 			return &model.ComplexMessage{
-				Components: disabledComponents,
+				Components: buildDisabledComponents(components, index),
 				Embeds: []*model.Embed{
 					buildPlayableInfoEmbed(result, vc, ctx.AuthorID).
-						WithTitle("Selected result for: " + searchQuery),
+						WithTitle("Selected result for: " + searchQuery).
+						WithColor(command.SuccessEmbedColor),
 				},
 			}
-
 		},
 	)
 
@@ -190,5 +180,36 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 		return nil
 	}
 
-	return []playable.Playable{<-selection}
+	select {
+	case result := <-selection:
+		return []playable.Playable{result}
+	case <-time.After(selectionTimeout):
+		result := results[0].ToPlayable()[0]
+		err = ctx.EditComplex(&model.ComplexMessage{
+			Components: buildDisabledComponents(components, 0),
+			Embeds: []*model.Embed{
+				buildPlayableInfoEmbed(result, vc, ctx.AuthorID).
+					WithTitle("Selected result for: " + searchQuery).
+					WithColor(command.SuccessEmbedColor),
+			},
+		})
+		if err != nil {
+			logger.Errorf("Error editing message: %v", err)
+		}
+		return []playable.Playable{result}
+	}
+
+}
+
+func buildDisabledComponents(components []model.MessageComponent, selectedIndex int) []model.MessageComponent {
+	disabledComponents := make([]model.MessageComponent, len(components))
+	for i, component := range components {
+		buttonComponent := component.(model.ButtonComponent)
+		buttonComponent.Disabled = true
+		if i != selectedIndex {
+			buttonComponent.Style = model.SecondaryButtonStyle
+		}
+		disabledComponents[i] = buttonComponent
+	}
+	return disabledComponents
 }
