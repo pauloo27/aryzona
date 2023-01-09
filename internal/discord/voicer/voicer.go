@@ -145,7 +145,7 @@ func (v *Voicer) IsPlaying() bool {
 }
 
 func (v *Voicer) GetPosition() (time.Duration, error) {
-	if v == nil || v.Queue.First() == nil {
+	if v == nil || v.Queue.First() == nil || v.StreamingSession == nil {
 		return 0, errors.New("nothing playing")
 	}
 	return time.Duration(v.StreamingSession.PlaybackPosition()), nil
