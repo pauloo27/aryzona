@@ -2,8 +2,8 @@ version: '3'
 
 services:
   bot:
+    build: .
     container_name: aryzona_bot
-    image: aryzonabot:latest
     hostname: aryhost
     ports:
       - 8099:8099
