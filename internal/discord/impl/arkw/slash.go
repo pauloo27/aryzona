@@ -146,13 +146,18 @@ func registerCommands(bot ArkwBot) error {
 				embed := message.Embeds[0]
 				embeds = append(embeds, buildEmbed(embed))
 			}
-			components := buildComponents(message.Components)
-			row := dc.ActionRowComponent(components)
+
+			var components *dc.ContainerComponents
+			if len(message.Components) > 0 {
+				rawComponents := buildComponents(message.Components)
+				row := dc.ActionRowComponent(rawComponents)
+				components = dc.ComponentsPtr(&row)
+			}
 
 			_, err := s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
 				Content:    option.NewNullableString(message.Content),
 				Embeds:     &embeds,
-				Components: dc.ComponentsPtr(&row),
+				Components: components,
 			})
 			return err
 		}
