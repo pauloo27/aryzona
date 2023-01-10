@@ -17,20 +17,36 @@ func buildEmbedFields(fields []*model.EmbedField) (dcgoFields []dc.EmbedField) {
 }
 
 func buildEmbed(e *model.Embed) dc.Embed {
+	var image *dc.EmbedImage
+	var thumbnail *dc.EmbedThumbnail
+	var footer *dc.EmbedFooter
+
+	if e.ImageURL != "" {
+		image = &dc.EmbedImage{
+			URL: e.ImageURL,
+		}
+	}
+
+	if e.ThumbnailURL != "" {
+		thumbnail = &dc.EmbedThumbnail{
+			URL: e.ThumbnailURL,
+		}
+	}
+
+	if e.Footer != "" {
+		footer = &dc.EmbedFooter{
+			Text: e.Footer,
+		}
+	}
+
 	return dc.Embed{
 		Title:       e.Title,
 		Description: e.Description,
 		URL:         e.URL,
-		Thumbnail: &dc.EmbedThumbnail{
-			URL: e.ThumbnailURL,
-		},
-		Footer: &dc.EmbedFooter{
-			Text: e.Footer,
-		},
-		Color: dc.Color(e.Color),
-		Image: &dc.EmbedImage{
-			URL: e.ImageURL,
-		},
-		Fields: buildEmbedFields(e.Fields),
+		Thumbnail:   thumbnail,
+		Footer:      footer,
+		Color:       dc.Color(e.Color),
+		Image:       image,
+		Fields:      buildEmbedFields(e.Fields),
 	}
 }
