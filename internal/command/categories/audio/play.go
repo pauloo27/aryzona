@@ -33,12 +33,14 @@ var PlayCommand = command.Command{
 	},
 	Handler: func(ctx *command.CommandContext) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
+		var connErrCh *chan error
 
 		if !vc.IsConnected() {
-			if err := vc.Connect(); err != nil {
-				ctx.Error("Cannot connect to your voice channel")
-				return
-			}
+			ch := make(chan error)
+			connErrCh = &ch
+			go func() {
+				ch <- vc.Connect()
+			}()
 		} else {
 			authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
 			if !found || *(vc.ChannelID) != authorVoiceChannelID.(string) {
@@ -53,6 +55,13 @@ var PlayCommand = command.Command{
 			ctx.Error("Cannot search for this song")
 			logger.Warnf("Error searching for %s: %v", searchQuery, err)
 			return
+		}
+
+		if connErrCh != nil {
+			if err := <-(*connErrCh); err != nil {
+				ctx.Error("Cannot connect to your voice channel")
+				return
+			}
 		}
 
 		// what should be added to the queue, since we support playlists...

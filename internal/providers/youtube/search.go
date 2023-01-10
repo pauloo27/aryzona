@@ -3,6 +3,7 @@ package youtube
 import (
 	"fmt"
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/config"
@@ -55,15 +56,22 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 		return nil, err
 	}
 
-	var results []*SearchResult
-	for _, id := range ids {
-		vid, err := defaultClient.GetVideo(id)
-		if err != nil {
-			logger.Warnf("error getting video %s from playlist %s: %s", id, searchQuery, err)
-			continue
-		}
-		results = append(results, videoAsSearchResult(vid))
+	wg := sync.WaitGroup{}
+
+	results := make([]*SearchResult, len(ids))
+	for i, id := range ids {
+		wg.Add(1)
+		go func(i int, id string) {
+			defer wg.Done()
+			vid, err := defaultClient.GetVideo(id)
+			if err != nil {
+				logger.Warnf("error getting video %s from playlist %s: %s", id, searchQuery, err)
+				return
+			}
+			results[i] = videoAsSearchResult(vid)
+		}(i, id)
 	}
+	wg.Wait()
 	return results, nil
 }
 
