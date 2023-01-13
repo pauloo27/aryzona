@@ -221,7 +221,12 @@ func registerCommands(bot ArkwBot) error {
 
 			var member model.Member
 
-			if !i.GuildID.IsNull() {
+			cType := model.ChannelTypeGuild
+			if i.GuildID.String() == "" {
+				cType = model.ChannelTypeDirect
+			}
+
+			if cType == model.ChannelTypeGuild {
 				m, err := bot.GetMember(i.GuildID.String(), i.SenderID().String())
 				if err != nil {
 					return
@@ -274,11 +279,6 @@ func registerCommands(bot ArkwBot) error {
 				EditEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
 					return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
 				},
-			}
-
-			cType := model.ChannelTypeGuild
-			if i.GuildID.String() == "" {
-				cType = model.ChannelTypeDirect
 			}
 
 			command.HandleCommand(
