@@ -125,7 +125,7 @@ func registerCommands(bot ArkwBot) error {
 	}
 
 	s.AddHandler(func(i *gateway.InteractionCreateEvent) {
-		respond := func(message *model.ComplexMessage) error {
+		respond := func(message *model.ComplexMessage, flags dc.MessageFlags) error {
 			var embeds []dc.Embed
 			if len(message.Embeds) > 0 {
 				embed := message.Embeds[0]
@@ -136,11 +136,12 @@ func registerCommands(bot ArkwBot) error {
 				Data: &api.InteractionResponseData{
 					Content: option.NewNullableString(message.Content),
 					Embeds:  &embeds,
+					Flags:   flags,
 				},
 			})
 		}
 
-		edit := func(message *model.ComplexMessage) error {
+		edit := func(message *model.ComplexMessage, flags dc.MessageFlags) error {
 			var embeds []dc.Embed
 			if len(message.Embeds) > 0 {
 				embed := message.Embeds[0]
@@ -228,6 +229,11 @@ func registerCommands(bot ArkwBot) error {
 				member = m
 			}
 
+			var flags dc.MessageFlags
+			if cmd.Ephemeral {
+				flags = 64
+			}
+
 			adapter := command.Adapter{
 				Member:   member,
 				AuthorID: i.Sender().ID.String(),
@@ -243,30 +249,30 @@ func registerCommands(bot ArkwBot) error {
 				},
 				ReplyComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
 					if ctx.Command.Deferred {
-						return edit(message)
+						return edit(message, flags)
 					}
-					return respond(message)
+					return respond(message, flags)
 				},
 				Reply: func(ctx *command.CommandContext, message string) error {
 					if ctx.Command.Deferred {
-						return edit(&model.ComplexMessage{Content: message})
+						return edit(&model.ComplexMessage{Content: message}, flags)
 					}
-					return respond(&model.ComplexMessage{Content: message})
+					return respond(&model.ComplexMessage{Content: message}, flags)
 				},
 				ReplyEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
 					if ctx.Command.Deferred {
-						return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
+						return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
 					}
-					return respond(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
+					return respond(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
 				},
 				EditComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
-					return edit(message)
+					return edit(message, flags)
 				},
 				Edit: func(ctx *command.CommandContext, message string) error {
-					return edit(&model.ComplexMessage{Content: message})
+					return edit(&model.ComplexMessage{Content: message}, flags)
 				},
 				EditEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
-					return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}})
+					return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
 				},
 			}
 

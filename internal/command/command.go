@@ -105,6 +105,7 @@ type Command struct {
 	Permission        *CommandPermission
 	category          *CommandCategory
 	Deferred          bool
+	Ephemeral         bool
 }
 
 func (c *Command) GetCategory() *CommandCategory {

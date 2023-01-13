@@ -6,7 +6,7 @@ var Tools = command.CommandCategory{
 	Name:  "Tools",
 	Emoji: "🔧",
 	Commands: []*command.Command{
-		&UUIDCommand, &CPFCommand, &CNPJCommand,
+		&UUIDCommand, &CPFCommand, &CNPJCommand, &PasswordCommand,
 	},
 }
 
