@@ -20,7 +20,7 @@ func executeCommand(
 	}
 
 	if command.Ephemeral && ctx.Trigger != CommandTriggerSlash {
-		ctx.Errorf("That command must be executed in a slash command. **Use `/%s` instead**", ctx.UsedName)
+		ctx.Errorf("That command must be executed in a slash command. **Use `/%s` instead**", command.Name)
 		return
 	}
 
