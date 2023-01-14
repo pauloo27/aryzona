@@ -2,6 +2,7 @@ package arkw
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
@@ -200,6 +201,7 @@ func registerCommands(bot ArkwBot) error {
 				logger.Error(err)
 			}
 		case *dc.CommandInteraction:
+			startTime := time.Now()
 			cmd, ok := command.GetCommandMap()[data.Name]
 			if !ok {
 				logger.Error("Invalid slash command interaction received:", data.Name)
@@ -282,7 +284,7 @@ func registerCommands(bot ArkwBot) error {
 			}
 
 			command.HandleCommand(
-				data.Name, args, &adapter, bot, command.CommandTriggerSlash,
+				data.Name, args, startTime, &adapter, bot, command.CommandTriggerSlash,
 				buildChannel(i.ChannelID.String(), buildGuild(i.GuildID.String()), cType),
 			)
 		}

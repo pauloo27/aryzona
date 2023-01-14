@@ -33,7 +33,7 @@ const (
 
 type CommandContext struct {
 	interactionHandler func(id string) (newMessage *model.ComplexMessage)
-	startDate          time.Time
+	startTime          time.Time
 	RawArgs            []string
 	Args               []interface{}
 	Bot                discord.BotAdapter
@@ -170,8 +170,9 @@ func (ctx *CommandContext) ErrorEmbedReturning(embed *model.Embed) error {
 }
 
 func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
-	processTime := time.Since(ctx.startDate).Truncate(time.Second)
-	duration := fmt.Sprintf("Took %v", processTime)
+	processTime := time.Since(ctx.startTime)
+	logger.Debugf("Command %s took %s", ctx.Command.Name, processTime)
+	duration := fmt.Sprintf("Took %v", processTime.Truncate(time.Second))
 	if embed.Footer != "" {
 		embed.Footer = fmt.Sprintf("%s • %s", embed.Footer, duration)
 	} else {

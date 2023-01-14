@@ -2,6 +2,7 @@ package listeners
 
 import (
 	"strings"
+	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
@@ -18,6 +19,7 @@ func init() {
 }
 
 func messageCreated(bot discord.BotAdapter, m model.Message) {
+	startTime := time.Now()
 	self, err := bot.Self()
 	if err != nil {
 		return
@@ -80,7 +82,7 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		},
 	}
 	command.HandleCommand(
-		strings.ToLower(rawCommand), args, &event, bot, command.CommandTriggerMessage,
+		strings.ToLower(rawCommand), args, startTime, &event, bot, command.CommandTriggerMessage,
 		m.Channel(),
 	)
 }

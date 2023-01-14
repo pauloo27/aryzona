@@ -85,6 +85,7 @@ func executeCommand(
 
 func HandleCommand(
 	commandName string, args []string,
+	startTime time.Time,
 	adapter *Adapter, bot discord.BotAdapter,
 	trigger CommandTrigger, channel model.TextChannel,
 ) {
@@ -102,7 +103,7 @@ func HandleCommand(
 		GuildID:   adapter.GuildID,
 		Locals:    make(map[string]interface{}),
 		Command:   command,
-		startDate: time.Now(),
+		startTime: startTime,
 		Trigger:   trigger,
 		Channel:   channel,
 	}
