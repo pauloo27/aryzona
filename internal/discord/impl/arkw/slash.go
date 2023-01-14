@@ -221,19 +221,9 @@ func registerCommands(bot ArkwBot) error {
 				args = append(args, option.String())
 			}
 
-			var member model.Member
-
 			cType := model.ChannelTypeGuild
 			if i.GuildID.String() == "" {
 				cType = model.ChannelTypeDirect
-			}
-
-			if cType == model.ChannelTypeGuild {
-				m, err := bot.GetMember(i.GuildID.String(), i.SenderID().String())
-				if err != nil {
-					return
-				}
-				member = m
 			}
 
 			var flags dc.MessageFlags
@@ -242,7 +232,6 @@ func registerCommands(bot ArkwBot) error {
 			}
 
 			adapter := command.Adapter{
-				Member:   member,
 				AuthorID: i.Sender().ID.String(),
 				GuildID:  i.GuildID.String(),
 				DeferResponse: func() error {
