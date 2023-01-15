@@ -32,7 +32,7 @@ const (
 )
 
 type CommandContext struct {
-	interactionHandler func(id string) (newMessage *model.ComplexMessage)
+	interactionHandler func(fullID, baseID string) (newMessage *model.ComplexMessage)
 	startTime          time.Time
 	RawArgs            []string
 	Args               []interface{}
@@ -180,7 +180,7 @@ func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	}
 }
 
-func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler func(string) *model.ComplexMessage) (baseID string, err error) {
+func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler func(fullID, baseID string) *model.ComplexMessage) (baseID string, err error) {
 	for {
 		baseID, err = gonanoid.New(InteractionBaseIDLength)
 		if err != nil {

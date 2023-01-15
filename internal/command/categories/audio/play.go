@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
@@ -20,8 +21,9 @@ import (
 )
 
 const (
-	maxSearchResults = 5
-	selectionTimeout = 10 * time.Second
+	maxSearchResults       = 5
+	firstResultTimeout     = 5 * time.Second
+	multipleResultsTimeout = 30 * time.Second
 )
 
 var PlayCommand = command.Command{
@@ -116,9 +118,134 @@ func handleSingleResult(ctx *command.CommandContext, vc *voicer.Voicer, searchQu
 }
 
 func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, results []*youtube.SearchResult) []playable.Playable {
-	selection := make(chan playable.Playable)
+	selectionLock := sync.Mutex{}
+	selectionCh := make(chan *youtube.SearchResult)
+	selected := false
+
+	selectResult := func(result *youtube.SearchResult) bool {
+		selectionLock.Lock()
+		defer selectionLock.Unlock()
+		if selected {
+			return false
+		}
+		selectionCh <- result
+		if result != nil {
+			selected = true
+		}
+		return true
+	}
+	firstResult := results[0]
+
+	embed := model.NewEmbed().
+		WithColor(command.PendingEmbedColor).
+		WithTitle("Multiple results found").
+		WithDescription(
+			fmt.Sprintf(
+				"[%s](https://youtu.be/%s) from %s (*%s*)\nWill be added to the queue in %d seconds\n"+
+					"If that's not the result you want, press `Play other`",
+				firstResult.Title,
+				firstResult.ID,
+				firstResult.Author,
+				f.ShortDuration(firstResult.Duration),
+				firstResultTimeout/time.Second,
+			),
+		)
+
 	var components []model.MessageComponent
 
+	baseID, err := ctx.RegisterInteractionHandler(
+		func(fullID, baseID string) *model.ComplexMessage {
+			if fullID[len(baseID):] == "play-now" {
+				ok := selectResult(firstResult)
+				if !ok {
+					return nil
+				}
+				return &model.ComplexMessage{
+					Components: buildDisabledComponents(components, 0),
+					Embeds: []*model.Embed{
+						buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
+							WithTitle("Selected result for: " + searchQuery).
+							WithColor(command.SuccessEmbedColor),
+					},
+				}
+			}
+			if !selectResult(nil) {
+				return nil
+			}
+			return buildMultipleResultsMessage(ctx, vc, searchQuery, results, selectResult)
+		},
+	)
+	if err != nil {
+		logger.Errorf("Cannot register interaction handler: %v", err)
+		return nil
+	}
+
+	components = []model.MessageComponent{
+		model.ButtonComponent{
+			Label: "Confirm",
+			Style: model.SuccessButtonStyle,
+			ID:    fmt.Sprintf("%splay-now", baseID),
+		},
+		model.ButtonComponent{
+			Label: "Play other",
+			Style: model.PrimaryButtonStyle,
+			ID:    fmt.Sprintf("%splay-other", baseID),
+		},
+	}
+
+	err = ctx.ReplyComplex(&model.ComplexMessage{
+		Embeds:     []*model.Embed{embed},
+		Components: components,
+	})
+
+	if err != nil {
+		logger.Errorf("Cannot send message: %v", err)
+		return nil
+	}
+
+	select {
+	case <-time.After(firstResultTimeout):
+		embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
+			WithTitle("Selected result for: " + searchQuery).
+			WithColor(command.SuccessEmbedColor)
+
+		err = ctx.EditComplex(
+			&model.ComplexMessage{
+				Embeds:     []*model.Embed{embed},
+				Components: buildDisabledComponents(components, 0),
+			},
+		)
+		if err != nil {
+			logger.Error(err)
+		}
+		return firstResult.ToPlayable()
+	case result := <-selectionCh:
+		if result == nil {
+			select {
+			case <-time.After(multipleResultsTimeout):
+				embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
+					WithTitle("Selected result for: " + searchQuery).
+					WithColor(command.SuccessEmbedColor)
+
+				err = ctx.EditComplex(
+					&model.ComplexMessage{
+						Embeds:     []*model.Embed{embed},
+						Components: buildDisabledComponents(components, 0),
+					},
+				)
+				if err != nil {
+					logger.Error(err)
+				}
+				return firstResult.ToPlayable()
+			case result := <-selectionCh:
+				return result.ToPlayable()
+			}
+		}
+		return result.ToPlayable()
+	}
+}
+
+func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, results []*youtube.SearchResult, selectResult func(*youtube.SearchResult) bool) *model.ComplexMessage {
 	embed := model.NewEmbed().
 		WithColor(command.PendingEmbedColor).
 		WithTitle("Multiple results found, please select one")
@@ -138,7 +265,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 	sb.WriteString(
 		fmt.Sprintf(
 			"\n\n**If you fail to select one in %d seconds, the first result will be selected**",
-			selectionTimeout/time.Second,
+			multipleResultsTimeout/time.Second,
 		),
 	)
 
@@ -146,17 +273,19 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 
 	ctx.AddCommandDuration(embed)
 
+	components := make([]model.MessageComponent, len(results))
+
 	baseID, err := ctx.RegisterInteractionHandler(
-		func(id string) *model.ComplexMessage {
-			indexStr := id[len(id)-1] - '0'
+		func(fullID, baseID string) *model.ComplexMessage {
+			indexStr := fullID[len(fullID)-1] - '0'
 			index := int(indexStr) - 1
-			result := results[index].ToPlayable()[0]
-			selection <- result
+			result := results[index]
+			selectResult(result)
 
 			return &model.ComplexMessage{
 				Components: buildDisabledComponents(components, index),
 				Embeds: []*model.Embed{
-					buildPlayableInfoEmbed(result, vc, ctx.AuthorID).
+					buildPlayableInfoEmbed(result.ToPlayable()[0], vc, ctx.AuthorID).
 						WithTitle("Selected result for: " + searchQuery).
 						WithColor(command.SuccessEmbedColor),
 				},
@@ -165,49 +294,23 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 	)
 
 	if err != nil {
-		ctx.Error("Something went wrong")
+		logger.Errorf("Error registering interaction handler: %v", err)
 		return nil
 	}
 
 	for i := range results {
-		components = append(
-			components,
-			model.ButtonComponent{
-				Label: fmt.Sprintf("%d", i+1),
-				ID:    fmt.Sprintf("%s-play-%d", baseID, i+1),
-				Style: model.PrimaryButtonStyle,
-			},
-		)
+		components[i] = model.ButtonComponent{
+			Label: fmt.Sprintf("%d", i+1),
+			ID:    fmt.Sprintf("%s-play-%d", baseID, i+1),
+			Style: model.PrimaryButtonStyle,
+		}
 	}
 
-	err = ctx.ReplyComplex(&model.ComplexMessage{
+	return &model.ComplexMessage{
 		Embeds:     []*model.Embed{embed},
 		Components: components,
-	})
-
-	if err != nil {
-		return nil
+		Content:    "",
 	}
-
-	select {
-	case result := <-selection:
-		return []playable.Playable{result}
-	case <-time.After(selectionTimeout):
-		result := results[0].ToPlayable()[0]
-		err = ctx.EditComplex(&model.ComplexMessage{
-			Components: buildDisabledComponents(components, 0),
-			Embeds: []*model.Embed{
-				buildPlayableInfoEmbed(result, vc, ctx.AuthorID).
-					WithTitle("Selected result for: " + searchQuery).
-					WithColor(command.SuccessEmbedColor),
-			},
-		})
-		if err != nil {
-			logger.Errorf("Error editing message: %v", err)
-		}
-		return []playable.Playable{result}
-	}
-
 }
 
 func buildDisabledComponents(components []model.MessageComponent, selectedIndex int) []model.MessageComponent {

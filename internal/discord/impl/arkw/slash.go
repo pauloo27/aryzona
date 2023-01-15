@@ -189,10 +189,15 @@ func registerCommands(bot ArkwBot) error {
 				componentsPtr = &dc.ContainerComponents{&row}
 			}
 
+			var content option.NullableString
+			if newMessage.Content != "" {
+				content = option.NewNullableString(newMessage.Content)
+			}
+
 			err := s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
 				Type: api.UpdateMessage,
 				Data: &api.InteractionResponseData{
-					Content:    option.NewNullableString(newMessage.Content),
+					Content:    content,
 					Embeds:     embedsPtr,
 					Components: componentsPtr,
 				},

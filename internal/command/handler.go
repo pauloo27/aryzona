@@ -137,7 +137,7 @@ func HandleInteraction(id string) *model.ComplexMessage {
 		logger.Error("Cannot find interaction adapter for id", baseID)
 		return nil
 	}
-	newMessage := ctx.interactionHandler(id)
+	newMessage := ctx.interactionHandler(id, baseID)
 	delete(commandInteractionMap, baseID)
 	return newMessage
 }

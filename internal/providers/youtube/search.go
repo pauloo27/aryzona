@@ -77,6 +77,7 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 
 func videoAsSearchResult(vid *yt.Video) *SearchResult {
 	return &SearchResult{
+		ID:           vid.ID,
 		vid:          vid,
 		Title:        vid.Title,
 		Author:       vid.Author,
