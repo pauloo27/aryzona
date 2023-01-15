@@ -227,11 +227,16 @@ func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMess
 	components := buildComponents(message.Components)
 	row := dc.ActionRowComponent(components)
 
+	var componentsPtr dc.ContainerComponents
+	if len(components) > 0 {
+		componentsPtr = dc.ContainerComponents{&row}
+	}
+
 	msg, err := b.d.s.SendMessageComplex(dc.ChannelID(channelSf), api.SendMessageData{
 		Content:    message.Content,
 		Embeds:     embeds,
 		Reference:  refMessage,
-		Components: dc.ContainerComponents{&row},
+		Components: componentsPtr,
 	})
 	if err != nil {
 		return nil, err
