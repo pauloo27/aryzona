@@ -11,6 +11,10 @@ import (
 	"github.com/Pauloo27/aryzona/internal/utils/slice"
 )
 
+var (
+	embedCache = make(map[string]model.Embed)
+)
+
 var HelpCommand = command.Command{
 	Name: "help", Description: "List all commands",
 	Aliases: []string{"h"},
@@ -34,6 +38,11 @@ var HelpCommand = command.Command{
 }
 
 func listCommands(ctx *command.CommandContext) {
+	if cacheEmbed, ok := embedCache[""]; ok {
+		ctx.SuccessEmbed(&cacheEmbed)
+		return
+	}
+
 	embed := model.NewEmbed()
 	sb := strings.Builder{}
 	embed.WithTitle("List of commands")
@@ -61,7 +70,11 @@ func listCommands(ctx *command.CommandContext) {
 			command.Prefix, ctx.UsedName,
 		),
 	)
-	ctx.SuccessEmbed(embed.WithDescription(sb.String()))
+
+	embed.WithDescription(sb.String())
+	embedCache[""] = *embed
+
+	ctx.SuccessEmbed(embed)
 }
 
 func helpForCommand(ctx *command.CommandContext) {
@@ -92,6 +105,11 @@ func helpForCommand(ctx *command.CommandContext) {
 	fullCommandName := rootCmd.Name
 	if rootCmd != cmd {
 		fullCommandName = fmt.Sprintf("%s %s", rootCmd.Name, cmd.Name)
+	}
+
+	if cacheEmbed, ok := embedCache[fullCommandName]; ok {
+		ctx.SuccessEmbed(&cacheEmbed)
+		return
 	}
 
 	embed := model.NewEmbed().
@@ -144,6 +162,8 @@ func helpForCommand(ctx *command.CommandContext) {
 			),
 		)
 	}
+
+	embedCache[fullCommandName] = *embed
 
 	ctx.SuccessEmbed(
 		embed,
