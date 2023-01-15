@@ -1,12 +1,12 @@
 package animal
 
 import (
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 	"github.com/tidwall/gjson"
 )
 
 func GetRandomFox() (string, error) {
-	json, err := utils.Get("https://randomfox.ca/floof/")
+	json, err := h.Get("https://randomfox.ca/floof/")
 	if err != nil {
 		return "", err
 	}

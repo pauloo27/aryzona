@@ -10,11 +10,12 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/core/f"
+	"github.com/Pauloo27/aryzona/internal/core/routine"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 )
 
@@ -79,7 +80,7 @@ var PlayCommand = command.Command{
 			return
 		}
 
-		utils.Go(func() {
+		routine.Go(func() {
 			if err = vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
@@ -127,10 +128,10 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 		sb.WriteString(
 			fmt.Sprintf(
 				" - %s **%s** from %s (*%s*)\n",
-				utils.Emojify(i+1),
+				f.Emojify(i+1),
 				result.Title,
 				result.Author,
-				utils.ShortDuration(result.Duration),
+				f.ShortDuration(result.Duration),
 			),
 		)
 	}

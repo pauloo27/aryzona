@@ -3,8 +3,8 @@ package queue
 import (
 	"math/rand"
 
+	"github.com/Pauloo27/aryzona/internal/core/event"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/utils/event"
 )
 
 const (

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Pauloo27/aryzona/internal/core/scheduler"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/aryzona/internal/utils/scheduler"
 	"github.com/Pauloo27/logger"
 )
 

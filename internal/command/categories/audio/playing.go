@@ -6,10 +6,10 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/core/f"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 const (
@@ -45,7 +45,7 @@ var PlayingCommand = command.Command{
 				if eta == -1 {
 					etaStr = "_Never_"
 				} else {
-					etaStr = utils.DurationAsDetailedDiffText(eta)
+					etaStr = f.DurationAsDetailedDiffText(eta)
 				}
 
 				title, artist := playable.GetFullTitle()

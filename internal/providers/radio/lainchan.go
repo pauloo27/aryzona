@@ -3,7 +3,7 @@ package radio
 import (
 	"html"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 	"github.com/tidwall/gjson"
 )
 
@@ -48,7 +48,7 @@ func (r LainchanRadio) GetDirectURL() (string, error) {
 }
 
 func (r LainchanRadio) GetFullTitle() (title, artist string) {
-	data, err := utils.Get("https://lainon.life/radio/status-json.xsl")
+	data, err := h.Get("https://lainon.life/radio/status-json.xsl")
 	if err != nil {
 		return
 	}

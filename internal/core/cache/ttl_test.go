@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/utils/cache"
+	"github.com/Pauloo27/aryzona/internal/core/cache"
 	"github.com/stretchr/testify/assert"
 )
 

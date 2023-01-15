@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d
 	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
+	github.com/Pauloo27/toolkit v0.0.0-20220930010425-02fde0d9cb76
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
 	github.com/diamondburned/arikawa/v3 v3.2.0
 	github.com/ghodss/yaml v1.0.0
@@ -14,7 +15,7 @@ require (
 	github.com/kkdai/youtube/v2 v2.7.10
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcdole/gofeed v1.1.3
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1
 	github.com/tidwall/gjson v1.14.0
 )
 

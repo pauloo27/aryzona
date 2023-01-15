@@ -3,11 +3,11 @@ package animal
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 )
 
 func GetRandomDog() (string, error) {
-	url, err := utils.GetString("https://random.dog/woof")
+	url, err := h.GetString("https://random.dog/woof")
 	if err != nil {
 		return "", err
 	}
@@ -15,7 +15,7 @@ func GetRandomDog() (string, error) {
 }
 
 func GetRandomDogImage() (string, error) {
-	url, err := utils.GetString("https://random.dog/woof?include=jpg")
+	url, err := h.GetString("https://random.dog/woof?include=jpg")
 	if err != nil {
 		return "", err
 	}

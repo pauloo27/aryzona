@@ -2,14 +2,17 @@ package bot
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/core/f"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/git"
-	"github.com/Pauloo27/aryzona/internal/utils"
+
+	k "github.com/Pauloo27/toolkit"
 )
 
 var UptimeCommand = command.Command{
@@ -19,14 +22,14 @@ var UptimeCommand = command.Command{
 		uptime := time.Since(*discord.Bot.StartedAt())
 		embed := model.NewEmbed().
 			WithTitle("Bot uptime").
-			WithField(":timer: Uptime", utils.DurationAsText(uptime)).
+			WithField(":timer: Uptime", f.DurationAsText(uptime)).
 			WithField(":gear: Implementation", discord.Bot.Implementation()).
 			WithField(
 				":computer: Host info",
 				fmt.Sprintf("Compiled with **%s (%s)**, running on a **%s %s%s**",
 					runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH,
-					utils.ConditionalString(
-						utils.IsDocker(),
+					k.Is(
+						isDocker(),
 						" (docker)",
 						"",
 					),
@@ -41,4 +44,9 @@ var UptimeCommand = command.Command{
 		}
 		ctx.SuccessEmbed(embed)
 	},
+}
+
+func isDocker() bool {
+	_, err := os.Stat("/.dockerenv")
+	return !os.IsNotExist(err)
 }

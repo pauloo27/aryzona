@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/config"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/utils"
 	"github.com/Pauloo27/logger"
 	yt "github.com/kkdai/youtube/v2"
 	"github.com/tidwall/gjson"
@@ -31,7 +31,7 @@ func searchWithAPI(searchQuery string, limit int) ([]string, error) {
 		url.QueryEscape(searchQuery), url.QueryEscape(apiKey),
 		limit,
 	)
-	buf, err := utils.Get(uri)
+	buf, err := h.Get(uri)
 	if err != nil {
 		return nil, err
 	}

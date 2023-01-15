@@ -6,8 +6,8 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
+	"github.com/Pauloo27/aryzona/internal/core/rnd"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/utils/rnd"
 )
 
 var PickCommand = command.Command{

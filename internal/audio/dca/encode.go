@@ -10,9 +10,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/routine"
 	"github.com/Pauloo27/logger"
 	"github.com/jonas747/ogg"
+
+	k "github.com/Pauloo27/toolkit"
 )
 
 // based on https://git.notagovernment.agency/ItsClairton/Anny/ which é...
@@ -50,7 +52,7 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 		isLocal: isLocal,
 	}
 
-	utils.Go(func() {
+	routine.Go(func() {
 		err := session.run()
 		if err != nil {
 			logger.Error(err)
@@ -72,7 +74,7 @@ func (e *EncodeSession) run() error {
 
 	commonArgs := []string{
 		"-i", e.path,
-		"-acodec", utils.ConditionalString(e.isOpus, "copy", "libopus"),
+		"-acodec", k.Is(e.isOpus, "copy", "libopus"),
 		"-analyzeduration", "0",
 		"-loglevel", "error",
 		"-map", "0:a",

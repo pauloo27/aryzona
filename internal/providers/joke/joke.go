@@ -3,7 +3,7 @@ package joke
 import (
 	"encoding/json"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 )
 
 type Joke struct {
@@ -14,7 +14,7 @@ type Joke struct {
 }
 
 func GetRandomJoke() (*Joke, error) {
-	data, err := utils.Get("https://official-joke-api.appspot.com/random_joke")
+	data, err := h.Get("https://official-joke-api.appspot.com/random_joke")
 	if err != nil {
 		return nil, err
 	}

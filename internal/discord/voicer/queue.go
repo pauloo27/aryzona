@@ -6,7 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
-	"github.com/Pauloo27/aryzona/internal/utils/scheduler"
+	"github.com/Pauloo27/aryzona/internal/core/scheduler"
 )
 
 func (v *Voicer) IsPaused() bool {

@@ -8,10 +8,10 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
+	"github.com/Pauloo27/aryzona/internal/core/routine"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/providers/radio"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 var RadioCommand = command.Command{
@@ -62,7 +62,7 @@ var RadioCommand = command.Command{
 		embed := buildPlayableInfoEmbed(channel, nil, ctx.AuthorID).WithTitle("Added to queue: " + channel.GetName())
 		ctx.SuccessEmbed(embed)
 
-		utils.Go(func() {
+		routine.Go(func() {
 			if err := vc.AppendToQueue(ctx.AuthorID, channel); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return

@@ -6,7 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/providers/doc"
 )
 
 var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
@@ -14,7 +14,7 @@ var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 var CNPJCommand = command.Command{
 	Name: "cnpj", Description: "Generate a CNPJ",
 	Handler: func(ctx *command.CommandContext) {
-		cnpj := utils.GenerateCNPJ()
+		cnpj := doc.GenerateCNPJ()
 		components := cnpjMaskRe.FindStringSubmatch(cnpj)
 		maskedCNPJ := fmt.Sprintf(
 			"%s.%s.%s/%s-%s",

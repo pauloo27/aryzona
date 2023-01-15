@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 	"github.com/tidwall/gjson"
 )
 
@@ -65,7 +65,7 @@ func (r HunterRadio) GetFullTitle() (title, artist string) {
 	}
 	hunterID := matches[1]
 
-	data, err := utils.Get("https://api.hunter.fm/stations/")
+	data, err := h.Get("https://api.hunter.fm/stations/")
 	if err != nil {
 		return
 	}

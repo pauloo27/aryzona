@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/routine"
 )
 
 type ListenerFn func(*LiveMatch, error)
@@ -32,7 +32,7 @@ const (
 )
 
 func init() {
-	utils.Go(func() {
+	routine.Go(func() {
 		for {
 			for _, match := range followedMatches {
 				updateLiveMatch(match)

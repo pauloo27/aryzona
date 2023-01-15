@@ -13,7 +13,7 @@ import (
 	_ "github.com/Pauloo27/aryzona/internal/discord/listener"
 
 	// import scheduler
-	_ "github.com/Pauloo27/aryzona/internal/utils/scheduler"
+	_ "github.com/Pauloo27/aryzona/internal/core/scheduler"
 
 	// import all command categories
 	_ "github.com/Pauloo27/aryzona/internal/command/categories/animals"

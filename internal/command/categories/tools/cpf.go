@@ -6,7 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/providers/doc"
 )
 
 var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
@@ -14,7 +14,7 @@ var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
 var CPFCommand = command.Command{
 	Name: "cpf", Description: "Generate a CPF",
 	Handler: func(ctx *command.CommandContext) {
-		cpf := utils.GenerateCPF()
+		cpf := doc.GenerateCPF()
 		components := cpfMaskRe.FindStringSubmatch(cpf)
 		maskedCPF := fmt.Sprintf(
 			"%s.%s.%s-%s",

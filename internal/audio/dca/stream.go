@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Pauloo27/aryzona/internal/core/routine"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 // based on https://git.notagovernment.agency/ItsClairton/Anny/ which é...
@@ -39,7 +39,7 @@ func NewStream(source *EncodeSession, vc model.VoiceConnection, callback chan er
 		callback:   callback,
 	}
 
-	utils.Go(session.stream)
+	routine.Go(session.stream)
 
 	return session
 }
@@ -126,7 +126,7 @@ func (s *StreamingSession) Resume() {
 		return
 	}
 	s.paused = false
-	utils.Go(s.stream)
+	routine.Go(s.stream)
 }
 
 func (s *StreamingSession) TogglePause() {

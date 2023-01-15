@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/utils"
+	"github.com/Pauloo27/aryzona/internal/core/h"
 )
 
 type Comic struct {
@@ -25,7 +25,7 @@ func GetByNum(num int) (*Comic, error) {
 	if num == 0 {
 		url = "https://xkcd.com/info.0.json"
 	}
-	res, err := utils.Get(url)
+	res, err := h.Get(url)
 	if err != nil {
 		return nil, err
 	}

@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/core/f"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/utils"
 )
 
 func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, requesterID string) *model.Embed {
@@ -46,7 +46,7 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, reque
 			"Will play",
 			fmt.Sprintf(
 				"in %s",
-				utils.DurationAsDetailedDiffText(eta),
+				f.DurationAsDetailedDiffText(eta),
 			),
 		)
 	}
@@ -59,13 +59,13 @@ func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, reque
 
 		if vc.Playing() != nil && playable == vc.Playing().Playable && posErr == nil && durErr == nil {
 			embed.WithField("Duration", fmt.Sprintf("%s/%s",
-				utils.ShortDuration(position),
-				utils.ShortDuration(duration),
+				f.ShortDuration(position),
+				f.ShortDuration(duration),
 			))
 		} else if durErr == nil {
-			embed.WithField("Duration", utils.ShortDuration(duration))
+			embed.WithField("Duration", f.ShortDuration(duration))
 		} else if posErr == nil {
-			embed.WithField("Position", utils.ShortDuration(position))
+			embed.WithField("Position", f.ShortDuration(position))
 		}
 	}
 

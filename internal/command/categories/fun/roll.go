@@ -6,10 +6,10 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
+	"github.com/Pauloo27/aryzona/internal/core/f"
+	"github.com/Pauloo27/aryzona/internal/core/rnd"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/dice"
-	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/aryzona/internal/utils/rnd"
 )
 
 const (
@@ -51,8 +51,8 @@ var RollCommand = command.Command{
 			WithDescription(
 				fmt.Sprintf("You rolled %s (%d %s with %d %s)\n%v -> %d\n_Gif by [Tenor](https://tenor.com/)_",
 					d.String(),
-					d.Dices, utils.Pluralize(d.Dices, "dice", "dices"),
-					d.Sides, utils.Pluralize(d.Sides, "side", "sides"),
+					d.Dices, f.Pluralize(d.Dices, "dice", "dices"),
+					d.Sides, f.Pluralize(d.Sides, "side", "sides"),
 					numbers, result),
 			).
 			WithImage(gif)

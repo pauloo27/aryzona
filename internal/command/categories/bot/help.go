@@ -7,8 +7,8 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/utils"
-	"github.com/Pauloo27/aryzona/internal/utils/slice"
+	k "github.com/Pauloo27/toolkit"
+	"github.com/Pauloo27/toolkit/slices"
 )
 
 var (
@@ -92,7 +92,7 @@ func helpForCommand(ctx *command.CommandContext) {
 	rootCmd := cmd
 
 	if subCommandName != "" {
-		subCommand := slice.Find(cmd.SubCommands, func(subCmd *command.Command) bool {
+		subCommand := slices.Find(cmd.SubCommands, func(subCmd *command.Command) bool {
 			return subCmd.Name == subCommandName
 		})
 		if subCommand == nil {
@@ -129,7 +129,7 @@ func helpForCommand(ctx *command.CommandContext) {
 		embed.WithField(
 			"Sub Commands",
 			strings.Join(
-				slice.Map(cmd.SubCommands, func(cmd *command.Command) string {
+				slices.Map(cmd.SubCommands, func(cmd *command.Command) string {
 					return cmd.Name
 				}),
 				", ",
@@ -141,7 +141,7 @@ func helpForCommand(ctx *command.CommandContext) {
 		embed.WithField(
 			"Validations",
 			strings.Join(
-				slice.Map(cmd.Validations, func(validation *command.CommandValidation) string {
+				slices.Map(cmd.Validations, func(validation *command.CommandValidation) string {
 					return validation.Description
 				}),
 				", ",
@@ -153,10 +153,10 @@ func helpForCommand(ctx *command.CommandContext) {
 		embed.WithField(
 			"Parameters",
 			strings.Join(
-				slice.Map(cmd.Parameters, func(param *command.CommandParameter) string {
+				slices.Map(cmd.Parameters, func(param *command.CommandParameter) string {
 					return fmt.Sprintf("%s: %s (%s)",
 						param.Name, param.Description,
-						utils.ConditionalString(param.Required, "required", "not required"))
+						k.Is(param.Required, "required", "not required"))
 				}),
 				", ",
 			),
