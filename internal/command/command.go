@@ -193,5 +193,9 @@ func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler func(fu
 	}
 	ctx.interactionHandler = interactionHandler
 	commandInteractionMap[baseID] = ctx
+	go func() {
+		time.Sleep(5 * time.Minute)
+		RemoveInteractionHandler(baseID)
+	}()
 	return baseID, nil
 }

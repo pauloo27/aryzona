@@ -87,3 +87,7 @@ func RegisterCategory(category CommandCategory) {
 		RegisterCommand(cmd)
 	}
 }
+
+func RemoveInteractionHandler(baseID string) {
+	delete(commandInteractionMap, baseID)
+}
