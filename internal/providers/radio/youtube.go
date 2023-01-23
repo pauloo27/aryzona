@@ -1,30 +1,24 @@
 package radio
 
 import (
+	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/logger"
 )
 
 type YouTubeRadio struct {
 	BaseRadio
-	playable      youtube.YouTubePlayable
 	ID, Name, URL string
 }
 
 var _ RadioChannel = &YouTubeRadio{}
 
 func newYouTubeRadio(id, name, url string) RadioChannel {
-	playable, err := youtube.AsPlayable(url)
-	if err != nil {
-		logger.Errorf("Error while creating YouTube radio %s: %s", name, err)
-		return nil
-	}
 	return YouTubeRadio{
 		ID:        id,
 		Name:      name,
 		URL:       url,
 		BaseRadio: BaseRadio{},
-		playable:  playable,
 	}
 }
 
@@ -37,7 +31,7 @@ func (r YouTubeRadio) GetName() string {
 }
 
 func (r YouTubeRadio) GetShareURL() string {
-	return r.playable.GetShareURL()
+	return r.GetPlayable().GetShareURL()
 }
 
 func (r YouTubeRadio) GetThumbnailURL() (string, error) {
@@ -45,13 +39,21 @@ func (r YouTubeRadio) GetThumbnailURL() (string, error) {
 }
 
 func (r YouTubeRadio) IsOpus() bool {
-	return r.playable.IsOpus()
+	return r.GetPlayable().IsOpus()
 }
 
 func (r YouTubeRadio) GetDirectURL() (string, error) {
-	return r.playable.GetDirectURL()
+	return r.GetPlayable().GetDirectURL()
 }
 
 func (r YouTubeRadio) GetFullTitle() (title, artist string) {
-	return r.playable.GetFullTitle()
+	return r.GetPlayable().GetFullTitle()
+}
+
+func (r YouTubeRadio) GetPlayable() playable.Playable {
+	vid, err := youtube.GetVideo(r.URL)
+	if err != nil {
+		logger.Error("Error getting video: ", err)
+	}
+	return vid
 }

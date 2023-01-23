@@ -85,7 +85,7 @@ func (p YouTubePlayable) IsOpus() bool {
 	return p.video.Formats.FindByItag(251) != nil
 }
 
-func AsPlayable(videoURL string) (YouTubePlayable, error) {
+func GetVideo(videoURL string) (YouTubePlayable, error) {
 	vid, err := defaultClient.GetVideo(videoURL)
 	if err != nil {
 		return YouTubePlayable{}, err
