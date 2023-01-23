@@ -7,7 +7,8 @@ var (
 
 func init() {
 	registerRadios(
-		newYouTubeRadio("lofi", "Lofi: beats to relax/study", "https://www.youtube.com/watch?v=jfKfPfyJRdk"),
+		newYouTubeRadio("lofi", "Lofi: beats to relax/study to", "https://www.youtube.com/watch?v=jfKfPfyJRdk"),
+		newYouTubeRadio("lofi-sleep", "Lofi: beats to sleep/chill to", "https://www.youtube.com/watch?v=rUxyKA_-grg"),
 		newYouTubeRadio("techno", "Techno: Rave Radio 24/7", "https://www.youtube.com/watch?v=6Irus3d5f0E"),
 
 		newCidadeRadio(
@@ -39,7 +40,7 @@ func init() {
 			"tropical", "Rádio Hunter Tropical", "https://hls.hunter.fm/tropical/192.m3u8",
 		),
 		newHunterRadio(
-			"lofi2", "Rádio Hunter Lofi", "https://hls.hunter.fm/lofi/192.m3u8",
+			"lofi-hunter", "Rádio Hunter Lofi", "https://hls.hunter.fm/lofi/192.m3u8",
 		),
 
 		newGloboRadio(
