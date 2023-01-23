@@ -18,6 +18,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/logger"
+	k "github.com/Pauloo27/toolkit"
 )
 
 const (
@@ -146,7 +147,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 				firstResult.Title,
 				firstResult.ID,
 				firstResult.Author,
-				f.ShortDuration(firstResult.Duration),
+				k.Is(firstResult.Duration == 0, "Live 🔴", f.ShortDuration(firstResult.Duration)),
 				firstResultTimeout/time.Second,
 			),
 		)
@@ -258,7 +259,7 @@ func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer,
 				f.Emojify(i+1),
 				result.Title,
 				result.Author,
-				f.ShortDuration(result.Duration),
+				k.Is(result.Duration == 0, "🔴 Live", f.ShortDuration(result.Duration)),
 			),
 		)
 	}
