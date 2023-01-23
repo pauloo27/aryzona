@@ -130,14 +130,16 @@ func HandleCommand(
 	executeCommand(command, ctx, adapter, bot)
 }
 
-func HandleInteraction(id string) *model.ComplexMessage {
+func HandleInteraction(id, userID string) *model.ComplexMessage {
 	baseID := id[:10]
 	ctx, ok := commandInteractionMap[baseID]
 	if !ok {
 		logger.Error("Cannot find interaction adapter for id", baseID)
 		return nil
 	}
-	newMessage := ctx.interactionHandler(id, baseID)
-	delete(commandInteractionMap, baseID)
+	newMessage, done := ctx.interactionHandler(id, baseID, userID)
+	if done {
+		delete(commandInteractionMap, baseID)
+	}
 	return newMessage
 }

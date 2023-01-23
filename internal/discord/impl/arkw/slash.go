@@ -166,8 +166,14 @@ func registerCommands(bot ArkwBot) error {
 
 		switch data := i.Data.(type) {
 		case dc.ComponentInteraction:
-			newMessage := command.HandleInteraction(string(data.ID()))
+			newMessage := command.HandleInteraction(string(data.ID()), i.Sender().ID.String())
 			if newMessage == nil {
+				err := s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
+					Type: api.DeferredMessageUpdate,
+				})
+				if err != nil {
+					logger.Error(err)
+				}
 				return
 			}
 			var embeds []dc.Embed

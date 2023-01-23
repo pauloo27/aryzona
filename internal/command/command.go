@@ -31,8 +31,10 @@ const (
 	PendingEmbedColor = 0x00add8
 )
 
+type InteractionHandler func(fullID, baseID, userID string) (newMessage *model.ComplexMessage, done bool)
+
 type CommandContext struct {
-	interactionHandler func(fullID, baseID string) (newMessage *model.ComplexMessage)
+	interactionHandler InteractionHandler
 	startTime          time.Time
 	RawArgs            []string
 	Args               []interface{}
@@ -180,7 +182,7 @@ func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	}
 }
 
-func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler func(fullID, baseID string) *model.ComplexMessage) (baseID string, err error) {
+func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler InteractionHandler) (baseID string, err error) {
 	for {
 		baseID, err = gonanoid.New(InteractionBaseIDLength)
 		if err != nil {

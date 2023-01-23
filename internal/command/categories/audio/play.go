@@ -155,11 +155,14 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 	var components []model.MessageComponent
 
 	baseID, err := ctx.RegisterInteractionHandler(
-		func(fullID, baseID string) *model.ComplexMessage {
+		func(fullID, baseID, userID string) (msg *model.ComplexMessage, done bool) {
+			if userID != ctx.AuthorID {
+				return nil, false
+			}
 			if fullID[len(baseID):] == "play-now" {
 				ok := selectResult(firstResult)
 				if !ok {
-					return nil
+					return nil, false
 				}
 				return &model.ComplexMessage{
 					Components: buildDisabledComponents(components, 0),
@@ -168,12 +171,12 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 							WithTitle("Selected result for: " + searchQuery).
 							WithColor(command.SuccessEmbedColor),
 					},
-				}
+				}, true
 			}
 			if !selectResult(nil) {
-				return nil
+				return nil, false
 			}
-			return buildMultipleResultsMessage(ctx, vc, searchQuery, results, selectResult)
+			return buildMultipleResultsMessage(ctx, vc, searchQuery, results, selectResult), true
 		},
 	)
 	if err != nil {
@@ -277,7 +280,10 @@ func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer,
 	components := make([]model.MessageComponent, len(results))
 
 	baseID, err := ctx.RegisterInteractionHandler(
-		func(fullID, baseID string) *model.ComplexMessage {
+		func(fullID, baseID, userID string) (msg *model.ComplexMessage, done bool) {
+			if userID != ctx.AuthorID {
+				return nil, false
+			}
 			indexStr := fullID[len(fullID)-1] - '0'
 			index := int(indexStr) - 1
 			result := results[index]
@@ -290,7 +296,7 @@ func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer,
 						WithTitle("Selected result for: " + searchQuery).
 						WithColor(command.SuccessEmbedColor),
 				},
-			}
+			}, true
 		},
 	)
 
