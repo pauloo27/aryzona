@@ -6,35 +6,17 @@ import (
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/ReneKroon/ttlcache/v2"
 	"github.com/diamondburned/arikawa/v3/api"
 	dc "github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
-	"github.com/diamondburned/arikawa/v3/utils/handler"
 	"github.com/diamondburned/arikawa/v3/utils/json/option"
 	"github.com/diamondburned/arikawa/v3/voice"
-	"github.com/google/uuid"
 )
 
 var _ discord.BotAdapter = ArkwBot{}
-
-func init() {
-	cache := ttlcache.NewCache()
-	_ = cache.SetTTL(1 * time.Minute)
-	discord.UseImplementation(&ArkwBot{
-		d: &discordData{
-			prevChannelCache: cache,
-		},
-	})
-}
-
-type eventListener struct {
-	handler    interface{}
-	preHandler bool
-}
 
 type discordData struct {
 	listeners        []*eventListener
@@ -46,7 +28,7 @@ type discordData struct {
 }
 
 type ArkwBot struct {
-	d *discordData
+	*discordData
 }
 
 func (b ArkwBot) Implementation() string {
@@ -54,18 +36,18 @@ func (b ArkwBot) Implementation() string {
 }
 
 func (b ArkwBot) Init(token string) error {
-	b.d.token = token
-	b.d.s = state.New("Bot " + b.d.token)
+	b.token = token
+	b.s = state.New("Bot " + b.token)
 	return nil
 }
 
 func (b ArkwBot) connect() error {
 	now := time.Now()
-	err := b.d.s.Open(context.Background())
+	err := b.s.Open(context.Background())
 	if err != nil {
 		return err
 	}
-	b.d.startedAt = &now
+	b.startedAt = &now
 	return nil
 }
 
@@ -75,7 +57,7 @@ func (b ArkwBot) Start() error {
 }
 
 func (b ArkwBot) StartedAt() *time.Time {
-	return b.d.startedAt
+	return b.startedAt
 }
 
 func (b ArkwBot) CountUsersInVoiceChannel(ch model.VoiceChannel) (count int) {
@@ -83,7 +65,7 @@ func (b ArkwBot) CountUsersInVoiceChannel(ch model.VoiceChannel) (count int) {
 	if err != nil {
 		return
 	}
-	states, err := b.d.s.VoiceStates(dc.GuildID(sf))
+	states, err := b.s.VoiceStates(dc.GuildID(sf))
 	if err != nil {
 		return
 	}
@@ -95,16 +77,12 @@ func (b ArkwBot) CountUsersInVoiceChannel(ch model.VoiceChannel) (count int) {
 	return
 }
 
-func (b ArkwBot) disconnect() error {
-	return b.d.s.Close()
-}
-
 func (b ArkwBot) Stop() error {
-	return b.disconnect()
+	return b.s.Close()
 }
 
 func (b ArkwBot) Self() (model.User, error) {
-	u, err := b.d.s.Me()
+	u, err := b.s.Me()
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +90,7 @@ func (b ArkwBot) Self() (model.User, error) {
 }
 
 func (b ArkwBot) GuildCount() int {
-	v, _ := b.d.s.Guilds()
+	v, _ := b.s.Guilds()
 	return len(v)
 }
 
@@ -120,91 +98,13 @@ func (b ArkwBot) RegisterSlashCommands() error {
 	return registerCommands(b)
 }
 
-func (b ArkwBot) Listen(eventType event.EventType, listener interface{}) error {
-	var l interface{}
-	pre := false
-	switch eventType {
-	case event.Ready:
-		l = func(*gateway.ReadyEvent) {
-			listener.(func(discord.BotAdapter))(b)
-		}
-	case event.MessageCreated:
-		b.d.indents = append(b.d.indents, gateway.IntentGuildMessages)
-		b.d.indents = append(b.d.indents, gateway.IntentDirectMessages)
-		l = func(m *gateway.MessageCreateEvent) {
-			cType := model.ChannelTypeGuild
-			if m.GuildID.String() == "" {
-				cType = model.ChannelTypeDirect
-			}
-			msg := buildMessage(m.ID.String(), buildChannel(m.ChannelID.String(), buildGuild(m.GuildID.String()), cType), buildUser(m.Author.ID.String()), m.Content)
-			listener.(func(discord.BotAdapter, model.Message))(b, msg)
-		}
-	case event.VoiceStateUpdated:
-		eventID := uuid.New().String()
-		// add helper listener
-		b.d.listeners = append(b.d.listeners, &eventListener{handler: func(m *gateway.VoiceStateUpdateEvent) {
-			var prevCh model.VoiceChannel
-			voiceState, err := b.FindUserVoiceState(m.GuildID.String(), m.UserID.String())
-			if err == nil && voiceState.Channel().ID() != "" {
-				cType := model.ChannelTypeGuild
-				if voiceState.Channel().Guild().ID() == "" {
-					cType = model.ChannelTypeDirect
-				}
-				prevCh = buildChannel(voiceState.Channel().ID(), buildGuild(voiceState.Channel().Guild().ID()), cType)
-			}
-			_ = b.d.prevChannelCache.Set(eventID, prevCh)
-		}, preHandler: true})
-
-		pre = false
-		b.d.indents = append(b.d.indents, gateway.IntentGuildVoiceStates)
-		b.d.indents = append(b.d.indents, gateway.IntentGuilds)
-
-		l = func(m *gateway.VoiceStateUpdateEvent) {
-			user := buildUser(m.UserID.String())
-			var prevCh, curCh model.VoiceChannel
-			if m.ChannelID.IsValid() {
-				curCh = buildVoiceChannel(m.ChannelID.String(), buildGuild(m.GuildID.String()))
-			}
-			possiblePrevCh, err := b.d.prevChannelCache.Get(eventID)
-			if err == nil {
-				prevCh, _ = possiblePrevCh.(model.VoiceChannel)
-			}
-
-			listener.(func(discord.BotAdapter, model.User, model.VoiceChannel, model.VoiceChannel))(b, user, prevCh, curCh)
-		}
-	default:
-		return event.ErrEventNotSupported
-	}
-	b.d.listeners = append(b.d.listeners, &eventListener{handler: l, preHandler: pre})
-	return nil
-}
-
-func (b ArkwBot) registerListeners() {
-	for _, intent := range b.d.indents {
-		b.d.s.AddIntents(intent)
-	}
-	b.d.s.PreHandler = handler.New()
-	for _, l := range b.d.listeners {
-		if l.preHandler {
-			b.d.s.PreHandler.AddSyncHandler(l.handler)
-		} else {
-			b.d.s.AddHandler(l.handler)
-		}
-	}
-}
-
 func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error) {
+	var refMessage *dc.MessageReference
+
 	channelSf, err := dc.ParseSnowflake(channelID)
 	if err != nil {
 		return nil, err
 	}
-	var embeds []dc.Embed
-
-	for _, embed := range message.Embeds {
-		embeds = append(embeds, buildEmbed(embed))
-	}
-
-	var refMessage *dc.MessageReference
 
 	if message.ReplyTo != nil {
 		refMessageSf, err := dc.ParseSnowflake(message.ReplyTo.ID())
@@ -224,19 +124,13 @@ func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMess
 		}
 	}
 
-	components := buildComponents(message.Components)
-	row := dc.ActionRowComponent(components)
+	arkwMessage := prepareComplexMessage(message)
 
-	var componentsPtr dc.ContainerComponents
-	if len(components) > 0 {
-		componentsPtr = dc.ContainerComponents{&row}
-	}
-
-	msg, err := b.d.s.SendMessageComplex(dc.ChannelID(channelSf), api.SendMessageData{
+	msg, err := b.s.SendMessageComplex(dc.ChannelID(channelSf), api.SendMessageData{
 		Content:    message.Content,
-		Embeds:     embeds,
+		Embeds:     arkwMessage.embed,
 		Reference:  refMessage,
-		Components: componentsPtr,
+		Components: arkwMessage.components,
 	})
 	if err != nil {
 		return nil, err
@@ -253,14 +147,9 @@ func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMess
 }
 
 func (b ArkwBot) EditComplexMessage(m model.Message, newMessage *model.ComplexMessage) (model.Message, error) {
-	msgSf, err := dc.ParseSnowflake(m.ID())
+	oldMsgSf, err := dc.ParseSnowflake(m.ID())
 	if err != nil {
 		return nil, err
-	}
-	var embeds []dc.Embed
-
-	for _, embed := range newMessage.Embeds {
-		embeds = append(embeds, buildEmbed(embed))
 	}
 
 	channelSf, err := dc.ParseSnowflake(m.Channel().ID())
@@ -268,20 +157,20 @@ func (b ArkwBot) EditComplexMessage(m model.Message, newMessage *model.ComplexMe
 		return nil, err
 	}
 
+	arkwMessage := prepareComplexMessage(newMessage)
+
 	var embedsPtr *[]dc.Embed
-	if len(embeds) > 0 {
-		embedsPtr = &embeds
-	}
-
-	components := buildComponents(newMessage.Components)
-	row := dc.ActionRowComponent(components)
-
 	var componentsPtr *dc.ContainerComponents
-	if len(components) > 0 {
-		componentsPtr = &dc.ContainerComponents{&row}
+
+	if len(arkwMessage.embed) > 0 {
+		embedsPtr = &arkwMessage.embed
 	}
 
-	msg, err := b.d.s.EditMessageComplex(dc.ChannelID(channelSf), dc.MessageID(msgSf), api.EditMessageData{
+	if len(arkwMessage.components) > 0 {
+		componentsPtr = &arkwMessage.components
+	}
+
+	msg, err := b.s.EditMessageComplex(dc.ChannelID(channelSf), dc.MessageID(oldMsgSf), api.EditMessageData{
 		Content:    option.NewNullableString(newMessage.Content),
 		Embeds:     embedsPtr,
 		Components: componentsPtr,
@@ -298,137 +187,41 @@ func (b ArkwBot) EditComplexMessage(m model.Message, newMessage *model.ComplexMe
 }
 
 func (b ArkwBot) SendReplyMessage(m model.Message, content string) (model.Message, error) {
-	sf, err := dc.ParseSnowflake(m.Channel().ID())
-	if err != nil {
-		return nil, err
-	}
-	msg, err := b.d.s.SendMessage(dc.ChannelID(sf), content)
-	if err != nil {
-		return nil, err
-	}
-	cType := model.ChannelTypeGuild
-	if msg.GuildID.String() == "" {
-		cType = model.ChannelTypeDirect
-	}
-	return buildMessage(
-		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
-		buildUser(msg.Author.ID.String()),
-		content,
-	), nil
-}
-
-func (b ArkwBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
-	sf, err := dc.ParseSnowflake(message.Channel().ID())
-	if err != nil {
-		return nil, err
-	}
-	msgSf, err := dc.ParseSnowflake(message.ID())
-	if err != nil {
-		return nil, err
-	}
-	msg, err := b.d.s.EditMessage(dc.ChannelID(sf), dc.MessageID(msgSf), newContent)
-	if err != nil {
-		return nil, err
-	}
-	cType := model.ChannelTypeGuild
-	if msg.GuildID.String() == "" {
-		cType = model.ChannelTypeDirect
-	}
-	return buildMessage(
-		msg.ID.String(), buildChannel(message.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
-		buildUser(msg.Author.ID.String()),
-		newContent,
-	), nil
-}
-
-func (b ArkwBot) EditMessageEmbed(message model.Message, newEmbed *model.Embed) (model.Message, error) {
-	sf, err := dc.ParseSnowflake(message.Channel().ID())
-	if err != nil {
-		return nil, err
-	}
-	msgSf, err := dc.ParseSnowflake(message.ID())
-	if err != nil {
-		return nil, err
-	}
-	msg, err := b.d.s.EditMessageComplex(dc.ChannelID(sf), dc.MessageID(msgSf), api.EditMessageData{
-		Embeds: &[]dc.Embed{buildEmbed(newEmbed)},
+	return b.SendComplexMessage(m.Channel().ID(), &model.ComplexMessage{
+		Content: content,
+		ReplyTo: m,
 	})
-	if err != nil {
-		return nil, err
-	}
-	cType := model.ChannelTypeGuild
-	if msg.GuildID.String() == "" {
-		cType = model.ChannelTypeDirect
-	}
-	return buildMessage(
-		msg.ID.String(), buildChannel(message.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
-		buildUser(msg.Author.ID.String()),
-		msg.Content,
-	), nil
 }
 
 func (b ArkwBot) SendMessage(channelID string, message string) (model.Message, error) {
-	sf, err := dc.ParseSnowflake(channelID)
-	if err != nil {
-		return nil, err
-	}
-	msg, err := b.d.s.SendMessage(dc.ChannelID(sf), message)
-	if err != nil {
-		return nil, err
-	}
-	cType := model.ChannelTypeGuild
-	if msg.GuildID.String() == "" {
-		cType = model.ChannelTypeDirect
-	}
-	return buildMessage(
-		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
-		buildUser(msg.Author.ID.String()),
-		message,
-	), nil
+	return b.SendComplexMessage(channelID, &model.ComplexMessage{
+		Content: message,
+	})
 }
 
 func (b ArkwBot) SendReplyEmbedMessage(m model.Message, embed *model.Embed) (model.Message, error) {
-	chSf, err := dc.ParseSnowflake(m.Channel().ID())
-	if err != nil {
-		return nil, err
-	}
-	refSf, err := dc.ParseSnowflake(m.ID())
-	if err != nil {
-		return nil, err
-	}
-	msg, err := b.d.s.SendEmbedReply(dc.ChannelID(chSf), dc.MessageID(refSf), buildEmbed(embed))
-	if err != nil {
-		return nil, err
-	}
-	cType := model.ChannelTypeGuild
-	if msg.GuildID.String() == "" {
-		cType = model.ChannelTypeDirect
-	}
-	return buildMessage(
-		msg.ID.String(), buildChannel(m.Channel().ID(), buildGuild(msg.GuildID.String()), cType),
-		buildUser(msg.Author.ID.String()),
-		msg.Content,
-	), nil
+	return b.SendComplexMessage(m.Channel().ID(), &model.ComplexMessage{
+		Embeds:  []*model.Embed{embed},
+		ReplyTo: m,
+	})
 }
 
 func (b ArkwBot) SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error) {
-	sf, err := dc.ParseSnowflake(channelID)
-	if err != nil {
-		return nil, err
-	}
-	msg, err := b.d.s.SendEmbeds(dc.ChannelID(sf), buildEmbed(embed))
-	if err != nil {
-		return nil, err
-	}
-	cType := model.ChannelTypeGuild
-	if msg.GuildID.String() == "" {
-		cType = model.ChannelTypeDirect
-	}
-	return buildMessage(
-		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
-		buildUser(msg.Author.ID.String()),
-		msg.Content,
-	), nil
+	return b.SendComplexMessage(channelID, &model.ComplexMessage{
+		Embeds: []*model.Embed{embed},
+	})
+}
+
+func (b ArkwBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
+	return b.EditComplexMessage(message, &model.ComplexMessage{
+		Content: newContent,
+	})
+}
+
+func (b ArkwBot) EditMessageEmbed(message model.Message, newEmbed *model.Embed) (model.Message, error) {
+	return b.EditComplexMessage(message, &model.ComplexMessage{
+		Embeds: []*model.Embed{newEmbed},
+	})
 }
 
 func (b ArkwBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
@@ -436,7 +229,7 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 	if err != nil {
 		return nil, err
 	}
-	dm, err := b.d.s.CreatePrivateChannel(dc.UserID(sf))
+	dm, err := b.s.CreatePrivateChannel(dc.UserID(sf))
 	if err != nil {
 		return nil, err
 	}
@@ -444,7 +237,7 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 }
 
 func (b ArkwBot) Latency() time.Duration {
-	return b.d.s.Gateway().Latency()
+	return b.s.Gateway().Latency()
 }
 
 func (b ArkwBot) OpenGuild(guildID string) (model.Guild, error) {
@@ -452,7 +245,7 @@ func (b ArkwBot) OpenGuild(guildID string) (model.Guild, error) {
 	if err != nil {
 		return nil, err
 	}
-	g, err := b.d.s.Guild(dc.GuildID(sf))
+	g, err := b.s.Guild(dc.GuildID(sf))
 	if err != nil {
 		return nil, err
 	}
@@ -460,7 +253,7 @@ func (b ArkwBot) OpenGuild(guildID string) (model.Guild, error) {
 }
 
 func (b ArkwBot) JoinVoiceChannel(guildID, channelID string) (model.VoiceConnection, error) {
-	vs, err := voice.NewSession(b.d.s)
+	vs, err := voice.NewSession(b.s)
 	if err != nil {
 		return nil, err
 	}
@@ -484,7 +277,7 @@ func (b ArkwBot) FindUserVoiceState(guildID, userID string) (model.VoiceState, e
 	if err != nil {
 		return nil, err
 	}
-	vs, err := b.d.s.VoiceState(dc.GuildID(guildSf), dc.UserID(userSf))
+	vs, err := b.s.VoiceState(dc.GuildID(guildSf), dc.UserID(userSf))
 	if err != nil {
 		return nil, err
 	}
@@ -501,14 +294,14 @@ func (b ArkwBot) GetMember(guildID, userID string) (model.Member, error) {
 		return nil, err
 	}
 
-	m, err := b.d.s.Member(dc.GuildID(guildSf), dc.UserID(userSf))
+	m, err := b.s.Member(dc.GuildID(guildSf), dc.UserID(userSf))
 	if err != nil {
 		return nil, err
 	}
 
 	var roles []model.Role
 	for _, r := range m.RoleIDs {
-		role, err := b.d.s.Role(dc.GuildID(guildSf), r)
+		role, err := b.s.Role(dc.GuildID(guildSf), r)
 		if err != nil {
 			return nil, err
 		}
@@ -530,7 +323,7 @@ func (b ArkwBot) UpdatePresence(presence *model.Presence) error {
 	default:
 		return errors.New("invalid presence type")
 	}
-	return b.d.s.Gateway().Send(context.Background(), &gateway.UpdatePresenceCommand{
+	return b.s.Gateway().Send(context.Background(), &gateway.UpdatePresenceCommand{
 		Activities: []dc.Activity{
 			{Name: presence.Title, URL: presence.Extra, Type: ty},
 		},

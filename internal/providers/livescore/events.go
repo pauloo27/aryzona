@@ -9,6 +9,6 @@ const (
 	EventTypeYellowCard       = 43
 	EventTypeRedCard          = 44
 	EventTypeDoubleYellowCard = 45
-	EventTypePenaltyGoal          = 41
-	EventTypePenaltyMissed        = 40
+	EventTypePenaltyGoal      = 41
+	EventTypePenaltyMissed    = 40
 )

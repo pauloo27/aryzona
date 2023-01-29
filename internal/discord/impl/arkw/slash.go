@@ -80,9 +80,7 @@ func mustGetOptionValue(arg *command.CommandParameter) dc.CommandOptionValue {
 }
 
 func registerCommands(bot ArkwBot) error {
-	s := bot.d.s
-
-	app, err := s.CurrentApplication()
+	app, err := bot.s.CurrentApplication()
 	if err != nil {
 		return err
 	}
@@ -106,6 +104,7 @@ func registerCommands(bot ArkwBot) error {
 				slashCommand.Options,
 				&dc.SubcommandOption{
 					OptionName:  subCmd.Name,
+
 					Description: subCmd.Description,
 					Options:     subCmdOptions,
 				},
@@ -121,18 +120,18 @@ func registerCommands(bot ArkwBot) error {
 		slashCommands = append(slashCommands, slashCommand)
 	}
 
-	if _, err = s.BulkOverwriteCommands(app.ID, slashCommands); err != nil {
+	if _, err = bot.s.BulkOverwriteCommands(app.ID, slashCommands); err != nil {
 		return err
 	}
 
-	s.AddHandler(func(i *gateway.InteractionCreateEvent) {
+	bot.s.AddHandler(func(i *gateway.InteractionCreateEvent) {
 		respond := func(message *model.ComplexMessage, flags dc.MessageFlags) error {
 			var embeds []dc.Embed
 			if len(message.Embeds) > 0 {
 				embed := message.Embeds[0]
 				embeds = append(embeds, buildEmbed(embed))
 			}
-			return s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
+			return bot.s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
 				Type: api.MessageInteractionWithSource,
 				Data: &api.InteractionResponseData{
 					Content: option.NewNullableString(message.Content),
@@ -156,7 +155,7 @@ func registerCommands(bot ArkwBot) error {
 				components = dc.ComponentsPtr(&row)
 			}
 
-			_, err := s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
+			_, err := bot.s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
 				Content:    option.NewNullableString(message.Content),
 				Embeds:     &embeds,
 				Components: components,
@@ -168,7 +167,7 @@ func registerCommands(bot ArkwBot) error {
 		case dc.ComponentInteraction:
 			newMessage := command.HandleInteraction(string(data.ID()), i.Sender().ID.String())
 			if newMessage == nil {
-				err := s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
+				err := bot.s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
 					Type: api.DeferredMessageUpdate,
 				})
 				if err != nil {
@@ -200,7 +199,7 @@ func registerCommands(bot ArkwBot) error {
 				content = option.NewNullableString(newMessage.Content)
 			}
 
-			err := s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
+			err := bot.s.RespondInteraction(i.ID, i.Token, api.InteractionResponse{
 				Type: api.UpdateMessage,
 				Data: &api.InteractionResponseData{
 					Content:    content,
@@ -246,7 +245,7 @@ func registerCommands(bot ArkwBot) error {
 				AuthorID: i.Sender().ID.String(),
 				GuildID:  i.GuildID.String(),
 				DeferResponse: func() error {
-					return s.RespondInteraction(
+					return bot.s.RespondInteraction(
 						i.ID,
 						i.Token,
 						api.InteractionResponse{
