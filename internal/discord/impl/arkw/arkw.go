@@ -112,9 +112,13 @@ func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMess
 			return nil, err
 		}
 
-		guildSf, err := dc.ParseSnowflake(message.ReplyTo.Channel().Guild().ID())
-		if err != nil {
-			return nil, err
+		var guildSf dc.Snowflake
+
+		if message.ReplyTo.Channel().Type() == model.ChannelTypeGuild {
+			guildSf, err = dc.ParseSnowflake(message.ReplyTo.Channel().Guild().ID())
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		refMessage = &dc.MessageReference{
@@ -135,10 +139,12 @@ func (b ArkwBot) SendComplexMessage(channelID string, message *model.ComplexMess
 	if err != nil {
 		return nil, err
 	}
+
 	cType := model.ChannelTypeGuild
 	if msg.GuildID.String() == "" {
 		cType = model.ChannelTypeDirect
 	}
+
 	return buildMessage(
 		msg.ID.String(), buildChannel(channelID, buildGuild(msg.GuildID.String()), cType),
 		buildUser(msg.Author.ID.String()),
