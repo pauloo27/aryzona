@@ -86,7 +86,7 @@ func (r HunterRadio) GetFullTitle() (title, artist string) {
 				sb.WriteString(a.String())
 			}
 
-			if feats != nil {
+			if len(feats) > 0 {
 				sb.WriteString(" feat. ")
 				for i, f := range feats {
 					if i != 0 {
