@@ -7,7 +7,9 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
+	"github.com/Pauloo27/logger"
 )
 
 const (
@@ -32,43 +34,48 @@ var FollowCommand = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandFollow)
+
 		teamNameOrID := ctx.Args[0].(string)
 		match, err := getMatchByTeamNameOrID(teamNameOrID)
 		if err != nil {
-			ctx.Errorf("Something went wrong: %v", err)
+			ctx.Error(t.SomethingWentWrong.Str())
+			logger.Error(err)
 			return
 		}
 
 		if match == nil {
-			ctx.Error("Match not found")
+			ctx.Error(t.MatchNotFound.Str())
 			return
 		}
 
 		liveMatch, err := livescore.GetLiveMatch(match.ID)
 		if errors.Is(err, livescore.ErrMatchHasFinished) {
-			ctx.Error("Match has finished")
+			ctx.Error(t.MatchFinished.Str())
 			return
 		}
 
 		if len(userFollowedMatcheIDs[ctx.AuthorID]) >= maxFollowPerUser {
-			ctx.Errorf(
-				"You can only follow %d matches at the same time. You can use `%sunfollow` to unfollow a match",
-				maxFollowPerUser,
-				command.Prefix,
-			)
+			ctx.Error(t.FollowLimitReached.Str(maxFollowPerUser, command.Prefix))
 			return
 		}
 
 		for _, followedMatchID := range userFollowedMatcheIDs[ctx.AuthorID] {
 			if followedMatchID == match.ID {
-				ctx.Error("You are already following this match")
+				ctx.Error(t.AlreadyFollowing.Str())
 				return
 			}
 		}
 
+		matchInfoI18n := &MatchInfoI18n{
+			Match:       t.Match.Str(),
+			Time:        t.Time.Str(),
+			TimePenalty: t.TimePenalty.Str(),
+		}
+
 		addUserFollow(ctx.AuthorID, match.ID)
 
-		embed := buildMatchEmbed(match)
+		embed := buildMatchEmbed(match, matchInfoI18n)
 		ctx.Embed(embed)
 
 		listenerID := getListenerID(ctx.AuthorID, match.ID)
@@ -79,7 +86,7 @@ var FollowCommand = command.Command{
 				removeUserFollow(ctx.AuthorID, match.MatchID)
 				return
 			}
-			embed := buildMatchEmbed(match.CurrentData)
+			embed := buildMatchEmbed(match.CurrentData, matchInfoI18n)
 			err = ctx.EditEmbed(embed)
 			if err != nil {
 				_ = liveMatch.RemoveListener(listenerID)

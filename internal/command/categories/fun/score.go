@@ -8,6 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
 )
 
@@ -24,22 +25,24 @@ var ScoreCommand = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandScore)
+
 		if len(ctx.Args) == 1 {
-			showMatchInfo(ctx)
+			showMatchInfo(ctx, t)
 			return
 		}
-		ListLiveMatches(ctx)
+		ListLiveMatches(ctx, t)
 	},
 }
 
-func ListLiveMatches(ctx *command.CommandContext) {
+func ListLiveMatches(ctx *command.CommandContext, t *i18n.CommandScore) {
 	matches, err := livescore.ListLives()
 	if err != nil {
 		ctx.Error(err.Error())
 		return
 	}
 	if len(matches) == 0 {
-		ctx.Error("I didn't find any live match right now...")
+		ctx.Error(t.NoMatchesLive.Str())
 		return
 	}
 	desc := strings.Builder{}
@@ -52,16 +55,13 @@ func ListLiveMatches(ctx *command.CommandContext) {
 	}
 	ctx.SuccessEmbed(
 		model.NewEmbed().
-			WithTitle("⚽ Live matches:").
-			WithFooter(
-				fmt.Sprintf("Use `%s%s <team name>` to see details",
-					command.Prefix, ctx.UsedName,
-				)).
+			WithTitle(t.Title.Str(":soccer:")).
+			WithFooter(t.Footer.Str(command.Prefix, ctx.UsedName)).
 			WithDescription(desc.String()),
 	)
 }
 
-func showMatchInfo(ctx *command.CommandContext) {
+func showMatchInfo(ctx *command.CommandContext, t *i18n.CommandScore) {
 	teamNameOrID := ctx.Args[0].(string)
 	match, err := getMatchByTeamNameOrID(teamNameOrID)
 
@@ -70,17 +70,29 @@ func showMatchInfo(ctx *command.CommandContext) {
 		return
 	}
 	if match == nil {
-		ctx.Error("Match not found")
+		ctx.Error(t.MatchNotFound.Str())
 		return
 	}
 
-	embed := buildMatchEmbed(match).
-		WithFooter(fmt.Sprintf("Use `%slive %s` to get live updates", command.Prefix, teamNameOrID))
+	embed := buildMatchEmbed(match, &MatchInfoI18n{
+		TimePenalty: t.TimePenalty.Str(),
+		Match:       t.Match.Str(),
+		Time:        t.Time.Str(),
+	}).
+		WithFooter(
+			t.LiveUpdates.Str(command.Prefix, teamNameOrID),
+		)
 
 	ctx.Embed(embed)
 }
 
-func buildMatchEmbed(match *livescore.MatchInfo) *model.Embed {
+type MatchInfoI18n struct {
+	TimePenalty string
+	Match       string
+	Time        string
+}
+
+func buildMatchEmbed(match *livescore.MatchInfo, t *MatchInfoI18n) *model.Embed {
 	desc := strings.Builder{}
 
 	if len(match.Events) > 0 {
@@ -92,7 +104,7 @@ func buildMatchEmbed(match *livescore.MatchInfo) *model.Embed {
 
 			var eventTime string
 			if event.Half == 4 {
-				eventTime = "Pen"
+				eventTime = t.TimePenalty
 			} else if event.ExtraMinute != 0 {
 				eventTime += fmt.Sprintf("%d+%d'", event.Minute, event.ExtraMinute)
 			} else {
@@ -124,8 +136,8 @@ func buildMatchEmbed(match *livescore.MatchInfo) *model.Embed {
 
 	return model.NewEmbed().
 		WithColor(0xC0FFEE).
-		WithField("Match", fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
-		WithField("Time", match.Time).
+		WithField(t.Match, fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
+		WithField(t.Time, match.Time).
 		WithImage(match.GetBannerURL()).
 		WithFieldInline(match.T1.Name, t1Score).
 		WithFieldInline(match.T2.Name, t2Score).

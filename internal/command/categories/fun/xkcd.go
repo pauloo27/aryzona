@@ -62,7 +62,7 @@ func sendComic(ctx *command.CommandContext, comic *xkcd.Comic, err error) {
 		model.NewEmbed().
 			WithTitle(fmt.Sprintf(
 				"#%d - %s (%s/%s/%s)", comic.Num, comic.SafeTitle,
-				// FIXME i18n the date format
+				// FIXME: i18n the date format
 				comic.Year, f.PadLeft(comic.Month, "0", 2), f.PadLeft(comic.Day, "0", 2)),
 			).
 			WithURL(fmt.Sprintf("https://www.explainxkcd.com/wiki/index.php/%d", comic.Num)).

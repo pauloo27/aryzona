@@ -41,9 +41,13 @@ type Common struct {
 }
 
 type Commands struct {
-	Even *CommandEven
-	Pick *CommandPick
-	News *CommandNews
+	Even     *CommandEven
+	Pick     *CommandPick
+	News     *CommandNews
+	Roll     *CommandRoll
+	Follow   *CommandFollow
+	UnFollow *CommandUnFollow
+	Score    *CommandScore
 }
 
 func GetCommand(l *Language, name string) any {

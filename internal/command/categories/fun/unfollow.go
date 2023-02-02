@@ -3,7 +3,9 @@ package fun
 import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/livescore"
+	"github.com/Pauloo27/logger"
 )
 
 var UnFollowCommand = command.Command{
@@ -18,46 +20,50 @@ var UnFollowCommand = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandUnFollow)
+
 		authorID := ctx.AuthorID
 
 		if len(ctx.Args) == 0 {
 			if len(userFollowedMatcheIDs[authorID]) == 0 {
-				ctx.Error("You are not following any match")
+				ctx.Error(t.NotFollowingAny.Str())
 				return
 			}
 			for _, matchID := range userFollowedMatcheIDs[authorID] {
 				liveMatch, err := livescore.GetLiveMatch(matchID)
 				if err != nil {
-					ctx.Errorf("Something went wrong: %v", err)
+					ctx.Error(t.SomethingWentWrong.Str())
 					return
 				}
 				_ = liveMatch.RemoveListener(getListenerID(authorID, matchID))
 				removeUserFollow(authorID, matchID)
 			}
-			ctx.Success("Unfollowed all matches")
+			ctx.Success(t.UnFollowedAll.Str())
 		} else {
 			teamNameOrID := ctx.Args[0].(string)
 			match, err := getMatchByTeamNameOrID(teamNameOrID)
 			if err != nil {
-				ctx.Errorf("Something went wrong: %v", err)
+				ctx.Error(t.SomethingWentWrong.Str())
+				logger.Error(err)
 				return
 			}
 			if match == nil {
-				ctx.Error("Match not found")
+				ctx.Error(t.MatchNotFound.Str())
 				return
 			}
 			liveMatch, err := livescore.GetLiveMatch(match.ID)
 			if err != nil {
-				ctx.Errorf("Something went wrong: %v", err)
+				ctx.Error(t.SomethingWentWrong.Str())
+				logger.Error(err)
 				return
 			}
 			err = liveMatch.RemoveListener(getListenerID(authorID, match.ID))
 			if err == livescore.ErrListenerNotFound {
-				ctx.Error("You are not following this match")
+				ctx.Error(t.NotFollowingMatch.Str())
 				return
 			}
 			removeUserFollow(authorID, match.ID)
-			ctx.Successf("Unfollowed match %s x %s", match.T1.Name, match.T2.Name)
+			ctx.Success(t.UnfollowedMatch.Str(match.T1.Name, match.T2.Name))
 		}
 	},
 }

@@ -2,13 +2,13 @@ package fun
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/core/f"
 	"github.com/Pauloo27/aryzona/internal/core/rnd"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/dice"
 	"github.com/Pauloo27/logger"
 )
@@ -24,6 +24,8 @@ var RollCommand = command.Command{
 		{Name: "sides", Description: "dice sides", Required: false, Type: diceNotation},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandRoll)
+
 		var d *dice.DiceNotation
 
 		if len(ctx.Args) == 1 {
@@ -38,7 +40,7 @@ var RollCommand = command.Command{
 		for i := 0; i < d.Dices; i++ {
 			luckyNumber, err := rnd.Rnd(d.Sides)
 			if err != nil {
-				ctx.Error(ctx.Lang.SomethingWentWrong.Str())
+				ctx.Error(t.SomethingWentWrong.Str())
 				logger.Error(err)
 				return
 			}
@@ -49,13 +51,14 @@ var RollCommand = command.Command{
 		}
 
 		embed := model.NewEmbed().
-			WithTitle(fmt.Sprintf(":game_die: You got %d", result)).
+			WithTitle(t.Title.Str(":game_die:", result)).
 			WithDescription(
-				fmt.Sprintf("You rolled %s (%d %s with %d %s)\n%v -> %d\n_Gif by [Tenor](https://tenor.com/)_",
+				t.Description.Str(
 					d.String(),
-					d.Dices, f.Pluralize(d.Dices, "dice", "dices"),
-					d.Sides, f.Pluralize(d.Sides, "side", "sides"),
-					numbers, result),
+					d.Dices, f.Pluralize(d.Dices, t.Dice.Str(), t.Dices.Str()),
+					d.Sides, f.Pluralize(d.Sides, t.Face.Str(), t.Faces.Str()),
+					numbers, result,
+				),
 			).
 			WithImage(gif)
 
@@ -64,6 +67,7 @@ var RollCommand = command.Command{
 }
 
 var (
+	// FIXME: i18n this
 	diceNotation = &command.CommandParameterType{
 		BaseType: parameters.TypeString,
 		Name:     "dice notation",

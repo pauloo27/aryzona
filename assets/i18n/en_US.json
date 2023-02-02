@@ -16,6 +16,40 @@
     "news": {
       "title": "News - {0:title} by {1:author}"
     },
+    "score": {
+      "time": "Time",
+      "match": "Match",
+      "timePenalty": "Pen",
+      "noMatchesLive": "I didn't find any match live right now",
+      "title": "{0:emoji} Live matches:",
+      "footer": "Use `{0:prefix}${1:command} <team name>` to get more info about a match",
+      "matchNotFound": "Match not found",
+      "liveUpdates": "Use `{0:prefix}follow ${1:team_name}` to get live updates about this match",
+    },
+    "unfollow": {
+      "notFollowingAny": "You are not following any match",
+      "unfollowedAll": "Unfollowed all matches",
+      "matchNotFound": "Match not found",
+      "notFollowingMatch": "You are not following this match",
+      "unfollowedMatch": "Unfollowed match {0:t1} x {1:t2}"
+    },
+    "follow": {
+      "time": "Time",
+      "match": "Match",
+      "timePenalty": "Pen",
+      "matchNotFound": "Match not found",
+      "matchFinished": "Match has finished",
+      "alreadyFollowing": "You are already following this match",
+      "followLimtReached": "You can only follow {0:limit} matches at the same time. Use `{1:prefix}unfollow` to unfollow a match"
+    },
+    "roll": {
+      "dice": "dice",
+      "dices": "dices",
+      "face": "face",
+      "faces": "faces",
+      "title": "{0:emoji} You got {1:result}",
+      "description": "You rolled {0:dice_notation} ({1:dice_amount} {2:dice_or_dices} with {3:dice_faces} {4:face_or_faces})\n{5:total} -> {6:result_per_dice}"
+    },
     "even": {
       "even": "Even",
       "odd": "Odd"
