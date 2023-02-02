@@ -6,7 +6,9 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/news"
+	"github.com/Pauloo27/logger"
 )
 
 type NewsFactory func() (*news.NewsFeed, error)
@@ -43,14 +45,17 @@ var NewsCommand = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandNews)
+
 		source := ctx.Args[0].(string)
 		news, err := Sources[source]()
 		if err != nil {
-			ctx.Errorf("Error getting news: %s", err)
+			ctx.Error(t.SomethingWentWrong.Str())
+			logger.Error(err)
 			return
 		}
 		embed := model.NewEmbed().
-			WithTitle(fmt.Sprintf("News - %s by %s", news.Title, news.Author)).
+			WithTitle(t.Title.Str(news.Title, news.Author)).
 			WithDescription(news.Description).
 			WithImage(news.ThumbnailURL)
 

@@ -11,7 +11,7 @@ var JokeCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		joke, err := joke.GetRandomJoke()
 		if err != nil {
-			ctx.Error("Something went wrong =(")
+			ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 			logger.Error(err)
 			return
 		}

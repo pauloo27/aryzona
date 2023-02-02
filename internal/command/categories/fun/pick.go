@@ -1,13 +1,13 @@
 package fun
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/core/rnd"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 )
 
 var PickCommand = command.Command{
@@ -22,20 +22,20 @@ var PickCommand = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandPick)
+
 		things := strings.Split(ctx.Args[0].(string), " ")
 		n, err := rnd.Rnd(len(things))
 		if err != nil {
-			ctx.Error("Something went wrong")
+			ctx.Error(t.SomethingWentWrong.Str())
 			return
 		}
+
 		ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle("Pick").
 				WithDescription(
-					fmt.Sprintf(
-						"Picking a random thing from _%s_:\n\nMy pick is **%s**",
-						ctx.Args[0], things[n],
-					),
+					t.Description.Str(ctx.Args[0], things[n]),
 				),
 		)
 	},

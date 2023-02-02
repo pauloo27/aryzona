@@ -10,6 +10,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/core/rnd"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/dice"
+	"github.com/Pauloo27/logger"
 )
 
 const (
@@ -37,7 +38,8 @@ var RollCommand = command.Command{
 		for i := 0; i < d.Dices; i++ {
 			luckyNumber, err := rnd.Rnd(d.Sides)
 			if err != nil {
-				ctx.Error("something went wrong =(")
+				ctx.Error(ctx.Lang.SomethingWentWrong.Str())
+				logger.Error(err)
 				return
 			}
 			// +1 since the dice starts at 1

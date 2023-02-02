@@ -1,15 +1,28 @@
 package i18n
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 type Entry string
 
-// TODO: add "params" for formatting...
-func (e Entry) Str() string {
-	return string(e)
+func (e Entry) Str(params ...any) string {
+	if len(params) == 0 {
+		return string(e)
+	}
+
+	formattedStr := string(e)
+	for i, param := range params {
+		formattedStr = strings.ReplaceAll(formattedStr, "{"+strconv.Itoa(i)+"}", fmt.Sprint(param))
+	}
+	return formattedStr
 }
 
 type Language struct {
-	Meta     *Meta
-	Common   *Common
+	*Meta
+	*Common
 	Commands *Commands
 
 	commands map[string]any
@@ -23,11 +36,14 @@ type Meta struct {
 }
 
 type Common struct {
-	HelloWorld Entry
+	HelloWorld         Entry
+	SomethingWentWrong Entry
 }
 
 type Commands struct {
 	Even *CommandEven
+	Pick *CommandPick
+	News *CommandNews
 }
 
 func GetCommand(l *Language, name string) any {

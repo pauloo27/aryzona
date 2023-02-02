@@ -1,13 +1,21 @@
 {
   "meta": {
     "name": "en_US",
-    "display_name": "English",
+    "displayName": "English",
     "authors": "Pauloo27"
   },
   "common": {
-    "helloWorld": "Hello World!"
+    "helloWorld": "Hello World!",
+    "somethingWentWrong": "Something went wrong"
   },
   "commands": {
+    "pick": {
+      "title": "Pick",
+      "description": "Picking a random thing from _{0}_\n\nMy pick is **{1}**"
+    },
+    "news": {
+      "title": "News - {0} by {1}"
+    },
     "even": {
       "even": "Even",
       "odd": "Odd"

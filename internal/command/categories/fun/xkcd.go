@@ -8,6 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/core/f"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/providers/xkcd"
+	"github.com/Pauloo27/logger"
 )
 
 var XkcdCommand = command.Command{
@@ -52,7 +53,8 @@ var XkcdNumberSubCommand = command.Command{
 
 func sendComic(ctx *command.CommandContext, comic *xkcd.Comic, err error) {
 	if err != nil {
-		ctx.Error("Cannot get comic =(")
+		ctx.Error(ctx.Lang.SomethingWentWrong.Str())
+		logger.Error(err)
 		return
 	}
 
@@ -60,6 +62,7 @@ func sendComic(ctx *command.CommandContext, comic *xkcd.Comic, err error) {
 		model.NewEmbed().
 			WithTitle(fmt.Sprintf(
 				"#%d - %s (%s/%s/%s)", comic.Num, comic.SafeTitle,
+				// FIXME i18n the date format
 				comic.Year, f.PadLeft(comic.Month, "0", 2), f.PadLeft(comic.Day, "0", 2)),
 			).
 			WithURL(fmt.Sprintf("https://www.explainxkcd.com/wiki/index.php/%d", comic.Num)).
