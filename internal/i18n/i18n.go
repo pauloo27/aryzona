@@ -45,6 +45,7 @@ func MustGetLanguage(name LanguageName) *Language {
 	return lang
 }
 
+/* #nosec G304 the name does not come from user input */
 func loadLanguage(name LanguageName) (*Language, error) {
 	fileName := fmt.Sprintf("%s/%s.json", I18nRootDir, name)
 	data, err := os.ReadFile(fileName)
