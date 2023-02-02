@@ -2,8 +2,7 @@ package i18n
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
+	"regexp"
 )
 
 type Entry string
@@ -15,7 +14,8 @@ func (e Entry) Str(params ...any) string {
 
 	formattedStr := string(e)
 	for i, param := range params {
-		formattedStr = strings.ReplaceAll(formattedStr, "{"+strconv.Itoa(i)+"}", fmt.Sprint(param))
+		re := regexp.MustCompile(fmt.Sprintf(`{%d:[\w]+}`, i))
+		formattedStr = re.ReplaceAllString(formattedStr, fmt.Sprint(param))
 	}
 	return formattedStr
 }

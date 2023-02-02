@@ -11,10 +11,10 @@
   "commands": {
     "pick": {
       "title": "Pick",
-      "description": "Picking a random thing from _{0}_\n\nMy pick is **{1}**"
+      "description": "Picking a random thing from _{0:list}_\n\nMy pick is **{1:pick}**"
     },
     "news": {
-      "title": "News - {0} by {1}"
+      "title": "News - {0:title} by {1:author}"
     },
     "even": {
       "even": "Even",
