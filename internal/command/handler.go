@@ -5,6 +5,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
 )
 
@@ -94,8 +95,15 @@ func HandleCommand(
 		return
 	}
 
+	// TODO: get the language of the user? of the guild? idk
+	lang := i18n.MustGetLanguage(i18n.DefaultLanguageName)
+
+	t := i18n.GetCommand(lang, command.Name)
+
 	ctx := &CommandContext{
 		Bot:       bot,
+		T:         t,
+		Lang:      lang,
 		RawArgs:   args,
 		AuthorID:  adapter.AuthorID,
 		UsedName:  commandName,

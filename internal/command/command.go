@@ -6,6 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
 	"github.com/matoous/go-nanoid/v2"
 )
@@ -35,6 +36,8 @@ type InteractionHandler func(fullID, baseID, userID string) (newMessage *model.C
 
 type CommandContext struct {
 	interactionHandler InteractionHandler
+	Lang               *i18n.Language
+	T                  any
 	startTime          time.Time
 	RawArgs            []string
 	Args               []interface{}

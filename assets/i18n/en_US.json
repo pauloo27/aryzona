@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "name": "en_US",
+    "display_name": "English",
+    "authors": "Pauloo27"
+  },
+  "common": {
+    "helloWorld": "Hello World!"
+  },
+  "commands": {
+    "even": {
+      "even": "Even",
+      "odd": "Odd"
+    }
+  }
+}
