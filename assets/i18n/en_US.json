@@ -9,6 +9,27 @@
     "somethingWentWrong": "Something went wrong"
   },
   "commands": {
+    "donate": {
+      "title": "Donate to the bot so it continues up and running"
+    },
+    "ping": {
+      "title": "{0:emoji} Pong!",
+      "footer": "(that's the bot's latency, not yours)",
+      "apiLatency": "API Latency",
+      "stillCalculating": "{0:emoji} Still calculating..."
+    },
+    "uptime": {
+      "title": "Bot uptime",
+      "uptime": "{0:emoji} Uptime",
+      "implementation": "{0:emoji} Implementation",
+      "hostInfoKey": "{0:emoji} Host info",
+      "hostInfoValue": "Compiled with **{0:version} {1:compiler}**, running on a **{2:os} {3:arch}{4:is_docker}**",
+      "startedAt": "{0:emoji} Started at",
+      "lastCommit": "{0:emoji} Last commit"
+    },
+    "source": {
+      "description": "I'm an open source bot, you can see my source code [here]({0:link})"
+    },
     "cnpj": {
       "title": "Random CNPJ",
       "withoutMask": "Without mask",

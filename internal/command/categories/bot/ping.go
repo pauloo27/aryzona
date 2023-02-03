@@ -6,19 +6,27 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 )
 
 var PingCommand = command.Command{
 	Name: "ping", Description: "Get the bot latency",
 	Aliases: []string{"pong"},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(i18n.CommandPing)
+
+		latency := formatAPILatency(ctx.Bot)
+		if latency == "0" {
+			latency = t.StillCalculating.Str()
+		}
+
 		ctx.SuccessEmbed(
 			model.NewEmbed().
-				WithTitle(":ping_pong: Pong!").
-				WithFooter("(that's the Bot latency, not yours)").
+				WithTitle(t.Title.Str(":ping_pong:")).
+				WithFooter(t.Footer.Str()).
 				WithField(
-					"API Latency",
-					formatAPILatency(ctx.Bot),
+					t.APILatency.Str(),
+					latency,
 				),
 		)
 	},
@@ -27,7 +35,7 @@ var PingCommand = command.Command{
 func formatAPILatency(bot discord.BotAdapter) string {
 	latency := bot.Latency()
 	if latency == 0 {
-		return "🤔 I'm still calculating..."
+		return "0"
 	}
 	ms := latency.Milliseconds()
 	var icon string

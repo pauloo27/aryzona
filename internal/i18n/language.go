@@ -51,6 +51,10 @@ type Commands struct {
 	CNPJ     *CommandCNPJ
 	CPF      *CommandCPF
 	Password *CommandPassword
+	Source   *CommandSource
+	Ping     *CommandPing
+	Donate   *CommandDonate
+	Uptime   *CommandUptime
 }
 
 func GetCommand(l *Language, name string) any {

@@ -88,3 +88,36 @@ type CommandNews struct {
 
 	Title Entry
 }
+
+type CommandPing struct {
+	*Common
+
+	Title            Entry
+	Footer           Entry
+	APILatency       Entry
+	StillCalculating Entry
+}
+
+type CommandDonate struct {
+	*Common
+
+	Title Entry
+}
+
+type CommandUptime struct {
+	*Common
+
+	Title          Entry
+	Uptime         Entry
+	Implementation Entry
+	HostInfoKey    Entry
+	HostInfoValue  Entry
+	StartedAt      Entry
+	LastCommit     Entry
+}
+
+type CommandSource struct {
+	*Common
+
+	Description Entry
+}
