@@ -9,6 +9,20 @@
     "somethingWentWrong": "Something went wrong"
   },
   "commands": {
+    "cnpj": {
+      "title": "Random CNPJ",
+      "withoutMask": "Without mask",
+      "withMask": "With mask"
+    },
+    "cpf": {
+      "title": "Random CPF",
+      "withoutMask": "Without mask",
+      "withMask": "With mask"
+    },
+    "password": {
+      "title": "Random password",
+      "description": "Your random password of length {0:length} is `{1:password}`\nClick \"Dismiss message\" when you have it copied to delete it from Discord chat!"
+    },
     "pick": {
       "title": "Pick",
       "description": "Picking a random thing from _{0:list}_\n\nMy pick is **{1:pick}**"

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/doc"
 )
 
@@ -14,6 +15,8 @@ var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 var CNPJCommand = command.Command{
 	Name: "cnpj", Description: "Generate a CNPJ",
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandCNPJ)
+
 		cnpj := doc.GenerateCNPJ()
 		components := cnpjMaskRe.FindStringSubmatch(cnpj)
 		maskedCNPJ := fmt.Sprintf(
@@ -23,9 +26,9 @@ var CNPJCommand = command.Command{
 
 		ctx.SuccessEmbed(
 			model.NewEmbed().
-				WithTitle("CNPJ").
-				WithField("Without mask", cnpj).
-				WithField("With mask", maskedCNPJ),
+				WithTitle(t.Title.Str()).
+				WithField(t.WithoutMask.Str(), cnpj).
+				WithField(t.WithoutMask.Str(), maskedCNPJ),
 		)
 	},
 }

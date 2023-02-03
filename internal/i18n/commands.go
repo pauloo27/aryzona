@@ -60,6 +60,29 @@ type CommandScore struct {
 	TimePenalty   Entry
 }
 
+type CommandCPF struct {
+	*Common
+
+	Title       Entry
+	WithMask    Entry
+	WithoutMask Entry
+}
+
+type CommandCNPJ struct {
+	*Common
+
+	Title       Entry
+	WithMask    Entry
+	WithoutMask Entry
+}
+
+type CommandPassword struct {
+	*Common
+
+	Title       Entry
+	Description Entry
+}
+
 type CommandNews struct {
 	*Common
 

@@ -48,6 +48,9 @@ type Commands struct {
 	Follow   *CommandFollow
 	UnFollow *CommandUnFollow
 	Score    *CommandScore
+	CNPJ     *CommandCNPJ
+	CPF      *CommandCPF
+	Password *CommandPassword
 }
 
 func GetCommand(l *Language, name string) any {
