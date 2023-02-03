@@ -12,7 +12,8 @@ var CatCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomCat()
 		if err != nil {
-			ctx.Errorf("An error occurred:\n %v", err)
+			ctx.Error(ctx.Lang.SomethingWentWrong.Str())
+			logger.Error(err)
 			return
 		}
 		if ctx.Reply(url) != nil {

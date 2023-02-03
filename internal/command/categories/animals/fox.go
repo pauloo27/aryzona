@@ -8,11 +8,12 @@ import (
 
 var FoxCommand = command.Command{
 	Name: "fox", Description: "Get a cute fox",
-	Aliases: []string{"floof", "firefox", "ff"},
+	Aliases: []string{"floof"},
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomFox()
 		if err != nil {
-			ctx.Errorf("An error occurred:\n %v", err)
+			ctx.Error(ctx.Lang.SomethingWentWrong.Str())
+			logger.Error(err)
 		}
 		if ctx.Reply(url) != nil {
 			logger.Error(url)
