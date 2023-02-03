@@ -13,14 +13,15 @@ import (
 type LanguageName string
 
 const (
-	English    LanguageName = "en_US"
-	Portuguese LanguageName = "pt_BR"
+	EnglishLang    LanguageName = "en_US"
+	PortugueseLang LanguageName = "pt_BR"
 
-	DefaultLanguageName = English
-	I18nRootDir         = "./assets/i18n"
+	DefaultLanguageName = EnglishLang
 )
 
 var (
+	I18nRootDir = "./assets/i18n"
+
 	loadedLanguages = make(map[LanguageName]*Language)
 )
 
@@ -55,6 +56,9 @@ func loadLanguage(name LanguageName) (*Language, error) {
 
 	var lang Language
 	err = json.Unmarshal(data, &lang)
+	if err != nil {
+		return nil, err
+	}
 
 	t := reflect.TypeOf(lang.Commands).Elem()
 
