@@ -24,7 +24,7 @@
       "title": "{0:emoji} Live matches:",
       "footer": "Use `{0:prefix}${1:command} <team name>` to get more info about a match",
       "matchNotFound": "Match not found",
-      "liveUpdates": "Use `{0:prefix}follow ${1:team_name}` to get live updates about this match",
+      "liveUpdates": "Use `{0:prefix}follow ${1:team_name}` to get live updates about this match"
     },
     "unfollow": {
       "notFollowingAny": "You are not following any match",
