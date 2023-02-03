@@ -10,14 +10,14 @@ import (
 // reference: https://en.wikipedia.org/wiki/Dice_notation
 
 type DiceNotation struct {
-	Dices, Sides int
+	Dices, Faces int
 }
 
 var (
 	reNotation = regexp.MustCompile(`^(\d+)$|^(\d*)d(\d*)$`)
 
 	ErrInvalidNotation = errors.New("invalid notation")
-	DefaultDice        = &DiceNotation{Dices: 1, Sides: 6}
+	DefaultDice        = &DiceNotation{Dices: 1, Faces: 6}
 )
 
 func parseMatch(match string, defaultValue int) (int, error) {
@@ -28,7 +28,7 @@ func parseMatch(match string, defaultValue int) (int, error) {
 }
 
 func (d *DiceNotation) String() string {
-	return fmt.Sprintf("%dd%d", d.Dices, d.Sides)
+	return fmt.Sprintf("%dd%d", d.Dices, d.Faces)
 }
 
 func ParseNotation(str string) (*DiceNotation, error) {
@@ -37,10 +37,10 @@ func ParseNotation(str string) (*DiceNotation, error) {
 		return nil, ErrInvalidNotation
 	}
 
-	sidesIndex := 3
+	facesIndex := 3
 
 	if matches[1] != "" {
-		sidesIndex = 1
+		facesIndex = 1
 	}
 	dicesIndex := 2
 
@@ -49,17 +49,17 @@ func ParseNotation(str string) (*DiceNotation, error) {
 		return nil, ErrInvalidNotation
 	}
 
-	sides, err := parseMatch(matches[sidesIndex], 6)
+	faces, err := parseMatch(matches[facesIndex], 6)
 	if err != nil {
 		return nil, ErrInvalidNotation
 	}
 
-	if sides <= 0 || dices <= 0 {
+	if faces <= 0 || dices <= 0 {
 		return nil, ErrInvalidNotation
 	}
 
 	return &DiceNotation{
 		Dices: dices,
-		Sides: sides,
+		Faces: faces,
 	}, nil
 }

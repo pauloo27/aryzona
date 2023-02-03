@@ -21,7 +21,7 @@ var RollCommand = command.Command{
 	Name: "roll", Aliases: []string{"rolar", "dado", "dados", "dice", "rool", "d"},
 	Description: "Roll a dice",
 	Parameters: []*command.CommandParameter{
-		{Name: "sides", Description: "dice sides", Required: false, Type: diceNotation},
+		{Name: "faces", Description: "dice faces", Required: false, Type: diceNotation},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandRoll)
@@ -38,7 +38,7 @@ var RollCommand = command.Command{
 		result := 0
 
 		for i := 0; i < d.Dices; i++ {
-			luckyNumber, err := rnd.Rnd(d.Sides)
+			luckyNumber, err := rnd.Rnd(d.Faces)
 			if err != nil {
 				ctx.Error(t.SomethingWentWrong.Str())
 				logger.Error(err)
@@ -56,7 +56,7 @@ var RollCommand = command.Command{
 				t.Description.Str(
 					d.String(),
 					d.Dices, f.Pluralize(d.Dices, t.Dice.Str(), t.Dices.Str()),
-					d.Sides, f.Pluralize(d.Sides, t.Face.Str(), t.Faces.Str()),
+					d.Faces, f.Pluralize(d.Faces, t.Face.Str(), t.Faces.Str()),
 					numbers, result,
 				),
 			).
@@ -82,8 +82,8 @@ var (
 			if d.Dices > 200 {
 				return nil, errors.New("dices cannot be more than 200")
 			}
-			if d.Sides > 200 {
-				return nil, errors.New("sides cannot be more than 200")
+			if d.Faces > 200 {
+				return nil, errors.New("faces cannot be more than 200")
 			}
 			return d, err
 		},

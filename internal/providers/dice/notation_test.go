@@ -10,7 +10,7 @@ import (
 )
 
 // reference: https://en.wikipedia.org/wiki/Dice_notation
-func parseAndCheck(t *testing.T, str string, ok bool, expectedDices, expectedSides int) {
+func parseAndCheck(t *testing.T, str string, ok bool, expectedDices, expectedFaces int) {
 	should := "Should"
 	if !ok {
 		should += " not"
@@ -28,7 +28,7 @@ func parseAndCheck(t *testing.T, str string, ok bool, expectedDices, expectedSid
 		require.NotNil(t, n)
 
 		assert.Equal(t, expectedDices, n.Dices)
-		assert.Equal(t, expectedSides, n.Sides)
+		assert.Equal(t, expectedFaces, n.Faces)
 	})
 }
 
