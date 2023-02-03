@@ -11,7 +11,7 @@ var DonateCommand = command.Command{
 	Name: "donate", Description: "Donate to the bot",
 	Aliases: []string{"pix"},
 	Handler: func(ctx *command.CommandContext) {
-		t := ctx.T.(i18n.CommandDonate)
+		t := ctx.T.(*i18n.CommandDonate)
 
 		msg := config.Config.DonateMessage
 		embed := model.NewEmbed().
