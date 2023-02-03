@@ -40,7 +40,7 @@
       "matchNotFound": "Match not found",
       "matchFinished": "Match has finished",
       "alreadyFollowing": "You are already following this match",
-      "followLimtReached": "You can only follow {0:limit} matches at the same time. Use `{1:prefix}unfollow` to unfollow a match"
+      "followLimitReached": "You can only follow {0:limit} matches at the same time. Use `{1:prefix}unfollow` to unfollow a match"
     },
     "roll": {
       "dice": "dice",
