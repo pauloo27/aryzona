@@ -64,6 +64,7 @@ type Commands struct {
 	Playing  *CommandPlaying
 	Radio    *CommandRadio
 	Help     *CommandHelp
+	Play     *CommandPlay
 }
 
 func GetCommand(l *Language, name string) any {

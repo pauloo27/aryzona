@@ -16,6 +16,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/youtube"
 	"github.com/Pauloo27/logger"
 	k "github.com/Pauloo27/toolkit"
@@ -36,6 +37,8 @@ var PlayCommand = command.Command{
 		{Name: "song", Description: "Search query or URL", Required: true, Type: parameters.ParameterText},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandPlay)
+
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		var connErrCh *chan error
 
@@ -48,7 +51,7 @@ var PlayCommand = command.Command{
 		} else {
 			authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
 			if !found || *(vc.ChannelID) != authorVoiceChannelID.(string) {
-				ctx.Error("You are not in the right voice channel")
+				ctx.Error(t.NotInRightChannel.Str())
 				return
 			}
 		}
@@ -56,14 +59,14 @@ var PlayCommand = command.Command{
 		searchQuery := ctx.Args[0].(string)
 		results, err := youtube.SearchFor(searchQuery, maxSearchResults)
 		if err != nil || len(results) == 0 {
-			ctx.Error("Cannot search for this song")
+			ctx.Error(t.SomethingWentWrong.Str())
 			logger.Warnf("Error searching for %s: %v", searchQuery, err)
 			return
 		}
 
 		if connErrCh != nil {
 			if err := <-(*connErrCh); err != nil {
-				ctx.Error("Cannot connect to your voice channel")
+				ctx.Error(t.CannotConnect.Str())
 				return
 			}
 		}
@@ -79,7 +82,7 @@ var PlayCommand = command.Command{
 		}
 
 		if toPlay == nil {
-			ctx.Error("Something went wrong =(")
+			ctx.Error(t.SomethingWentWrong.Str())
 			return
 		}
 
@@ -88,7 +91,8 @@ var PlayCommand = command.Command{
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
-				ctx.Errorf("Cannot play stuff: %v", err)
+				ctx.Error(t.SomethingWentWrong.Str())
+				logger.Error(err)
 				return
 			}
 		})
@@ -96,13 +100,15 @@ var PlayCommand = command.Command{
 }
 
 func handleSingleResult(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, result *youtube.SearchResult) (toPlay []playable.Playable) {
+	t := ctx.T.(*i18n.CommandPlay)
+
 	toPlay = result.ToPlayable()
 
 	var displayResult playable.Playable
 
 	if result.IsPlaylist() {
 		displayResult = playable.DummyPlayable{
-			Name:     "YouTube Playlist",
+			Name:     t.YouTubePlaylist.Str(),
 			Artist:   result.Author,
 			Title:    result.Title,
 			Duration: result.Duration,
@@ -112,13 +118,15 @@ func handleSingleResult(ctx *command.CommandContext, vc *voicer.Voicer, searchQu
 	}
 
 	ctx.SuccessEmbed(
-		buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID).WithTitle("Best result for: " + searchQuery),
+		buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID).WithTitle(t.BestResult.Str(searchQuery)),
 	)
 
 	return
 }
 
 func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, results []*youtube.SearchResult) []playable.Playable {
+	t := ctx.T.(*i18n.CommandPlay)
+
 	selectionLock := sync.Mutex{}
 	selectionCh := make(chan *youtube.SearchResult)
 	selected := false
@@ -139,15 +147,13 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 
 	embed := model.NewEmbed().
 		WithColor(command.PendingEmbedColor).
-		WithTitle("Multiple results found").
+		WithTitle(t.MultipleResults.Str()).
 		WithDescription(
-			fmt.Sprintf(
-				"[%s](https://youtu.be/%s) from %s (*%s*)\nWill be added to the queue in %d seconds\n"+
-					"If that's not the result you want, press `Play other`",
+			t.FirstResultWillPlay.Str(
 				firstResult.Title,
 				firstResult.ID,
 				firstResult.Author,
-				k.Is(firstResult.Duration == 0, "Live 🔴", f.ShortDuration(firstResult.Duration)),
+				k.Is(firstResult.Duration == 0, t.Live.Str(":red_circle:"), f.ShortDuration(firstResult.Duration)),
 				firstResultTimeout/time.Second,
 			),
 		)
@@ -168,7 +174,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 					Components: buildDisabledComponents(components, 0),
 					Embeds: []*model.Embed{
 						buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
-							WithTitle("Selected result for: " + searchQuery).
+							WithTitle(t.SelectedResult.Str(searchQuery)).
 							WithColor(command.SuccessEmbedColor),
 					},
 				}, true
@@ -186,12 +192,12 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 
 	components = []model.MessageComponent{
 		model.ButtonComponent{
-			Label: "Confirm",
+			Label: t.ConfirmBtn.Str(),
 			Style: model.SuccessButtonStyle,
 			ID:    fmt.Sprintf("%splay-now", baseID),
 		},
 		model.ButtonComponent{
-			Label: "Play other",
+			Label: t.PlayOtherBtn.Str(),
 			Style: model.PrimaryButtonStyle,
 			ID:    fmt.Sprintf("%splay-other", baseID),
 		},
@@ -210,7 +216,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 	select {
 	case <-time.After(firstResultTimeout):
 		embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
-			WithTitle("Selected result for: " + searchQuery).
+			WithTitle(t.SelectedResult.Str(searchQuery)).
 			WithColor(command.SuccessEmbedColor)
 
 		err = ctx.EditComplex(
@@ -228,7 +234,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 			select {
 			case <-time.After(multipleResultsTimeout):
 				embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
-					WithTitle("Selected result for: " + searchQuery).
+					WithTitle(t.SelectedResult.Str(searchQuery)).
 					WithColor(command.SuccessEmbedColor)
 
 				err = ctx.EditComplex(
@@ -250,26 +256,29 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 }
 
 func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer, searchQuery string, results []*youtube.SearchResult, selectResult func(*youtube.SearchResult) bool) *model.ComplexMessage {
+	t := ctx.T.(*i18n.CommandPlay)
+
 	embed := model.NewEmbed().
 		WithColor(command.PendingEmbedColor).
-		WithTitle("Multiple results found, please select one")
+		WithTitle(t.MultipleResultsSelectOne.Str())
 
 	sb := strings.Builder{}
 	for i, result := range results {
 		sb.WriteString(
-			fmt.Sprintf(
-				" - %s **%s** from %s (*%s*)\n",
-				f.Emojify(i+1),
-				result.Title,
-				result.Author,
-				k.Is(result.Duration == 0, "🔴 Live", f.ShortDuration(result.Duration)),
+			fmt.Sprintf("%s\n",
+				t.Entry.Str(
+					f.Emojify(i+1),
+					result.Title,
+					result.Author,
+					k.Is(result.Duration == 0, t.Live.Str(":red_circle:"), f.ShortDuration(result.Duration)),
+				),
 			),
 		)
 	}
 	sb.WriteString(
 		fmt.Sprintf(
-			"\n\n**If you fail to select one in %d seconds, the first result will be selected**",
-			multipleResultsTimeout/time.Second,
+			"\n\n%s",
+			t.IfYouFailToSelect.Str(multipleResultsTimeout/time.Second),
 		),
 	)
 
@@ -293,7 +302,7 @@ func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer,
 				Components: buildDisabledComponents(components, index),
 				Embeds: []*model.Embed{
 					buildPlayableInfoEmbed(result.ToPlayable()[0], vc, ctx.AuthorID).
-						WithTitle("Selected result for: " + searchQuery).
+						WithTitle(t.SelectedResult.Str(searchQuery)).
 						WithColor(command.SuccessEmbedColor),
 				},
 			}, true

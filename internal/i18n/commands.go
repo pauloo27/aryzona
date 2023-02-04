@@ -201,3 +201,21 @@ type CommandHelp struct {
 	Required           Entry
 	NotRequired        Entry
 }
+
+type CommandPlay struct {
+	*Common
+
+	NotInRightChannel        Entry
+	CannotConnect            Entry
+	YouTubePlaylist          Entry
+	BestResult               Entry
+	MultipleResults          Entry
+	MultipleResultsSelectOne Entry
+	FirstResultWillPlay      Entry
+	IfYouFailToSelect        Entry
+	Entry                    Entry
+	SelectedResult           Entry
+	ConfirmBtn               Entry
+	PlayOtherBtn             Entry
+	Live                     Entry
+}
