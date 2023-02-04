@@ -94,7 +94,7 @@
       "resumed": "Resumed!"
     },
     "shuffle": {
-      "shuffled": "Shuffled! :wink:"
+      "shuffled": "Shuffled! {0:emoji}"
     },
     "skip": {
       "skipped": "Skipped!"

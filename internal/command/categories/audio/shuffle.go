@@ -16,6 +16,6 @@ var ShuffleCommand = command.Command{
 		t := ctx.T.(*i18n.CommandShuffle)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		vc.Queue.Shuffle()
-		ctx.Success(t.Shuffled.Str())
+		ctx.Success(t.Shuffled.Str(":wink:"))
 	},
 }

@@ -55,6 +55,10 @@ type Commands struct {
 	Ping     *CommandPing
 	Donate   *CommandDonate
 	Uptime   *CommandUptime
+	Resume   *CommandResume
+	Shuffle  *CommandShuffle
+	Skip     *CommandSkip
+	Stop     *CommandStop
 }
 
 func GetCommand(l *Language, name string) any {
