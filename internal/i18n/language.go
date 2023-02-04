@@ -59,6 +59,10 @@ type Commands struct {
 	Shuffle  *CommandShuffle
 	Skip     *CommandSkip
 	Stop     *CommandStop
+	Lyric    *CommandLyric
+	Pause    *CommandPause
+	Playing  *CommandPlaying
+	Radio    *CommandRadio
 }
 
 func GetCommand(l *Language, name string) any {

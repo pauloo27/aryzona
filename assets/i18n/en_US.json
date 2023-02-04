@@ -55,11 +55,11 @@
       "time": "Time",
       "match": "Match",
       "timePenalty": "Pen",
-      "noMatchesLive": "I didn't find any match live right now",
+      "noMatchesLive": "No live matches found right now",
       "title": "{0:emoji} Live matches:",
-      "footer": "Use `{0:prefix}${1:command} <team name>` to get more info about a match",
+      "footer": "Use `{0:prefix}{1:command} <team name>` to get more info about a match",
       "matchNotFound": "Match not found",
-      "liveUpdates": "Use `{0:prefix}follow ${1:team_name}` to get live updates about this match"
+      "liveUpdates": "Use `{0:prefix}follow {1:team_name}` to get live updates about this match"
     },
     "unfollow": {
       "notFollowingAny": "You are not following any match",
@@ -101,6 +101,30 @@
     },
     "stop": {
       "stopped": "Stopped!"
+    },
+    "pause": {
+      "cannotPause": "Cannot pause the current queue item",
+      "alreadyPaused": "The queue is already paused!",
+      "paused": "Paused! Use `{0:prefix}resume` to resume the queue"
+    },
+    "radio": {
+      "listTitle": "Radio list:",
+      "cannotConnect": "Cannot connect to your voice channel",
+      "notInRightChannel": "You are not in the same voice channel as the bot",
+      "addedToQueue": "Added {0:radio} to the queue",
+      "listFooter": "Start a radio with `{0:prefix}{1:command} <radio name>` and `{0:prefix}stop` when you are tired of it!"
+    },
+    "playing": {
+      "title": "Now playing: {0:name}",
+      "never": "_Never_",
+      "entry": "  -> {0:artist_and_title} _requested by {1:requester} (playing in {2:eta})_",
+      "comingNext": "**Coming next ({0:queue_size}):**",
+      "andMore": "_... and more ..._"
+    },
+    "lyric": {
+      "nothingPlaying": "Nothing playing...",
+      "notConnected": "Bot is not connected to a voice channel, you can pass the song name as argument",
+      "noResults": "No results found for {0:query}"
     }
   }
 }

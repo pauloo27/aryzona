@@ -5,6 +5,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 )
 
 var PauseCommand = command.Command{
@@ -12,19 +13,21 @@ var PauseCommand = command.Command{
 	Description: "Pause the queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandPause)
+
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		playing := ctx.Locals["playing"].(playable.Playable)
 
 		if !playing.CanPause() {
-			ctx.Error("Cannot pause the current queue item =(")
+			ctx.Error(t.CannotPause.Str())
 			return
 		}
 
 		if vc.IsPaused() {
-			ctx.Error("The queue is already paused")
+			ctx.Error(t.AlreadyPaused.Str())
 			return
 		}
 		vc.Pause()
-		ctx.Successf("Paused! Use `%sresume` to resume the queue.", command.Prefix)
+		ctx.Successf(t.Paused.Str(command.Prefix))
 	},
 }

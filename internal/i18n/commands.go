@@ -146,3 +146,39 @@ type CommandStop struct {
 
 	Stopped Entry
 }
+
+type CommandPause struct {
+	*Common
+
+	CannotPause   Entry
+	AlreadyPaused Entry
+	Paused        Entry
+}
+
+type CommandRadio struct {
+	*Common
+
+	ListTitle         Entry
+	CannotConnect     Entry
+	NotInRightChannel Entry
+	AddedToQueue      Entry
+	ListFooter        Entry
+}
+
+type CommandPlaying struct {
+	*Common
+
+	Title      Entry
+	Never      Entry
+	Entry      Entry
+	ComingNext Entry
+	AndMore    Entry
+}
+
+type CommandLyric struct {
+	*Common
+
+	NothingPlaying Entry
+	NoResults      Entry
+	NotConnected   Entry
+}

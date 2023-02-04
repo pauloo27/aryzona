@@ -2,7 +2,6 @@ package audio
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -11,7 +10,9 @@ import (
 	"github.com/Pauloo27/aryzona/internal/core/routine"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/aryzona/internal/providers/radio"
+	"github.com/Pauloo27/logger"
 )
 
 var RadioCommand = command.Command{
@@ -34,8 +35,10 @@ var RadioCommand = command.Command{
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandRadio)
+
 		if len(ctx.Args) == 0 {
-			listRadios(ctx, "Radio list:")
+			listRadios(ctx, t.ListTitle.Str())
 			return
 		}
 		if ok, msg := command.RunValidation(ctx, validations.MustBeOnAValidVoiceChannel); !ok {
@@ -49,17 +52,18 @@ var RadioCommand = command.Command{
 
 		if !vc.IsConnected() {
 			if err := vc.Connect(); err != nil {
-				ctx.Error("Cannot connect to your voice channel")
+				ctx.Error(t.CannotConnect.Str())
+				logger.Error(err)
 				return
 			}
 		} else {
 			authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
 			if !found || *(vc.ChannelID) != authorVoiceChannelID.(string) {
-				ctx.Error("You are not in the right voice channel")
+				ctx.Error(t.NotInRightChannel.Str())
 				return
 			}
 		}
-		embed := buildPlayableInfoEmbed(channel, nil, ctx.AuthorID).WithTitle("Added to queue: " + channel.GetName())
+		embed := buildPlayableInfoEmbed(channel, nil, ctx.AuthorID).WithTitle(t.AddedToQueue.Str(channel.GetName()))
 		ctx.SuccessEmbed(embed)
 
 		routine.Go(func() {
@@ -67,7 +71,8 @@ var RadioCommand = command.Command{
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
-				ctx.Errorf("Cannot play stuff: %v", err)
+				ctx.Errorf(t.SomethingWentWrong.Str())
+				logger.Error(err)
 				return
 			}
 		})
@@ -75,6 +80,8 @@ var RadioCommand = command.Command{
 }
 
 func listRadios(ctx *command.CommandContext, title string) {
+	t := ctx.T.(*i18n.CommandRadio)
+
 	embed := model.NewEmbed().
 		WithTitle(title)
 
@@ -83,9 +90,8 @@ func listRadios(ctx *command.CommandContext, title string) {
 	}
 
 	embed.WithFooter(
-		fmt.Sprintf(
-			"Start a radio with '%s%s <name>' and '%sstop' when you are tired of it!",
-			command.Prefix, ctx.UsedName, command.Prefix,
+		t.ListFooter.Str(
+			command.Prefix, ctx.UsedName,
 		),
 	)
 

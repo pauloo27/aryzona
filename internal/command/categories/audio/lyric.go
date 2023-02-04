@@ -6,6 +6,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/lyric"
 )
 
@@ -16,6 +17,8 @@ var LyricCommand = command.Command{
 		{Name: "song", Description: "Search query", Type: parameters.ParameterText, Required: false},
 	},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandLyric)
+
 		var searchTerms string
 
 		if len(ctx.Args) != 0 {
@@ -23,12 +26,12 @@ var LyricCommand = command.Command{
 		} else {
 			vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
 			if vc == nil {
-				ctx.Error("Bot is not connect to a voice channel, you can pass the song title")
+				ctx.Error(t.NotConnected.Str())
 				return
 			}
 			entry := vc.Playing()
 			if entry == nil {
-				ctx.Error("Nothing playing...")
+				ctx.Error(t.NothingPlaying.Str())
 				return
 			}
 			playable := entry.Playable
@@ -39,7 +42,7 @@ var LyricCommand = command.Command{
 
 		result, err := lyric.SearchDDG(searchTerms)
 		if err != nil {
-			ctx.Errorf("No results found for %s", searchTerms)
+			ctx.Error(t.NoResults.Str(searchTerms))
 			return
 		}
 		_ = ctx.Reply(result)

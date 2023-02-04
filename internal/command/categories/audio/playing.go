@@ -10,6 +10,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 )
 
 const (
@@ -22,12 +23,14 @@ var PlayingCommand = command.Command{
 	Description: "Show what is playing now",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
+		t := ctx.T.(*i18n.CommandPlaying)
+
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		playing := ctx.Locals["playing"].(playable.Playable)
 		requesterID := ctx.Locals["requesterID"].(string)
 
 		embed := buildPlayableInfoEmbed(playing, vc, requesterID).
-			WithTitle("Now playing: " + playing.GetName())
+			WithTitle(t.Title.Str(playing.GetName()))
 
 		if vc.Queue.Size() > 1 {
 			sb := strings.Builder{}
@@ -43,23 +46,28 @@ var PlayingCommand = command.Command{
 
 				eta := calcETA(playable, vc)
 				if eta == -1 {
-					etaStr = "_Never_"
+					etaStr = t.Never.Str()
 				} else {
 					etaStr = f.DurationAsDetailedDiffText(eta)
 				}
 
 				title, artist := playable.GetFullTitle()
 				requester := discord.AsMention(item.Requester)
+
+				var fullTitle string
+
 				if artist == "" {
-					sb.WriteString(fmt.Sprintf("  -> %s _requested by %s (playing in %s)_\n", title, requester, etaStr))
+					fullTitle = title
 				} else {
-					sb.WriteString(fmt.Sprintf("  -> %s - %s _requested by %s (playing in %s)_\n", artist, title, requester, etaStr))
+					fullTitle = fmt.Sprintf("%s - %s", artist, title)
 				}
+
+				sb.WriteString(t.Entry.Str(fullTitle, requester, etaStr))
 			}
 			if len(next) > maxNextItems {
-				sb.WriteString("_... and more ..._")
+				sb.WriteString(t.AndMore.Str())
 			}
-			embed.WithField(fmt.Sprintf("**Coming next (%d):**", len(next)), sb.String())
+			embed.WithField(t.ComingNext.Str(len(next)), sb.String())
 		}
 
 		ctx.SuccessEmbed(embed)
