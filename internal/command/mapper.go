@@ -17,7 +17,7 @@ var Prefix string
 
 func validateCommand(command *Command) string {
 	if command.Name == "" {
-		// "lol why dont i put the name of the name in the error message?"
+		// "lol why dont i put the name of the command in the error message?"
 		// counter: 3
 		return "One command has no name"
 	}
