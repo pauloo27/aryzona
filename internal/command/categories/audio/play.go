@@ -29,7 +29,7 @@ const (
 )
 
 var PlayCommand = command.Command{
-	Name: "play", Aliases: []string{"p", "tocar", "yt", "youtube"},
+	Name: "play", Aliases: []string{"p"},
 	Description: "Play a video/song from youtube",
 	Deferred:    true,
 	Validations: []*command.CommandValidation{validations.MustBeOnAValidVoiceChannel},

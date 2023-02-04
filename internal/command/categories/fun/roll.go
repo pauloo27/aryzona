@@ -18,7 +18,7 @@ const (
 )
 
 var RollCommand = command.Command{
-	Name: "roll", Aliases: []string{"rolar", "dado", "dados", "dice", "rool", "d"},
+	Name: "roll", Aliases: []string{"dice"},
 	Description: "Roll a dice",
 	Parameters: []*command.CommandParameter{
 		{Name: "faces", Description: "dice faces", Required: false, Type: diceNotation},

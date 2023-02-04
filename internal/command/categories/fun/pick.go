@@ -12,7 +12,6 @@ import (
 
 var PickCommand = command.Command{
 	Name: "pick", Description: "Pick a random thing",
-	Aliases: []string{"sorteio", "sortear", "draw"},
 	Parameters: []*command.CommandParameter{
 		{
 			Name:        "things",

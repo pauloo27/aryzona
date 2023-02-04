@@ -14,7 +14,6 @@ import (
 
 var ScoreCommand = command.Command{
 	Name: "score", Description: "Show matches score",
-	Aliases: []string{"placar", "gols", "scores"},
 	Parameters: []*command.CommandParameter{
 		{
 			Name:            "game",

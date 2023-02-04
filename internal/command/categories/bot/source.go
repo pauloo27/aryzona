@@ -8,7 +8,6 @@ import (
 
 var SourceCommand = command.Command{
 	Name: "source", Description: "Source code link",
-	Aliases: []string{"sauce", "src"},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandSource)
 		ctx.Success(t.Description.Str(config.Config.GitRepoURL))

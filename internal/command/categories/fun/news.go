@@ -33,7 +33,7 @@ func listSources() []interface{} {
 }
 
 var NewsCommand = command.Command{
-	Name: "news", Aliases: []string{"noticias", "notícias"},
+	Name: "news",
 	Description: "Get recent news",
 	Parameters: []*command.CommandParameter{
 		{

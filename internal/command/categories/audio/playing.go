@@ -18,7 +18,7 @@ const (
 )
 
 var PlayingCommand = command.Command{
-	Name: "playing", Aliases: []string{"np", "nowplaying", "tocando"},
+	Name: "playing", Aliases: []string{"np"},
 	Deferred:    true,
 	Description: "Show what is playing now",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},

@@ -8,7 +8,7 @@ import (
 )
 
 var ResumeCommand = command.Command{
-	Name: "resume", Aliases: []string{"unpause"},
+	Name:        "resume",
 	Description: "Resume the queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {

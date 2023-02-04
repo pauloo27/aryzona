@@ -7,7 +7,7 @@ import (
 )
 
 var UUIDCommand = command.Command{
-	Name: "uuid", Aliases: []string{"gid", "id", "uid", "guid"},
+	Name: "uuid",
 	Description: "Generate an UUID",
 	Handler: func(ctx *command.CommandContext) {
 		id := uuid.New()

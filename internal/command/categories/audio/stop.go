@@ -9,7 +9,7 @@ import (
 )
 
 var StopCommand = command.Command{
-	Name: "stop", Aliases: []string{"st", "parar", "pare"},
+	Name:        "stop",
 	Description: "Stop what is playing",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {

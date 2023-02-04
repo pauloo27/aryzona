@@ -11,7 +11,6 @@ import (
 
 var PingCommand = command.Command{
 	Name: "ping", Description: "Get the bot latency",
-	Aliases: []string{"pong"},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandPing)
 

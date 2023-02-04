@@ -11,7 +11,7 @@ import (
 )
 
 var LyricCommand = command.Command{
-	Name: "lyric", Aliases: []string{"ly", "letra", "letras", "lyrics"},
+	Name: "lyric", Aliases: []string{"ly", "lyrics"},
 	Description: "Show a song lyrics",
 	Parameters: []*command.CommandParameter{
 		{Name: "song", Description: "Search query", Type: parameters.ParameterText, Required: false},

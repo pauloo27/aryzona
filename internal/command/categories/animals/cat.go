@@ -8,7 +8,6 @@ import (
 
 var CatCommand = command.Command{
 	Name: "cat", Description: "Get a cute cat",
-	Aliases: []string{"meow", "miau"},
 	Handler: func(ctx *command.CommandContext) {
 		url, err := animal.GetRandomCat()
 		if err != nil {
