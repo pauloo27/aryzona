@@ -88,6 +88,19 @@
     "even": {
       "even": "Even",
       "odd": "Odd"
+    },
+    "resume": {
+      "notPaused": "The queue is not paused",
+      "resumed": "Resumed!"
+    },
+    "shuffle": {
+      "shuffled": "Shuffled! :wink:"
+    },
+    "skip": {
+      "skipped": "Skipped!"
+    },
+    "stop": {
+      "stopped": "Stopped!"
     }
   }
 }

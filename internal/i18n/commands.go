@@ -121,3 +121,28 @@ type CommandSource struct {
 
 	Description Entry
 }
+
+type CommandResume struct {
+	*Common
+
+	NotPaused Entry
+	Resumed   Entry
+}
+
+type CommandShuffle struct {
+	*Common
+
+	Shuffled Entry
+}
+
+type CommandSkip struct {
+	*Common
+
+	Skipped Entry
+}
+
+type CommandStop struct {
+	*Common
+
+	Stopped Entry
+}
