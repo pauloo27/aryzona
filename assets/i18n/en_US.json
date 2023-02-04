@@ -12,6 +12,22 @@
     "donate": {
       "title": "Donate to the bot so it continues up and running"
     },
+    "help": {
+      "title": "List of commands",
+      "parameters": "Parameters",
+      "validations": "Validations",
+      "subCommands": "Sub Commands",
+      "aliases": "Aliases",
+      "permission": "Permission",
+      "required": "Required",
+      "notRequired": "Not required",
+      "category": "Category",
+      "subCommandNotFound": "Sub command not found",
+      "commandNotFound": "Command not found",
+      "forMoreInfo": "For more information on a command, use `{0:prefix}{1:used_help_command} <command>`",
+      "aka": "(aka {0:aliases})",
+      "requiresPermission": "(_requires you to {0:permission_name}_)"
+    },
     "ping": {
       "title": "{0:emoji} Pong!",
       "footer": "(that's the bot's latency, not yours)",

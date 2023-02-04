@@ -182,3 +182,22 @@ type CommandLyric struct {
 	NoResults      Entry
 	NotConnected   Entry
 }
+
+type CommandHelp struct {
+	*Common
+
+	Title              Entry
+	Parameters         Entry
+	Validations        Entry
+	SubCommands        Entry
+	Aliases            Entry
+	Permission         Entry
+	Category           Entry
+	AKA                Entry
+	ForMoreInfo        Entry
+	CommandNotFound    Entry
+	SubCommandNotFound Entry
+	RequiresPermission Entry
+	Required           Entry
+	NotRequired        Entry
+}
