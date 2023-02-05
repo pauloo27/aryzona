@@ -2,9 +2,9 @@
 
 The one and only Discord Bot that is proudly Flamenguista.
 
-[Agola CI](https://ci.db.cafe/user/Pauloo27/projects/aryzona.proj)
-
 [![CI status](https://ci.db.cafe/api/v1alpha/badges/187accd5-deac-4593-ae76-3454b052bf5b)](https://ci.db.cafe/user/Pauloo27/projects/aryzona.proj)
+
+![Translation status](https://i18n.db.cafe/widgets/aryzona/-/bot/287x66-black.png)
 
 > ⚠ I am mentally unstable, so I may `git rebase` on the master branch. Deal with it
 
