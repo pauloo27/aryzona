@@ -62,7 +62,7 @@ func checkForMissingTranslations(t reflect.Type, value reflect.Value, parentPath
 
 		if structField.Type == entryType {
 			if fieldValue.Interface().(i18n.Entry).Str() == "" {
-				fmt.Printf("Missing translation for %s%s", parentPath, structField.Name)
+				fmt.Printf("Missing translation for %s%s\n", parentPath, structField.Name)
 				missing = append(missing, structField.Name)
 			}
 			continue
