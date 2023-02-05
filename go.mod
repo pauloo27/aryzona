@@ -1,6 +1,6 @@
 module github.com/Pauloo27/aryzona
 
-go 1.19
+go 1.20
 
 require (
 	github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d
