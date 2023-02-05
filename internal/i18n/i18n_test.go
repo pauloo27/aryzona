@@ -38,10 +38,10 @@ func TestEntryFormat(t *testing.T) {
 	assert.Equal(t, "Hello 123, true", entry.Str(123, true))
 }
 
-func TestEnglishLanguage(t *testing.T) {
+func TestDefaultLangs(t *testing.T) {
 	i18n.I18nRootDir = "../../assets/i18n"
 
-	l, err := i18n.GetLanguage(i18n.EnglishLang)
+	l, err := i18n.GetLanguage(i18n.DefaultLanguageName)
 	assert.Nil(t, err)
 	assert.NotNil(t, l)
 
@@ -53,6 +53,28 @@ func TestEnglishLanguage(t *testing.T) {
 	missingTranslations := checkForMissingTranslations(lType, lValue, "")
 
 	assert.Empty(t, missingTranslations)
+}
+
+func TestOtherLangs(t *testing.T) {
+	i18n.I18nRootDir = "../../assets/i18n"
+
+	for _, lang := range i18n.LanguagesName {
+		if lang == i18n.DefaultLanguageName {
+			continue
+		}
+		t.Run(string(lang), func(t *testing.T) {
+			l, err := i18n.GetLanguage(lang)
+			assert.Nil(t, err)
+			assert.NotNil(t, l)
+
+			lType := reflect.TypeOf(l).Elem()
+			lValue := reflect.ValueOf(l).Elem()
+
+			missingTranslations := checkForMissingTranslations(lType, lValue, "")
+
+			assert.Empty(t, missingTranslations)
+		})
+	}
 }
 
 func checkForMissingTranslations(t reflect.Type, value reflect.Value, parentPath string) (missing []string) {
