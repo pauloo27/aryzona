@@ -31,6 +31,19 @@ func (l LanguageName) DiscordName() string {
 	return strings.Replace(string(l), "_", "-", 1)
 }
 
+func FindLanguageName(name string) LanguageName {
+	langName := strings.Split(name, "_")[0]
+
+	switch langName {
+	case "en":
+		return EnglishLang
+	case "pt":
+		return PortugueseLang
+	default:
+		return DefaultLanguageName
+	}
+}
+
 func GetLanguage(name LanguageName) (*Language, error) {
 	lang, ok := loadedLanguages[name]
 	if !ok {

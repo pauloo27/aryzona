@@ -86,6 +86,7 @@ func executeCommand(
 
 func HandleCommand(
 	commandName string, args []string,
+	langName i18n.LanguageName,
 	startTime time.Time,
 	adapter *Adapter, bot discord.BotAdapter,
 	trigger CommandTrigger, channel model.TextChannel,
@@ -95,8 +96,7 @@ func HandleCommand(
 		return
 	}
 
-	// TODO: get the language of the user? of the guild? idk
-	lang := i18n.MustGetLanguage(i18n.DefaultLanguageName)
+	lang := i18n.MustGetLanguage(langName)
 
 	t := i18n.GetCommand(lang, command.Name)
 

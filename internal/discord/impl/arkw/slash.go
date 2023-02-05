@@ -2,6 +2,7 @@ package arkw
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
@@ -317,8 +318,10 @@ func registerCommands(bot ArkwBot) error {
 				},
 			}
 
+			langName := i18n.FindLanguageName(strings.Replace(string(i.Locale), "-", "_", 1))
+
 			command.HandleCommand(
-				data.Name, args, startTime, &adapter, bot, command.CommandTriggerSlash,
+				data.Name, args, langName, startTime, &adapter, bot, command.CommandTriggerSlash,
 				buildChannel(i.ChannelID.String(), buildGuild(i.GuildID.String()), cType),
 			)
 		}
