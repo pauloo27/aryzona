@@ -1,0 +1,161 @@
+{
+    "meta": {
+        "name": "",
+        "displayName": "",
+        "authors": ""
+    },
+    "common": {
+        "helloWorld": "",
+        "somethingWentWrong": ""
+    },
+    "commands": {
+        "donate": {
+            "title": ""
+        },
+        "help": {
+            "title": "",
+            "parameters": "",
+            "validations": "",
+            "subCommands": "",
+            "aliases": "",
+            "permission": "",
+            "required": "",
+            "notRequired": "",
+            "category": "",
+            "subCommandNotFound": "",
+            "commandNotFound": "",
+            "forMoreInfo": "",
+            "aka": "",
+            "requiresPermission": ""
+        },
+        "ping": {
+            "title": "",
+            "footer": "",
+            "apiLatency": "",
+            "stillCalculating": ""
+        },
+        "uptime": {
+            "title": "",
+            "uptime": "",
+            "implementation": "",
+            "hostInfoKey": "",
+            "hostInfoValue": "",
+            "startedAt": "",
+            "lastCommit": ""
+        },
+        "source": {
+            "description": ""
+        },
+        "cnpj": {
+            "title": "",
+            "withoutMask": "",
+            "withMask": ""
+        },
+        "cpf": {
+            "title": "",
+            "withoutMask": "",
+            "withMask": ""
+        },
+        "password": {
+            "title": "",
+            "description": ""
+        },
+        "pick": {
+            "title": "",
+            "description": ""
+        },
+        "news": {
+            "title": ""
+        },
+        "score": {
+            "time": "",
+            "match": "",
+            "timePenalty": "",
+            "noMatchesLive": "",
+            "title": "",
+            "footer": "",
+            "matchNotFound": "",
+            "liveUpdates": ""
+        },
+        "unfollow": {
+            "notFollowingAny": "",
+            "unfollowedAll": "",
+            "matchNotFound": "",
+            "notFollowingMatch": "",
+            "unfollowedMatch": ""
+        },
+        "follow": {
+            "time": "",
+            "match": "",
+            "timePenalty": "",
+            "matchNotFound": "",
+            "matchFinished": "",
+            "alreadyFollowing": "",
+            "followLimitReached": ""
+        },
+        "roll": {
+            "dice": "",
+            "dices": "",
+            "face": "",
+            "faces": "",
+            "title": "",
+            "description": ""
+        },
+        "even": {
+            "even": "",
+            "odd": ""
+        },
+        "resume": {
+            "notPaused": "",
+            "resumed": ""
+        },
+        "shuffle": {
+            "shuffled": ""
+        },
+        "skip": {
+            "skipped": ""
+        },
+        "stop": {
+            "stopped": ""
+        },
+        "pause": {
+            "cannotPause": "",
+            "alreadyPaused": "",
+            "paused": ""
+        },
+        "radio": {
+            "listTitle": "",
+            "cannotConnect": "",
+            "notInRightChannel": "",
+            "addedToQueue": "",
+            "listFooter": ""
+        },
+        "playing": {
+            "title": "",
+            "never": "",
+            "entry": "",
+            "comingNext": "",
+            "andMore": ""
+        },
+        "play": {
+            "notInRightChannel": "",
+            "cannotConnect": "",
+            "youtubePlaylist": "",
+            "bestResult": "",
+            "multipleResults": "",
+            "multipleResultsSelectOne": "",
+            "firstResultWillPlay": "",
+            "ifYouFailToSelect": "",
+            "entry": "",
+            "selectedResult": "",
+            "confirmBtn": "",
+            "playOtherBtn": "",
+            "live": ""
+        },
+        "lyric": {
+            "nothingPlaying": "",
+            "notConnected": "",
+            "noResults": ""
+        }
+    }
+}
