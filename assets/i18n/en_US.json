@@ -62,7 +62,7 @@
                         "description": "The command to get help about"
                     },
                     {
-                        "name": "subCommand",
+                        "name": "sub_command",
                         "description": "The sub command to get help about"
                     }
                 ]
@@ -174,7 +174,13 @@
         "score": {
             "definition": {
                 "name": "score",
-                "description": "Get the score of a match"
+                "description": "Get the score of a match",
+                "parameters": [
+                    {
+                        "name": "match",
+                        "description": "Team name or match ID"
+                    }
+                ]
             },
             "time": "Time",
             "match": "Match",
@@ -188,7 +194,13 @@
         "unfollow": {
             "definition": {
                 "name": "unfollow",
-                "description": "Unfollow a match"
+                "description": "Unfollow a match",
+                "parameters": [
+                    {
+                        "name": "match",
+                        "description": "Team name or match ID, all matches if not specified"
+                    }
+                ]
             },
             "notFollowingAny": "You are not following any match",
             "unfollowedAll": "Unfollowed all matches",
@@ -199,7 +211,13 @@
         "follow": {
             "definition": {
                 "name": "follow",
-                "description": "Follow a match"
+                "description": "Follow a match",
+                "parameters": [
+                    {
+                        "name": "match",
+                        "description": "Team name or match ID"
+                    }
+                ]
             },
             "time": "Time",
             "match": "Match",
@@ -212,7 +230,13 @@
         "roll": {
             "definition": {
                 "name": "roll",
-                "description": "Roll a dice"
+                "description": "Roll a dice",
+                "parameters": [
+                    {
+                        "name": "faces",
+                        "description": "The dice faces or a dice notation"
+                    }
+                ]
             },
             "dice": "dice",
             "dices": "dices",
