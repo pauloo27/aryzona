@@ -8,7 +8,6 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
 )
 
@@ -71,8 +70,11 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 			return err
 		},
 	}
+
+	langName := command.GetCommandLang(strings.ToLower(rawCommand))
+
 	command.HandleCommand(
-		strings.ToLower(rawCommand), args, i18n.DefaultLanguageName, startTime, &event, bot, command.CommandTriggerMessage,
+		strings.ToLower(rawCommand), args, langName, startTime, &event, bot, command.CommandTriggerMessage,
 		m.Channel(),
 	)
 }

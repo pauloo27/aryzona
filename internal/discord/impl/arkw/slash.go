@@ -143,7 +143,7 @@ func registerCommands(bot ArkwBot) error {
 			continue
 		}
 
-		defaultCmdLang := i18n.GetCommandDefinition(defaultLang, cmd.Name)
+		defaultCmdLang := i18n.MustGetCommandDefinition(defaultLang, cmd.Name)
 		if defaultCmdLang == nil {
 			logger.Fatalf("Command %s not found in default language", cmd.Name)
 			break
@@ -151,7 +151,7 @@ func registerCommands(bot ArkwBot) error {
 
 		otherCmdLangs := make([]*i18n.CommandDefinition, len(otherLangs))
 		for i, lang := range otherLangs {
-			otherCmdLangs[i] = i18n.GetCommandDefinition(lang, cmd.Name)
+			otherCmdLangs[i] = i18n.MustGetCommandDefinition(lang, cmd.Name)
 			if otherCmdLangs[i] == nil {
 				logger.Fatalf("Command %s not found in language %s", cmd.Name, lang.Name)
 				return nil

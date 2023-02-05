@@ -12,10 +12,6 @@ import (
 	"github.com/Pauloo27/toolkit/slices"
 )
 
-var (
-	embedCache = make(map[string]model.Embed)
-)
-
 var HelpCommand = command.Command{
 	Name:    "help",
 	Aliases: []string{"h"},
@@ -41,17 +37,12 @@ var HelpCommand = command.Command{
 func listCommands(ctx *command.CommandContext) {
 	t := ctx.T.(*i18n.CommandHelp)
 
-	if cacheEmbed, ok := embedCache[""]; ok {
-		ctx.SuccessEmbed(&cacheEmbed)
-		return
-	}
-
 	embed := model.NewEmbed()
 	sb := strings.Builder{}
 	embed.WithTitle(t.Title.Str())
 	lastCategory := ""
 	for _, cmd := range command.GetCommandList() {
-		cmdLang := i18n.GetCommandDefinition(ctx.Lang, cmd.Name)
+		cmdLang := i18n.MustGetCommandDefinition(ctx.Lang, cmd.Name)
 
 		if lastCategory != cmd.GetCategory().Name {
 			sb.WriteString(fmt.Sprintf("\n**%s %s**:\n", cmd.GetCategory().Emoji, cmd.GetCategory().Name))
@@ -77,7 +68,6 @@ func listCommands(ctx *command.CommandContext) {
 	)
 
 	embed.WithDescription(sb.String())
-	embedCache[""] = *embed
 
 	ctx.SuccessEmbed(embed)
 }
@@ -114,12 +104,7 @@ func helpForCommand(ctx *command.CommandContext) {
 		fullCommandName = fmt.Sprintf("%s %s", rootCmd.Name, cmd.Name)
 	}
 
-	if cacheEmbed, ok := embedCache[fullCommandName]; ok {
-		ctx.SuccessEmbed(&cacheEmbed)
-		return
-	}
-
-	cmdLang := i18n.GetCommandDefinition(ctx.Lang, cmd.Name)
+	cmdLang := i18n.MustGetCommandDefinition(ctx.Lang, cmd.Name)
 
 	embed := model.NewEmbed().
 		WithTitle(fullCommandName).
@@ -174,8 +159,6 @@ func helpForCommand(ctx *command.CommandContext) {
 			),
 		)
 	}
-
-	embedCache[fullCommandName] = *embed
 
 	ctx.SuccessEmbed(
 		embed,

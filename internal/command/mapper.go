@@ -3,11 +3,13 @@ package command
 import (
 	"strings"
 
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
 )
 
 var (
 	commandMap            = map[string]*Command{}
+	commandLangMap        = map[string]i18n.LanguageName{}
 	commandInteractionMap = map[string]*CommandContext{}
 	commandList           []*Command
 )
@@ -19,6 +21,15 @@ func RegisterCommand(command *Command) {
 	commandMap[strings.ToLower(command.Name)] = command
 	for _, alias := range command.Aliases {
 		commandMap[strings.ToLower(alias)] = command
+	}
+	for _, langName := range i18n.LanguagesName {
+		if langName == i18n.DefaultLanguageName {
+			continue
+		}
+		cmdLang := i18n.MustGetCommandDefinition(i18n.MustGetLanguage(langName), command.Name)
+		cmdName := strings.ToLower(cmdLang.Name.Str())
+		commandMap[cmdName] = command
+		commandLangMap[cmdName] = langName
 	}
 }
 

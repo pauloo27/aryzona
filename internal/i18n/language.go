@@ -79,7 +79,7 @@ func GetCommand(l *Language, name string) any {
 	return l.commands[name]
 }
 
-func GetCommandDefinition(l *Language, name string) *CommandDefinition {
+func MustGetCommandDefinition(l *Language, name string) *CommandDefinition {
 	cmd := l.commands[name]
 	if cmd == nil {
 		return nil

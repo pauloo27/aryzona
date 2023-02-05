@@ -84,6 +84,14 @@ func executeCommand(
 	}
 }
 
+func GetCommandLang(commandName string) i18n.LanguageName {
+	lang, found := commandLangMap[commandName]
+	if found {
+		return lang
+	}
+	return i18n.DefaultLanguageName
+}
+
 func HandleCommand(
 	commandName string, args []string,
 	langName i18n.LanguageName,
