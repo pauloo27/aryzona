@@ -28,6 +28,9 @@ func RegisterCommand(command *Command) {
 		}
 		cmdLang := i18n.MustGetCommandDefinition(i18n.MustGetLanguage(langName), command.Name)
 		cmdName := strings.ToLower(cmdLang.Name.Str())
+		if _, found := commandMap[cmdName]; found {
+			continue
+		}
 		commandMap[cmdName] = command
 		commandLangMap[cmdName] = langName
 	}
