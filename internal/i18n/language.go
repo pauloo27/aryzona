@@ -2,6 +2,7 @@ package i18n
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 )
 
@@ -65,8 +66,23 @@ type Commands struct {
 	Radio    *CommandRadio
 	Help     *CommandHelp
 	Play     *CommandPlay
+	Dog      *CommandDog
+	Cat      *CommandCat
+	Fox      *CommandFox
+	UUID     *CommandUUID
+	Joke     *CommandJoke
+	Xkcd     *CommandXkcd
 }
 
 func GetCommand(l *Language, name string) any {
 	return l.commands[name]
+}
+
+func GetCommandDefinition(l *Language, name string) *CommandDefinition {
+	cmd := l.commands[name]
+	if cmd == nil {
+		return nil
+	}
+
+	return reflect.ValueOf(cmd).Elem().FieldByName("Definition").Interface().(*CommandDefinition)
 }

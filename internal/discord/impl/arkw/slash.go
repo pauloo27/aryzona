@@ -7,6 +7,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
 
 	"github.com/diamondburned/arikawa/v3/api"
@@ -85,16 +86,49 @@ func registerCommands(bot ArkwBot) error {
 		return err
 	}
 
+	defaultLang := i18n.MustGetLanguage(i18n.DefaultLanguageName)
+	otherLangs := make([]*i18n.Language, len(i18n.LanguagesName)-1)
+
+	langCounter := 0
+
+	for _, langName := range i18n.LanguagesName {
+		if langName == i18n.DefaultLanguageName {
+			continue
+		}
+		otherLangs[langCounter] = i18n.MustGetLanguage(langName)
+		langCounter++
+	}
+
 	var slashCommands []api.CreateCommandData
 	for key, cmd := range command.GetCommandMap() {
 		if key != cmd.Name {
 			continue
 		}
 
-		slashCommand := api.CreateCommandData{
-			Name: cmd.Name, Description: cmd.Description,
+		defaultCmdLang := i18n.GetCommandDefinition(defaultLang, cmd.Name)
+		if defaultCmdLang == nil {
+			logger.Fatalf("Command %s not found in default language", cmd.Name)
+			break
 		}
 
+		slashCommand := api.CreateCommandData{
+			Name: defaultCmdLang.Name.Str(), Description: defaultCmdLang.Description.Str(),
+			NameLocalizations:        make(dc.StringLocales),
+			DescriptionLocalizations: make(dc.StringLocales),
+		}
+
+		for _, lang := range otherLangs {
+			cmdLang := i18n.GetCommandDefinition(lang, cmd.Name)
+			if cmdLang == nil {
+				logger.Fatalf("Command %s not found in language %s", cmd.Name, lang.Name)
+				break
+			}
+			dcName := dc.Language(lang.Name.DiscordName())
+			slashCommand.NameLocalizations[dcName] = cmdLang.Name.Str()
+			slashCommand.DescriptionLocalizations[dcName] = cmdLang.Description.Str()
+		}
+
+		// TODO: i18n
 		for _, subCmd := range cmd.SubCommands {
 			subCmdOptions := []dc.CommandOptionValue{}
 			for _, subCmdParam := range subCmd.Parameters {
@@ -103,7 +137,7 @@ func registerCommands(bot ArkwBot) error {
 			slashCommand.Options = append(
 				slashCommand.Options,
 				&dc.SubcommandOption{
-					OptionName:  subCmd.Name,
+					OptionName: subCmd.Name,
 
 					Description: subCmd.Description,
 					Options:     subCmdOptions,
@@ -111,6 +145,7 @@ func registerCommands(bot ArkwBot) error {
 			)
 		}
 
+		// TODO: i18n
 		for _, arg := range cmd.Parameters {
 			slashCommand.Options = append(
 				slashCommand.Options, mustGetOption(arg),

@@ -255,3 +255,27 @@ type CommandPlay struct {
 	PlayOtherBtn             Entry
 	Live                     Entry
 }
+
+type CommandFox struct {
+	Definition *CommandDefinition
+}
+
+type CommandDog struct {
+	Definition *CommandDefinition
+}
+
+type CommandCat struct {
+	Definition *CommandDefinition
+}
+
+type CommandUUID struct {
+	Definition *CommandDefinition
+}
+
+type CommandJoke struct {
+	Definition *CommandDefinition
+}
+
+type CommandXkcd struct {
+	Definition *CommandDefinition
+}

@@ -22,8 +22,14 @@ const (
 var (
 	I18nRootDir = "./assets/i18n"
 
+	LanguagesName = []LanguageName{EnglishLang, PortugueseLang}
+
 	loadedLanguages = make(map[LanguageName]*Language)
 )
+
+func (l LanguageName) DiscordName() string {
+	return strings.Replace(string(l), "_", "-", 1)
+}
 
 func GetLanguage(name LanguageName) (*Language, error) {
 	lang, ok := loadedLanguages[name]
