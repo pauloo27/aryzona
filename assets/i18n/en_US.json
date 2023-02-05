@@ -9,6 +9,42 @@
         "somethingWentWrong": "Something went wrong"
     },
     "commands": {
+        "cat": {
+            "definition": {
+                "name": "cat",
+                "description": "Get a random cat image"
+            }
+        },
+        "dog": {
+            "definition": {
+                "name": "dog",
+                "description": "Get a random dog image"
+            }
+        },
+        "fox": {
+            "definition": {
+                "name": "fox",
+                "description": "Get a random fox image"
+            }
+        },
+        "uuid": {
+            "definition": {
+                "name": "uuid",
+                "description": "Generate a random UUID"
+            }
+        },
+        "joke": {
+            "definition": {
+                "name": "joke",
+                "description": "Get a random joke"
+            }
+        },
+        "xkcd": {
+            "definition": {
+                "name": "xkcd",
+                "description": "Get a random XKCD comic"
+            }
+        },
         "donate": {
             "definition": {
                 "name": "donate",
