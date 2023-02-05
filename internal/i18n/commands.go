@@ -1,7 +1,20 @@
 package i18n
 
+type CommandDefinition struct {
+	Name        Entry
+	Description Entry
+
+	Parameters []ParameterDefinition
+}
+
+type ParameterDefinition struct {
+	Name        Entry
+	Description Entry
+}
+
 type CommandEven struct {
 	*Common
+	Definition *CommandDefinition
 
 	Even Entry
 	Odd  Entry
@@ -9,6 +22,7 @@ type CommandEven struct {
 
 type CommandPick struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title       Entry
 	Description Entry
@@ -16,6 +30,7 @@ type CommandPick struct {
 
 type CommandRoll struct {
 	*Common
+	Definition *CommandDefinition
 
 	Dice        Entry
 	Dices       Entry
@@ -27,6 +42,7 @@ type CommandRoll struct {
 
 type CommandUnFollow struct {
 	*Common
+	Definition *CommandDefinition
 
 	NotFollowingAny   Entry
 	UnFollowedAll     Entry
@@ -37,6 +53,7 @@ type CommandUnFollow struct {
 
 type CommandFollow struct {
 	*Common
+	Definition *CommandDefinition
 
 	Match              Entry
 	Time               Entry
@@ -49,6 +66,7 @@ type CommandFollow struct {
 
 type CommandScore struct {
 	*Common
+	Definition *CommandDefinition
 
 	NoMatchesLive Entry
 	Title         Entry
@@ -62,6 +80,7 @@ type CommandScore struct {
 
 type CommandCPF struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title       Entry
 	WithMask    Entry
@@ -70,6 +89,7 @@ type CommandCPF struct {
 
 type CommandCNPJ struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title       Entry
 	WithMask    Entry
@@ -78,6 +98,7 @@ type CommandCNPJ struct {
 
 type CommandPassword struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title       Entry
 	Description Entry
@@ -85,12 +106,14 @@ type CommandPassword struct {
 
 type CommandNews struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title Entry
 }
 
 type CommandPing struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title            Entry
 	Footer           Entry
@@ -100,12 +123,14 @@ type CommandPing struct {
 
 type CommandDonate struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title Entry
 }
 
 type CommandUptime struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title          Entry
 	Uptime         Entry
@@ -118,12 +143,14 @@ type CommandUptime struct {
 
 type CommandSource struct {
 	*Common
+	Definition *CommandDefinition
 
 	Description Entry
 }
 
 type CommandResume struct {
 	*Common
+	Definition *CommandDefinition
 
 	NotPaused Entry
 	Resumed   Entry
@@ -131,24 +158,28 @@ type CommandResume struct {
 
 type CommandShuffle struct {
 	*Common
+	Definition *CommandDefinition
 
 	Shuffled Entry
 }
 
 type CommandSkip struct {
 	*Common
+	Definition *CommandDefinition
 
 	Skipped Entry
 }
 
 type CommandStop struct {
 	*Common
+	Definition *CommandDefinition
 
 	Stopped Entry
 }
 
 type CommandPause struct {
 	*Common
+	Definition *CommandDefinition
 
 	CannotPause   Entry
 	AlreadyPaused Entry
@@ -157,6 +188,7 @@ type CommandPause struct {
 
 type CommandRadio struct {
 	*Common
+	Definition *CommandDefinition
 
 	ListTitle         Entry
 	CannotConnect     Entry
@@ -167,6 +199,7 @@ type CommandRadio struct {
 
 type CommandPlaying struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title      Entry
 	Never      Entry
@@ -177,6 +210,7 @@ type CommandPlaying struct {
 
 type CommandLyric struct {
 	*Common
+	Definition *CommandDefinition
 
 	NothingPlaying Entry
 	NoResults      Entry
@@ -185,6 +219,7 @@ type CommandLyric struct {
 
 type CommandHelp struct {
 	*Common
+	Definition *CommandDefinition
 
 	Title              Entry
 	Parameters         Entry
@@ -204,6 +239,7 @@ type CommandHelp struct {
 
 type CommandPlay struct {
 	*Common
+	Definition *CommandDefinition
 
 	NotInRightChannel        Entry
 	CannotConnect            Entry
