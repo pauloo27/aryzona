@@ -7,7 +7,7 @@
     "common": {
         "helloWorld": "Olá mundo!",
         "somethingWentWrong": "Algo deu errado",
-        "took": "Levou {0:time}",
+        "took": "Levou {0:duration}",
         "categories": {
             "fun": "Diversão",
             "bot": "Bot",
