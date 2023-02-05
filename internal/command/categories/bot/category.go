@@ -3,7 +3,7 @@ package bot
 import "github.com/Pauloo27/aryzona/internal/command"
 
 var Bot = command.CommandCategory{
-	Name:  "Bot",
+	Name:  "bot",
 	Emoji: "🤖",
 	Commands: []*command.Command{
 		&HelpCommand, &PingCommand, &SourceCommand, &UptimeCommand,

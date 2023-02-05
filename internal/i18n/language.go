@@ -40,6 +40,7 @@ type Common struct {
 	HelloWorld         Entry
 	SomethingWentWrong Entry
 	Took               Entry
+	Categories         map[string]Entry
 }
 
 type Commands struct {

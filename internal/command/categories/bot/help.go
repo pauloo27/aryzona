@@ -8,6 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/i18n"
+	"github.com/Pauloo27/logger"
 	k "github.com/Pauloo27/toolkit"
 	"github.com/Pauloo27/toolkit/slices"
 )
@@ -44,8 +45,15 @@ func listCommands(ctx *command.CommandContext) {
 	for _, cmd := range command.GetCommandList() {
 		cmdLang := i18n.MustGetCommandDefinition(ctx.Lang, cmd.Name)
 
-		if lastCategory != cmd.GetCategory().Name {
-			sb.WriteString(fmt.Sprintf("\n**%s %s**:\n", cmd.GetCategory().Emoji, cmd.GetCategory().Name))
+		categoryName := cmd.GetCategory().Name
+		localizedCategoryName := t.Categories[categoryName].Str()
+		if localizedCategoryName == "" {
+			logger.Warnf("Missing category name for %s", categoryName)
+			localizedCategoryName = categoryName
+		}
+
+		if lastCategory != categoryName {
+			sb.WriteString(fmt.Sprintf("\n**%s %s**:\n", cmd.GetCategory().Emoji, localizedCategoryName))
 		}
 		var permission string
 		if cmd.Permission != nil {

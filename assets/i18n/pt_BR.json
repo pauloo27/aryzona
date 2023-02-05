@@ -7,7 +7,14 @@
     "common": {
         "helloWorld": "Olá mundo!",
         "somethingWentWrong": "Algo deu errado",
-        "took": "Levou {0:time}"
+        "took": "Levou {0:time}",
+        "categories": {
+            "fun": "Diversão",
+            "bot": "Bot",
+            "audio": "Áudio",
+            "animals": "Animais",
+            "tools": "Ferramentas"
+        }
     },
     "commands": {
         "donate": {
