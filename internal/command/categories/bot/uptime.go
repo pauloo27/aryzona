@@ -27,6 +27,7 @@ var UptimeCommand = command.Command{
 			WithTitle(t.Title.Str()).
 			WithField(t.Uptime.Str(":timer:"), f.DurationAsText(uptime)).
 			WithField(t.Implementation.Str(":gear:"), discord.Bot.Implementation()).
+			WithField(t.Language.Str(":globe_with_meridians:"), t.Meta.DisplayName.Str()).
 			WithField(
 				t.HostInfoKey.Str(":computer:"),
 				t.HostInfoValue.Str(runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH,

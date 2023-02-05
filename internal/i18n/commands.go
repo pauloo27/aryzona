@@ -130,8 +130,10 @@ type CommandDonate struct {
 
 type CommandUptime struct {
 	*Common
+	*Meta
 	Definition *CommandDefinition
 
+	Language       Entry
 	Title          Entry
 	Uptime         Entry
 	Implementation Entry
