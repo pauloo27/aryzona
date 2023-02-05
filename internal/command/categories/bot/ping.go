@@ -16,7 +16,7 @@ var PingCommand = command.Command{
 
 		latency := formatAPILatency(ctx.Bot)
 		if latency == "0" {
-			latency = t.StillCalculating.Str()
+			latency = t.StillCalculating.Str(":hourglass_flowing_sand:")
 		}
 
 		ctx.SuccessEmbed(
