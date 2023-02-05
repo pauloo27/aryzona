@@ -40,7 +40,7 @@
                         "description": "O comando para ver a ajuda"
                     },
                     {
-                        "name": "subComando",
+                        "name": "sub_comando",
                         "description": "O sub comando para ver a ajuda"
                     }
                 ]
@@ -146,7 +146,13 @@
             "liveUpdates": "Use `{0:prefix}follow {1:team_name}` para receber atualizações ao vivo sobre essa partida",
             "definition": {
                 "name": "resultado",
-                "description": "Veja o resultado de uma partida"
+                "description": "Veja o resultado de uma partida",
+                "parameters": [
+                    {
+                        "name": "partida",
+                        "description": "Nome do time ou ID da partida"
+                    }
+                ]
             }
         },
         "unfollow": {
@@ -157,7 +163,13 @@
             "unfollowedMatch": "Parou de seguir a partida {0:t1} x {1:t2}",
             "definition": {
                 "name": "desseguir",
-                "description": "Deixe de seguir uma partida"
+                "description": "Deixe de seguir uma partida",
+                "parameters": [
+                    {
+                        "name": "partida",
+                        "description": "Nome do time ou ID da partida, todas se não for especificada"
+                    }
+                ]
             }
         },
         "follow": {
@@ -170,7 +182,13 @@
             "followLimitReached": "Você pode seguir apenas {0:limit} partidas de uma vez. Use `{1:prefix}unfollow` para parar de seguir uma partida",
             "definition": {
                 "name": "seguir",
-                "description": "Siga uma partida"
+                "description": "Siga uma partida",
+                "parameters": [
+                    {
+                        "name": "partida",
+                        "description": "Nome do time ou ID da partida"
+                    }
+                ]
             }
         },
         "roll": {
@@ -182,7 +200,13 @@
             "description": "Você rolou {0:dice_notation} ({1:dice_amount} {2:dice_or_dices} com {3:dice_faces} {4:face_or_faces})\n{5:total} -> {6:result_per_dice}",
             "definition": {
                 "name": "rolar",
-                "description": "Role um dado"
+                "description": "Role um dado",
+                "parameters": [
+                    {
+                        "name": "lados",
+                        "description": "Os lados do dado ou uma notação de dados"
+                    }
+                ]
             }
         },
         "even": {
