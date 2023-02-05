@@ -304,6 +304,42 @@
                     }
                 ]
             }
+        },
+        "fox": {
+            "definition": {
+                "description": "Veja uma foto aleatória de uma raposa",
+                "name": "raposa"
+            }
+        },
+        "cat": {
+            "definition": {
+                "name": "gato",
+                "description": "Veja uma foto aleatória de um gato"
+            }
+        },
+        "dog": {
+            "definition": {
+                "name": "cachorro",
+                "description": "Veja uma foto aleatória de um cachorro"
+            }
+        },
+        "uuid": {
+            "definition": {
+                "name": "uuid",
+                "description": "Gere um UUID aleatório"
+            }
+        },
+        "joke": {
+            "definition": {
+                "name": "piada",
+                "description": "Veja uma piada aleatória"
+            }
+        },
+        "xkcd": {
+            "definition": {
+                "name": "xkcd",
+                "description": "Veja um XKCD aleatório"
+            }
         }
     }
 }
