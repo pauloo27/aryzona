@@ -6,7 +6,8 @@
     },
     "common": {
         "helloWorld": "Olá mundo!",
-        "somethingWentWrong": "Algo deu errado"
+        "somethingWentWrong": "Algo deu errado",
+        "took": "Levou {0:time}"
     },
     "commands": {
         "donate": {

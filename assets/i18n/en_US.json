@@ -6,7 +6,8 @@
     },
     "common": {
         "helloWorld": "Hello World!",
-        "somethingWentWrong": "Something went wrong"
+        "somethingWentWrong": "Something went wrong",
+        "took": "Took {0:duration}"
     },
     "commands": {
         "cat": {

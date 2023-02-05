@@ -39,6 +39,7 @@ type Meta struct {
 type Common struct {
 	HelloWorld         Entry
 	SomethingWentWrong Entry
+	Took               Entry
 }
 
 type Commands struct {

@@ -176,7 +176,7 @@ func (ctx *CommandContext) ErrorEmbedReturning(embed *model.Embed) error {
 func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	processTime := time.Since(ctx.startTime)
 	logger.Debugf("Command %s took %s", ctx.Command.Name, processTime)
-	duration := fmt.Sprintf("Took %v", processTime.Truncate(time.Second))
+	duration := ctx.Lang.Took.Str(processTime.Truncate(time.Second))
 	if embed.Footer != "" {
 		embed.Footer = fmt.Sprintf("%s • %s", embed.Footer, duration)
 	} else {
