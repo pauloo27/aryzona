@@ -9,7 +9,6 @@ import (
 
 var ResumeCommand = command.Command{
 	Name:        "resume",
-	Description: "Resume the queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandResume)

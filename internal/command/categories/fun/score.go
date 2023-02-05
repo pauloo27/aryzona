@@ -13,13 +13,12 @@ import (
 )
 
 var ScoreCommand = command.Command{
-	Name: "score", Description: "Show matches score",
+	Name: "score",
 	Parameters: []*command.CommandParameter{
 		{
 			Name:            "game",
 			Required:        false,
 			RequiredMessage: "Missing the team name or a match id",
-			Description:     "team name or match id",
 			Type:            parameters.ParameterText,
 		},
 	},

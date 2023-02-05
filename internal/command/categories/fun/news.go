@@ -34,11 +34,9 @@ func listSources() []interface{} {
 
 var NewsCommand = command.Command{
 	Name: "news",
-	Description: "Get recent news",
 	Parameters: []*command.CommandParameter{
 		{
 			Name:            "source",
-			Description:     "Source Name",
 			Type:            parameters.ParameterString,
 			Required:        true,
 			ValidValuesFunc: listSources,

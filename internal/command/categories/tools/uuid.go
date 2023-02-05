@@ -8,7 +8,6 @@ import (
 
 var UUIDCommand = command.Command{
 	Name: "uuid",
-	Description: "Generate an UUID",
 	Handler: func(ctx *command.CommandContext) {
 		id := uuid.New()
 		ctx.SuccessEmbed(

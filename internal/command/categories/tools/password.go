@@ -11,10 +11,9 @@ import (
 
 var PasswordCommand = command.Command{
 	Name: "password", Aliases: []string{"pass"},
-	Description: "Generate a random password",
 	Ephemeral:   true,
 	Parameters: []*command.CommandParameter{
-		{Name: "length", Description: "Length of the password", Type: parameters.ParameterInt, Required: false},
+		{Name: "length", Type: parameters.ParameterInt, Required: false},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandPassword)

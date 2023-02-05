@@ -12,9 +12,8 @@ import (
 
 var LyricCommand = command.Command{
 	Name: "lyric", Aliases: []string{"ly", "lyrics"},
-	Description: "Show a song lyrics",
 	Parameters: []*command.CommandParameter{
-		{Name: "song", Description: "Search query", Type: parameters.ParameterText, Required: false},
+		{Name: "song", Type: parameters.ParameterText, Required: false},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandLyric)

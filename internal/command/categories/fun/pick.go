@@ -11,13 +11,12 @@ import (
 )
 
 var PickCommand = command.Command{
-	Name: "pick", Description: "Pick a random thing",
+	Name: "pick",
 	Parameters: []*command.CommandParameter{
 		{
-			Name:        "things",
-			Description: "List of things, splitted by space",
-			Required:    true,
-			Type:        parameters.ParameterText,
+			Name:     "things",
+			Required: true,
+			Type:     parameters.ParameterText,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {

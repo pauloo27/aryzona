@@ -10,7 +10,7 @@ import (
 )
 
 var PingCommand = command.Command{
-	Name: "ping", Description: "Get the bot latency",
+	Name: "ping",
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandPing)
 

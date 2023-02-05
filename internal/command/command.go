@@ -83,7 +83,6 @@ type CommandParameterType struct {
 type CommandParameter struct {
 	ValidValues     []interface{}
 	Name            string
-	Description     string
 	RequiredMessage string
 	Type            *CommandParameterType
 	ValidValuesFunc func() []interface{}
@@ -101,16 +100,16 @@ func (param *CommandParameter) GetValidValues() []interface{} {
 }
 
 type Command struct {
-	Validations       []*CommandValidation
-	Parameters        []*CommandParameter
-	Aliases           []string
-	SubCommands       []*Command
-	Name, Description string
-	Handler           CommandHandler
-	Permission        *CommandPermission
-	category          *CommandCategory
-	Deferred          bool
-	Ephemeral         bool
+	Validations []*CommandValidation
+	Parameters  []*CommandParameter
+	Aliases     []string
+	SubCommands []*Command
+	Name        string
+	Handler     CommandHandler
+	Permission  *CommandPermission
+	category    *CommandCategory
+	Deferred    bool
+	Ephemeral   bool
 }
 
 func (c *Command) GetCategory() *CommandCategory {

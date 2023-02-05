@@ -19,9 +19,8 @@ const (
 
 var RollCommand = command.Command{
 	Name: "roll", Aliases: []string{"dice"},
-	Description: "Roll a dice",
 	Parameters: []*command.CommandParameter{
-		{Name: "faces", Description: "dice faces", Required: false, Type: diceNotation},
+		{Name: "faces", Required: false, Type: diceNotation},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandRoll)

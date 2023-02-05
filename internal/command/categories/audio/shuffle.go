@@ -10,7 +10,6 @@ import (
 var ShuffleCommand = command.Command{
 	Name:        "shuffle",
 	Aliases:     []string{"sh"},
-	Description: "Shuffle current queue",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandShuffle)

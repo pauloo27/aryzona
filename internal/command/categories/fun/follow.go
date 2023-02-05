@@ -21,15 +21,13 @@ var (
 )
 
 var FollowCommand = command.Command{
-	Name:        "follow",
-	Aliases:     []string{"live"},
-	Description: "Get live updates from a soccer match",
+	Name:    "follow",
+	Aliases: []string{"live"},
 	Parameters: []*command.CommandParameter{
 		{
 			Name:            "game",
 			Required:        true,
 			RequiredMessage: "Missing the team name or a match id",
-			Description:     "team name or match id",
 			Type:            parameters.ParameterText,
 		},
 	},

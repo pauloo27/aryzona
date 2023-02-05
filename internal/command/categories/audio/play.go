@@ -30,11 +30,10 @@ const (
 
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p"},
-	Description: "Play a video/song from youtube",
 	Deferred:    true,
 	Validations: []*command.CommandValidation{validations.MustBeOnAValidVoiceChannel},
 	Parameters: []*command.CommandParameter{
-		{Name: "song", Description: "Search query or URL", Required: true, Type: parameters.ParameterText},
+		{Name: "song", Required: true, Type: parameters.ParameterText},
 	},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandPlay)

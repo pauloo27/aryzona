@@ -9,14 +9,12 @@ import (
 )
 
 var UnFollowCommand = command.Command{
-	Name:        "unfollow",
-	Description: "Stop following a soccer match",
+	Name: "unfollow",
 	Parameters: []*command.CommandParameter{
 		{
-			Name:        "game",
-			Required:    false,
-			Description: "team name or match id, if none is provided, all matches are unfollowed",
-			Type:        parameters.ParameterText,
+			Name:     "game",
+			Required: false,
+			Type:     parameters.ParameterText,
 		},
 	},
 	Handler: func(ctx *command.CommandContext) {

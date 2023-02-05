@@ -17,7 +17,7 @@ import (
 )
 
 var UptimeCommand = command.Command{
-	Name: "uptime", Description: "Tell how long the bot is running",
+	Name:    "uptime",
 	Aliases: []string{"up"},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandUptime)

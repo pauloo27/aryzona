@@ -13,7 +13,7 @@ import (
 var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
 
 var CPFCommand = command.Command{
-	Name: "cpf", Description: "Generate a CPF",
+	Name: "cpf", 
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandCPF)
 

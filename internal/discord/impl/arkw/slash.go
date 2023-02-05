@@ -94,6 +94,7 @@ func mustGetOption(param *command.CommandParameter, i int, lang languageContext)
 	return nil
 }
 
+/*
 func mustGetOptionValue(arg *command.CommandParameter) dc.CommandOptionValue {
 	switch arg.Type.BaseType {
 	case parameters.TypeString:
@@ -115,6 +116,7 @@ func mustGetOptionValue(arg *command.CommandParameter) dc.CommandOptionValue {
 	}
 	return nil
 }
+*/
 
 func registerCommands(bot ArkwBot) error {
 	app, err := bot.s.CurrentApplication()
@@ -169,21 +171,11 @@ func registerCommands(bot ArkwBot) error {
 			slashCommand.DescriptionLocalizations[dcName] = cmdLang.Description.Str()
 		}
 
-		// TODO: i18n
-		for _, subCmd := range cmd.SubCommands {
-			subCmdOptions := []dc.CommandOptionValue{}
-			for _, subCmdParam := range subCmd.Parameters {
-				subCmdOptions = append(subCmdOptions, mustGetOptionValue(subCmdParam))
+		// FIXME: subcommands
+		/*
+			for subCmd := range cmd.SubCommands {
 			}
-			slashCommand.Options = append(
-				slashCommand.Options,
-				&dc.SubcommandOption{
-					OptionName:  subCmd.Name,
-					Description: subCmd.Description,
-					Options:     subCmdOptions,
-				},
-			)
-		}
+		*/
 
 		for i, arg := range cmd.Parameters {
 			slashCommand.Options = append(

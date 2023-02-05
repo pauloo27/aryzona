@@ -8,7 +8,7 @@ import (
 )
 
 var DonateCommand = command.Command{
-	Name: "donate", Description: "Donate to the bot",
+	Name:    "donate",
 	Aliases: []string{"pix"},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandDonate)

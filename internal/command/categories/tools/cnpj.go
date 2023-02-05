@@ -13,7 +13,7 @@ import (
 var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 
 var CNPJCommand = command.Command{
-	Name: "cnpj", Description: "Generate a CNPJ",
+	Name: "cnpj", 
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandCNPJ)
 

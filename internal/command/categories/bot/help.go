@@ -17,15 +17,15 @@ var (
 )
 
 var HelpCommand = command.Command{
-	Name: "help", Description: "List all commands",
+	Name:    "help",
 	Aliases: []string{"h"},
 	Parameters: []*command.CommandParameter{
 		{
-			Name: "command", Description: "Command to get help for",
+			Name:     "command",
 			Required: false, Type: parameters.ParameterString,
 		},
 		{
-			Name: "subcommand", Description: "Sub command to get help for",
+			Name:     "subcommand",
 			Required: false, Type: parameters.ParameterString,
 		},
 	},
@@ -51,6 +51,8 @@ func listCommands(ctx *command.CommandContext) {
 	embed.WithTitle(t.Title.Str())
 	lastCategory := ""
 	for _, cmd := range command.GetCommandList() {
+		cmdLang := i18n.GetCommandDefinition(ctx.Lang, cmd.Name)
+
 		if lastCategory != cmd.GetCategory().Name {
 			sb.WriteString(fmt.Sprintf("\n**%s %s**:\n", cmd.GetCategory().Emoji, cmd.GetCategory().Name))
 		}
@@ -64,7 +66,7 @@ func listCommands(ctx *command.CommandContext) {
 		}
 		sb.WriteString(fmt.Sprintf(
 			" - `%s%s` %s: **%s** %s\n",
-			command.Prefix, cmd.Name, aliases, cmd.Description, permission,
+			command.Prefix, cmdLang.Name, aliases, cmdLang.Description, permission,
 		))
 		lastCategory = cmd.GetCategory().Name
 	}
@@ -117,10 +119,12 @@ func helpForCommand(ctx *command.CommandContext) {
 		return
 	}
 
+	cmdLang := i18n.GetCommandDefinition(ctx.Lang, cmd.Name)
+
 	embed := model.NewEmbed().
 		WithTitle(fullCommandName).
 		WithField(t.Category.Str(), fmt.Sprintf("%s %s", rootCmd.GetCategory().Emoji, rootCmd.GetCategory().Name)).
-		WithDescription(cmd.Description)
+		WithDescription(cmdLang.Description.Str())
 
 	if cmd.Aliases != nil {
 		embed.WithField(t.Aliases.Str(), strings.Join(cmd.Aliases, ", "))
@@ -155,15 +159,18 @@ func helpForCommand(ctx *command.CommandContext) {
 	}
 
 	if cmd.Parameters != nil {
+		i := 0
 		embed.WithField(
 			t.Parameters.Str(),
 			strings.Join(
 				slices.Map(cmd.Parameters, func(param *command.CommandParameter) string {
+					paramLang := cmdLang.Parameters[i]
+					i++
 					return fmt.Sprintf("%s: %s (%s)",
-						param.Name, param.Description,
+						param.Name, paramLang.Description.Str(),
 						k.Is(param.Required, t.Required.Str(), t.NotRequired.Str()))
 				}),
-				", ",
+				"\n",
 			),
 		)
 	}

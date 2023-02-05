@@ -16,15 +16,13 @@ import (
 )
 
 var RadioCommand = command.Command{
-	Name:        "radio",
-	Description: "Plays a pre-defined radio",
-	Deferred:    true,
+	Name:     "radio",
+	Deferred: true,
 	Parameters: []*command.CommandParameter{
 		{
-			Name:        "radio",
-			Description: "radio name",
-			Required:    false,
-			Type:        parameters.ParameterString,
+			Name:     "radio",
+			Required: false,
+			Type:     parameters.ParameterString,
 			ValidValuesFunc: func() []interface{} {
 				ids := []interface{}{}
 				for _, radio := range radio.GetRadioList() {

@@ -7,7 +7,7 @@ import (
 )
 
 var JokeCommand = command.Command{
-	Name: "joke", Description: "Get a random joke",
+	Name: "joke",
 	Handler: func(ctx *command.CommandContext) {
 		joke, err := joke.GetRandomJoke()
 		if err != nil {

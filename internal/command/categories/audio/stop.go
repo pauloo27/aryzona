@@ -10,7 +10,6 @@ import (
 
 var StopCommand = command.Command{
 	Name:        "stop",
-	Description: "Stop what is playing",
 	Validations: []*command.CommandValidation{validations.MustBePlaying},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandStop)

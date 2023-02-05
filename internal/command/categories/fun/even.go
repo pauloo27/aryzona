@@ -8,11 +8,9 @@ import (
 
 var EvenCommand = command.Command{
 	Name: "even", Aliases: []string{"odd"},
-	Description: "Check if a number is even or odd",
 	Parameters: []*command.CommandParameter{
 		{
 			Name:        "number",
-			Description: "number",
 			Type:        parameters.ParameterInt,
 			Required:    true,
 		},

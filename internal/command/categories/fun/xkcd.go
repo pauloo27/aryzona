@@ -12,7 +12,7 @@ import (
 )
 
 var XkcdCommand = command.Command{
-	Name: "xkcd", Description: "Get a xkcd comic",
+	Name: "xkcd",
 	SubCommands: []*command.Command{
 		&XkcdLatestSubCommand,
 		&XkcdRandomSubCommand,
@@ -21,7 +21,7 @@ var XkcdCommand = command.Command{
 }
 
 var XkcdLatestSubCommand = command.Command{
-	Name: "latest", Description: "Get the latest xkcd comic",
+	Name: "latest", 
 	Handler: func(ctx *command.CommandContext) {
 		comic, err := xkcd.GetLatest()
 		sendComic(ctx, comic, err)
@@ -29,7 +29,7 @@ var XkcdLatestSubCommand = command.Command{
 }
 
 var XkcdRandomSubCommand = command.Command{
-	Name: "random", Description: "Get a random xkcd comic",
+	Name: "random", 
 	Handler: func(ctx *command.CommandContext) {
 		comic, err := xkcd.GetRandom()
 		sendComic(ctx, comic, err)
@@ -37,11 +37,11 @@ var XkcdRandomSubCommand = command.Command{
 }
 
 var XkcdNumberSubCommand = command.Command{
-	Name: "number", Description: "Get a xkcd comic by it's number",
+	Name: "number", 
 	Aliases: []string{"num"},
 	Parameters: []*command.CommandParameter{
 		{
-			Name: "number", Description: "number of the comic",
+			Name: "number", 
 			Type: parameters.ParameterInt, Required: true,
 		},
 	},
