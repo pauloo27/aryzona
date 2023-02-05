@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"time"
 )
 
 // copied from https://github.com/paemuri/brdoc
 
 func GenerateCPF() string {
-	rand.Seed(time.Now().UnixNano())
 	/* #nosec G404 */
 	doc := fmt.Sprintf("%v", rand.Float64())[2:11]
 	doc += calculateDigit(doc, 10)
@@ -19,7 +17,6 @@ func GenerateCPF() string {
 }
 
 func GenerateCNPJ() string {
-	rand.Seed(time.Now().UnixNano())
 	/* #nosec G404 */
 	doc := fmt.Sprintf("%v", rand.Float64())[2:10] + "0001"
 	doc += calculateDigit(doc, 5)
