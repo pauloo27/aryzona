@@ -10,7 +10,11 @@
     },
     "commands": {
         "donate": {
-            "title": "Doe para o bot para que ele continue online"
+            "title": "Doe para o bot para que ele continue online",
+            "definition": {
+                "name": "doar",
+                "description": "Doar para o bot"
+            }
         },
         "help": {
             "title": "Lista de comandos",
@@ -26,13 +30,31 @@
             "commandNotFound": "Comando não encontrado",
             "forMoreInfo": "Para mais informações sobre um comando, use `{0:prefix}{1:used_help_command} <comando>`",
             "aka": "(vulgo {0:aliases})",
-            "requiresPermission": "(_você precisa {0:permission_name}_)"
+            "requiresPermission": "(_você precisa {0:permission_name}_)",
+            "definition": {
+                "name": "ajuda",
+                "description": "Veja os comandos do bot",
+                "parameters": [
+                    {
+                        "name": "comando",
+                        "description": "O comando para ver a ajuda"
+                    },
+                    {
+                        "name": "subComando",
+                        "description": "O sub comando para ver a ajuda"
+                    }
+                ]
+            }
         },
         "ping": {
             "title": "{0:emoji} Pong!",
             "footer": "(essa é a latência do bot, não a sua)",
             "apiLatency": "Latência da API",
-            "stillCalculating": "{0:emoji} Ainda calculando…"
+            "stillCalculating": "{0:emoji} Ainda calculando…",
+            "definition": {
+                "name": "ping",
+                "description": "Veja a latência do bot"
+            }
         },
         "uptime": {
             "title": "Tempo online do bot",
@@ -41,31 +63,77 @@
             "hostInfoKey": "{0:emoji} Informação do host",
             "hostInfoValue": "Compilado com **{0:version} {1:compiler}**, rodando em um **{2:os} {3:arch}{4:is_docker}**",
             "startedAt": "{0:emoji} Iniciado em",
-            "lastCommit": "{0:emoji} Último commit"
+            "lastCommit": "{0:emoji} Último commit",
+            "definition": {
+                "name": "tempoon",
+                "description": "Veja a quanto tempo o bot está online"
+            }
         },
         "source": {
-            "description": "Eu sou um bot open source, meu código está disponível [aqui]({0:link})"
+            "description": "Eu sou um bot open source, meu código está disponível [aqui]({0:link})",
+            "definition": {
+                "name": "source",
+                "description": "Veja o código fonte do bot"
+            }
         },
         "cnpj": {
             "title": "CNPJ Aleatório",
             "withoutMask": "Sem máscara",
-            "withMask": "Com máscara"
+            "withMask": "Com máscara",
+            "definition": {
+                "description": "Gere um CNPJ aleatório",
+                "name": "cnpj"
+            }
         },
         "cpf": {
             "title": "CPF Aleatório",
             "withoutMask": "Sem máscara",
-            "withMask": "Com máscara"
+            "withMask": "Com máscara",
+            "definition": {
+                "name": "cpf",
+                "description": "Gere um CPF aleatório"
+            }
         },
         "password": {
             "title": "Senha aleatória",
-            "description": "Sua senha aleatória de tamanho {0:length} é {1:password}\nClique em \"Ignorar mensagem\" quando já tiver copiado para que ela seja deletada do chat do Discord!"
+            "description": "Sua senha aleatória de tamanho {0:length} é {1:password}\nClique em \"Ignorar mensagem\" quando já tiver copiado para que ela seja deletada do chat do Discord!",
+            "definition": {
+                "name": "senha",
+                "description": "Gere uma senha aleatória",
+                "parameters": [
+                    {
+                        "name": "tamanho",
+                        "description": "O tamanho da senha"
+                    }
+                ]
+            }
         },
         "pick": {
             "title": "Escolher",
-            "description": "Escolhendo algo aleatório de _{0:list}_\n\nEscolhi **{1:pick}**"
+            "description": "Escolhendo algo aleatório de _{0:list}_\n\nEscolhi **{1:pick}**",
+            "definition": {
+                "parameters": [
+                    {
+                        "description": "A lista de coisas para escolher",
+                        "name": "lista"
+                    }
+                ],
+                "name": "escolher",
+                "description": "Escolha algo aleatório de uma lista"
+            }
         },
         "news": {
-            "title": "Noticias - {0:title} por {1:author}"
+            "title": "Noticias - {0:title} por {1:author}",
+            "definition": {
+                "name": "noticias",
+                "description": "Veja noticias de alguma fonte",
+                "parameters": [
+                    {
+                        "name": "fonte",
+                        "description": "A fonte de noticia"
+                    }
+                ]
+            }
         },
         "score": {
             "time": "Tempo",
@@ -75,14 +143,22 @@
             "title": "{0:emoji} Partidas ao vivo:",
             "footer": "Use `{0:prefix}{1:command} <nome do time>` para ver mais informações sobre uma partida",
             "matchNotFound": "Partida não encontrada",
-            "liveUpdates": "Use `{0:prefix}follow {1:team_name}` para receber atualizações ao vivo sobre essa partida"
+            "liveUpdates": "Use `{0:prefix}follow {1:team_name}` para receber atualizações ao vivo sobre essa partida",
+            "definition": {
+                "name": "resultado",
+                "description": "Veja o resultado de uma partida"
+            }
         },
         "unfollow": {
             "notFollowingAny": "Você não está seguindo nenhuma partida",
             "unfollowedAll": "Parou de seguir todas as partidas",
             "matchNotFound": "Partida não encontrada",
             "notFollowingMatch": "Você não está seguindo essa partida",
-            "unfollowedMatch": "Parou de seguir a partida {0:t1} x {1:t2}"
+            "unfollowedMatch": "Parou de seguir a partida {0:t1} x {1:t2}",
+            "definition": {
+                "name": "desseguir",
+                "description": "Deixe de seguir uma partida"
+            }
         },
         "follow": {
             "time": "Tempo",
@@ -91,7 +167,11 @@
             "matchNotFound": "Partida não encontrada",
             "matchFinished": "Partida acabou",
             "alreadyFollowing": "Vocẽ não está seguindo essa partida",
-            "followLimitReached": "Você pode seguir apenas {0:limit} partidas de uma vez. Use `{1:prefix}unfollow` para parar de seguir uma partida"
+            "followLimitReached": "Você pode seguir apenas {0:limit} partidas de uma vez. Use `{1:prefix}unfollow` para parar de seguir uma partida",
+            "definition": {
+                "name": "seguir",
+                "description": "Siga uma partida"
+            }
         },
         "roll": {
             "dice": "dado",
@@ -99,43 +179,91 @@
             "face": "lado",
             "faces": "lados",
             "title": "{0:emoji} Você tirou {1:result}",
-            "description": "Você rolou {0:dice_notation} ({1:dice_amount} {2:dice_or_dices} com {3:dice_faces} {4:face_or_faces})\n{5:total} -> {6:result_per_dice}"
+            "description": "Você rolou {0:dice_notation} ({1:dice_amount} {2:dice_or_dices} com {3:dice_faces} {4:face_or_faces})\n{5:total} -> {6:result_per_dice}",
+            "definition": {
+                "name": "rolar",
+                "description": "Role um dado"
+            }
         },
         "even": {
             "even": "Par",
-            "odd": "Ímpar"
+            "odd": "Ímpar",
+            "definition": {
+                "parameters": [
+                    {
+                        "name": "numero",
+                        "description": "O número a ser verificado"
+                    }
+                ],
+                "name": "par",
+                "description": "Veja se um número é par ou ímpar"
+            }
         },
         "resume": {
             "notPaused": "A fila não está pausada",
-            "resumed": "Retomado!"
+            "resumed": "Retomado!",
+            "definition": {
+                "name": "retomar",
+                "description": "Retome a fila"
+            }
         },
         "shuffle": {
-            "shuffled": "Aleatorizado! {0:emoji}"
+            "shuffled": "Aleatorizado! {0:emoji}",
+            "definition": {
+                "name": "aleatorizar",
+                "description": "Aleatorize a fila"
+            }
         },
         "skip": {
-            "skipped": "Pulado!"
+            "skipped": "Pulado!",
+            "definition": {
+                "name": "pular",
+                "description": "Pular o item atual da fila"
+            }
         },
         "stop": {
-            "stopped": "Parado!"
+            "stopped": "Parado!",
+            "definition": {
+                "name": "parar",
+                "description": "Pare a fila"
+            }
         },
         "pause": {
             "cannotPause": "Não é possível pausar o item atual da fila",
             "alreadyPaused": "A fila já está pausada!",
-            "paused": "Pausada! Use `{0:prefix}resume` para retomar a fila"
+            "paused": "Pausada! Use `{0:prefix}resume` para retomar a fila",
+            "definition": {
+                "description": "Pause o item atual da fila",
+                "name": "pause"
+            }
         },
         "radio": {
             "listTitle": "Lista de rádios:",
             "cannotConnect": "Não foi possível conectar no canal de voz",
             "notInRightChannel": "Você não está no mesmo canal de voz que o bot",
             "addedToQueue": "Adicionado {0:radio} a fila",
-            "listFooter": "Inicie uma rádio com `{0:prefix}{1:command} <nome da rádio>` e `{0:prefix}stop` quando estiver cansado dela!"
+            "listFooter": "Inicie uma rádio com `{0:prefix}{1:command} <nome da rádio>` e `{0:prefix}stop` quando estiver cansado dela!",
+            "definition": {
+                "name": "radio",
+                "description": "Toque uma rádio pré-definida",
+                "parameters": [
+                    {
+                        "name": "radio",
+                        "description": "A rádio para tocar"
+                    }
+                ]
+            }
         },
         "playing": {
             "title": "Tocando agora {0:name}",
             "never": "_Nunca_",
             "entry": "  -> {0:artist_and_title} _pedido por {1:requester}  (tocando em {2:eta})_",
             "comingNext": "**A seguir ({0:queue_size}):**",
-            "andMore": "_…e mais…_"
+            "andMore": "_…e mais…_",
+            "definition": {
+                "name": "tocando",
+                "description": "Veja a fila"
+            }
         },
         "play": {
             "notInRightChannel": "Você não está no mesmo canal de voz que o bot",
@@ -150,12 +278,32 @@
             "selectedResult": "Resultado selecionado de {0:query}",
             "confirmBtn": "Confirmar",
             "playOtherBtn": "Tocar outro",
-            "live": "Ao vivo {0:emoji}"
+            "live": "Ao vivo {0:emoji}",
+            "definition": {
+                "name": "tocar",
+                "description": "Toque uma música",
+                "parameters": [
+                    {
+                        "name": "musica",
+                        "description": "Termo de pesquisa ou URL"
+                    }
+                ]
+            }
         },
         "lyric": {
             "nothingPlaying": "Nada tocando",
             "notConnected": "O bot não está conectado a um canal de voz, você pode informar o nome da música no comando",
-            "noResults": "Nenhum resultado encontrado para {0:query}"
+            "noResults": "Nenhum resultado encontrado para {0:query}",
+            "definition": {
+                "name": "letra",
+                "description": "Veja a letra de uma música",
+                "parameters": [
+                    {
+                        "name": "musica",
+                        "description": "O nome da música"
+                    }
+                ]
+            }
         }
     }
 }
