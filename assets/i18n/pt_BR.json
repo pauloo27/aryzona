@@ -1,161 +1,161 @@
 {
     "meta": {
-        "name": "",
-        "displayName": "",
-        "authors": ""
+        "name": "pt_BR",
+        "displayName": "Português",
+        "authors": "Pauloo27"
     },
     "common": {
-        "helloWorld": "",
-        "somethingWentWrong": ""
+        "helloWorld": "Olá mundo!",
+        "somethingWentWrong": "Algo deu errado"
     },
     "commands": {
         "donate": {
-            "title": ""
+            "title": "Doe para o bot para que ele continue online"
         },
         "help": {
-            "title": "",
-            "parameters": "",
-            "validations": "",
-            "subCommands": "",
-            "aliases": "",
-            "permission": "",
-            "required": "",
-            "notRequired": "",
-            "category": "",
-            "subCommandNotFound": "",
-            "commandNotFound": "",
-            "forMoreInfo": "",
-            "aka": "",
-            "requiresPermission": ""
+            "title": "Lista de comandos",
+            "parameters": "Parametros",
+            "validations": "Validações",
+            "subCommands": "Sub Comandos",
+            "aliases": "Aliases",
+            "permission": "Permissão",
+            "required": "Obrigatório",
+            "notRequired": "Não obrigatório",
+            "category": "Categoria",
+            "subCommandNotFound": "Sub comandos não encontrado",
+            "commandNotFound": "Comando não encontrado",
+            "forMoreInfo": "Para mais informações sobre um comando, use `{0:prefix}{1:used_help_command} <comando>`",
+            "aka": "(vulgo {0:aliases})",
+            "requiresPermission": "(_você precisa {0:permission_name}_)"
         },
         "ping": {
-            "title": "",
-            "footer": "",
-            "apiLatency": "",
-            "stillCalculating": ""
+            "title": "{0:emoji} Pong!",
+            "footer": "(essa é a latência do bot, não a sua)",
+            "apiLatency": "Latência da API",
+            "stillCalculating": "{0:emoji} Ainda calculando…"
         },
         "uptime": {
-            "title": "",
-            "uptime": "",
-            "implementation": "",
-            "hostInfoKey": "",
-            "hostInfoValue": "",
-            "startedAt": "",
-            "lastCommit": ""
+            "title": "Tempo online do bot",
+            "uptime": "{0:emoji} Tempo online",
+            "implementation": "{0:emoji} Implementação",
+            "hostInfoKey": "{0:emoji} Informação do host",
+            "hostInfoValue": "Compilado com **{0:version} {1:compiler}**, rodando em um **{2:os} {3:arch}{4:is_docker}**",
+            "startedAt": "{0:emoji} Iniciado em",
+            "lastCommit": "{0:emoji} Último commit"
         },
         "source": {
-            "description": ""
+            "description": "Eu sou um bot open source, meu código está disponível [aqui]({0:link})"
         },
         "cnpj": {
-            "title": "",
-            "withoutMask": "",
-            "withMask": ""
+            "title": "CNPJ Aleatório",
+            "withoutMask": "Sem máscara",
+            "withMask": "Com máscara"
         },
         "cpf": {
-            "title": "",
-            "withoutMask": "",
-            "withMask": ""
+            "title": "CPF Aleatório",
+            "withoutMask": "Sem máscara",
+            "withMask": "Com máscara"
         },
         "password": {
-            "title": "",
-            "description": ""
+            "title": "Senha aleatória",
+            "description": "Sua senha aleatória de tamanho {0:length} é {1:password}\nClique em \"Ignorar mensagem\" quando já tiver copiado para que ela seja deletada do chat do Discord!"
         },
         "pick": {
-            "title": "",
-            "description": ""
+            "title": "Escolher",
+            "description": "Escolhendo algo aleatório de _{0:list}_\n\nEscolhi **{1:pick}**"
         },
         "news": {
-            "title": ""
+            "title": "Noticias - {0:title} por {1:author}"
         },
         "score": {
-            "time": "",
-            "match": "",
-            "timePenalty": "",
-            "noMatchesLive": "",
-            "title": "",
-            "footer": "",
-            "matchNotFound": "",
-            "liveUpdates": ""
+            "time": "Tempo",
+            "match": "Partida",
+            "timePenalty": "Pen",
+            "noMatchesLive": "Nenhuma partida ao vivo agora",
+            "title": "{0:emoji} Partidas ao vivo:",
+            "footer": "Use `{0:prefix}{1:command} <nome do time>` para ver mais informações sobre uma partida",
+            "matchNotFound": "Partida não encontrada",
+            "liveUpdates": "Use `{0:prefix}follow {1:team_name}` para receber atualizações ao vivo sobre essa partida"
         },
         "unfollow": {
-            "notFollowingAny": "",
-            "unfollowedAll": "",
-            "matchNotFound": "",
-            "notFollowingMatch": "",
-            "unfollowedMatch": ""
+            "notFollowingAny": "Você não está seguindo nenhuma partida",
+            "unfollowedAll": "Parou de seguir todas as partidas",
+            "matchNotFound": "Partida não encontrada",
+            "notFollowingMatch": "Você não está seguindo essa partida",
+            "unfollowedMatch": "Parou de seguir a partida {0:t1} x {1:t2}"
         },
         "follow": {
-            "time": "",
-            "match": "",
-            "timePenalty": "",
-            "matchNotFound": "",
-            "matchFinished": "",
-            "alreadyFollowing": "",
-            "followLimitReached": ""
+            "time": "Tempo",
+            "match": "Partida",
+            "timePenalty": "Pen",
+            "matchNotFound": "Partida não encontrada",
+            "matchFinished": "Partida acabou",
+            "alreadyFollowing": "Vocẽ não está seguindo essa partida",
+            "followLimitReached": "Você pode seguir apenas {0:limit} partidas de uma vez. Use `{1:prefix}unfollow` para parar de seguir uma partida"
         },
         "roll": {
-            "dice": "",
-            "dices": "",
-            "face": "",
-            "faces": "",
-            "title": "",
-            "description": ""
+            "dice": "dado",
+            "dices": "dados",
+            "face": "lado",
+            "faces": "lados",
+            "title": "{0:emoji} Você tirou {1:result}",
+            "description": "Você rolou {0:dice_notation} ({1:dice_amount} {2:dice_or_dices} com {3:dice_faces} {4:face_or_faces})\n{5:total} -> {6:result_per_dice}"
         },
         "even": {
-            "even": "",
-            "odd": ""
+            "even": "Par",
+            "odd": "Ímpar"
         },
         "resume": {
-            "notPaused": "",
-            "resumed": ""
+            "notPaused": "A fila não está pausada",
+            "resumed": "Retomado!"
         },
         "shuffle": {
-            "shuffled": ""
+            "shuffled": "Aleatorizado! {0:emoji}"
         },
         "skip": {
-            "skipped": ""
+            "skipped": "Pulado!"
         },
         "stop": {
-            "stopped": ""
+            "stopped": "Parado!"
         },
         "pause": {
-            "cannotPause": "",
-            "alreadyPaused": "",
-            "paused": ""
+            "cannotPause": "Não é possível pausar o item atual da fila",
+            "alreadyPaused": "A fila já está pausada!",
+            "paused": "Pausada! Use `{0:prefix}resume` para retomar a fila"
         },
         "radio": {
-            "listTitle": "",
-            "cannotConnect": "",
-            "notInRightChannel": "",
-            "addedToQueue": "",
-            "listFooter": ""
+            "listTitle": "Lista de rádios:",
+            "cannotConnect": "Não foi possível conectar no canal de voz",
+            "notInRightChannel": "Você não está no mesmo canal de voz que o bot",
+            "addedToQueue": "Adicionado {0:radio} a fila",
+            "listFooter": "Inicie uma rádio com `{0:prefix}{1:command} <nome da rádio>` e `{0:prefix}stop` quando estiver cansado dela!"
         },
         "playing": {
-            "title": "",
-            "never": "",
-            "entry": "",
-            "comingNext": "",
-            "andMore": ""
+            "title": "Tocando agora {0:name}",
+            "never": "_Nunca_",
+            "entry": "  -> {0:artist_and_title} _pedido por {1:requester}  (tocando em {2:eta})_",
+            "comingNext": "**A seguir ({0:queue_size}):**",
+            "andMore": "_…e mais…_"
         },
         "play": {
-            "notInRightChannel": "",
-            "cannotConnect": "",
-            "youtubePlaylist": "",
-            "bestResult": "",
-            "multipleResults": "",
-            "multipleResultsSelectOne": "",
-            "firstResultWillPlay": "",
-            "ifYouFailToSelect": "",
-            "entry": "",
-            "selectedResult": "",
-            "confirmBtn": "",
-            "playOtherBtn": "",
-            "live": ""
+            "notInRightChannel": "Você não está no mesmo canal de voz que o bot",
+            "cannotConnect": "Não foi possível conectar no canal de voz",
+            "youtubePlaylist": "Playlist do YouTube",
+            "bestResult": "Melhor resultado para {0:query}",
+            "multipleResults": "Múltiplos resultados encontrados",
+            "multipleResultsSelectOne": "Múltiplos resultados encontrados, por favor, escolha um",
+            "firstResultWillPlay": "[{0:title} de {1:author}]({2:url})\nSerá adicionado a fila em {3:time} segundos\nSe não é esse que você quer, aperte o botão `Tocar outro`",
+            "ifYouFailToSelect": "Se você não escolher um resultado em {0:time} segundos, o primeiro será selecionado automaticamente",
+            "entry": " - {0:number_emoji} - **{1:title}** de **{2:author}** (**{3:duration}**)",
+            "selectedResult": "Resultado selecionado de {0:query}",
+            "confirmBtn": "Confirmar",
+            "playOtherBtn": "Tocar outro",
+            "live": "Ao vivo {0:emoji}"
         },
         "lyric": {
-            "nothingPlaying": "",
-            "notConnected": "",
-            "noResults": ""
+            "nothingPlaying": "Nada tocando",
+            "notConnected": "O bot não está conectado a um canal de voz, você pode informar o nome da música no comando",
+            "noResults": "Nenhum resultado encontrado para {0:query}"
         }
     }
 }
