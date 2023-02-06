@@ -15,6 +15,20 @@
             "animals": "Animals",
             "tools": "Tools"
         },
+        "playingInfo": {
+            "songTitle": "Title",
+            "artist": "Artist",
+            "source": "Source",
+            "etaKey": "Will play",
+            "etaNever": "_Never_",
+            "etaValue": "in {0:duration}",
+            "durationKey": "Duration",
+            "durationLive": "**{0:emoji} Live**",
+            "position": "Position",
+            "requestedBy": "Requested by",
+            "warning": "Warning",
+            "songPausedWarning": "Song is **paused**, use `{0:prefix}resume` to resume"
+        },
         "matchInfo": {
             "time": "Time",
             "match": "Match",
@@ -328,7 +342,6 @@
                 "description": "Check the queue"
             },
             "title": "Now playing: {0:name}",
-            "never": "_Never_",
             "entry": "  -> {0:artist_and_title} _requested by {1:requester} (playing in {2:eta})_",
             "comingNext": "**Coming next ({0:queue_size}):**",
             "andMore": "_…and more…_"
@@ -355,8 +368,7 @@
             "entry": " - {0:number_emoji} - **{1:title}** from **{2:author}** (**{3:duration}**)",
             "selectedResult": "Selected result for {0:query}",
             "confirmBtn": "Confirm",
-            "playOtherBtn": "Play other",
-            "live": "Live {0:emoji}"
+            "playOtherBtn": "Play other"
         },
         "lyric": {
             "definition": {
