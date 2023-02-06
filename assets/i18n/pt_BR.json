@@ -19,6 +19,20 @@
             "time": "Tempo",
             "match": "Partida",
             "timePenalty": "Pen"
+        },
+        "playingInfo": {
+            "durationKey": "Duração",
+            "etaKey": "Vai tocar",
+            "etaNever": "_Nunca_",
+            "etaValue": "em {0:duration}",
+            "durationLive": "**{0:emoji} Ao vivo**",
+            "artist": "Artista",
+            "source": "Fonte",
+            "position": "Posição",
+            "requestedBy": "Pedido por",
+            "warning": "Aviso",
+            "songPausedWarning": "A fila está **pausada**, use `{0:prefix}resume` para retomar",
+            "songTitle": "Título"
         }
     },
     "commands": {
@@ -150,7 +164,6 @@
             }
         },
         "score": {
-            "match": "Partida",
             "noMatchesLive": "Nenhuma partida ao vivo agora",
             "title": "{0:emoji} Partidas ao vivo:",
             "footer": "Use `{0:prefix}{1:command} <nome do time>` para ver mais informações sobre uma partida",
@@ -185,7 +198,6 @@
             }
         },
         "follow": {
-            "match": "Partida",
             "matchNotFound": "Partida não encontrada",
             "matchFinished": "Partida acabou",
             "alreadyFollowing": "Vocẽ não está seguindo essa partida",
@@ -290,7 +302,6 @@
         },
         "playing": {
             "title": "Tocando agora {0:name}",
-            "never": "_Nunca_",
             "entry": "  -> {0:artist_and_title} _pedido por {1:requester}  (tocando em {2:eta})_",
             "comingNext": "**A seguir ({0:queue_size}):**",
             "andMore": "_…e mais…_",
@@ -312,7 +323,6 @@
             "selectedResult": "Resultado selecionado de {0:query}",
             "confirmBtn": "Confirmar",
             "playOtherBtn": "Tocar outro",
-            "live": "Ao vivo {0:emoji}",
             "definition": {
                 "name": "tocar",
                 "description": "Toque uma música",
