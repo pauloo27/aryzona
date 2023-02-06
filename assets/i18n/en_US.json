@@ -14,6 +14,11 @@
             "audio": "Audio",
             "animals": "Animals",
             "tools": "Tools"
+        },
+        "matchInfo": {
+            "time": "Time",
+            "match": "Match",
+            "timePenalty": "Pen"
         }
     },
     "commands": {
@@ -191,9 +196,6 @@
                     }
                 ]
             },
-            "time": "Time",
-            "match": "Match",
-            "timePenalty": "Pen",
             "noMatchesLive": "No live matches found right now",
             "title": "{0:emoji} Live matches:",
             "footer": "Use `{0:prefix}{1:command} <team name>` to get more info about a match",
@@ -228,9 +230,6 @@
                     }
                 ]
             },
-            "time": "Time",
-            "match": "Match",
-            "timePenalty": "Pen",
             "matchNotFound": "Match not found",
             "matchFinished": "Match has finished",
             "alreadyFollowing": "You are already following this match",
