@@ -69,7 +69,21 @@
         "xkcd": {
             "definition": {
                 "name": "xkcd",
-                "description": "Get a random XKCD comic"
+                "description": "Get a XKCD comic",
+                "subCommands": [
+                    {
+                        "name": "latest",
+                        "description": "Get the latest XKCD comic"
+                    },
+                    {
+                        "name": "number",
+                        "description": "Get a XKCD comic by number"
+                    },
+                    {
+                        "name": "random",
+                        "description": "Get a random XKCD comic"
+                    }
+                ]
             }
         },
         "donate": {
