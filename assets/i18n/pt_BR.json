@@ -382,7 +382,21 @@
         "xkcd": {
             "definition": {
                 "name": "xkcd",
-                "description": "Veja um XKCD aleatório"
+                "description": "Veja um XKCD",
+                "subCommands": [
+                    {
+                        "name": "ultimo",
+                        "description": "Veja o último XKCD"
+                    },
+                    {
+                        "name": "numero",
+                        "description": "Veja um XKCD a partir do seu número"
+                    },
+                    {
+                        "name": "aleatorio",
+                        "description": "Veja um XKCD aleatório"
+                    }
+                ]
             }
         }
     }
