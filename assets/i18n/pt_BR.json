@@ -150,9 +150,7 @@
             }
         },
         "score": {
-            "time": "Tempo",
             "match": "Partida",
-            "timePenalty": "Pen",
             "noMatchesLive": "Nenhuma partida ao vivo agora",
             "title": "{0:emoji} Partidas ao vivo:",
             "footer": "Use `{0:prefix}{1:command} <nome do time>` para ver mais informações sobre uma partida",
@@ -187,9 +185,7 @@
             }
         },
         "follow": {
-            "time": "Tempo",
             "match": "Partida",
-            "timePenalty": "Pen",
             "matchNotFound": "Partida não encontrada",
             "matchFinished": "Partida acabou",
             "alreadyFollowing": "Vocẽ não está seguindo essa partida",
