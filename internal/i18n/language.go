@@ -40,7 +40,16 @@ type Common struct {
 	HelloWorld         Entry
 	SomethingWentWrong Entry
 	Took               Entry
-	Categories         map[string]Entry
+
+	MatchInfo *MatchInfo
+
+	Categories map[string]Entry
+}
+
+type MatchInfo struct {
+	Match       Entry
+	Time        Entry
+	TimePenalty Entry
 }
 
 type Commands struct {

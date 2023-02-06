@@ -72,11 +72,7 @@ func showMatchInfo(ctx *command.CommandContext, t *i18n.CommandScore) {
 		return
 	}
 
-	embed := buildMatchEmbed(match, &MatchInfoI18n{
-		TimePenalty: t.TimePenalty.Str(),
-		Match:       t.Match.Str(),
-		Time:        t.Time.Str(),
-	}).
+	embed := buildMatchEmbed(match, t.MatchInfo).
 		WithFooter(
 			t.LiveUpdates.Str(command.Prefix, teamNameOrID),
 		)
@@ -84,13 +80,7 @@ func showMatchInfo(ctx *command.CommandContext, t *i18n.CommandScore) {
 	ctx.Embed(embed)
 }
 
-type MatchInfoI18n struct {
-	TimePenalty string
-	Match       string
-	Time        string
-}
-
-func buildMatchEmbed(match *livescore.MatchInfo, t *MatchInfoI18n) *model.Embed {
+func buildMatchEmbed(match *livescore.MatchInfo, t *i18n.MatchInfo) *model.Embed {
 	desc := strings.Builder{}
 
 	if len(match.Events) > 0 {
@@ -102,7 +92,7 @@ func buildMatchEmbed(match *livescore.MatchInfo, t *MatchInfoI18n) *model.Embed 
 
 			var eventTime string
 			if event.Half == 4 {
-				eventTime = t.TimePenalty
+				eventTime = t.TimePenalty.Str()
 			} else if event.ExtraMinute != 0 {
 				eventTime += fmt.Sprintf("%d+%d'", event.Minute, event.ExtraMinute)
 			} else {
@@ -134,8 +124,8 @@ func buildMatchEmbed(match *livescore.MatchInfo, t *MatchInfoI18n) *model.Embed 
 
 	return model.NewEmbed().
 		WithColor(0xC0FFEE).
-		WithField(t.Match, fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
-		WithField(t.Time, match.Time).
+		WithField(t.Match.Str(), fmt.Sprintf("%s: %s, %s", match.CupName, match.StadiumName, match.StadiumCity)).
+		WithField(t.Time.Str(), match.Time).
 		WithImage(match.GetBannerURL()).
 		WithFieldInline(match.T1.Name, t1Score).
 		WithFieldInline(match.T2.Name, t2Score).

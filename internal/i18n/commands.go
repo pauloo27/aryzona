@@ -55,9 +55,6 @@ type CommandFollow struct {
 	*Common
 	Definition *CommandDefinition
 
-	Match              Entry
-	Time               Entry
-	TimePenalty        Entry
 	MatchNotFound      Entry
 	MatchFinished      Entry
 	AlreadyFollowing   Entry
@@ -73,9 +70,6 @@ type CommandScore struct {
 	Footer        Entry
 	MatchNotFound Entry
 	LiveUpdates   Entry
-	Time          Entry
-	Match         Entry
-	TimePenalty   Entry
 }
 
 type CommandCPF struct {

@@ -65,15 +65,9 @@ var FollowCommand = command.Command{
 			}
 		}
 
-		matchInfoI18n := &MatchInfoI18n{
-			Match:       t.Match.Str(),
-			Time:        t.Time.Str(),
-			TimePenalty: t.TimePenalty.Str(),
-		}
-
 		addUserFollow(ctx.AuthorID, match.ID)
 
-		embed := buildMatchEmbed(match, matchInfoI18n)
+		embed := buildMatchEmbed(match, t.MatchInfo)
 		ctx.Embed(embed)
 
 		listenerID := getListenerID(ctx.AuthorID, match.ID)
@@ -84,7 +78,7 @@ var FollowCommand = command.Command{
 				removeUserFollow(ctx.AuthorID, match.MatchID)
 				return
 			}
-			embed := buildMatchEmbed(match.CurrentData, matchInfoI18n)
+			embed := buildMatchEmbed(match.CurrentData, t.MatchInfo)
 			err = ctx.EditEmbed(embed)
 			if err != nil {
 				_ = liveMatch.RemoveListener(listenerID)
