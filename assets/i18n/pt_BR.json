@@ -14,6 +14,11 @@
             "audio": "Áudio",
             "animals": "Animais",
             "tools": "Ferramentas"
+        },
+        "matchInfo": {
+            "time": "Tempo",
+            "match": "Partida",
+            "timePenalty": "Pen"
         }
     },
     "commands": {
