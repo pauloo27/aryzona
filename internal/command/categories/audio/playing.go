@@ -28,7 +28,7 @@ var PlayingCommand = command.Command{
 		playing := ctx.Locals["playing"].(playable.Playable)
 		requesterID := ctx.Locals["requesterID"].(string)
 
-		embed := buildPlayableInfoEmbed(playing, vc, requesterID).
+		embed := buildPlayableInfoEmbed(playing, vc, requesterID, t.PlayingInfo).
 			WithTitle(t.Title.Str(playing.GetName()))
 
 		if vc.Queue.Size() > 1 {
@@ -45,7 +45,7 @@ var PlayingCommand = command.Command{
 
 				eta := calcETA(playable, vc)
 				if eta == -1 {
-					etaStr = t.Never.Str()
+					etaStr = t.PlayingInfo.ETANever.Str()
 				} else {
 					etaStr = f.DurationAsDetailedDiffText(eta)
 				}

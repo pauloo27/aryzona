@@ -198,7 +198,6 @@ type CommandPlaying struct {
 	Definition *CommandDefinition
 
 	Title      Entry
-	Never      Entry
 	Entry      Entry
 	ComingNext Entry
 	AndMore    Entry
@@ -249,7 +248,6 @@ type CommandPlay struct {
 	SelectedResult           Entry
 	ConfirmBtn               Entry
 	PlayOtherBtn             Entry
-	Live                     Entry
 }
 
 type CommandFox struct {

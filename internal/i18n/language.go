@@ -41,7 +41,8 @@ type Common struct {
 	SomethingWentWrong Entry
 	Took               Entry
 
-	MatchInfo *MatchInfo
+	MatchInfo   *MatchInfo
+	PlayingInfo *PlayingInfo
 
 	Categories map[string]Entry
 }
@@ -50,6 +51,21 @@ type MatchInfo struct {
 	Match       Entry
 	Time        Entry
 	TimePenalty Entry
+}
+
+type PlayingInfo struct {
+	SongTitle         Entry
+	Artist            Entry
+	Source            Entry
+	ETAKey            Entry
+	ETANever          Entry
+	ETAValue          Entry
+	DurationKey       Entry
+	DurationLive      Entry
+	Position          Entry
+	RequestedBy       Entry
+	Warning           Entry
+	SongPausedWarning Entry
 }
 
 type Commands struct {

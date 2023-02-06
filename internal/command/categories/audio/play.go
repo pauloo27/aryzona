@@ -117,7 +117,7 @@ func handleSingleResult(ctx *command.CommandContext, vc *voicer.Voicer, searchQu
 	}
 
 	ctx.SuccessEmbed(
-		buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID).WithTitle(t.BestResult.Str(searchQuery)),
+		buildPlayableInfoEmbed(displayResult, vc, ctx.AuthorID, t.PlayingInfo).WithTitle(t.BestResult.Str(searchQuery)),
 	)
 
 	return
@@ -152,7 +152,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 				firstResult.Title,
 				firstResult.ID,
 				firstResult.Author,
-				k.Is(firstResult.Duration == 0, t.Live.Str(":red_circle:"), f.ShortDuration(firstResult.Duration)),
+				k.Is(firstResult.Duration == 0, t.PlayingInfo.DurationLive.Str(":red_circle:"), f.ShortDuration(firstResult.Duration)),
 				firstResultTimeout/time.Second,
 			),
 		)
@@ -172,7 +172,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 				return &model.ComplexMessage{
 					Components: buildDisabledComponents(components, 0),
 					Embeds: []*model.Embed{
-						buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
+						buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID, t.PlayingInfo).
 							WithTitle(t.SelectedResult.Str(searchQuery)).
 							WithColor(command.SuccessEmbedColor),
 					},
@@ -214,7 +214,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 
 	select {
 	case <-time.After(firstResultTimeout):
-		embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
+		embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID, t.PlayingInfo).
 			WithTitle(t.SelectedResult.Str(searchQuery)).
 			WithColor(command.SuccessEmbedColor)
 
@@ -232,7 +232,7 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 		if result == nil {
 			select {
 			case <-time.After(multipleResultsTimeout):
-				embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID).
+				embed := buildPlayableInfoEmbed(firstResult.ToPlayable()[0], vc, ctx.AuthorID, t.PlayingInfo).
 					WithTitle(t.SelectedResult.Str(searchQuery)).
 					WithColor(command.SuccessEmbedColor)
 
@@ -269,7 +269,7 @@ func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer,
 					f.Emojify(i+1),
 					result.Title,
 					result.Author,
-					k.Is(result.Duration == 0, t.Live.Str(":red_circle:"), f.ShortDuration(result.Duration)),
+					k.Is(result.Duration == 0, t.PlayingInfo.DurationLive.Str(":red_circle:"), f.ShortDuration(result.Duration)),
 				),
 			),
 		)
@@ -300,7 +300,7 @@ func buildMultipleResultsMessage(ctx *command.CommandContext, vc *voicer.Voicer,
 			return &model.ComplexMessage{
 				Components: buildDisabledComponents(components, index),
 				Embeds: []*model.Embed{
-					buildPlayableInfoEmbed(result.ToPlayable()[0], vc, ctx.AuthorID).
+					buildPlayableInfoEmbed(result.ToPlayable()[0], vc, ctx.AuthorID, t.PlayingInfo).
 						WithTitle(t.SelectedResult.Str(searchQuery)).
 						WithColor(command.SuccessEmbedColor),
 				},
