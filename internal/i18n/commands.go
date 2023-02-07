@@ -4,7 +4,8 @@ type CommandDefinition struct {
 	Name        Entry
 	Description Entry
 
-	Parameters []ParameterDefinition
+	Parameters  []ParameterDefinition
+	SubCommands []CommandDefinition
 }
 
 type ParameterDefinition struct {

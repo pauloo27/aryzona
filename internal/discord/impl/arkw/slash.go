@@ -17,106 +17,11 @@ import (
 	"github.com/diamondburned/arikawa/v3/utils/json/option"
 )
 
-func mustGetIntegerChoises(arg *command.CommandParameter) (choises []dc.IntegerChoice) {
-	for _, value := range arg.GetValidValues() {
-		choises = append(choises, dc.IntegerChoice{
-			Name:  fmt.Sprintf("%v", value),
-			Value: value.(int),
-		})
-	}
-	return
+type languageContext struct {
+	defaultLangCmd *i18n.CommandDefinition
+	otherLangs     []*i18n.Language
+	otherLangsCmd  []*i18n.CommandDefinition
 }
-
-func mustGetStringChoises(arg *command.CommandParameter) (choises []dc.StringChoice) {
-	for _, value := range arg.GetValidValues() {
-		choises = append(choises, dc.StringChoice{
-			Name:  fmt.Sprintf("%v", value),
-			Value: value.(string),
-		})
-	}
-	return
-}
-
-func mustGetOption(param *command.CommandParameter, i int, lang languageContext) dc.CommandOption {
-	if len(lang.defaultLangCmd.Parameters) <= i {
-		logger.Fatalf("Cannot find parameter %d for command %s in the default language", i, lang.defaultLangCmd.Name)
-		return nil
-	}
-
-	defaultParamName := lang.defaultLangCmd.Parameters[i].Name.Str()
-	defaultParamDescription := lang.defaultLangCmd.Parameters[i].Description.Str()
-
-	localizedParamName := make(dc.StringLocales)
-	localizedParamDescription := make(dc.StringLocales)
-
-	for j, l := range lang.otherLangsCmd {
-		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
-
-		if len(l.Parameters) <= i {
-			logger.Fatalf("Cannot find parameter %d for command %s in the language %s", i, l.Name.Str(), langName)
-			return nil
-		}
-		localizedParamName[langName] = l.Parameters[i].Name.Str()
-		localizedParamDescription[langName] = l.Parameters[i].Description.Str()
-	}
-
-	switch param.Type.BaseType {
-	case parameters.TypeString:
-
-		return &dc.StringOption{
-			OptionName:               defaultParamName,
-			Description:              defaultParamDescription,
-			OptionNameLocalizations:  localizedParamName,
-			DescriptionLocalizations: localizedParamDescription,
-			Required:                 param.Required,
-			Choices:                  mustGetStringChoises(param),
-		}
-	case parameters.TypeBool:
-		return &dc.BooleanOption{
-			OptionName:               defaultParamName,
-			Description:              defaultParamDescription,
-			OptionNameLocalizations:  localizedParamName,
-			DescriptionLocalizations: localizedParamDescription,
-			Required:                 param.Required,
-		}
-	case parameters.TypeInt:
-		return &dc.IntegerOption{
-			OptionName:               defaultParamName,
-			Description:              defaultParamDescription,
-			OptionNameLocalizations:  localizedParamName,
-			DescriptionLocalizations: localizedParamDescription,
-			Required:                 param.Required,
-			Choices:                  mustGetIntegerChoises(param),
-		}
-	default:
-		logger.Fatalf("Cannot find discord type for %s", param.Type.BaseType.Name)
-	}
-	return nil
-}
-
-/*
-func mustGetOptionValue(arg *command.CommandParameter) dc.CommandOptionValue {
-	switch arg.Type.BaseType {
-	case parameters.TypeString:
-		return &dc.StringOption{
-			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
-			Choices: mustGetStringChoises(arg),
-		}
-	case parameters.TypeBool:
-		return &dc.BooleanOption{
-			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
-		}
-	case parameters.TypeInt:
-		return &dc.IntegerOption{
-			OptionName: arg.Name, Description: arg.Description, Required: arg.Required,
-			Choices: mustGetIntegerChoises(arg),
-		}
-	default:
-		logger.Fatalf("Cannot find discord type for %s", arg.Type.BaseType.Name)
-	}
-	return nil
-}
-*/
 
 func registerCommands(bot ArkwBot) error {
 	app, err := bot.s.CurrentApplication()
@@ -159,7 +64,8 @@ func registerCommands(bot ArkwBot) error {
 		}
 
 		slashCommand := api.CreateCommandData{
-			Name: defaultCmdLang.Name.Str(), Description: defaultCmdLang.Description.Str(),
+			Name:                     defaultCmdLang.Name.Str(),
+			Description:              defaultCmdLang.Description.Str(),
 			NameLocalizations:        make(dc.StringLocales),
 			DescriptionLocalizations: make(dc.StringLocales),
 		}
@@ -171,15 +77,56 @@ func registerCommands(bot ArkwBot) error {
 			slashCommand.DescriptionLocalizations[dcName] = cmdLang.Description.Str()
 		}
 
-		// FIXME: subcommands
-		/*
-			for subCmd := range cmd.SubCommands {
-			}
-		*/
-
 		for i, arg := range cmd.Parameters {
 			slashCommand.Options = append(
-				slashCommand.Options, mustGetOption(arg, i, languageContext{defaultCmdLang, otherLangs, otherCmdLangs}),
+				slashCommand.Options, mustGetOption(
+					arg, i, languageContext{defaultCmdLang, otherLangs, otherCmdLangs},
+				),
+			)
+		}
+
+		for i, subCmd := range cmd.SubCommands {
+			subCmdOptions := make([]dc.CommandOptionValue, len(subCmd.Parameters))
+			for j, subCmdParam := range subCmd.Parameters {
+				subCmdOptions[j] = mustGetOptionValue(
+					subCmdParam, i, j, languageContext{defaultCmdLang, otherLangs, otherCmdLangs},
+				)
+			}
+
+			if len(defaultCmdLang.SubCommands) <= i {
+				logger.Fatalf("Subcommand %s not found in default language", subCmd.Name)
+				return nil
+			}
+
+			defaultSubCmdName := defaultCmdLang.SubCommands[i].Name.Str()
+			defaultSubCmdDescription := defaultCmdLang.SubCommands[i].Description.Str()
+
+			localizedSubCmdNames := make(dc.StringLocales)
+			localizedSubCmdDescriptions := make(dc.StringLocales)
+
+			for j, l := range otherCmdLangs {
+				langName := dc.Language(otherLangs[j].Name.DiscordName())
+
+				if len(l.SubCommands) <= i {
+					logger.Fatalf(
+						"Cannot find sub command %d for command %s in the language %s",
+						i, l.Name.Str(), langName,
+					)
+					return nil
+				}
+				localizedSubCmdNames[langName] = l.SubCommands[i].Name.Str()
+				localizedSubCmdDescriptions[langName] = l.SubCommands[i].Description.Str()
+			}
+
+			slashCommand.Options = append(
+				slashCommand.Options,
+				&dc.SubcommandOption{
+					OptionName:               defaultSubCmdName,
+					Description:              defaultSubCmdDescription,
+					OptionNameLocalizations:  localizedSubCmdNames,
+					DescriptionLocalizations: localizedSubCmdDescriptions,
+					Options:                  subCmdOptions,
+				},
 			)
 		}
 
@@ -221,11 +168,12 @@ func registerCommands(bot ArkwBot) error {
 				components = dc.ComponentsPtr(&row)
 			}
 
-			_, err := bot.s.EditInteractionResponse(i.AppID, i.Token, api.EditInteractionResponseData{
-				Content:    option.NewNullableString(message.Content),
-				Embeds:     &embeds,
-				Components: components,
-			})
+			_, err := bot.s.EditInteractionResponse(i.AppID, i.Token,
+				api.EditInteractionResponseData{
+					Content:    option.NewNullableString(message.Content),
+					Embeds:     &embeds,
+					Components: components,
+				})
 			return err
 		}
 
@@ -360,8 +308,135 @@ func registerCommands(bot ArkwBot) error {
 	return nil
 }
 
-type languageContext struct {
-	defaultLangCmd *i18n.CommandDefinition
-	otherLangs     []*i18n.Language
-	otherLangsCmd  []*i18n.CommandDefinition
+func mustGetIntegerChoises(arg *command.CommandParameter) (choises []dc.IntegerChoice) {
+	for _, value := range arg.GetValidValues() {
+		choises = append(choises, dc.IntegerChoice{
+			Name:  fmt.Sprintf("%v", value),
+			Value: value.(int),
+		})
+	}
+	return
+}
+
+func mustGetStringChoises(arg *command.CommandParameter) (choises []dc.StringChoice) {
+	for _, value := range arg.GetValidValues() {
+		choises = append(choises, dc.StringChoice{
+			Name:  fmt.Sprintf("%v", value),
+			Value: value.(string),
+		})
+	}
+	return
+}
+
+func mustGetOption(param *command.CommandParameter, i int, lang languageContext) dc.CommandOption {
+	if len(lang.defaultLangCmd.Parameters) <= i {
+		logger.Fatalf("Cannot find parameter %d for command %s in the default language", i, lang.defaultLangCmd.Name)
+		return nil
+	}
+
+	defaultParamName := lang.defaultLangCmd.Parameters[i].Name.Str()
+	defaultParamDescription := lang.defaultLangCmd.Parameters[i].Description.Str()
+
+	localizedParamName := make(dc.StringLocales)
+	localizedParamDescription := make(dc.StringLocales)
+
+	for j, l := range lang.otherLangsCmd {
+		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
+
+		if len(l.Parameters) <= i {
+			logger.Fatalf("Cannot find parameter %d for command %s in the language %s", i, l.Name.Str(), langName)
+			return nil
+		}
+		localizedParamName[langName] = l.Parameters[i].Name.Str()
+		localizedParamDescription[langName] = l.Parameters[i].Description.Str()
+	}
+
+	switch param.Type.BaseType {
+	case parameters.TypeString:
+
+		return &dc.StringOption{
+			OptionName:               defaultParamName,
+			Description:              defaultParamDescription,
+			OptionNameLocalizations:  localizedParamName,
+			DescriptionLocalizations: localizedParamDescription,
+			Required:                 param.Required,
+			Choices:                  mustGetStringChoises(param),
+		}
+	case parameters.TypeBool:
+		return &dc.BooleanOption{
+			OptionName:               defaultParamName,
+			Description:              defaultParamDescription,
+			OptionNameLocalizations:  localizedParamName,
+			DescriptionLocalizations: localizedParamDescription,
+			Required:                 param.Required,
+		}
+	case parameters.TypeInt:
+		return &dc.IntegerOption{
+			OptionName:               defaultParamName,
+			Description:              defaultParamDescription,
+			OptionNameLocalizations:  localizedParamName,
+			DescriptionLocalizations: localizedParamDescription,
+			Required:                 param.Required,
+			Choices:                  mustGetIntegerChoises(param),
+		}
+	default:
+		logger.Fatalf("Cannot find discord type for %s", param.Type.BaseType.Name)
+	}
+	return nil
+}
+
+func mustGetOptionValue(param *command.CommandParameter, subCommandIdx, paramIdx int, lang languageContext) dc.CommandOptionValue {
+	if len(lang.defaultLangCmd.SubCommands[subCommandIdx].Parameters) <= paramIdx {
+		logger.Fatalf("Cannot find parameter %d for command %s in the default language", paramIdx, lang.defaultLangCmd.Name)
+		return nil
+	}
+
+	defaultParamName := lang.defaultLangCmd.SubCommands[subCommandIdx].Parameters[paramIdx].Name.Str()
+	defaultParamDescription := lang.defaultLangCmd.SubCommands[subCommandIdx].Parameters[paramIdx].Description.Str()
+
+	localizedParamName := make(dc.StringLocales)
+	localizedParamDescription := make(dc.StringLocales)
+
+	for j, l := range lang.otherLangsCmd {
+		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
+
+		if len(l.SubCommands[subCommandIdx].Parameters) <= paramIdx {
+			logger.Fatalf("Cannot find parameter %d for command %s in the language %s", paramIdx, l.Name.Str(), langName)
+			return nil
+		}
+		localizedParamName[langName] = l.SubCommands[subCommandIdx].Parameters[paramIdx].Name.Str()
+		localizedParamDescription[langName] = l.SubCommands[subCommandIdx].Parameters[paramIdx].Description.Str()
+	}
+
+	switch param.Type.BaseType {
+	case parameters.TypeString:
+		return &dc.StringOption{
+			OptionName:               defaultParamName,
+			Description:              defaultParamDescription,
+			OptionNameLocalizations:  localizedParamName,
+			DescriptionLocalizations: localizedParamDescription,
+			Required:                 param.Required,
+			Choices:                  mustGetStringChoises(param),
+		}
+	case parameters.TypeBool:
+		return &dc.BooleanOption{
+			OptionName:               defaultParamName,
+			Description:              defaultParamDescription,
+			OptionNameLocalizations:  localizedParamName,
+			DescriptionLocalizations: localizedParamDescription,
+			Required:                 param.Required,
+		}
+	case parameters.TypeInt:
+		return &dc.IntegerOption{
+			OptionName:               defaultParamName,
+			Description:              defaultParamDescription,
+			OptionNameLocalizations:  localizedParamName,
+			DescriptionLocalizations: localizedParamDescription,
+			Required:                 param.Required,
+			Choices:                  mustGetIntegerChoises(param),
+		}
+	default:
+		logger.Fatalf("Cannot find discord type for %s", param.Type.BaseType.Name)
+	}
+	return nil
 }

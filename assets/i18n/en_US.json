@@ -76,12 +76,18 @@
                         "description": "Get the latest XKCD comic"
                     },
                     {
-                        "name": "number",
-                        "description": "Get a XKCD comic by number"
-                    },
-                    {
                         "name": "random",
                         "description": "Get a random XKCD comic"
+                    },
+                    {
+                        "name": "number",
+                        "description": "Get a XKCD comic by number",
+                        "parameters": [
+                            {
+                                "name": "number",
+                                "description": "The comic number"
+                            }
+                        ]
                     }
                 ]
             }

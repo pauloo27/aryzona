@@ -389,12 +389,18 @@
                         "description": "Veja o último XKCD"
                     },
                     {
-                        "name": "numero",
-                        "description": "Veja um XKCD a partir do seu número"
-                    },
-                    {
                         "name": "aleatorio",
                         "description": "Veja um XKCD aleatório"
+                    },
+                    {
+                        "name": "numero",
+                        "description": "Veja um XKCD a partir do seu número",
+                        "parameters": [
+                            {
+                                "name": "numero",
+                                "description": "O numero do XKCD"
+                            }
+                        ]
                     }
                 ]
             }
