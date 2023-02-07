@@ -160,7 +160,7 @@ func helpForCommand(ctx *command.CommandContext) {
 					paramLang := cmdLang.Parameters[i]
 					i++
 					return fmt.Sprintf("%s: %s (%s)",
-						param.Name, paramLang.Description.Str(),
+						paramLang.Name, paramLang.Description.Str(),
 						k.Is(param.Required, t.Required.Str(), t.NotRequired.Str()))
 				}),
 				"\n",
