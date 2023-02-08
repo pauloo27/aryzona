@@ -8,4 +8,4 @@ services:
     ports:
       - 8099:8099
     volumes:
-      - ./.env:/app/.env
+      - ./config.yml:/app/config.yml
