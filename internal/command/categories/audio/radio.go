@@ -61,7 +61,12 @@ var RadioCommand = command.Command{
 				return
 			}
 		}
-		embed := buildPlayableInfoEmbed(channel, nil, ctx.AuthorID, t.PlayingInfo).WithTitle(t.AddedToQueue.Str(channel.GetName()))
+		embed := buildPlayableInfoEmbed(
+			channel,
+			nil,
+			ctx.AuthorID,
+			t.PlayingInfo,
+		).WithTitle(t.AddedToQueue.Str(channel.GetName()))
 		ctx.SuccessEmbed(embed)
 
 		routine.Go(func() {

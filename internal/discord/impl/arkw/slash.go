@@ -401,7 +401,12 @@ func mustGetOptionValue(param *command.CommandParameter, subCommandIdx, paramIdx
 		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
 
 		if len(l.SubCommands[subCommandIdx].Parameters) <= paramIdx {
-			logger.Fatalf("Cannot find parameter %d for command %s in the language %s", paramIdx, l.Name.Str(), langName)
+			logger.Fatalf(
+				"Cannot find parameter %d for command %s in the language %s",
+				paramIdx,
+				l.Name.Str(),
+				langName,
+			)
 			return nil
 		}
 		localizedParamName[langName] = l.SubCommands[subCommandIdx].Parameters[paramIdx].Name.Str()

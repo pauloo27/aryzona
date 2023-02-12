@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	userFollowedMatcheIDs = make(map[string][]string)
+	followedMatchIDs = make(map[string][]string)
 )
 
 var FollowCommand = command.Command{
@@ -53,12 +53,12 @@ var FollowCommand = command.Command{
 			return
 		}
 
-		if len(userFollowedMatcheIDs[ctx.AuthorID]) >= maxFollowPerUser {
+		if len(followedMatchIDs[ctx.AuthorID]) >= maxFollowPerUser {
 			ctx.Error(t.FollowLimitReached.Str(maxFollowPerUser, command.Prefix))
 			return
 		}
 
-		for _, followedMatchID := range userFollowedMatcheIDs[ctx.AuthorID] {
+		for _, followedMatchID := range followedMatchIDs[ctx.AuthorID] {
 			if followedMatchID == match.ID {
 				ctx.Error(t.AlreadyFollowing.Str())
 				return
@@ -89,13 +89,16 @@ var FollowCommand = command.Command{
 }
 
 func addUserFollow(userID string, matchID string) {
-	userFollowedMatcheIDs[userID] = append(userFollowedMatcheIDs[userID], matchID)
+	followedMatchIDs[userID] = append(followedMatchIDs[userID], matchID)
 }
 
 func removeUserFollow(userID string, matchID string) {
-	for i, id := range userFollowedMatcheIDs[userID] {
+	for i, id := range followedMatchIDs[userID] {
 		if id == matchID {
-			userFollowedMatcheIDs[userID] = append(userFollowedMatcheIDs[userID][:i], userFollowedMatcheIDs[userID][i+1:]...)
+			followedMatchIDs[userID] = append(
+				followedMatchIDs[userID][:i],
+				followedMatchIDs[userID][i+1:]...,
+			)
 		}
 	}
 }

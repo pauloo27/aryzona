@@ -23,11 +23,11 @@ var UnFollowCommand = command.Command{
 		authorID := ctx.AuthorID
 
 		if len(ctx.Args) == 0 {
-			if len(userFollowedMatcheIDs[authorID]) == 0 {
+			if len(followedMatchIDs[authorID]) == 0 {
 				ctx.Error(t.NotFollowingAny.Str())
 				return
 			}
-			for _, matchID := range userFollowedMatcheIDs[authorID] {
+			for _, matchID := range followedMatchIDs[authorID] {
 				liveMatch, err := livescore.GetLiveMatch(matchID)
 				if err != nil {
 					ctx.Error(t.SomethingWentWrong.Str())

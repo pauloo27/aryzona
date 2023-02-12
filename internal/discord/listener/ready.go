@@ -70,5 +70,10 @@ func createStartedEmbed(guildCount int) *model.Embed {
 		WithColor(0xC0FFEE).
 		WithImage(dogImage).
 		WithField("Guild count", strconv.Itoa(guildCount)).
-		WithField("Last commit", fmt.Sprintf("**[%s](%s/commit/%s)**", git.CommitMessage, git.RemoteRepo, git.CommitHash))
+		WithField("Last commit", fmt.Sprintf(
+			"**[%s](%s/commit/%s)**",
+			git.CommitMessage,
+			git.RemoteRepo,
+			git.CommitHash,
+		))
 }

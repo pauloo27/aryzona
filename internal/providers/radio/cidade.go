@@ -47,7 +47,9 @@ func (r CidadeRadio) GetDirectURL() (string, error) {
 }
 
 func (r CidadeRadio) GetFullTitle() (title, artist string) {
-	res, err := http.Get("https://np.tritondigital.com/public/nowplaying?mountName=RADIOCIDADEAAC&numberToFetch=1&eventType=track")
+	res, err := http.Get(
+		"https://np.tritondigital.com/public/nowplaying?mountName=RADIOCIDADEAAC&numberToFetch=1&eventType=track",
+	)
 	if err != nil {
 		return
 	}

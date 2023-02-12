@@ -18,7 +18,12 @@ func NewErrRequiredParameter(param *CommandParameter) error {
 		if param.RequiredMessage != "" {
 			message = param.RequiredMessage
 		} else if validValues != nil {
-			message = fmt.Sprintf("parameter `%s` (type %s, valid values are: `%v`) missing", param.Name, param.Type.Name, validValues)
+			message = fmt.Sprintf(
+				"parameter `%s` (type %s, valid values are: `%v`) missing",
+				param.Name,
+				param.Type.Name,
+				validValues,
+			)
 		} else {
 			message = fmt.Sprintf("parameter `%s` (type %s) missing", param.Name, param.Type.Name)
 		}

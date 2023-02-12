@@ -184,7 +184,7 @@ func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	}
 }
 
-func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler InteractionHandler) (baseID string, err error) {
+func (ctx *CommandContext) RegisterInteractionHandler(handler InteractionHandler) (baseID string, err error) {
 	for {
 		baseID, err = gonanoid.New(InteractionBaseIDLength)
 		if err != nil {
@@ -195,7 +195,7 @@ func (ctx *CommandContext) RegisterInteractionHandler(interactionHandler Interac
 			break
 		}
 	}
-	ctx.interactionHandler = interactionHandler
+	ctx.interactionHandler = handler
 	commandInteractionMap[baseID] = ctx
 	go func() {
 		time.Sleep(5 * time.Minute)
