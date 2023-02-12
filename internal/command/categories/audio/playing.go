@@ -28,7 +28,14 @@ var PlayingCommand = command.Command{
 		playing := ctx.Locals["playing"].(playable.Playable)
 		requesterID := ctx.Locals["requesterID"].(string)
 
-		embed := buildPlayableInfoEmbed(playing, vc, requesterID, t.PlayingInfo).
+		embed := buildPlayableInfoEmbed(
+			PlayableInfo{
+				Playable:    playing,
+				Voicer:      vc,
+				RequesterID: requesterID,
+				T:           t.PlayingInfo,
+			},
+		).
 			WithTitle(t.Title.Str(playing.GetName()))
 
 		if vc.Queue.Size() > 1 {

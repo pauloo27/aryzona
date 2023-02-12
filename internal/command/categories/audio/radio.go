@@ -62,10 +62,11 @@ var RadioCommand = command.Command{
 			}
 		}
 		embed := buildPlayableInfoEmbed(
-			channel,
-			nil,
-			ctx.AuthorID,
-			t.PlayingInfo,
+			PlayableInfo{
+				Playable:    channel,
+				RequesterID: ctx.AuthorID,
+				T:           t.PlayingInfo,
+			},
 		).WithTitle(t.AddedToQueue.Str(channel.GetName()))
 		ctx.SuccessEmbed(embed)
 

@@ -13,7 +13,19 @@ import (
 	"github.com/Pauloo27/aryzona/internal/i18n"
 )
 
-func buildPlayableInfoEmbed(playable playable.Playable, vc *voicer.Voicer, requesterID string, t *i18n.PlayingInfo) *model.Embed {
+type PlayableInfo struct {
+	Playable    playable.Playable
+	Voicer      *voicer.Voicer
+	RequesterID string
+	T           *i18n.PlayingInfo
+}
+
+func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
+	playable := info.Playable
+	vc := info.Voicer
+	requesterID := info.RequesterID
+	t := info.T
+
 	title, artist := playable.GetFullTitle()
 
 	embed := model.NewEmbed().
