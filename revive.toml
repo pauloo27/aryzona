@@ -21,3 +21,6 @@ warningCode = 0
 [rule.unexported-return]
 [rule.indent-error-flow]
 [rule.errorf]
+[rule.line-length-limit]
+  # try to keep at most 80, but allow up to 120
+  arguments = [120]
