@@ -150,9 +150,16 @@ func handleMultipleResults(ctx *command.CommandContext, vc *voicer.Voicer, searc
 		WithDescription(
 			t.FirstResultWillPlay.Str(
 				firstResult.Title,
-				firstResult.ID,
 				firstResult.Author,
-				k.Is(firstResult.Duration == 0, t.PlayingInfo.DurationLive.Str(":red_circle:"), f.ShortDuration(firstResult.Duration)),
+				fmt.Sprintf(
+					"https://youtu.be/%s",
+					firstResult.ID,
+				),
+				k.Is(
+					firstResult.Duration == 0,
+					t.PlayingInfo.DurationLive.Str(":red_circle:"),
+					f.ShortDuration(firstResult.Duration),
+				),
 				firstResultTimeout/time.Second,
 			),
 		)
