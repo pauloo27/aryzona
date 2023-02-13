@@ -39,7 +39,7 @@ func NewErrInvalidValue(param *CommandParameter) error {
 	return fmt.Errorf("%w: %s", ErrInvalidValue, message)
 }
 
-func NewErrCannotParseParameter(argument *CommandParameter, err error) error {
+func NewErrCannotParseParameter(err error) error {
 	var message string
 	if err != nil {
 		message = err.Error()
@@ -77,7 +77,7 @@ func (command *Command) ValidateParameters(parameters []string) (values []interf
 
 		value, err := parameter.Type.Parser(i, parameters)
 		if err != nil {
-			syntaxError = NewErrCannotParseParameter(parameter, err)
+			syntaxError = NewErrCannotParseParameter(err)
 			break
 		}
 

@@ -385,14 +385,18 @@ func mustGetOption(param *command.CommandParameter, i int, lang languageContext)
 	return nil
 }
 
-func mustGetOptionValue(param *command.CommandParameter, subCommandIdx, paramIdx int, lang languageContext) dc.CommandOptionValue {
-	if len(lang.defaultLangCmd.SubCommands[subCommandIdx].Parameters) <= paramIdx {
-		logger.Fatalf("Cannot find parameter %d for command %s in the default language", paramIdx, lang.defaultLangCmd.Name)
+func mustGetOptionValue(param *command.CommandParameter, subCmdIdx, paramIdx int, lang languageContext) dc.CommandOptionValue {
+	if len(lang.defaultLangCmd.SubCommands[subCmdIdx].Parameters) <= paramIdx {
+		logger.Fatalf(
+			"Cannot find parameter %d for command %s in the default language",
+			paramIdx,
+			lang.defaultLangCmd.Name,
+		)
 		return nil
 	}
 
-	defaultParamName := lang.defaultLangCmd.SubCommands[subCommandIdx].Parameters[paramIdx].Name.Str()
-	defaultParamDescription := lang.defaultLangCmd.SubCommands[subCommandIdx].Parameters[paramIdx].Description.Str()
+	defaultParamName := lang.defaultLangCmd.SubCommands[subCmdIdx].Parameters[paramIdx].Name.Str()
+	defaultParamDescription := lang.defaultLangCmd.SubCommands[subCmdIdx].Parameters[paramIdx].Description.Str()
 
 	localizedParamName := make(dc.StringLocales)
 	localizedParamDescription := make(dc.StringLocales)
@@ -400,7 +404,7 @@ func mustGetOptionValue(param *command.CommandParameter, subCommandIdx, paramIdx
 	for j, l := range lang.otherLangsCmd {
 		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
 
-		if len(l.SubCommands[subCommandIdx].Parameters) <= paramIdx {
+		if len(l.SubCommands[subCmdIdx].Parameters) <= paramIdx {
 			logger.Fatalf(
 				"Cannot find parameter %d for command %s in the language %s",
 				paramIdx,
@@ -409,8 +413,8 @@ func mustGetOptionValue(param *command.CommandParameter, subCommandIdx, paramIdx
 			)
 			return nil
 		}
-		localizedParamName[langName] = l.SubCommands[subCommandIdx].Parameters[paramIdx].Name.Str()
-		localizedParamDescription[langName] = l.SubCommands[subCommandIdx].Parameters[paramIdx].Description.Str()
+		localizedParamName[langName] = l.SubCommands[subCmdIdx].Parameters[paramIdx].Name.Str()
+		localizedParamDescription[langName] = l.SubCommands[subCmdIdx].Parameters[paramIdx].Description.Str()
 	}
 
 	switch param.Type.BaseType {
