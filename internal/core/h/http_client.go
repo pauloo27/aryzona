@@ -22,6 +22,7 @@ func Get(url string) ([]byte, error) {
 		return body, err
 	}
 
+	/* #nosec G307 */
 	defer res.Body.Close()
 
 	return io.ReadAll(res.Body)

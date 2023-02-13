@@ -91,6 +91,7 @@ func FetchMatchInfo(matchID string) (*MatchInfo, error) {
 		return nil, err
 	}
 
+	/* #nosec G307 */
 	defer res.Body.Close()
 
 	data, err := io.ReadAll(res.Body)

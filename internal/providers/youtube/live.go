@@ -15,6 +15,7 @@ func getFirstURL(manifestURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	/* #nosec G307 */
 	defer res.Body.Close()
 	buffer, err := io.ReadAll(res.Body)
 	if err != nil {

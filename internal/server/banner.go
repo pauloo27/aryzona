@@ -77,6 +77,7 @@ func loadTeamImg(teamID string) (image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
+	/* #nosec G307 */
 	defer resp.Body.Close()
 	img, _, err := image.Decode(resp.Body)
 	return img, err

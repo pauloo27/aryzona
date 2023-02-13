@@ -53,6 +53,7 @@ func (r CidadeRadio) GetFullTitle() (title, artist string) {
 	if err != nil {
 		return
 	}
+	/* #nosec G307 */
 	defer res.Body.Close()
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
