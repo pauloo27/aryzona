@@ -27,9 +27,6 @@ type eventListener struct {
 	preEvent bool
 }
 
-type voiceUpdateHandler func(discord.BotAdapter, model.User, model.VoiceChannel, model.VoiceChannel)
-type messageCreatedHandler func(discord.BotAdapter, model.Message)
-
 func (b ArkwBot) Listen(eventType event.EventType, listener any) error {
 	var l interface{}
 	switch eventType {
@@ -54,7 +51,7 @@ func (b ArkwBot) Listen(eventType event.EventType, listener any) error {
 				buildUser(m.Author.ID.String()),
 				m.Content,
 			)
-			listener.(messageCreatedHandler)(b, msg)
+			listener.(func(discord.BotAdapter, model.Message))(b, msg)
 		}
 	case event.VoiceStateUpdated:
 		eventID := uuid.New().String()
@@ -73,7 +70,7 @@ func (b ArkwBot) Listen(eventType event.EventType, listener any) error {
 				prevCh, _ = possiblePrevCh.(model.VoiceChannel)
 			}
 
-			listener.(voiceUpdateHandler)(b, user, prevCh, curCh)
+			listener.(func(discord.BotAdapter, model.User, model.VoiceChannel, model.VoiceChannel))(b, user, prevCh, curCh)
 		}
 	default:
 		return event.ErrEventNotSupported
