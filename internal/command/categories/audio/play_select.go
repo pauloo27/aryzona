@@ -59,6 +59,8 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 			),
 		)
 
+	ctx.AddCommandDuration(embed)
+
 	var components []model.MessageComponent
 
 	baseID, err := ctx.RegisterInteractionHandler(
@@ -134,6 +136,8 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 			WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
 			WithColor(command.SuccessEmbedColor)
 
+		ctx.AddCommandDuration(embed)
+
 		err = ctx.EditComplex(
 			&model.ComplexMessage{
 				Embeds:     []*model.Embed{embed},
@@ -149,15 +153,17 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 			select {
 			case <-time.After(multipleResultsTimeout):
 				embed := buildPlayableInfoEmbed(
-PlayableInfo{
-					Playable: firstResult.ToPlayable()[0],
-					Voicer: ctx.Voicer,
-					RequesterID: ctx.AuthorID,
-					T: t.PlayingInfo,
-				},
+					PlayableInfo{
+						Playable:    firstResult.ToPlayable()[0],
+						Voicer:      ctx.Voicer,
+						RequesterID: ctx.AuthorID,
+						T:           t.PlayingInfo,
+					},
 				).
 					WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
 					WithColor(command.SuccessEmbedColor)
+
+				ctx.AddCommandDuration(embed)
 
 				err = ctx.EditComplex(
 					&model.ComplexMessage{
@@ -224,20 +230,22 @@ func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn
 			result := ctx.Results[index]
 			selectResult(result)
 
+			embed := buildPlayableInfoEmbed(
+				PlayableInfo{
+					Playable:    result.ToPlayable()[0],
+					Voicer:      ctx.Voicer,
+					RequesterID: ctx.AuthorID,
+					T:           t.PlayingInfo,
+				},
+			).
+				WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
+				WithColor(command.SuccessEmbedColor)
+
+			ctx.AddCommandDuration(embed)
+
 			return &model.ComplexMessage{
 				Components: buildDisabledComponents(components, index),
-				Embeds: []*model.Embed{
-					buildPlayableInfoEmbed(
-						PlayableInfo{
-							Playable:    result.ToPlayable()[0],
-							Voicer:      ctx.Voicer,
-							RequesterID: ctx.AuthorID,
-							T:           t.PlayingInfo,
-						},
-					).
-						WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
-						WithColor(command.SuccessEmbedColor),
-				},
+				Embeds:     []*model.Embed{embed},
 			}, true
 		},
 	)
