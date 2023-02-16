@@ -55,6 +55,9 @@ type CommandContext struct {
 	EditEmbed          func(*model.Embed) error
 	Command            *Command
 	Trigger            CommandTrigger
+
+	executionID string
+	processTime time.Duration
 }
 
 type CommandPermission struct {
@@ -174,9 +177,8 @@ func (ctx *CommandContext) ErrorEmbedReturning(embed *model.Embed) error {
 }
 
 func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
-	processTime := time.Since(ctx.startTime)
-	logger.Debugf("Command %s took %s", ctx.Command.Name, processTime)
-	duration := ctx.Lang.Took.Str(processTime.Truncate(time.Second))
+	ctx.processTime = time.Since(ctx.startTime)
+	duration := ctx.Lang.Took.Str(ctx.processTime.Truncate(time.Second))
 	if embed.Footer != "" {
 		embed.Footer = fmt.Sprintf("%s • %s", embed.Footer, duration)
 	} else {

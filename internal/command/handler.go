@@ -7,12 +7,27 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
+	"github.com/matoous/go-nanoid/v2"
+)
+
+var (
+	CommandLogLevel = logger.Level{
+		Name:  "COMMAND",
+		Color: "\033[38;5;5m",
+	}
 )
 
 func executeCommand(
 	command *Command, ctx *CommandContext,
 	adapter *Adapter, bot discord.BotAdapter,
 ) {
+	logger.Logf(
+		CommandLogLevel,
+		"[i %s] <u %s> <g %s><c %s> executed: %s %s",
+		ctx.executionID,
+		ctx.AuthorID, ctx.GuildID, ctx.Channel.ID(), ctx.UsedName, ctx.RawArgs,
+	)
+
 	if command.Deferred && adapter.DeferResponse != nil {
 		err := adapter.DeferResponse()
 		if err != nil {
@@ -123,23 +138,42 @@ func HandleCommand(
 		Channel:   channel,
 	}
 
+	ctx.executionID = gonanoid.Must(5)
+
+	logResponse := func() {
+		logger.Logf(
+			CommandLogLevel,
+			"[i %s] got response %s, took %s",
+			ctx.executionID,
+			// there's no need to log the response, also, not microsoft here
+			"<omitted>",
+			ctx.processTime,
+		)
+	}
+
 	// attach adapter
 	ctx.Reply = func(msg string) error {
+		logResponse()
 		return adapter.Reply(ctx, msg)
 	}
 	ctx.ReplyEmbed = func(embed *model.Embed) error {
+		logResponse()
 		return adapter.ReplyEmbed(ctx, embed)
 	}
 	ctx.Edit = func(msg string) error {
+		logResponse()
 		return adapter.Edit(ctx, msg)
 	}
 	ctx.EditEmbed = func(embed *model.Embed) error {
+		logResponse()
 		return adapter.EditEmbed(ctx, embed)
 	}
 	ctx.ReplyComplex = func(data *model.ComplexMessage) error {
+		logResponse()
 		return adapter.ReplyComplex(ctx, data)
 	}
 	ctx.EditComplex = func(data *model.ComplexMessage) error {
+		logResponse()
 		return adapter.EditComplex(ctx, data)
 	}
 
