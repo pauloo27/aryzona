@@ -23,8 +23,8 @@ func executeCommand(
 ) {
 	logger.Logf(
 		CommandLogLevel,
-		"[i %s] <u %s> <g %s><c %s> executed: %s %s",
-		ctx.executionID,
+		"[i %s] (%s) <u %s> <g %s><c %s> executed: %s %s",
+		ctx.executionID, ctx.Trigger,
 		ctx.AuthorID, ctx.GuildID, ctx.Channel.ID(), ctx.UsedName, ctx.RawArgs,
 	)
 
