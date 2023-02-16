@@ -2,6 +2,7 @@ package audio
 
 import (
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/audio/dca"
@@ -41,13 +42,22 @@ var PlayCommand = command.Command{
 		t := ctx.T.(*i18n.CommandPlay)
 
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
-		var connErrCh *chan error
+		searchQuery := ctx.Args[0].(string)
+		hasResultsAndIsConnected := true
+
+		var results []*youtube.SearchResult
+		var wg sync.WaitGroup
+		var err error
 
 		if !vc.IsConnected() {
-			ch := make(chan error)
-			connErrCh = &ch
+			wg.Add(1)
 			go func() {
-				ch <- vc.Connect()
+				defer wg.Done()
+				if err := vc.Connect(); err != nil {
+					hasResultsAndIsConnected = false
+					ctx.Error(t.CannotConnect.Str())
+					logger.Error(err)
+				}
 			}()
 		} else {
 			authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
@@ -57,19 +67,20 @@ var PlayCommand = command.Command{
 			}
 		}
 
-		searchQuery := ctx.Args[0].(string)
-		results, err := youtube.SearchFor(searchQuery, maxSearchResults)
-		if err != nil || len(results) == 0 {
-			ctx.Error(t.SomethingWentWrong.Str())
-			logger.Warnf("Error searching for %s: %v", searchQuery, err)
-			return
-		}
-
-		if connErrCh != nil {
-			if err := <-(*connErrCh); err != nil {
-				ctx.Error(t.CannotConnect.Str())
-				return
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			results, err = youtube.SearchFor(searchQuery, maxSearchResults)
+			if err != nil || len(results) == 0 {
+				hasResultsAndIsConnected = false
+				ctx.Error(t.SomethingWentWrong.Str())
+				logger.Warnf("Error searching for %s: %v", searchQuery, err)
 			}
+		}()
+
+		wg.Wait()
+		if !hasResultsAndIsConnected {
+			return
 		}
 
 		// what should be added to the queue, since we support playlists...
@@ -95,7 +106,7 @@ var PlayCommand = command.Command{
 		}
 
 		routine.Go(func() {
-			if err = vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
+			if err := vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return
 				}
