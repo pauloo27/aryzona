@@ -143,4 +143,5 @@ runs:
               name: build docker image
               command:  |
                 export COMMIT=$(cat /workspace/commit.txt)
-                /kaniko/executor --destination $REGISTRY_URL/$REGISTRY_IMAGE:$COMMIT --destination $REGISTRY_URL/$REGISTRY_IMAGE:latest --force
+                export DESTINATION="$REGISTRY_URL/$REGISTRY_IMAGE"
+                /kaniko/executor --destination $DESTINATION:$COMMIT --destination $DESTINATION:$AGOLA_GIT_BRANCH --destination $DESTINATION:latest --force
