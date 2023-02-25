@@ -1,16 +1,28 @@
 name: Aryzona CI/CD
 on: [push, pull_request]
 
+# FIXME: remove docker hub login, right now it's needed SO I DONT GET RATE LIMITED
+# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+# ok im feeling better now
+
 jobs:
   build:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.20.1
           cache: true
+
       - name: Build
         run: make build
 
@@ -18,11 +30,19 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.20.1
           cache: true
+
       - name: Test
         run: make test
 
@@ -30,26 +50,41 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.20.1
           cache: true
+
       - name: Install inspection tools
         run: |
           go install github.com/mgechev/revive@latest
           go install honnef.co/go/tools/cmd/staticcheck@latest
           go install github.com/securego/gosec/v2/cmd/gosec@latest
+
       - name: Inspect
         run: make inspect
-
-
+  
   deploy:
     needs: [build, test, inspect]
     runs-on: self-hosted
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
     steps:
       - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -57,6 +92,7 @@ jobs:
         id: buildx-context
         run: |
           docker context create builders
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -78,3 +114,11 @@ jobs:
           context: .
           push: true
           tags: ${{ vars.DOCKER_REGISTRY }}/${{ vars.DOCKER_IMAGE }}:${{ github.sha }},${{ vars.DOCKER_REGISTRY }}/${{ vars.DOCKER_IMAGE }}:${{ github.ref_name }}
+
+      - uses: actions-hub/kubectl@v1.26.1
+        env:
+          KUBE_HOST: ${{ secrets.K8S_URL }}
+          KUBE_TOKEN: ${{ secrets.K8S_TOKEN }}
+          KUBE_CERTIFICATE: ${{ secrets.K8S_CERTIFICATE }}
+        with:
+          args: rollout restart deployment/aryzona -n aryzona-${{ github.ref_name }}
