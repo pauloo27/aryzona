@@ -2,9 +2,6 @@
 
 The one and only Discord Bot that is proudly Flamenguista.
 
-If you are using Github, this is a mirror. The original repo can be found 
-[here](https://code.db.cafe/Pauloo27/aryzona).
-
 [![CI status](https://ci.db.cafe/api/v1alpha/badges/187accd5-deac-4593-ae76-3454b052bf5b)](https://ci.db.cafe/user/Pauloo27/projects/aryzona.proj)
 
 [![Translation status](https://i18n.db.cafe/widgets/aryzona/-/bot/287x66-black.png)](https://i18n.db.cafe/projects/aryzona/bot/)
