@@ -68,7 +68,7 @@ var PlayingCommand = command.Command{
 					fullTitle = fmt.Sprintf("%s - %s", artist, title)
 				}
 
-				sb.WriteString(t.Entry.Str(fullTitle, requester, etaStr))
+				sb.WriteString(t.Entry.Str(fullTitle, requester, etaStr) + "\n")
 			}
 			if len(next) > maxNextItems {
 				sb.WriteString(t.AndMore.Str())

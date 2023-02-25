@@ -336,7 +336,7 @@
                 "description": "Pause the current queue item"
             },
             "cannotPause": "Cannot pause the current queue item",
-            "alreadyPaused": "The queue is already paused!",
+            "alreadyPaused": "The queue is already paused! Maybe you meant `{0:prefix}resume`?",
             "paused": "Paused! Use `{0:prefix}resume` to resume the queue"
         },
         "radio": {

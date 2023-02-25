@@ -23,7 +23,7 @@ var PauseCommand = command.Command{
 		}
 
 		if vc.IsPaused() {
-			ctx.Error(t.AlreadyPaused.Str())
+			ctx.Error(t.AlreadyPaused.Str(command.Prefix))
 			return
 		}
 		vc.Pause()

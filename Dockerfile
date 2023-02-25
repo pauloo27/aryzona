@@ -22,6 +22,10 @@ RUN make dist
 FROM alpine:latest
 RUN apk add ffmpeg
 
+RUN addgroup -S ary && adduser -S ary -G ary
+
+USER ary
+
 WORKDIR /app
 COPY --from=builder /app/assets /app/assets
 COPY --from=builder /app/aryzona /app/aryzona

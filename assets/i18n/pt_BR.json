@@ -276,8 +276,8 @@
         },
         "pause": {
             "cannotPause": "Não é possível pausar o item atual da fila",
-            "alreadyPaused": "A fila já está pausada!",
-            "paused": "Pausada! Use `{0:prefix}resume` para retomar a fila",
+            "alreadyPaused": "A fila já está pausada! Talvez você queria usar `{0:prefix}retomar`?",
+            "paused": "Fila pausada! Use `{0:prefix}resume` para retomar a fila",
             "definition": {
                 "description": "Pause o item atual da fila",
                 "name": "pause"
