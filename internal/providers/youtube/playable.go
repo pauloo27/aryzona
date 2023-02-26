@@ -10,8 +10,16 @@ import (
 type YouTubePlayable struct {
 	ID, Title, Author, ThumbnailURL string
 	Duration                        time.Duration
-	video                           *youtube.Video
+	vid                             *youtube.Video
 	Live                            bool
+}
+
+func (p YouTubePlayable) video() *youtube.Video {
+	if p.vid != nil {
+		return p.vid
+	}
+	p.vid, _ = defaultClient.GetVideo(p.ID)
+	return p.vid
 }
 
 func (p YouTubePlayable) CanPause() bool {
@@ -23,14 +31,7 @@ func (YouTubePlayable) GetName() string {
 }
 
 func (p YouTubePlayable) GetShareURL() string {
-	if p.video == nil {
-		var err error
-		p.video, err = defaultClient.GetVideo(p.ID)
-		if err != nil {
-			return ""
-		}
-	}
-	return fmt.Sprintf("https://youtu.be/%s", p.video.ID)
+	return fmt.Sprintf("https://youtu.be/%s", p.video().ID)
 }
 
 func (p YouTubePlayable) IsLive() bool {
@@ -50,20 +51,13 @@ func (YouTubePlayable) TogglePause() error {
 }
 
 func (p YouTubePlayable) GetDirectURL() (string, error) {
-	if p.video == nil {
-		var err error
-		p.video, err = defaultClient.GetVideo(p.ID)
-		if err != nil {
-			return "", err
-		}
-	}
 	if p.Live {
-		return getLiveURL(p.video)
+		return getLiveURL(p.video())
 	}
-	if format := p.video.Formats.FindByItag(251); format != nil {
-		return defaultClient.GetStreamURL(p.video, format)
+	if format := p.video().Formats.FindByItag(251); format != nil {
+		return defaultClient.GetStreamURL(p.video(), format)
 	}
-	return defaultClient.GetStreamURL(p.video, p.video.Formats.FindByItag(140))
+	return defaultClient.GetStreamURL(p.video(), p.video().Formats.FindByItag(140))
 }
 
 func (p YouTubePlayable) GetFullTitle() (title string, artist string) {
@@ -75,14 +69,7 @@ func (YouTubePlayable) IsLocal() bool {
 }
 
 func (p YouTubePlayable) IsOpus() bool {
-	if p.video == nil {
-		var err error
-		p.video, err = defaultClient.GetVideo(p.ID)
-		if err != nil {
-			return false
-		}
-	}
-	return p.video.Formats.FindByItag(251) != nil
+	return p.video().Formats.FindByItag(251) != nil
 }
 
 func GetVideo(videoURL string) (YouTubePlayable, error) {
@@ -97,6 +84,6 @@ func GetVideo(videoURL string) (YouTubePlayable, error) {
 		ThumbnailURL: vid.Thumbnails[0].URL,
 		Duration:     vid.Duration,
 		Live:         vid.Duration == 0,
-		video:        vid,
+		vid:          vid,
 	}, nil
 }

@@ -35,9 +35,13 @@ func searchWithAPI(searchQuery string, limit int) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	var ids []string
-	for _, id := range gjson.GetBytes(buf, "items.#.id.videoId").Array() {
-		ids = append(ids, id.String())
+
+	results := gjson.GetBytes(buf, "items.#.id.videoId").Array()
+
+	ids := make([]string, 0, len(results))
+
+	for i, id := range results {
+		ids[i] = id.String()
 	}
 	return ids, nil
 }
@@ -92,9 +96,9 @@ func playlistAsSearchResult(pl *yt.Playlist) *SearchResult {
 		duration += vid.Duration
 	}
 
-	var plVids []*SearchResult
-	for _, vid := range pl.Videos {
-		plVids = append(plVids, playlistVidAsSearchResult(vid))
+	plVids := make([]*SearchResult, 0, len(pl.Videos))
+	for i, vid := range pl.Videos {
+		plVids[i] = playlistVidAsSearchResult(vid)
 	}
 
 	return &SearchResult{
@@ -128,9 +132,9 @@ func (r *SearchResult) IsLive() bool {
 
 func (r *SearchResult) ToPlayable() []playable.Playable {
 	if r.IsPlaylist() {
-		var playables []playable.Playable
-		for _, vid := range r.plVids {
-			playables = append(playables, vid.ToPlayable()[0])
+		playables := make([]playable.Playable, len(r.plVids))
+		for i, vid := range r.plVids {
+			playables[i] = vid.ToPlayable()[0]
 		}
 		return playables
 	}
@@ -142,7 +146,7 @@ func (r *SearchResult) ToPlayable() []playable.Playable {
 			ThumbnailURL: r.ThumbnailURL,
 			Duration:     r.Duration,
 			Live:         r.IsLive(),
-			video:        r.vid,
+			vid:          r.vid,
 		},
 	}
 }
