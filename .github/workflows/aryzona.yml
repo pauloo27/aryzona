@@ -1,9 +1,8 @@
 name: Aryzona CI/CD
 on: [push, pull_request]
 
-# FIXME: remove docker hub login, right now it's needed SO I DONT GET RATE LIMITED
-# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-# ok im feeling better now
+# all logins to docker hub are due to rate limit when pulling images
+# we dont push to docker hub, so we dont need to login there.
 
 jobs:
   build:
@@ -113,9 +112,19 @@ jobs:
           tags: ${{ vars.DOCKER_REGISTRY }}/${{ vars.DOCKER_IMAGE }}:${{ github.sha }},${{ vars.DOCKER_REGISTRY }}/${{ vars.DOCKER_IMAGE }}:${{ github.ref_name }}
 
       - uses: actions-hub/kubectl@v1.26.1
+        if: github.ref_name == 'dev'
         env:
           KUBE_HOST: ${{ secrets.K8S_URL }}
           KUBE_TOKEN: ${{ secrets.K8S_TOKEN }}
           KUBE_CERTIFICATE: ${{ secrets.K8S_CERTIFICATE }}
         with:
-          args: rollout restart deployment/aryzona -n aryzona-${{ github.ref_name }}
+          args: rollout restart deployment/aryzona -n aryzona-dev
+
+      - uses: actions-hub/kubectl@v1.26.1
+        if: github.ref_name == 'master'
+        env:
+          KUBE_HOST: ${{ secrets.K8S_URL }}
+          KUBE_TOKEN: ${{ secrets.K8S_TOKEN }}
+          KUBE_CERTIFICATE: ${{ secrets.K8S_CERTIFICATE }}
+        with:
+          args: rollout restart deployment/aryzona -n aryzona-prod
