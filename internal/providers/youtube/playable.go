@@ -14,12 +14,13 @@ type YouTubePlayable struct {
 	Live                            bool
 }
 
-func (p YouTubePlayable) video() *youtube.Video {
+func (p YouTubePlayable) video() (*youtube.Video, error) {
 	if p.vid != nil {
-		return p.vid
+		return p.vid, nil
 	}
-	p.vid, _ = defaultClient.GetVideo(p.ID)
-	return p.vid
+	var err error
+	p.vid, err = defaultClient.GetVideo(p.ID)
+	return p.vid, err
 }
 
 func (p YouTubePlayable) CanPause() bool {
@@ -31,7 +32,11 @@ func (YouTubePlayable) GetName() string {
 }
 
 func (p YouTubePlayable) GetShareURL() string {
-	return fmt.Sprintf("https://youtu.be/%s", p.video().ID)
+	vid, err := p.video()
+	if err != nil {
+		return ""
+	}
+	return fmt.Sprintf("https://youtu.be/%s", vid.ID)
 }
 
 func (p YouTubePlayable) IsLive() bool {
@@ -51,13 +56,17 @@ func (YouTubePlayable) TogglePause() error {
 }
 
 func (p YouTubePlayable) GetDirectURL() (string, error) {
+	vid, err := p.video()
+	if err != nil {
+		return "", err
+	}
 	if p.Live {
-		return getLiveURL(p.video())
+		return getLiveURL(vid)
 	}
-	if format := p.video().Formats.FindByItag(251); format != nil {
-		return defaultClient.GetStreamURL(p.video(), format)
+	if format := vid.Formats.FindByItag(251); format != nil {
+		return defaultClient.GetStreamURL(vid, format)
 	}
-	return defaultClient.GetStreamURL(p.video(), p.video().Formats.FindByItag(140))
+	return defaultClient.GetStreamURL(vid, vid.Formats.FindByItag(140))
 }
 
 func (p YouTubePlayable) GetFullTitle() (title string, artist string) {
@@ -69,7 +78,11 @@ func (YouTubePlayable) IsLocal() bool {
 }
 
 func (p YouTubePlayable) IsOpus() bool {
-	return p.video().Formats.FindByItag(251) != nil
+	vid, err := p.video()
+	if err != nil {
+		return false
+	}
+	return vid.Formats.FindByItag(251) != nil
 }
 
 func GetVideo(videoURL string) (YouTubePlayable, error) {
