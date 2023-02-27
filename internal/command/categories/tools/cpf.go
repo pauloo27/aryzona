@@ -13,7 +13,7 @@ import (
 var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
 
 var CPFCommand = command.Command{
-	Name: "cpf", 
+	Name: "cpf",
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandCPF)
 
@@ -27,8 +27,8 @@ var CPFCommand = command.Command{
 		ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle(t.Title.Str()).
-				WithField("Without mask", cpf).
-				WithField("With mask", maskedCPF),
+				WithField(t.WithoutMask.Str(), cpf).
+				WithField(t.WithMask.Str(), maskedCPF),
 		)
 	},
 }

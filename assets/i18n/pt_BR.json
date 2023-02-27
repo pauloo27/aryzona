@@ -124,7 +124,7 @@
         },
         "password": {
             "title": "Senha aleatória",
-            "description": "Sua senha aleatória de tamanho {0:length} é {1:password}\nClique em \"Ignorar mensagem\" quando já tiver copiado para que ela seja deletada do chat do Discord!",
+            "description": "Sua senha aleatória de tamanho {0:length} é `{1:password}`\nClique em \"Ignorar mensagem\" quando já tiver copiado para que ela seja deletada do chat do Discord!",
             "definition": {
                 "name": "senha",
                 "description": "Gere uma senha aleatória",
