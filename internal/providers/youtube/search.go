@@ -38,7 +38,7 @@ func searchWithAPI(searchQuery string, limit int) ([]string, error) {
 
 	results := gjson.GetBytes(buf, "items.#.id.videoId").Array()
 
-	ids := make([]string, 0, len(results))
+	ids := make([]string, len(results))
 
 	for i, id := range results {
 		ids[i] = id.String()
@@ -96,7 +96,7 @@ func playlistAsSearchResult(pl *yt.Playlist) *SearchResult {
 		duration += vid.Duration
 	}
 
-	plVids := make([]*SearchResult, 0, len(pl.Videos))
+	plVids := make([]*SearchResult, len(pl.Videos))
 	for i, vid := range pl.Videos {
 		plVids[i] = playlistVidAsSearchResult(vid)
 	}
