@@ -18,3 +18,12 @@ youtube_api_key: 'your youtube api key here'
 http_server_external_url: 'https://aryzona.example.com'
 # port of http server
 http_server_port: 8099
+
+# postgres database config
+db:
+  host: 'localhost'
+  port: 5432
+  user: postgres
+  password: donnahaditcoming
+  database: aryzona_db
+  ssl: false

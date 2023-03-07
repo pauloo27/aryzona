@@ -24,6 +24,10 @@ func preStart(commitHash, commitMessage string) {
 func Start(commitHash, commitMessage string) {
 	preStart(commitHash, commitMessage)
 
+	if err := connectToDB(); err != nil {
+		logger.Fatal("Cannot connect to database", err)
+	}
+
 	go connectToDiscord()
 	go server.StartHTTPServer()
 
