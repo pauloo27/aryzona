@@ -10,7 +10,7 @@ import (
 
 var StopCommand = command.Command{
 	Name:        "stop",
-	Validations: []*command.CommandValidation{validations.MustBePlaying},
+	Validations: []*command.CommandValidation{validations.MustHaveVoicerOnGuild},
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandStop)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
