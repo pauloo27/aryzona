@@ -29,6 +29,7 @@ func RegisterCommand(command *Command) {
 		cmdLang := i18n.MustGetCommandDefinition(i18n.MustGetLanguage(langName), command.Name)
 		if cmdLang == nil {
 			logger.Fatalf("Command %s has no translation for language %s", command.Name, langName)
+			return // the logger.Fatal will exit the program, but the compiler doesn't know that
 		}
 		cmdName := strings.ToLower(cmdLang.Name.Str())
 		if _, found := commandMap[cmdName]; found {
