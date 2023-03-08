@@ -41,6 +41,8 @@ type Common struct {
 	SomethingWentWrong Entry
 	Took               Entry
 
+	TranslationInProgress Entry
+
 	MatchInfo   *MatchInfo
 	PlayingInfo *PlayingInfo
 
@@ -99,6 +101,7 @@ type Commands struct {
 	UUID     *CommandUUID
 	Joke     *CommandJoke
 	Xkcd     *CommandXkcd
+	Language *CommandLanguage
 }
 
 func GetCommand(l *Language, name string) any {

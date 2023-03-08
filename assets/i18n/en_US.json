@@ -6,6 +6,7 @@
     },
     "common": {
         "helloWorld": "Hello World!",
+        "translationInProgress": "The bot is not fully translated yet",
         "somethingWentWrong": "Something went wrong",
         "took": "Took {0:duration}",
         "categories": {
@@ -65,6 +66,24 @@
                 "name": "joke",
                 "description": "Get a random joke"
             }
+        },
+        "language": {
+            "definition": {
+                "name": "language",
+                "description": "Select the language the bot will talk to you",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "description": "The language to change to"
+                    }
+                ]
+            },
+            "title": "Language",
+            "languageNotFound": "Language not found",
+            "languageChanged": "Language changed to {0:language}",
+            "languageList": "Available languages: {0:languages}",
+            "currentLanguage": "Current language: {0:language} (translated by {1:authors})",
+            "usingDefaultLanguage": "Using default language ({0:language})"
         },
         "xkcd": {
             "definition": {

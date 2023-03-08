@@ -41,6 +41,18 @@ type CommandRoll struct {
 	Description Entry
 }
 
+type CommandLanguage struct {
+	*Common
+	Definition *CommandDefinition
+
+	Title                Entry
+	LanguageNotFound     Entry
+	LanguageChanged      Entry
+	LanguageList         Entry
+	CurrentLanguage      Entry
+	UsingDefaultLanguage Entry
+}
+
 type CommandUnFollow struct {
 	*Common
 	Definition *CommandDefinition

@@ -7,6 +7,7 @@
     "common": {
         "helloWorld": "Olá mundo!",
         "somethingWentWrong": "Algo deu errado",
+        "translationInProgress": "O bot não está totalmente traduzido, mas estamos trabalhando nisso!",
         "took": "Levou {0:duration}",
         "categories": {
             "fun": "Diversão",
@@ -377,6 +378,18 @@
             "definition": {
                 "name": "piada",
                 "description": "Veja uma piada aleatória"
+            }
+        },
+        "language": {
+            "definition": {
+                "name": "idioma",
+                "description": "Escolha o idioma que o bot fala com você",
+                "parameters": [
+                    {
+                        "name": "idioma",
+                        "description": "O idioma escolhido"
+                    }
+                ]
             }
         },
         "xkcd": {
