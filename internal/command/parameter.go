@@ -59,7 +59,7 @@ pre-defined set of values are accepted) and also for type validation
 
 If no errors are returned, then we are good to go.
 */
-func (command *Command) ValidateParameters(parameters []string) (values []interface{}, syntaxError error) {
+func (command *Command) ValidateParameters(parameters []string) (values []any, syntaxError error) {
 
 	if command.Parameters == nil || len(command.Parameters) == 0 {
 		return

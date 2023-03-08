@@ -23,12 +23,12 @@ func init() {
 }
 
 type eventListener struct {
-	handler  interface{}
+	handler  any
 	preEvent bool
 }
 
 func (b ArkwBot) Listen(eventType event.EventType, listener any) error {
-	var l interface{}
+	var l any
 	switch eventType {
 	case event.Ready:
 		l = func(*gateway.ReadyEvent) {

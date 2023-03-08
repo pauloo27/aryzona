@@ -131,7 +131,7 @@ func HandleCommand(
 		AuthorID:  adapter.AuthorID,
 		UsedName:  commandName,
 		GuildID:   adapter.GuildID,
-		Locals:    make(map[string]interface{}),
+		Locals:    make(map[string]any),
 		Command:   command,
 		startTime: startTime,
 		Trigger:   trigger,

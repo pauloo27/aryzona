@@ -7,7 +7,7 @@ import (
 	"github.com/Pauloo27/logger"
 )
 
-type TaskCallback func(params ...interface{})
+type TaskCallback func(params ...any)
 
 type Task struct {
 	LastRunAt             time.Time

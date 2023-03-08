@@ -40,13 +40,13 @@ type CommandContext struct {
 	T                  any
 	startTime          time.Time
 	RawArgs            []string
-	Args               []interface{}
+	Args               []any
 	Bot                discord.BotAdapter
 	Member             model.Member
 	Channel            model.TextChannel
 	AuthorID, GuildID  string
 	UsedName           string
-	Locals             map[string]interface{}
+	Locals             map[string]any
 	Reply              func(string) error
 	ReplyEmbed         func(*model.Embed) error
 	ReplyComplex       func(*model.ComplexMessage) error
@@ -71,7 +71,7 @@ type CommandValidation struct {
 	Checker     CommandValidationChecker
 }
 
-type CommandParameterTypeParser func(index int, args []string) (interface{}, error)
+type CommandParameterTypeParser func(index int, args []string) (any, error)
 
 type BaseType struct {
 	Name string
@@ -84,15 +84,15 @@ type CommandParameterType struct {
 }
 
 type CommandParameter struct {
-	ValidValues     []interface{}
+	ValidValues     []any
 	Name            string
 	RequiredMessage string
 	Type            *CommandParameterType
-	ValidValuesFunc func() []interface{}
+	ValidValuesFunc func() []any
 	Required        bool
 }
 
-func (param *CommandParameter) GetValidValues() []interface{} {
+func (param *CommandParameter) GetValidValues() []any {
 	if param.ValidValues != nil {
 		return param.ValidValues
 	}

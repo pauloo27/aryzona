@@ -23,8 +23,8 @@ var RadioCommand = command.Command{
 			Name:     "radio",
 			Required: false,
 			Type:     parameters.ParameterString,
-			ValidValuesFunc: func() []interface{} {
-				ids := []interface{}{}
+			ValidValuesFunc: func() []any {
+				ids := []any{}
 				for _, radio := range radio.GetRadioList() {
 					ids = append(ids, radio.GetID())
 				}

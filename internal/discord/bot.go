@@ -15,7 +15,7 @@ type BotAdapter interface {
 	Implementation() string
 	Init(token string) error
 	StartedAt() *time.Time
-	Listen(event event.EventType, handlerFunc interface{}) error
+	Listen(event event.EventType, handlerFunc any) error
 	Start() error
 	Stop() error
 	Self() (model.User, error)

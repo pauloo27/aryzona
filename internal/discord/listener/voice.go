@@ -68,7 +68,7 @@ func onDisconnect(bot discord.BotAdapter, ch model.VoiceChannel, v *voicer.Voice
 
 	task := scheduler.NewRunLaterTask(
 		30*time.Second,
-		func(params ...interface{}) {
+		func(params ...any) {
 			if err := v.Disconnect(); err != nil {
 				logger.Errorf("Cannot disconnect empty channel: %v", err)
 			}

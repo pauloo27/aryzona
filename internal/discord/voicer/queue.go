@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Pauloo27/aryzona/internal/core/scheduler"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
-	"github.com/Pauloo27/aryzona/internal/core/scheduler"
 )
 
 func (v *Voicer) IsPaused() bool {
@@ -17,7 +17,7 @@ func (v *Voicer) IsPaused() bool {
 }
 
 func (v *Voicer) registerListeners() {
-	start := func(params ...interface{}) {
+	start := func(params ...any) {
 		if v.IsPlaying() {
 			return
 		}
@@ -26,7 +26,7 @@ func (v *Voicer) registerListeners() {
 	}
 	v.Queue.On(queue.EventAppend, start)
 
-	v.Queue.On(queue.EventRemove, func(params ...interface{}) {
+	v.Queue.On(queue.EventRemove, func(params ...any) {
 		data := params[0].(queue.EventRemoveData)
 		if data.Index == 0 {
 			v.EncodeSession.Cleanup()
@@ -87,7 +87,7 @@ func (v *Voicer) AppendManyToQueue(requesterID string, playable ...playable.Play
 }
 
 func (v *Voicer) scheduleEmptyQueue() {
-	task := scheduler.NewRunLaterTask(30*time.Second, func(params ...interface{}) {
+	task := scheduler.NewRunLaterTask(30*time.Second, func(params ...any) {
 		if v.IsConnected() {
 			_ = v.Disconnect()
 		}

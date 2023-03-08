@@ -70,7 +70,7 @@ var (
 	diceNotation = &command.CommandParameterType{
 		BaseType: parameters.TypeString,
 		Name:     "dice notation",
-		Parser: func(index int, args []string) (interface{}, error) {
+		Parser: func(index int, args []string) (any, error) {
 			d, err := dice.ParseNotation(args[index])
 			if err != nil {
 				return nil, errors.New("invalid notation")

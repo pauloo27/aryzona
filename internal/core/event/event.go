@@ -1,7 +1,7 @@
 package event
 
 type EventType string
-type EventListener func(params ...interface{})
+type EventListener func(params ...any)
 
 type EventEmitter struct {
 	listeners map[EventType][]EventListener
@@ -18,7 +18,7 @@ func (q *EventEmitter) On(event EventType, listener EventListener) {
 	q.listeners[event] = append(q.listeners[event], listener)
 }
 
-func (q *EventEmitter) Emit(event EventType, params ...interface{}) {
+func (q *EventEmitter) Emit(event EventType, params ...any) {
 	listeners, found := q.listeners[event]
 	if !found {
 		return

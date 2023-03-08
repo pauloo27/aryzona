@@ -22,8 +22,8 @@ var (
 	}
 )
 
-func listSources() []interface{} {
-	var sources []interface{}
+func listSources() []any {
+	var sources []any
 
 	for name := range Sources {
 		sources = append(sources, name)

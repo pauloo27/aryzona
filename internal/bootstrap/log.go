@@ -10,7 +10,7 @@ import (
 )
 
 func listenToLog() {
-	logger.AddLogListener(func(level logger.Level, params ...interface{}) {
+	logger.AddLogListener(func(level logger.Level, params ...any) {
 		if discord.Bot.StartedAt() == nil || (level != logger.ERROR && level != logger.FATAL) {
 			return
 		}
