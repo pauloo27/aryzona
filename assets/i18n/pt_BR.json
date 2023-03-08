@@ -7,7 +7,7 @@
     "common": {
         "helloWorld": "Olá mundo!",
         "somethingWentWrong": "Algo deu errado",
-        "translationInProgress": "O bot não está totalmente traduzido, mas estamos trabalhando nisso!",
+        "translationInProgress": "O bot não está totalmente traduzido, mas estamos trabalhando nisso",
         "took": "Levou {0:duration}",
         "categories": {
             "fun": "Diversão",
@@ -390,7 +390,13 @@
                         "description": "O idioma escolhido"
                     }
                 ]
-            }
+            },
+            "usingDefaultLanguage": "Usando o idioma padrão ({0:language})",
+            "currentLanguage": "Idioma atual: {0:language} (traduzido por {1:authors})",
+            "languageChanged": "Idioma alterado para {0:language}",
+            "languageList": "Idiomas disponíveis: {0:languages}",
+            "languageNotFound": "Idioma não encontrado",
+            "title": "Idioma"
         },
         "xkcd": {
             "definition": {
