@@ -27,6 +27,9 @@ func RegisterCommand(command *Command) {
 			continue
 		}
 		cmdLang := i18n.MustGetCommandDefinition(i18n.MustGetLanguage(langName), command.Name)
+		if cmdLang == nil {
+			logger.Fatalf("Command %s has no translation for language %s", command.Name, langName)
+		}
 		cmdName := strings.ToLower(cmdLang.Name.Str())
 		if _, found := commandMap[cmdName]; found {
 			continue
