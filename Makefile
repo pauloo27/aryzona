@@ -30,6 +30,16 @@ install: build
 test: 
 	$(TEST_COMMAND) -cover -parallel 5 -failfast -count=1 ./... 
 
+# human readable test output
+.PHONY: htest
+htest:
+	gotestsum ./...
+
+# human readable test output, watch for changes
+.PHONY: whtest
+whtest:
+	gotestsum --watch ./...
+
 .PHONY: tidy
 tidy:
 	go mod tidy
