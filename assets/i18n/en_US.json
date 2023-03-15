@@ -82,7 +82,7 @@
             "languageNotFound": "Language not found",
             "languageChanged": "Language changed to {0:language}",
             "languageList": "Available languages: {0:languages}",
-            "currentLanguage": "Current language: {0:language} (translated by {1:authors})",
+            "currentLanguage": "Current language: {0:language} ({1:language_display_name}) _translated by {2:authors}_",
             "usingDefaultLanguage": "Using default language ({0:language})"
         },
         "xkcd": {

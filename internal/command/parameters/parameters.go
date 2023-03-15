@@ -24,6 +24,14 @@ var ParameterString = &command.CommandParameterType{
 	},
 }
 
+var ParameterLowerCasedString = &command.CommandParameterType{
+	BaseType: TypeString,
+	Name:     "lower cased string",
+	Parser: func(index int, args []string) (any, error) {
+		return strings.ToLower(args[index]), nil
+	},
+}
+
 var ParameterBool = &command.CommandParameterType{
 	BaseType: TypeBool,
 	Name:     "bool",

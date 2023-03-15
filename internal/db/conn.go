@@ -3,23 +3,23 @@ package db
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/db/model"
 	// postgres driver
+	"github.com/Pauloo27/aryzona/internal/db/entity"
 	_ "github.com/lib/pq"
 	"xorm.io/xorm"
 )
 
 var (
 	models = []any{
-		new(model.Guild),
-		new(model.User),
+		new(entity.Guild),
+		new(entity.User),
 	}
 
 	DB *DBConn
 )
 
 type DBConn struct {
-	engine *xorm.Engine
+	*xorm.Engine
 }
 
 type DBConfig struct {
@@ -47,14 +47,14 @@ func NewDB(config *DBConfig) (*DBConn, error) {
 		return nil, err
 	}
 	return &DBConn{
-		engine: engine,
+		Engine: engine,
 	}, nil
 }
 
 func (db *DBConn) Migrate() error {
-	return db.engine.Sync(models...)
+	return db.Sync(models...)
 }
 
 func (db *DBConn) Close() error {
-	return db.engine.Close()
+	return db.Engine.Close()
 }

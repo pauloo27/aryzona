@@ -43,6 +43,7 @@ type CommandRoll struct {
 
 type CommandLanguage struct {
 	*Common
+	*Meta
 	Definition *CommandDefinition
 
 	Title                Entry

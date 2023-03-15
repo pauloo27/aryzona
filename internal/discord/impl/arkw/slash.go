@@ -353,7 +353,6 @@ func mustGetOption(param *command.CommandParameter, i int, lang languageContext)
 
 	switch param.Type.BaseType {
 	case parameters.TypeString:
-
 		return &dc.StringOption{
 			OptionName:               defaultParamName,
 			Description:              defaultParamDescription,

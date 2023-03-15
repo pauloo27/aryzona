@@ -392,7 +392,7 @@
                 ]
             },
             "usingDefaultLanguage": "Usando o idioma padrão ({0:language})",
-            "currentLanguage": "Idioma atual: {0:language} (traduzido por {1:authors})",
+            "currentLanguage": "Idioma atual: {0:language} ({1:language_display_name}) _traduzido por {2:authors}_",
             "languageChanged": "Idioma alterado para {0:language}",
             "languageList": "Idiomas disponíveis: {0:languages}",
             "languageNotFound": "Idioma não encontrado",
