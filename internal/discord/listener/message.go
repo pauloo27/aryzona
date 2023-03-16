@@ -1,13 +1,20 @@
 package listeners
 
 import (
+	"errors"
+	"fmt"
 	"strings"
 	"time"
 
+	"xorm.io/xorm"
+
 	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/Pauloo27/aryzona/internal/db"
+	"github.com/Pauloo27/aryzona/internal/db/entity"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
 )
 
@@ -71,12 +78,35 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		},
 	}
 
-	langName := command.GetCommandLang(strings.ToLower(rawCommand))
+	langName := getUserLanguage(m.Author().ID())
 
 	command.HandleCommand(
 		strings.ToLower(rawCommand), args, langName, startTime, &event, bot, command.CommandTriggerMessage,
 		m.Channel(),
 	)
+}
+
+func getUserLanguage(userID string) i18n.LanguageName {
+	var user = entity.User{ID: userID}
+
+	has, err := db.DB.Get(&user)
+	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
+		logger.Error(err)
+	}
+
+	if !has {
+		return i18n.DefaultLanguageName
+	}
+
+	if user.PreferredLocale != "" {
+		return user.PreferredLocale
+	}
+
+	if user.LastSlashCommandLocale != "" {
+		return user.LastSlashCommandLocale
+	}
+
+	return i18n.DefaultLanguageName
 }
 
 func parseCommand(self model.User, content string) (rawCommand string, args []string, ok bool) {
