@@ -7,6 +7,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
+	"github.com/Pauloo27/aryzona/internal/db/services"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
@@ -296,7 +297,16 @@ func registerCommands(bot ArkwBot) error {
 				},
 			}
 
-			langName := i18n.FindLanguageName(strings.Replace(string(i.Locale), "-", "_", 1))
+			langName := i18n.FindLanguageName(
+				strings.Replace(string(i.Locale), "-", "_", 1),
+			)
+
+			err = services.User.SetLastSlashCommandLocale(
+				i.Sender().ID.String(), langName,
+			)
+			if err != nil {
+				logger.Error(err)
+			}
 
 			command.HandleCommand(
 				data.Name, args, langName, startTime, &adapter, bot, command.CommandTriggerSlash,

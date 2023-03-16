@@ -3,8 +3,9 @@ package db
 import (
 	"fmt"
 
-	// postgres driver
 	"github.com/Pauloo27/aryzona/internal/db/entity"
+
+	// postgres driver
 	_ "github.com/lib/pq"
 	"xorm.io/xorm"
 )

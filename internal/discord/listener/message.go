@@ -2,7 +2,6 @@ package listeners
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 

@@ -6,8 +6,7 @@ import (
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/db"
-	"github.com/Pauloo27/aryzona/internal/db/entity"
+	"github.com/Pauloo27/aryzona/internal/db/services"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
@@ -73,19 +72,7 @@ func selectLanguage(ctx *command.CommandContext) {
 		}
 	}
 
-	user := entity.User{
-		ID:              ctx.AuthorID,
-		PreferredLocale: lang.Name,
-	}
-
-	var err error
-
-	if found, _ := db.DB.ID(ctx.AuthorID).Exist(&entity.User{}); found {
-		_, err = db.DB.ID(user.ID).Update(&user)
-	} else {
-		_, err = db.DB.Insert(&user)
-	}
-
+	err := services.User.SetPreferredLang(ctx.AuthorID, lang.Name)
 	if err != nil {
 		logger.Error(err)
 		ctx.Error(t.SomethingWentWrong.Str())
