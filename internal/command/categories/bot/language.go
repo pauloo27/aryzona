@@ -92,7 +92,8 @@ func selectLanguage(ctx *command.CommandContext) {
 		return
 	}
 
-	ctx.Success(t.LanguageChanged.Str(lang.DisplayName))
+	newLang, _ := i18n.GetLanguage(lang.Name)
+	ctx.Success(newLang.Commands.Language.LanguageChanged.Str(lang.DisplayName))
 }
 
 func listValidLanguages() []any {
