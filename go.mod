@@ -45,7 +45,7 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
@@ -55,3 +55,5 @@ require (
 )
 
 replace github.com/kkdai/youtube/v2 => github.com/ItsClairton/youtube/v2 v2.7.7-0.20220610163135-5e6c6831c1e3
+
+replace github.com/diamondburned/arikawa/v3 => github.com/Pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b
