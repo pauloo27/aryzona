@@ -18,7 +18,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 	})
 
 	t.Run("hasn't voicer in the same guild id", func(t *testing.T) {
-		discord.UseImplementation(DummyBot{})
+		discord.UseImplementation(discord.DummyBot{})
 
 		guildId := "321"
 
@@ -36,7 +36,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 	})
 
 	t.Run("has voicer in the same guild id", func(t *testing.T) {
-		discord.UseImplementation(DummyBot{})
+		discord.UseImplementation(discord.DummyBot{})
 
 		guildId := "321"
 

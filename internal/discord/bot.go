@@ -19,7 +19,7 @@ type BotAdapter interface {
 	Start() error
 	Stop() error
 	Self() (model.User, error)
-	GetMember(guildID, userID string) (model.Member, error)
+	GetMember(guildID, channelID, userID string) (model.Member, error)
 	CountUsersInVoiceChannel(vc model.VoiceChannel) int
 	SendMessage(channelID string, content string) (model.Message, error)
 	SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error)

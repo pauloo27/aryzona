@@ -1,9 +1,8 @@
-package validations_test
+package discord
 
 import (
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/event"
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 )
@@ -11,7 +10,7 @@ import (
 type DummyBot struct {
 }
 
-var _ discord.BotAdapter = DummyBot{}
+var _ BotAdapter = DummyBot{}
 
 func (DummyBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
 	return nil, nil
@@ -29,7 +28,7 @@ func (DummyBot) Implementation() string {
 	return "Dummy Bot"
 }
 
-func (DummyBot) GetMember(guildID, memberID string) (model.Member, error) {
+func (DummyBot) GetMember(guildID, channelID, memberID string) (model.Member, error) {
 	return nil, nil
 }
 
@@ -41,7 +40,7 @@ func (DummyBot) StartedAt() *time.Time {
 	return nil
 }
 
-func (DummyBot) Listen(event event.EventType, handlerFunc interface{}) error {
+func (DummyBot) Listen(event event.EventType, handlerFunc any) error {
 	return nil
 }
 

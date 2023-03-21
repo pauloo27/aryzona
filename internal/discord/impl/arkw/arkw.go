@@ -290,20 +290,52 @@ func (b ArkwBot) FindUserVoiceState(guildID, userID string) (model.VoiceState, e
 	return buildVoiceState(buildVoiceChannel(vs.ChannelID.String(), buildGuild(guildID))), nil
 }
 
-func (b ArkwBot) GetMember(guildID, userID string) (model.Member, error) {
+func (b ArkwBot) GetMember(guildID, channelID, userID string) (model.Member, error) {
+	if guildID == "" {
+		return nil, errors.New("guildID is empty")
+	}
+
 	guildSf, err := dc.ParseSnowflake(guildID)
 	if err != nil {
 		return nil, err
 	}
+
+	channelSf, err := dc.ParseSnowflake(channelID)
+	if err != nil && channelID != "" {
+		return nil, err
+	}
+
 	userSf, err := dc.ParseSnowflake(userID)
 	if err != nil {
 		return nil, err
+	}
+
+	guild, err := b.s.Guild(dc.GuildID(guildSf))
+	if err != nil {
+		return nil, err
+	}
+
+	var channel *dc.Channel
+
+	if channelID == "" {
+		channel = new(dc.Channel)
+	} else {
+		channel, err = b.s.Channel(dc.ChannelID(channelSf))
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	m, err := b.s.Member(dc.GuildID(guildSf), dc.UserID(userSf))
 	if err != nil {
 		return nil, err
 	}
+
+	perms := dc.CalcOverwrites(
+		*guild,
+		*channel,
+		*m,
+	)
 
 	var roles []model.Role
 	for _, r := range m.RoleIDs {
@@ -314,7 +346,10 @@ func (b ArkwBot) GetMember(guildID, userID string) (model.Member, error) {
 		roles = append(roles, buildRole(role))
 	}
 
-	return buildMember(roles), nil
+	return buildMember(
+		roles,
+		model.Permissions(uint64(perms)),
+	), nil
 }
 
 func (b ArkwBot) UpdatePresence(presence *model.Presence) error {

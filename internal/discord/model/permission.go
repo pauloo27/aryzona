@@ -3,6 +3,7 @@ package model
 // copied from arikawa code
 type Permissions uint64
 
+// https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
 const (
 	// Allows creation of instant invites
 	PermissionCreateInstantInvite Permissions = 1 << iota
@@ -44,8 +45,8 @@ const (
 	PermissionMentionEveryone
 	// Allows the usage of custom emojis from other servers
 	PermissionUseExternalEmojis
-	// ?
-	_
+	// Allows for viewing guild insights
+	PermissionViewGuildInsights
 	// Allows for joining of a voice channel
 	PermissionConnect
 	// Allows for speaking in a voice channel
@@ -73,7 +74,8 @@ const (
 	// Allows for requesting to speak in stage channels. (This permission is
 	// under active development and may be changed or removed.)
 	PermissionRequestToSpeak
-	_
+	// Allows for creating, editing, and deleting scheduled events.
+	PermissionManageEvents
 	// Allows for deleting and archiving threads, and viewing all private
 	// threads
 	PermissionManageThreads
@@ -88,6 +90,8 @@ const (
 	// Allows for launching activities (applications with the EMBEDDED flag)
 	// in a voice channel
 	PermissionStartEmbeddedActivities
+	// Allows for timing out users
+	PermissionModerateMembers
 
 	PermissionAllText = 0 |
 		PermissionViewChannel |
@@ -137,5 +141,26 @@ const (
 		PermissionManageEmojisAndStickers |
 		PermissionManageNicknames |
 		PermissionChangeNickname |
-		PermissionViewAuditLog
+		PermissionViewAuditLog |
+		PermissionManageEvents
 )
+
+func NewPermissions(p ...Permissions) *Permissions {
+	var perm Permissions
+	for _, permission := range p {
+		perm |= permission
+	}
+	return &perm
+}
+
+func (p Permissions) Has(perm Permissions) bool {
+	return HasFlag(uint64(p), uint64(perm))
+}
+
+func (p Permissions) Add(perm Permissions) Permissions {
+	return p | perm
+}
+
+func HasFlag(flag, has uint64) bool {
+	return flag&has == has
+}
