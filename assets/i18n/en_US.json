@@ -67,6 +67,20 @@
                 "description": "Get a random joke"
             }
         },
+        "server": {
+            "definition": {
+                "name": "server",
+                "description": "Select the language the bot will talk to the server's members",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "description": "The language to change to"
+                    }
+                ]
+            },
+            "title": "Server Options",
+            "serverOptionsChanged": "Server options changed"
+        },
         "language": {
             "definition": {
                 "name": "language",
