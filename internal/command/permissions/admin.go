@@ -5,7 +5,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 )
 
-var MustBeAdmin = command.CommandPermission{
+var MustBeAdmin = &command.CommandPermission{
 	Name: "be server admin",
 	Checker: func(ctx *command.CommandContext) bool {
 		if ctx.GuildID == "" {
