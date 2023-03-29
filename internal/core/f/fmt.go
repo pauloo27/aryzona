@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/Pauloo27/aryzona/internal/i18n"
 )
 
 func Pluralize(i int, singular, plural string) string {
@@ -41,10 +43,10 @@ func ShortDuration(duration time.Duration) string {
 	return fmt.Sprintf("%02d:%02d", minutes, seconds)
 }
 
-func DurationAsText(duration time.Duration) string {
+func DurationAsText(duration time.Duration, t *i18n.Common) string {
 	seconds := int(duration.Seconds())
 	if seconds < 60 {
-		return "Less than a minute"
+		return t.DurationLessThanAMinute.Str()
 	}
 
 	days := seconds / 86400
@@ -60,16 +62,16 @@ func DurationAsText(duration time.Duration) string {
 
 	return strings.TrimSpace(fmt.Sprintf(
 		"%s %s %s",
-		stringfy(days, "day", "days"),
-		stringfy(hours, "hour", "hours"),
-		stringfy(minutes, "minute", "minutes"),
+		stringfy(days, t.DurationDay.Str(), t.DurationDays.Str()),
+		stringfy(hours, t.DurationHour.Str(), t.DurationHours.Str()),
+		stringfy(minutes, t.DurationMinute.Str(), t.DurationMinutes.Str()),
 	))
 }
 
-func DurationAsDetailedDiffText(duration time.Duration) string {
+func DurationAsDetailedDiffText(duration time.Duration, t *i18n.Common) string {
 	totalSeconds := int(duration.Seconds())
 	if totalSeconds == 0 {
-		return "Now"
+		return t.DurationNow.Str()
 	}
 
 	days := totalSeconds / 86400
@@ -86,10 +88,10 @@ func DurationAsDetailedDiffText(duration time.Duration) string {
 
 	return strings.TrimSpace(fmt.Sprintf(
 		"%s %s %s %s",
-		stringfy(days, "day", "days"),
-		stringfy(hours, "hour", "hours"),
-		stringfy(minutes, "minute", "minutes"),
-		stringfy(seconds, "second", "seconds"),
+		stringfy(days, t.DurationDay.Str(), t.DurationDays.Str()),
+		stringfy(hours, t.DurationHour.Str(), t.DurationHours.Str()),
+		stringfy(minutes, t.DurationMinute.Str(), t.DurationMinutes.Str()),
+		stringfy(seconds, t.DurationSecond.Str(), t.DurationSeconds.Str()),
 	))
 }
 

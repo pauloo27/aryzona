@@ -46,6 +46,18 @@ type Common struct {
 	MatchInfo   *MatchInfo
 	PlayingInfo *PlayingInfo
 
+	DurationNow             Entry
+	DurationLessThanAMinute Entry
+	DurationDay             Entry
+	DurationDays            Entry
+	DurationHour            Entry
+	DurationHours           Entry
+	DurationMinute          Entry
+	DurationMinutes         Entry
+
+	DurationSecond  Entry
+	DurationSeconds Entry
+
 	Categories map[string]Entry
 }
 
@@ -102,7 +114,7 @@ type Commands struct {
 	Joke     *CommandJoke
 	Xkcd     *CommandXkcd
 	Language *CommandLanguage
-	Server	 *CommandServer
+	Server   *CommandServer
 }
 
 func GetCommand(l *Language, name string) any {

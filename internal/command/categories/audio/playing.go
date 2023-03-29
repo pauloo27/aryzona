@@ -34,6 +34,7 @@ var PlayingCommand = command.Command{
 				Voicer:      vc,
 				RequesterID: requesterID,
 				T:           t.PlayingInfo,
+				Common:      t.Common,
 			},
 		).
 			WithTitle(t.Title.Str(playing.GetName()))
@@ -54,7 +55,7 @@ var PlayingCommand = command.Command{
 				if eta == -1 {
 					etaStr = t.PlayingInfo.ETANever.Str()
 				} else {
-					etaStr = f.DurationAsDetailedDiffText(eta)
+					etaStr = f.DurationAsDetailedDiffText(eta, t.Common)
 				}
 
 				title, artist := playable.GetFullTitle()

@@ -66,6 +66,7 @@ var RadioCommand = command.Command{
 				Playable:    channel,
 				RequesterID: ctx.AuthorID,
 				T:           t.PlayingInfo,
+				Common:      t.Common,
 			},
 		).WithTitle(t.AddedToQueue.Str(channel.GetName()))
 		ctx.SuccessEmbed(embed)

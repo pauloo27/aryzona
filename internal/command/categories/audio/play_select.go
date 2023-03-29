@@ -82,6 +82,7 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 								Voicer:      ctx.Voicer,
 								RequesterID: ctx.AuthorID,
 								T:           t.PlayingInfo,
+								Common:      t.Common,
 							},
 						).
 							WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
@@ -131,6 +132,7 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 				Voicer:      ctx.Voicer,
 				RequesterID: ctx.AuthorID,
 				T:           t.PlayingInfo,
+				Common:      t.Common,
 			},
 		).
 			WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
@@ -158,6 +160,7 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 						Voicer:      ctx.Voicer,
 						RequesterID: ctx.AuthorID,
 						T:           t.PlayingInfo,
+						Common:      t.Common,
 					},
 				).
 					WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).
@@ -236,6 +239,7 @@ func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn
 					Voicer:      ctx.Voicer,
 					RequesterID: ctx.AuthorID,
 					T:           t.PlayingInfo,
+					Common:      t.Common,
 				},
 			).
 				WithTitle(t.SelectedResult.Str(ctx.SearchQuery)).

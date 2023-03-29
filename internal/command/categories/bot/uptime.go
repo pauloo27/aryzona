@@ -25,7 +25,7 @@ var UptimeCommand = command.Command{
 		uptime := time.Since(*discord.Bot.StartedAt())
 		embed := model.NewEmbed().
 			WithTitle(t.Title.Str()).
-			WithField(t.Uptime.Str(":timer:"), f.DurationAsText(uptime)).
+			WithField(t.Uptime.Str(":timer:"), f.DurationAsText(uptime, t.Common)).
 			WithField(t.Implementation.Str(":gear:"), discord.Bot.Implementation()).
 			WithField(t.Language.Str(":globe_with_meridians:"), t.Meta.DisplayName.Str()).
 			WithField(

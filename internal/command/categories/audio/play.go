@@ -145,6 +145,7 @@ func handleSingleResult(ctx *SearchContext) (toPlay []playable.Playable) {
 				Voicer:      ctx.Voicer,
 				RequesterID: ctx.AuthorID,
 				T:           t.PlayingInfo,
+				Common:      t.Common,
 			},
 		).
 			WithTitle(

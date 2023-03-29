@@ -18,6 +18,7 @@ type PlayableInfo struct {
 	Voicer      *voicer.Voicer
 	RequesterID string
 	T           *i18n.PlayingInfo
+	Common      *i18n.Common
 }
 
 func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
@@ -58,7 +59,7 @@ func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
 		embed.WithFieldInline(
 			t.ETAKey.Str(),
 			t.ETAValue.Str(
-				f.DurationAsDetailedDiffText(eta),
+				f.DurationAsDetailedDiffText(eta, info.Common),
 			),
 		)
 	}
