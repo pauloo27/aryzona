@@ -423,6 +423,20 @@
                     }
                 ]
             }
+        },
+        "server": {
+            "definition": {
+                "name": "servidor",
+                "description": "Escolha o idioma que o bot fala com os membros do servidor",
+                "parameters": [
+                    {
+                        "name": "idioma",
+                        "description": "O idioma escolhido"
+                    }
+                ]
+            },
+            "title": "Opções do Servidor",
+            "serverOptionsChanged": "As opções do servidor foram alteradas"
         }
     }
 }
