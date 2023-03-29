@@ -49,12 +49,6 @@ func init() {
 		newGloboRadio(
 			"globo-sp", "Rádio Globo SP", "https://medias.sgr.globo.com/hls/aRGloboSP/aRGloboSP.m3u8",
 		),
-
-		newLainchanRadio("cyber", "Cyber songs (no ads)", "http://lainon.life:8000/mpd-cyberia.mp3"),
-		newLainchanRadio("cafe", "Cafe songs (no ads)", "http://lainon.life:8000/mpd-cafe.mp3"),
-		newLainchanRadio("swing", "Swing songs (no ads)", "http://lainon.life:8000/mpd-swing.mp3"),
-		// i dont know what to name that one...
-		newLainchanRadio("all", "Everything songs (no ads)", "http://lainon.life:8000/mpd-everything.mp3"),
 	)
 }
 
