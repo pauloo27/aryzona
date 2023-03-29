@@ -7,7 +7,7 @@ var Bot = command.CommandCategory{
 	Emoji: "🤖",
 	Commands: []*command.Command{
 		&HelpCommand, &PingCommand, &SourceCommand, &UptimeCommand,
-		&DonateCommand, &LanguageCommand,
+		&DonateCommand, &LanguageCommand, &ServerCommand,
 	},
 }
 

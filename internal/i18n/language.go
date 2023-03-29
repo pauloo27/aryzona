@@ -102,6 +102,7 @@ type Commands struct {
 	Joke     *CommandJoke
 	Xkcd     *CommandXkcd
 	Language *CommandLanguage
+	Server	 *CommandServer
 }
 
 func GetCommand(l *Language, name string) any {

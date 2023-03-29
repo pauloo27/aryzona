@@ -41,6 +41,14 @@ type CommandRoll struct {
 	Description Entry
 }
 
+type CommandServer struct {
+	*Common
+	Definition *CommandDefinition
+
+	Title                Entry
+	ServerOptionsChanged Entry
+}
+
 type CommandLanguage struct {
 	*Common
 	*Meta

@@ -41,10 +41,11 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 	}
 
 	var lastSentMessage model.Message
+	guildID := m.Channel().Guild().ID()
 
 	event := command.Adapter{
 		AuthorID: m.Author().ID(),
-		GuildID:  m.Channel().Guild().ID(),
+		GuildID:  guildID,
 		Reply: func(ctx *command.CommandContext, msg string) error {
 			var err error
 			lastSentMessage, err = discord.Bot.SendReplyMessage(m, msg)
@@ -77,7 +78,7 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		},
 	}
 
-	langName := getUserLanguage(m.Author().ID())
+	langName := getUserLanguage(m.Author().ID(), guildID)
 
 	command.HandleCommand(
 		strings.ToLower(rawCommand), args, langName, startTime, &event, bot, command.CommandTriggerMessage,
@@ -85,24 +86,38 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 	)
 }
 
-func getUserLanguage(userID string) i18n.LanguageName {
+func getUserLanguage(userID, guildID string) i18n.LanguageName {
 	var user = entity.User{ID: userID}
 
-	has, err := db.DB.Get(&user)
+	hasUser, err := db.DB.Get(&user)
 	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
 		logger.Error(err)
 	}
 
-	if !has {
+	if hasUser {
+		if user.PreferredLocale != "" {
+			return user.PreferredLocale
+		}
+
+		if user.LastSlashCommandLocale != "" {
+			return user.LastSlashCommandLocale
+		}
+	}
+
+	if guildID == "" {
 		return i18n.DefaultLanguageName
 	}
 
-	if user.PreferredLocale != "" {
-		return user.PreferredLocale
+	var guild = entity.Guild{ID: guildID}
+
+	hasGuild, err := db.DB.Get(&guild)
+
+	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
+		logger.Error(err)
 	}
 
-	if user.LastSlashCommandLocale != "" {
-		return user.LastSlashCommandLocale
+	if hasGuild {
+		return guild.PreferredLocale
 	}
 
 	return i18n.DefaultLanguageName
