@@ -334,6 +334,7 @@
             "selectedResult": "Resultado selecionado de {0:query}",
             "confirmBtn": "Confirmar",
             "playOtherBtn": "Tocar outro",
+            "cancelBtn": "Cancelar",
             "definition": {
                 "name": "tocar",
                 "description": "Toque uma música",

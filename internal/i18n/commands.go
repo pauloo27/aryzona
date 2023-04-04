@@ -270,6 +270,7 @@ type CommandPlay struct {
 	SelectedResult           Entry
 	ConfirmBtn               Entry
 	PlayOtherBtn             Entry
+	CancelBtn                Entry
 }
 
 type CommandFox struct {

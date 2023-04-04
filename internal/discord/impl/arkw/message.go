@@ -50,12 +50,12 @@ func prepareComplexMessage(message *model.ComplexMessage) *ArkwComplexMessage {
 		}
 	}
 
-	var componentsPtr dc.ContainerComponents
+	componentsPtr := make(dc.ContainerComponents, len(message.ComponentRows))
 
-	if len(message.Components) > 0 {
-		components := buildComponents(message.Components)
+	for i, row := range message.ComponentRows {
+		components := buildComponents(row.Components)
 		row := dc.ActionRowComponent(components)
-		componentsPtr = dc.ContainerComponents{&row}
+		componentsPtr[i] = &row
 	}
 
 	return &ArkwComplexMessage{

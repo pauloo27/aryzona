@@ -5,6 +5,18 @@ import (
 	dc "github.com/diamondburned/arikawa/v3/discord"
 )
 
+func buildRows(rows []model.MessageComponentRow) dc.ContainerComponents {
+	builtRows := make(dc.ContainerComponents, len(rows))
+
+	for i, row := range rows {
+		rawComponents := buildComponents(row.Components)
+		row := dc.ActionRowComponent(rawComponents)
+		builtRows[i] = &row
+	}
+
+	return builtRows
+}
+
 func buildComponents(components []model.MessageComponent) []dc.InteractiveComponent {
 	builtComponents := make([]dc.InteractiveComponent, len(components))
 

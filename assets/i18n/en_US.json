@@ -431,7 +431,8 @@
             "entry": " - {0:number_emoji} - **{1:title}** from **{2:author}** (**{3:duration}**)",
             "selectedResult": "Selected result for {0:query}",
             "confirmBtn": "Confirm",
-            "playOtherBtn": "Play other"
+            "playOtherBtn": "Play other",
+            "cancelBtn": "Cancel"
         },
         "lyric": {
             "definition": {
