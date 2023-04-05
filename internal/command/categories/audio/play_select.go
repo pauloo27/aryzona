@@ -17,12 +17,14 @@ import (
 )
 
 type selectResultFn func(*youtube.SearchResult) bool
+type cancelSelectionFn func()
 
 func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 	t := ctx.T.(*i18n.CommandPlay)
 
 	selectionLock := sync.Mutex{}
 	selectionCh := make(chan *youtube.SearchResult)
+	cancelSelectionCh := make(chan bool)
 	selected := false
 
 	var selectResult selectResultFn = func(result *youtube.SearchResult) bool {
@@ -37,6 +39,17 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 		}
 		return true
 	}
+
+	var cancelSelection cancelSelectionFn = func() {
+		selectionLock.Lock()
+		defer selectionLock.Unlock()
+		if selected {
+			return
+		}
+		cancelSelectionCh <- true
+		selected = true
+	}
+
 	firstResult := ctx.Results[0]
 
 	embed := model.NewEmbed().
@@ -68,7 +81,18 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 			if userID != ctx.AuthorID {
 				return nil, false
 			}
-			if fullID[len(baseID):] == "play-now" {
+			data := fullID[len(baseID):]
+			if data == "cancel" {
+				cancelSelection()
+				return &model.ComplexMessage{
+					ComponentRows: []model.MessageComponentRow{
+						{
+							Components: buildDisabledComponents(components, 2),
+						},
+					},
+				}, true
+			}
+			if data == "play-now" {
 				ok := selectResult(firstResult)
 				if !ok {
 					return nil, false
@@ -97,7 +121,7 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 			if !selectResult(nil) {
 				return nil, false
 			}
-			return buildMultipleResultsMessage(ctx, selectResult), true
+			return buildMultipleResultsMessage(ctx, selectResult, cancelSelection), true
 		},
 	)
 	if err != nil {
@@ -138,6 +162,8 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 	}
 
 	select {
+	case <-cancelSelectionCh:
+		return nil
 	case <-time.After(firstResultTimeout):
 		embed := buildPlayableInfoEmbed(
 			PlayableInfo{
@@ -170,6 +196,9 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 	case result := <-selectionCh:
 		if result == nil {
 			select {
+			case <-cancelSelectionCh:
+				cancelSelection()
+				return nil
 			case <-time.After(multipleResultsTimeout):
 				embed := buildPlayableInfoEmbed(
 					PlayableInfo{
@@ -207,7 +236,7 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 	}
 }
 
-func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn) *model.ComplexMessage {
+func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn, cancelSelection cancelSelectionFn) *model.ComplexMessage {
 	t := ctx.T.(*i18n.CommandPlay)
 
 	embed := model.NewEmbed().
@@ -243,13 +272,32 @@ func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn
 	ctx.AddCommandDuration(embed)
 
 	components := make([]model.MessageComponent, len(ctx.Results))
+	var cancelButton model.MessageComponent
 
 	baseID, err := ctx.RegisterInteractionHandler(
 		func(fullID, baseID, userID string) (msg *model.ComplexMessage, done bool) {
 			if userID != ctx.AuthorID {
 				return nil, false
 			}
-			indexStr := fullID[len(fullID)-1] - '0'
+			data := fullID[len(baseID):]
+
+			if data == "cancel" {
+				cancelSelection()
+				return &model.ComplexMessage{
+					ComponentRows: []model.MessageComponentRow{
+						{
+							Components: buildDisabledComponents(components, -1),
+						},
+						{
+							Components: buildDisabledComponents(
+								[]model.MessageComponent{cancelButton}, 0,
+							),
+						},
+					},
+				}, true
+			}
+
+			indexStr := strings.TrimPrefix(data, "play")[0] - '0'
 			index := int(indexStr) - 1
 			result := ctx.Results[index]
 			selectResult(result)
@@ -279,6 +327,12 @@ func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn
 		},
 	)
 
+	cancelButton = model.ButtonComponent{
+		Label: t.CancelBtn.Str(),
+		Style: model.DangerButtonStyle,
+		ID:    fmt.Sprintf("%scancel", baseID),
+	}
+
 	if err != nil {
 		logger.Errorf("Error registering interaction handler: %v", err)
 		return nil
@@ -287,15 +341,9 @@ func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn
 	for i := range ctx.Results {
 		components[i] = model.ButtonComponent{
 			Label: fmt.Sprintf("%d", i+1),
-			ID:    fmt.Sprintf("%s-play-%d", baseID, i+1),
+			ID:    fmt.Sprintf("%splay%d", baseID, i+1),
 			Style: model.PrimaryButtonStyle,
 		}
-	}
-
-	cancelButton := model.ButtonComponent{
-		Label: t.CancelBtn.Str(),
-		Style: model.DangerButtonStyle,
-		ID:    fmt.Sprintf("%scancel", baseID),
 	}
 
 	return &model.ComplexMessage{
