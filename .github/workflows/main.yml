@@ -1,20 +1,11 @@
 name: Aryzona CI/CD
 on: [push, pull_request]
 
-# all logins to docker hub are due to rate limit when pulling images
-# we dont push to docker hub, so we dont need to login there.
-
 jobs:
   build:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Go
         uses: actions/setup-go@v3
@@ -30,12 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
@@ -49,12 +34,6 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Go
         uses: actions/setup-go@v3
@@ -77,12 +56,6 @@ jobs:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
     steps:
       - uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Context for Buildx
         id: buildx-context
