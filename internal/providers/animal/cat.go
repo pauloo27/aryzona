@@ -6,10 +6,10 @@ import (
 )
 
 func GetRandomCat() (string, error) {
-	json, err := h.Get("https://aws.random.cat/meow")
+	json, err := h.Get("https://api.thecatapi.com/v1/images/search")
 	if err != nil {
 		return "", err
 	}
 
-	return gjson.GetBytes(json, "file").String(), nil
+	return gjson.GetBytes(json, "url").String(), nil
 }
