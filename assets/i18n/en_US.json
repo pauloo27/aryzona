@@ -406,7 +406,7 @@
             },
             "title": "Now playing: {0:name}",
             "entry": "  -> {0:artist_and_title} _requested by {1:requester} (playing in {2:eta})_",
-            "comingNext": "**Coming next ({0:queue_size}):**",
+            "comingNext": "**Coming next ({0:queue_size} songs, {1:queue_duration}):**",
             "andMore": "_…and more…_"
         },
         "play": {

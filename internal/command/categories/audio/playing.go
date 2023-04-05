@@ -3,6 +3,7 @@ package audio
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/Pauloo27/aryzona/internal/command"
 	"github.com/Pauloo27/aryzona/internal/command/validations"
@@ -74,7 +75,18 @@ var PlayingCommand = command.Command{
 			if len(next) > maxNextItems {
 				sb.WriteString(t.AndMore.Str())
 			}
-			embed.WithField(t.ComingNext.Str(len(next)), sb.String())
+
+			var queueDuration time.Duration
+
+			for _, item := range next {
+				duration, err := item.Playable.GetDuration()
+				if err != nil {
+					continue
+				}
+				queueDuration += duration
+			}
+
+			embed.WithField(t.ComingNext.Str(len(next), f.ShortDuration(queueDuration)), sb.String())
 		}
 
 		ctx.SuccessEmbed(embed)
