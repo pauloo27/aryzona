@@ -101,7 +101,6 @@ var PlayCommand = command.Command{
 		}
 
 		if toPlay == nil {
-			ctx.Error(t.SomethingWentWrong.Str())
 			return
 		}
 

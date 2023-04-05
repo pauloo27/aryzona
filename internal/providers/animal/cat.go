@@ -10,6 +10,5 @@ func GetRandomCat() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	return gjson.GetBytes(json, "url").String(), nil
+	return gjson.GetBytes(json, "0.url").String(), nil
 }

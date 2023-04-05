@@ -7,9 +7,13 @@ type Message interface {
 	Content() string
 }
 
-type ComplexMessage struct {
-	Content    string
-	Embeds     []*Embed
+type MessageComponentRow struct {
 	Components []MessageComponent
-	ReplyTo    Message
+}
+
+type ComplexMessage struct {
+	Content       string
+	Embeds        []*Embed
+	ComponentRows []MessageComponentRow
+	ReplyTo       Message
 }

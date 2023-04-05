@@ -162,18 +162,13 @@ func registerCommands(bot ArkwBot) error {
 				embeds = append(embeds, buildEmbed(embed))
 			}
 
-			var components *dc.ContainerComponents
-			if len(message.Components) > 0 {
-				rawComponents := buildComponents(message.Components)
-				row := dc.ActionRowComponent(rawComponents)
-				components = dc.ComponentsPtr(&row)
-			}
+			rows := buildRows(message.ComponentRows)
 
 			_, err := bot.s.EditInteractionResponse(i.AppID, i.Token,
 				api.EditInteractionResponseData{
 					Content:    option.NewNullableString(message.Content),
 					Embeds:     &embeds,
-					Components: components,
+					Components: &rows,
 				})
 			return err
 		}
@@ -201,13 +196,7 @@ func registerCommands(bot ArkwBot) error {
 				embedsPtr = &embeds
 			}
 
-			components := buildComponents(newMessage.Components)
-			row := dc.ActionRowComponent(components)
-
-			var componentsPtr *dc.ContainerComponents
-			if len(components) > 0 {
-				componentsPtr = &dc.ContainerComponents{&row}
-			}
+			rows := buildRows(newMessage.ComponentRows)
 
 			var content option.NullableString
 			if newMessage.Content != "" {
@@ -219,7 +208,7 @@ func registerCommands(bot ArkwBot) error {
 				Data: &api.InteractionResponseData{
 					Content:    content,
 					Embeds:     embedsPtr,
-					Components: componentsPtr,
+					Components: &rows,
 				},
 			})
 			if err != nil {
