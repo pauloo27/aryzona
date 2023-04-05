@@ -263,7 +263,7 @@ func buildMultipleResultsMessage(ctx *SearchContext, selectResult selectResultFn
 	sb.WriteString(
 		fmt.Sprintf(
 			"\n\n%s",
-			t.IfYouFailToSelect.Str(multipleResultsTimeout/time.Second),
+			t.IfYouFailToSelect.Str(int64(multipleResultsTimeout/time.Second)),
 		),
 	)
 
