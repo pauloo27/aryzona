@@ -68,7 +68,7 @@ func handleMultipleResults(ctx *SearchContext) []playable.Playable {
 					t.PlayingInfo.DurationLive.Str(":red_circle:"),
 					f.ShortDuration(firstResult.Duration),
 				),
-				firstResultTimeout/time.Second,
+				int64(firstResultTimeout/time.Second),
 			),
 		)
 
