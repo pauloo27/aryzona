@@ -82,9 +82,11 @@ func loadLanguage(name LanguageName) (*Language, error) {
 	t := reflect.TypeOf(lang.Commands).Elem()
 
 	lang.commands = make(map[string]any)
+	lang.langName = name
 
 	commonValue := reflect.ValueOf(lang.Common)
 	metaValue := reflect.ValueOf(lang.Meta)
+	localeValue := reflect.ValueOf(lang.Locale)
 
 	for i := 0; i < t.NumField(); i++ {
 		structField := t.Field(i)
@@ -98,6 +100,11 @@ func loadLanguage(name LanguageName) (*Language, error) {
 		metaField := fieldValue.Elem().FieldByName("Meta")
 		if metaField.IsValid() {
 			metaField.Set(metaValue)
+		}
+
+		localeField := fieldValue.Elem().FieldByName("Locale")
+		if localeField.IsValid() {
+			localeField.Set(localeValue)
 		}
 
 		lang.commands[strings.ToLower(structField.Name)] = fieldValue.Interface()

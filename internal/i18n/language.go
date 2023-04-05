@@ -24,6 +24,7 @@ func (e Entry) Str(params ...any) string {
 type Language struct {
 	*Meta    `json:"meta"`
 	*Common  `json:"common"`
+	*Locale  `json:"locale"`
 	Commands *Commands
 
 	commands map[string]any

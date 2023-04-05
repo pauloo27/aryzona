@@ -38,7 +38,10 @@ var UptimeCommand = command.Command{
 					),
 				),
 			).
-			WithField(t.StartedAt.Str(":star:"), discord.Bot.StartedAt().Format("2 Jan, 15:04"))
+			WithField(
+				t.StartedAt.Str(":star:"),
+				t.FormatSimpleDateTime(*discord.Bot.StartedAt()),
+			)
 
 		if git.CommitHash != "" {
 			embed.WithField(

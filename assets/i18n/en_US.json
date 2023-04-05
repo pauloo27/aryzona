@@ -4,6 +4,9 @@
         "displayName": "English",
         "authors": "Pauloo27"
     },
+    "locale": {
+        "simpleDateTimeFormat": "2 Jan, 15:04"
+    },
     "common": {
         "helloWorld": "Hello World!",
         "translationInProgress": "The bot is not fully translated yet",

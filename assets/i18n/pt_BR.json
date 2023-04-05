@@ -4,6 +4,9 @@
         "displayName": "Português",
         "authors": "Pauloo27"
     },
+    "locale": {
+        "simpleDateTimeFormat": "2 Jan, 15:04"
+    },
     "common": {
         "helloWorld": "Olá mundo!",
         "somethingWentWrong": "Algo deu errado",

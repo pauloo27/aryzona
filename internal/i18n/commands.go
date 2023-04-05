@@ -145,6 +145,7 @@ type CommandDonate struct {
 }
 
 type CommandUptime struct {
+	*Locale
 	*Common
 	*Meta
 	Definition *CommandDefinition
