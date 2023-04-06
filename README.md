@@ -24,6 +24,8 @@ Aryzona is not public yet.
 
 _The bot is written in GoLang, so you need the Go compiler._
 
+_To store data, the bot uses Postgres, so you need to have a Postgres server running._
+
 Create a `config.yml` file and copy the content of the `config.example.yml` file into it.
 
 Then, fill the config with proper values.
