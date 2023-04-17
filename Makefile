@@ -68,7 +68,7 @@ gosec:
 .PHONY: inspect
 inspect: lint gosec staticcheck
 
-# auto restart bot (using fiber CLI)
+# auto restart bot
 .PHONY: dev
 dev:
-	fiber dev -t ./cmd/$(BINARY_NAME)
+	air
