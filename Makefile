@@ -31,14 +31,13 @@ test:
 	$(TEST_COMMAND) -cover -parallel 5 -failfast -count=1 ./... 
 
 # human readable test output
-.PHONY: htest
-htest:
-	gotestsum ./...
-
-# human readable test output, watch for changes
-.PHONY: whtest
-whtest:
+.PHONY: love
+love:
+ifeq ($(filter watch,$(MAKECMDGOALS)),watch)
 	gotestsum --watch ./...
+else
+	gotestsum ./...
+endif
 
 .PHONY: tidy
 tidy:
@@ -69,7 +68,7 @@ gosec:
 .PHONY: inspect
 inspect: lint gosec staticcheck
 
-# auto restart bot (using fiber CLI)
+# auto restart bot
 .PHONY: dev
 dev:
-	fiber dev -t ./cmd/$(BINARY_NAME)
+	air
