@@ -14,8 +14,6 @@ github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856 h1:k8zl0zenL6c8jnOk
 github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856/go.mod h1:iy94yme2Foi86LomMXphTGQWhG0dxneMLhIA6mlUZ50=
 github.com/Pauloo27/toolkit v0.0.0-20220930010425-02fde0d9cb76 h1:B8WfkRayxk3zlD6QxaaAHk0PQyOC2hjeRpz0xj/YqnI=
 github.com/Pauloo27/toolkit v0.0.0-20220930010425-02fde0d9cb76/go.mod h1:KyNKjQaQFiG9kMDOFlsefC97bCIiTfwk3E9ikkvFr2Q=
-github.com/Pauloo27/youtube/v2 v2.0.0-20230424170354-d3a792fb740a h1:fuzn0vxMnq24KUHRt+ulyX200v4fJ0/bbmFIoLiaSJY=
-github.com/Pauloo27/youtube/v2 v2.0.0-20230424170354-d3a792fb740a/go.mod h1:FMx1e/QBA+GBoRpwLAYJoJZcPE+P0yeA2ckAbPCHZow=
 github.com/PuerkitoBio/goquery v1.5.1 h1:PSPBGne8NIUWw+/7vFBV+kG2J/5MOjbzc7154OaKCSE=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/ReneKroon/ttlcache/v2 v2.11.0 h1:OvlcYFYi941SBN3v9dsDcC2N8vRxyHcCmJb3Vl4QMoM=
@@ -249,6 +247,8 @@ github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNU
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51/go.mod h1:CzGEWj7cYgsdH8dAjBGEr58BoE7ScuLd+fwFZ44+/x8=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
+github.com/kkdai/youtube/v2 v2.7.18 h1:bVP60bULmCZg5H9GsLLeBx0ONHEsZwdSrzPrVCVWJ1k=
+github.com/kkdai/youtube/v2 v2.7.18/go.mod h1:CeUYFc227iiNNpEaipwmJIYPNsuH6rb/8H3HpWEG63U=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/konsorten/go-windows-terminal-sequences v1.0.2/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFBFZlji/RkVcI2GknAs/DXo4wKdlNEc=

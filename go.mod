@@ -13,7 +13,7 @@ require (
 	github.com/goodsign/monday v1.0.1
 	github.com/google/uuid v1.3.0
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
-	github.com/kkdai/youtube/v2 v2.7.10
+	github.com/kkdai/youtube/v2 v2.7.18
 	github.com/lib/pq v1.10.7
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcdole/gofeed v1.1.3
@@ -55,7 +55,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	xorm.io/builder v0.3.11-0.20220531020008-1bd24a7dc978 // indirect
 )
-
-replace github.com/kkdai/youtube/v2 => github.com/Pauloo27/youtube/v2 v2.0.0-20230424170354-d3a792fb740a
 
 replace github.com/diamondburned/arikawa/v3 => github.com/Pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b
