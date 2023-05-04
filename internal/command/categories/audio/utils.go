@@ -48,22 +48,6 @@ func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
 		embed.WithThumbnail(thumbnailURL)
 	}
 
-	eta := calcETA(playable, vc)
-
-	if eta == -1 {
-		embed.WithFieldInline(
-			t.ETAKey.Str(),
-			t.ETANever.Str(),
-		)
-	} else if eta != 0 {
-		embed.WithFieldInline(
-			t.ETAKey.Str(),
-			t.ETAValue.Str(
-				f.DurationAsDetailedDiffText(eta, info.Common),
-			),
-		)
-	}
-
 	if playable.IsLive() {
 		embed.WithFieldInline(t.DurationKey.Str(), t.DurationLive.Str(":red_circle:"))
 	} else {
@@ -80,6 +64,22 @@ func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
 		} else if posErr == nil {
 			embed.WithField(t.Position.Str(), f.ShortDuration(position))
 		}
+	}
+
+	eta := calcETA(playable, vc)
+
+	if eta == -1 {
+		embed.WithFieldInline(
+			t.ETAKey.Str(),
+			t.ETANever.Str(),
+		)
+	} else if eta != 0 {
+		embed.WithFieldInline(
+			t.ETAKey.Str(),
+			t.ETAValue.Str(
+				f.DurationAsDetailedDiffText(eta, info.Common),
+			),
+		)
 	}
 
 	if requesterID != "" {
