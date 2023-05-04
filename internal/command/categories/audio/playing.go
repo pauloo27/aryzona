@@ -86,7 +86,7 @@ var PlayingCommand = command.Command{
 				queueDuration += duration
 			}
 
-			embed.WithField(t.ComingNext.Str(len(next), f.ShortDuration(queueDuration)), sb.String())
+			embed.WithField(t.ComingNext.Str(len(next), f.Pluralize(len(next), t.Song.Str(), t.Songs.Str()), f.ShortDuration(queueDuration)), sb.String())
 		}
 
 		ctx.SuccessEmbed(embed)

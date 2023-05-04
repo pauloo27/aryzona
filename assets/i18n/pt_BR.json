@@ -317,7 +317,9 @@
         "playing": {
             "title": "Tocando agora {0:name}",
             "entry": "  -> {0:artist_and_title} _pedido por {1:requester}  (tocando em {2:eta})_",
-            "comingNext": "**A seguir ({0:queue_size} músicas, {1:queue_duration}):**",
+            "comingNext": "**A seguir ({0:queue_size} {1:song_or_songs}, {2:queue_duration}):**",
+            "song": "música",
+            "songs": "músicas",
             "andMore": "_…e mais…_",
             "definition": {
                 "name": "tocando",

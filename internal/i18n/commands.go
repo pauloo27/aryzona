@@ -223,6 +223,8 @@ type CommandPlaying struct {
 	Title      Entry
 	Entry      Entry
 	ComingNext Entry
+	Song       Entry
+	Songs      Entry
 	AndMore    Entry
 }
 
