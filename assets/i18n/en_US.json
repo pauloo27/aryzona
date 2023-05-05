@@ -30,6 +30,12 @@
             "tools": "Tools"
         },
         "validations": {
+            "preCommandValidation": {
+                "mustBeExecutedAsSlashCommand": "This command must be executed as a slash command. **Use `/{0:command_name}` instead**",
+                "permissionRequired": "This command requires `{0:permission_name}`",
+                "missingSubCommand": "Missing sub command. Available sub commands: {0:sub_commands}",
+                "invalidSubCommand": "Invalid sub command. Available sub commands: {0:sub_commands}"
+            },
             "mustBeOnSameVoiceChannel": {
                 "description": "be on the same voice channel as the bot",
                 "notInRightChannel": "You are not in the same voice channel as the bot"

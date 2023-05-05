@@ -90,6 +90,7 @@ type Validations struct {
 	MustBeOnVoiceChannel       *ValidationMustBeOnVoiceChannel
 	MustBeOnAValidVoiceChannel *ValidationMustBeOnAValidVoiceChannel
 	MustBeOnSameVoiceChannel   *ValidationMustBeOnSameVoiceChannel
+	PreCommandValidation       *PreCommandValidation
 }
 
 type Commands struct {

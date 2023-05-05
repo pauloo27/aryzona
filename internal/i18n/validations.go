@@ -21,6 +21,13 @@ type ValidationMustBeOnAValidVoiceChannel struct {
 }
 
 type ValidationMustBeOnSameVoiceChannel struct {
-	Description            Entry
+	Description       Entry
 	NotInRightChannel Entry
+}
+
+type PreCommandValidation struct {
+	MustBeExecutedAsSlashCommand Entry
+	PermissionRequired           Entry
+	MissingSubCommand            Entry
+	InvalidSubCommand            Entry
 }
