@@ -7,12 +7,29 @@ import (
 	"github.com/Pauloo27/aryzona/internal/command/validations"
 	"github.com/Pauloo27/aryzona/internal/discord"
 	"github.com/Pauloo27/aryzona/internal/discord/voicer"
+	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	defaultLang *i18n.Language
+)
+
+func TestMain(m *testing.M) {
+	var err error
+	i18n.I18nRootDir = "../../../assets/i18n"
+	defaultLang, err = i18n.GetLanguage(i18n.DefaultLanguageName)
+	if err != nil {
+		panic(err)
+	}
+	m.Run()
+}
+
 func TestMustHaveVoicerOnGuild(t *testing.T) {
 	t.Run("implementation is missing", func(t *testing.T) {
-		ctx := &command.CommandContext{}
+		ctx := &command.CommandContext{
+			Lang: defaultLang,
+		}
 		b, _ := validations.MustHaveVoicerOnGuild.Checker(ctx)
 		require.False(t, b)
 	})
@@ -29,6 +46,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 		ctx := &command.CommandContext{
 			GuildID: "123123", // not the same guild id
 			Locals:  make(map[string]interface{}),
+			Lang: defaultLang,
 		}
 
 		b, _ := validations.MustHaveVoicerOnGuild.Checker(ctx)
@@ -47,6 +65,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 		ctx := &command.CommandContext{
 			GuildID: guildId,
 			Locals:  make(map[string]interface{}),
+			Lang: defaultLang,
 		}
 
 		b, _ := validations.MustHaveVoicerOnGuild.Checker(ctx)
