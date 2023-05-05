@@ -6,11 +6,11 @@ import (
 )
 
 var MustHaveVoicerOnGuild = &command.CommandValidation{
-	Description: "have voicer on guild",
+	Name: "mustHaveVoicerOnGuild",
 	Checker: func(ctx *command.CommandContext) (bool, string) {
 		vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
 		if vc == nil {
-			return false, "Bot is not connect to a voice channel"
+			return false, ctx.Lang.Validations.MustHaveVoicerOnGuild.BotNotConnected.Str()
 		}
 		ctx.Locals["vc"] = vc
 		return true, ""
@@ -18,13 +18,13 @@ var MustHaveVoicerOnGuild = &command.CommandValidation{
 }
 
 var MustBePlaying = &command.CommandValidation{
-	Description: "be playing something on voicer",
-	DependsOn:   []*command.CommandValidation{MustHaveVoicerOnGuild},
+	Name:      "mustBePlaying",
+	DependsOn: []*command.CommandValidation{MustHaveVoicerOnGuild},
 	Checker: func(ctx *command.CommandContext) (bool, string) {
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		item := vc.Playing()
 		if item == nil {
-			return false, "Nothing playing"
+			return false, ctx.Lang.Validations.MustBePlaying.NothingPlaying.Str()
 		}
 		ctx.Locals["playing"] = item.Playable
 		ctx.Locals["requesterID"] = item.Requester
@@ -34,11 +34,11 @@ var MustBePlaying = &command.CommandValidation{
 }
 
 var MustBeOnVoiceChannel = &command.CommandValidation{
-	Description: "be connected to a voice channel",
+	Name: "mustBeOnVoiceChannel",
 	Checker: func(ctx *command.CommandContext) (bool, string) {
 		voiceState, err := ctx.Bot.FindUserVoiceState(ctx.GuildID, ctx.AuthorID)
 		if err != nil {
-			return false, "You are not in a voice channel"
+			return false, ctx.Lang.Validations.MustBeOnVoiceChannel.YouAreNotInVoiceChannel.Str()
 		}
 		ctx.Locals["authorVoiceChannelID"] = voiceState.Channel().ID()
 		return true, ""
@@ -46,17 +46,27 @@ var MustBeOnVoiceChannel = &command.CommandValidation{
 }
 
 var MustBeOnAValidVoiceChannel = &command.CommandValidation{
-	Description: "be connected to a valid voice channel",
-	DependsOn:   []*command.CommandValidation{MustBeOnVoiceChannel},
+	Name:      "mustBeOnAValidVoiceChannel",
+	DependsOn: []*command.CommandValidation{MustBeOnVoiceChannel},
 	Checker: func(ctx *command.CommandContext) (bool, string) {
 		vc, err := voicer.NewVoicerForUser(ctx.AuthorID, ctx.GuildID)
-		if err != nil {
-			return false, "Cannot create voicer"
-		}
-		if !vc.CanConnect() {
-			return false, "Cannot connect to your voice channel"
+		if err != nil || !vc.CanConnect() {
+			return false, ctx.Lang.Validations.MustBeOnAValidVoiceChannel.CannotConnectToChannel.Str()
 		}
 		ctx.Locals["vc"] = vc
+		return true, ""
+	},
+}
+
+var MustBeOnSameVoiceChannel = &command.CommandValidation{
+	Name:      "mustBeOnSameVoiceChannel",
+	DependsOn: []*command.CommandValidation{MustBeOnVoiceChannel, MustHaveVoicerOnGuild},
+	Checker: func(ctx *command.CommandContext) (bool, string) {
+		vc := ctx.Locals["vc"].(*voicer.Voicer)
+		authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
+		if !found || *(vc.ChannelID) != authorVoiceChannelID.(string) {
+			return false, ctx.Lang.Validations.MustBeOnSameVoiceChannel.NotInRightChannel.Str()
+		}
 		return true, ""
 	},
 }

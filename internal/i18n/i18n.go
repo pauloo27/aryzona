@@ -73,14 +73,17 @@ func loadLanguage(name LanguageName) (*Language, error) {
 		return nil, err
 	}
 
+	var rawMap RawJSONMap
+	err = json.Unmarshal(data, &rawMap)
+	if err != nil {
+		return nil, err
+	}
+
 	var lang Language
 	err = json.Unmarshal(data, &lang)
 	if err != nil {
 		return nil, err
 	}
-
-	var rawMap RawJSONMap
-	err = json.Unmarshal(data, &rawMap)
 
 	t := reflect.TypeOf(lang.Commands).Elem()
 

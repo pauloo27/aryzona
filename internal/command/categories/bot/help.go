@@ -144,7 +144,7 @@ func helpForCommand(ctx *command.CommandContext) {
 			t.Validations.Str(),
 			strings.Join(
 				slices.Map(cmd.Validations, func(validation *command.CommandValidation) string {
-					return validation.Description
+					return t.RawMap.Get("common", "validations", validation.Name, "description").(string)
 				}),
 				", ",
 			),

@@ -29,6 +29,28 @@
             "animals": "Animais",
             "tools": "Ferramentas"
         },
+        "validations": {
+            "mustBeOnSameVoiceChannel": {
+                "description": "estar no mesmo canal de voz que o bot",
+                "notInRightChannel": "Você não está no mesmo canal de voz que o bot"
+            },
+            "mustHaveVoicerOnGuild": {
+                "description": "ter o bot em um canal de voz",
+                "botNotConnected": "O bot não está conectado a nenhum canal de voz"
+            },
+            "mustBePlaying": {
+                "description": "estar tocando alguma coisa",
+                "nothingPlaying": "Nada está tocando"
+            },
+            "mustBeOnVoiceChannel": {
+                "description": "estar conectado a um canal de voz",
+                "youAreNotInVoiceChannel": "Você não está conectado a um canal de voz"
+            },
+            "mustBeOnAValidVoiceChannel": {
+                "description": "estar conectado a um canal de voz válido",
+                "cannotConnectToChannel": "Não foi possível conectar ao canal de voz"
+            }
+        },
         "matchInfo": {
             "time": "Tempo",
             "match": "Partida",
@@ -300,7 +322,6 @@
         "radio": {
             "listTitle": "Lista de rádios:",
             "cannotConnect": "Não foi possível conectar no canal de voz",
-            "notInRightChannel": "Você não está no mesmo canal de voz que o bot",
             "addedToQueue": "Adicionado {0:radio} a fila",
             "listFooter": "Inicie uma rádio com `{0:prefix}{1:command} <nome da rádio>` e `{0:prefix}stop` quando estiver cansado dela!",
             "definition": {
@@ -327,7 +348,6 @@
             }
         },
         "play": {
-            "notInRightChannel": "Você não está no mesmo canal de voz que o bot",
             "cannotConnect": "Não foi possível conectar no canal de voz",
             "youtubePlaylist": "Playlist do YouTube",
             "bestResult": "Melhor resultado para {0:query}",

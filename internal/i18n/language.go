@@ -59,7 +59,8 @@ type Common struct {
 	DurationSecond  Entry
 	DurationSeconds Entry
 
-	Categories map[string]Entry
+	Validations *Validations
+	Categories  map[string]Entry
 }
 
 type MatchInfo struct {
@@ -81,6 +82,14 @@ type PlayingInfo struct {
 	RequestedBy       Entry
 	Warning           Entry
 	SongPausedWarning Entry
+}
+
+type Validations struct {
+	MustHaveVoicerOnGuild      *ValidationMustHaveVoicerOnGuild
+	MustBePlaying              *ValidationMustBePlaying
+	MustBeOnVoiceChannel       *ValidationMustBeOnVoiceChannel
+	MustBeOnAValidVoiceChannel *ValidationMustBeOnAValidVoiceChannel
+	MustBeOnSameVoiceChannel   *ValidationMustBeOnSameVoiceChannel
 }
 
 type Commands struct {

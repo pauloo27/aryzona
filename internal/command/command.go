@@ -8,7 +8,7 @@ import (
 	"github.com/Pauloo27/aryzona/internal/discord/model"
 	"github.com/Pauloo27/aryzona/internal/i18n"
 	"github.com/Pauloo27/logger"
-	"github.com/matoous/go-nanoid/v2"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 type CommandHandler func(*CommandContext)
@@ -65,9 +65,9 @@ type CommandPermission struct {
 }
 
 type CommandValidation struct {
-	DependsOn   []*CommandValidation
-	Description string
-	Checker     CommandValidationChecker
+	Name      string
+	DependsOn []*CommandValidation
+	Checker   CommandValidationChecker
 }
 
 type CommandParameterTypeParser func(index int, args []string) (any, error)

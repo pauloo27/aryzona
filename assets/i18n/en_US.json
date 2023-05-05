@@ -29,6 +29,28 @@
             "animals": "Animals",
             "tools": "Tools"
         },
+        "validations": {
+            "mustBeOnSameVoiceChannel": {
+                "description": "be on the same voice channel as the bot",
+                "notInRightChannel": "You are not in the same voice channel as the bot"
+            },
+            "mustHaveVoicerOnGuild": {
+                "description": "have bot on guild's voice channel",
+                "botNotConnected": "Bot is not connected to a voice channel"
+            },
+            "mustBePlaying": {
+                "description": "be playing something",
+                "nothingPlaying": "Nothing is playing"
+            },
+            "mustBeOnVoiceChannel": {
+                "description": "be connected to a voice channel",
+                "youAreNotInVoiceChannel": "You are not in a voice channel"
+            },
+            "mustBeOnAValidVoiceChannel": {
+                "description": "be connected to a valid voice channel",
+                "cannotConnectToChannel": "Cannot connect to your voice channel"
+            }
+        },
         "playingInfo": {
             "songTitle": "Title",
             "artist": "Artist",
@@ -398,7 +420,6 @@
             },
             "listTitle": "Radio list:",
             "cannotConnect": "Cannot connect to your voice channel",
-            "notInRightChannel": "You are not in the same voice channel as the bot",
             "addedToQueue": "Added {0:radio} to the queue",
             "listFooter": "Start a radio with `{0:prefix}{1:command} <radio name>` and `{0:prefix}stop` when you are tired of it!"
         },
@@ -425,7 +446,6 @@
                     }
                 ]
             },
-            "notInRightChannel": "You are not in the same voice channel as the bot",
             "cannotConnect": "Cannot connect to your voice channel",
             "youtubePlaylist": "YouTube Playlist",
             "bestResult": "Best result for {0:query}",

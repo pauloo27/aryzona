@@ -209,11 +209,10 @@ type CommandRadio struct {
 	*Common
 	Definition *CommandDefinition
 
-	ListTitle         Entry
-	CannotConnect     Entry
-	NotInRightChannel Entry
-	AddedToQueue      Entry
-	ListFooter        Entry
+	ListTitle     Entry
+	CannotConnect Entry
+	AddedToQueue  Entry
+	ListFooter    Entry
 }
 
 type CommandPlaying struct {
@@ -262,7 +261,6 @@ type CommandPlay struct {
 	*Common
 	Definition *CommandDefinition
 
-	NotInRightChannel        Entry
 	CannotConnect            Entry
 	YouTubePlaylist          Entry
 	BestResult               Entry

@@ -55,9 +55,9 @@ var RadioCommand = command.Command{
 				return
 			}
 		} else {
-			authorVoiceChannelID, found := ctx.Locals["authorVoiceChannelID"]
-			if !found || *(vc.ChannelID) != authorVoiceChannelID.(string) {
-				ctx.Error(t.NotInRightChannel.Str())
+			ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
+			if !ok {
+				logger.Error(msg)
 				return
 			}
 		}
