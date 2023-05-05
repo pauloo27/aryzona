@@ -239,6 +239,7 @@ type CommandLyric struct {
 
 type CommandHelp struct {
 	*Common
+	RawMap     RawJSONMap
 	Definition *CommandDefinition
 
 	Title              Entry

@@ -79,6 +79,9 @@ func loadLanguage(name LanguageName) (*Language, error) {
 		return nil, err
 	}
 
+	var rawMap RawJSONMap
+	err = json.Unmarshal(data, &rawMap)
+
 	t := reflect.TypeOf(lang.Commands).Elem()
 
 	lang.commands = make(map[string]any)
@@ -87,6 +90,7 @@ func loadLanguage(name LanguageName) (*Language, error) {
 	commonValue := reflect.ValueOf(lang.Common)
 	metaValue := reflect.ValueOf(lang.Meta)
 	localeValue := reflect.ValueOf(lang.Locale)
+	rawMapValue := reflect.ValueOf(rawMap)
 
 	for i := 0; i < t.NumField(); i++ {
 		structField := t.Field(i)
@@ -107,8 +111,37 @@ func loadLanguage(name LanguageName) (*Language, error) {
 			localeField.Set(localeValue)
 		}
 
+		rawMapField := fieldValue.Elem().FieldByName("RawMap")
+		if rawMapField.IsValid() {
+			rawMapField.Set(rawMapValue)
+		}
+
 		lang.commands[strings.ToLower(structField.Name)] = fieldValue.Interface()
 	}
 
 	return &lang, err
+}
+
+type RawJSONMap map[string]any
+
+func (r RawJSONMap) Get(keys ...string) any {
+	if len(keys) == 0 {
+		return r
+	}
+
+	var value any = r
+
+	for i, key := range keys {
+		if i == 0 {
+			value = value.(RawJSONMap)[key]
+		} else {
+			valueMap, ok := value.(map[string]any)
+			if !ok {
+				return nil
+			}
+			value = valueMap[key]
+		}
+	}
+
+	return value
 }
