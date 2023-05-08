@@ -85,7 +85,6 @@ type CommandParameterType struct {
 type CommandParameter struct {
 	ValidValues     []any
 	Name            string
-	RequiredMessage string
 	Type            *CommandParameterType
 	ValidValuesFunc func() []any
 	Required        bool
@@ -102,6 +101,8 @@ func (param *CommandParameter) GetValidValues() []any {
 }
 
 type Command struct {
+	parent *Command
+
 	Validations []*CommandValidation
 	Parameters  []*CommandParameter
 	Aliases     []string

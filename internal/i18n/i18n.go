@@ -2,6 +2,7 @@ package i18n
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -89,6 +90,7 @@ func loadLanguage(name LanguageName) (*Language, error) {
 
 	lang.commands = make(map[string]any)
 	lang.langName = name
+	lang.RawMap = rawMap
 
 	commonValue := reflect.ValueOf(lang.Common)
 	metaValue := reflect.ValueOf(lang.Meta)
@@ -127,24 +129,37 @@ func loadLanguage(name LanguageName) (*Language, error) {
 
 type RawJSONMap map[string]any
 
-func (r RawJSONMap) Get(keys ...string) any {
+var (
+	ErrInvalidKeyType   = errors.New("invalid key type")
+	ErrInvalidMapAccess = errors.New("invalid map access")
+	ErrInvalidArrayAccess = errors.New("invalid array access")
+)
+
+func (r RawJSONMap) Get(keys ...any) (any, error) {
 	if len(keys) == 0 {
-		return r
+		return r, nil
 	}
 
-	var value any = r
+	value := r[keys[0].(string)]
 
-	for i, key := range keys {
-		if i == 0 {
-			value = value.(RawJSONMap)[key]
-		} else {
-			valueMap, ok := value.(map[string]any)
+	for _, key := range keys[1:] {
+		switch k := key.(type) {
+		case string:
+			typedV, ok := value.(map[string]any)
 			if !ok {
-				return nil
+				return nil, fmt.Errorf("%w: %v (%T)", ErrInvalidMapAccess, key, key)
 			}
-			value = valueMap[key]
+			value = typedV[k]
+		case int:
+			typedV, ok := value.([]any)
+			if !ok {
+				return nil, fmt.Errorf("%w: %v (%T)", ErrInvalidArrayAccess, key, key)
+			}
+			value = typedV[k]
+		default:
+			return nil, fmt.Errorf("%w: %v (%T)", ErrInvalidKeyType, key, key)
 		}
 	}
 
-	return value
+	return value, nil
 }

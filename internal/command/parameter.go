@@ -3,6 +3,9 @@ package command
 import (
 	"errors"
 	"fmt"
+
+	"github.com/Pauloo27/aryzona/internal/i18n"
+	"github.com/Pauloo27/logger"
 )
 
 var (
@@ -11,24 +14,27 @@ var (
 	ErrInvalidValue        = errors.New("invalid value")
 )
 
-func (command *Command) ValidateParameters(parameters []string) (values []any, syntaxError error) {
+func (command *Command) ValidateParameters(ctx *CommandContext) (values []any, syntaxError error) {
+	arguments := ctx.RawArgs
+	lang := ctx.Lang
+
 	if command.Parameters == nil || len(command.Parameters) == 0 {
 		return
 	}
 
-	parametersCount := len(parameters)
+	argumentsCount := len(arguments)
 
 	for i, parameter := range command.Parameters {
-		if i >= parametersCount {
+		if i >= argumentsCount {
 			if parameter.Required {
-				syntaxError = NewErrRequiredParameter(parameter)
+				syntaxError = NewErrRequiredParameter(lang, command, parameter)
 			}
 			break
 		}
 
-		value, err := parameter.Type.Parser(i, parameters)
+		value, err := parameter.Type.Parser(i, arguments)
 		if err != nil {
-			syntaxError = NewErrCannotParseParameter(err)
+			syntaxError = NewErrCannotParseParameter(lang, err)
 			break
 		}
 
@@ -41,7 +47,7 @@ func (command *Command) ValidateParameters(parameters []string) (values []any, s
 				}
 			}
 			if !valid {
-				syntaxError = NewErrInvalidValue(parameter)
+				syntaxError = NewErrInvalidValue(lang, command, parameter)
 				break
 			}
 		}
@@ -52,38 +58,64 @@ func (command *Command) ValidateParameters(parameters []string) (values []any, s
 	return
 }
 
-func NewErrRequiredParameter(param *CommandParameter) error {
+func NewErrRequiredParameter(lang *i18n.Language, cmd *Command, param *CommandParameter) error {
+	localizedParamName := mustGetLocalizedParamName(lang, cmd, param)
+
 	var message string
 	if param != nil {
-		validValues := param.GetValidValues()
-		if param.RequiredMessage != "" {
-			message = param.RequiredMessage
-		} else if validValues != nil {
-			message = fmt.Sprintf(
-				"parameter `%s` (type %s, valid values are: `%v`) missing",
-				param.Name,
-				param.Type.Name,
-				validValues,
-			)
-		} else {
-			message = fmt.Sprintf("parameter `%s` (type %s) missing", param.Name, param.Type.Name)
-		}
+		message = lang.Validations.ParametersValidations.RequiredParam.Str(localizedParamName)
 	}
 	return fmt.Errorf("%w: %s", ErrRequireParameter, message)
 }
 
-func NewErrInvalidValue(param *CommandParameter) error {
+func NewErrInvalidValue(lang *i18n.Language, cmd *Command, param *CommandParameter) error {
+	localizedParamName := mustGetLocalizedParamName(lang, cmd, param)
+
 	var message string
 	if param != nil {
-		message = fmt.Sprintf("invalid value for `%s`. Valid  values are: `%v`", param.Name, param.GetValidValues())
+		message = lang.Validations.ParametersValidations.InvalidValue.Str(localizedParamName, param.GetValidValues())
 	}
 	return fmt.Errorf("%w: %s", ErrInvalidValue, message)
 }
 
-func NewErrCannotParseParameter(err error) error {
+func NewErrCannotParseParameter(lang *i18n.Language, err error) error {
 	var message string
 	if err != nil {
 		message = err.Error()
 	}
 	return fmt.Errorf("%w: %s", ErrCannotParseArgument, message)
+}
+
+func mustGetLocalizedParamName(lang *i18n.Language, cmd *Command, param *CommandParameter) string {
+	var paramIdx int
+	for i, p := range cmd.Parameters {
+		if p.Name == param.Name {
+			paramIdx = i
+		}
+	}
+
+	var localizedParamName any
+	var err error
+
+	if cmd.parent == nil {
+		localizedParamName, err = lang.RawMap.Get("commands", cmd.Name, "definition", "parameters", paramIdx, "name")
+	} else {
+
+		var subCommandIdx int
+
+		for i, subCmd := range cmd.parent.SubCommands {
+			if subCmd.Name == cmd.Name {
+				subCommandIdx = i
+			}
+		}
+
+		localizedParamName, err = lang.RawMap.Get("commands", cmd.parent.Name, "definition", "subCommands", subCommandIdx, "parameters", paramIdx, "name")
+	}
+
+	if err != nil {
+		logger.Errorf("Failed to get localized parameter name: %v", err)
+		return param.Name
+	}
+
+	return localizedParamName.(string)
 }

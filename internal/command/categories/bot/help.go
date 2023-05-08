@@ -144,7 +144,12 @@ func helpForCommand(ctx *command.CommandContext) {
 			t.Validations.Str(),
 			strings.Join(
 				slices.Map(cmd.Validations, func(validation *command.CommandValidation) string {
-					return t.RawMap.Get("common", "validations", validation.Name, "description").(string)
+					v, err := t.RawMap.Get("common", "validations", validation.Name, "description")
+					if err != nil {
+						logger.Errorf("Missing validation description for %s", validation.Name)
+						return validation.Name
+					}
+					return v.(string)
 				}),
 				", ",
 			),

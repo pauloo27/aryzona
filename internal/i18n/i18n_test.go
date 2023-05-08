@@ -50,9 +50,9 @@ func TestDefaultLangs(t *testing.T) {
 	lType := reflect.TypeOf(l).Elem()
 	lValue := reflect.ValueOf(l).Elem()
 
-	missingTranslations := checkForMissingTranslations(lType, lValue, "")
+	hasMissing := checkForMissingTranslations(lType, lValue, "")
 
-	assert.Empty(t, missingTranslations)
+	assert.False(t, hasMissing)
 }
 
 func TestOtherLangs(t *testing.T) {
@@ -77,15 +77,20 @@ func TestOtherLangs(t *testing.T) {
 	}
 }
 
-func checkForMissingTranslations(t reflect.Type, value reflect.Value, parentPath string) (missing []string) {
+func checkForMissingTranslations(t reflect.Type, value reflect.Value, parentPath string) (hasMissing bool) {
 	for i := 0; i < t.NumField(); i++ {
 		structField := t.Field(i)
+		if !value.IsValid() {
+			fmt.Printf("Missing translation for %s%s\n", parentPath, structField.Name)
+			hasMissing = true
+			continue
+		}
 		fieldValue := value.Field(i)
 
 		if structField.Type == entryType {
 			if fieldValue.Interface().(i18n.Entry).Str() == "" {
 				fmt.Printf("Missing translation for %s%s\n", parentPath, structField.Name)
-				missing = append(missing, structField.Name)
+				hasMissing = true
 			}
 			continue
 		}
@@ -93,16 +98,16 @@ func checkForMissingTranslations(t reflect.Type, value reflect.Value, parentPath
 		path := fmt.Sprintf("%s%s.", parentPath, structField.Name)
 
 		if structField.Type.Kind() == reflect.Struct {
-			missing = append(missing, checkForMissingTranslations(structField.Type, fieldValue, path)...)
+			hasMissing = checkForMissingTranslations(structField.Type, fieldValue, path) || hasMissing
 			continue
 		}
 
 		if structField.Type.Kind() == reflect.Ptr {
 			if structField.Type.Elem().Kind() == reflect.Struct {
-				missing = append(missing, checkForMissingTranslations(structField.Type.Elem(), fieldValue.Elem(), path)...)
+				hasMissing = checkForMissingTranslations(structField.Type.Elem(), fieldValue.Elem(), path) || hasMissing
 			}
 			continue
 		}
 	}
-	return missing
+	return hasMissing
 }

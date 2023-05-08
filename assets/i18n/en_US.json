@@ -36,6 +36,10 @@
                 "missingSubCommand": "Missing sub command. Available sub commands: {0:sub_commands}",
                 "invalidSubCommand": "Invalid sub command. Available sub commands: {0:sub_commands}"
             },
+            "parametersValidations": {
+                "requiredParam": "parameter `{0:param_name}` is required",
+                "invalidValue":  "invalid value for `{0:param_name}`. Valid values are: `{1:valid_values}`"
+            },
             "mustBeOnSameVoiceChannel": {
                 "description": "be on the same voice channel as the bot",
                 "notInRightChannel": "You are not in the same voice channel as the bot"

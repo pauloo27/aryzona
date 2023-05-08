@@ -18,7 +18,6 @@ var ScoreCommand = command.Command{
 		{
 			Name:            "game",
 			Required:        false,
-			RequiredMessage: "Missing the team name or a match id",
 			Type:            parameters.ParameterText,
 		},
 	},

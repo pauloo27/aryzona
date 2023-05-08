@@ -31,3 +31,8 @@ type PreCommandValidation struct {
 	MissingSubCommand            Entry
 	InvalidSubCommand            Entry
 }
+
+type ParametersValidations struct {
+	RequiredParam Entry
+	InvalidValue  Entry
+}

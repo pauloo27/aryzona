@@ -27,7 +27,6 @@ var FollowCommand = command.Command{
 		{
 			Name:            "game",
 			Required:        true,
-			RequiredMessage: "Missing the team name or a match id",
 			Type:            parameters.ParameterText,
 		},
 	},

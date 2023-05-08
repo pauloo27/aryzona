@@ -1,6 +1,7 @@
 package command
 
 import (
+	"strings"
 	"time"
 
 	"github.com/Pauloo27/aryzona/internal/discord"
@@ -61,9 +62,9 @@ func executeCommand(
 		}
 	}
 
-	values, syntaxError := command.ValidateParameters(ctx.RawArgs)
+	values, syntaxError := command.ValidateParameters(ctx)
 	if syntaxError != nil {
-		msg := syntaxError.Error()
+		msg := strings.SplitN(syntaxError.Error(), ":", 2)[1]
 		ctx.Error(msg)
 		return
 	}
@@ -88,6 +89,7 @@ func executeCommand(
 		}
 		subCommandName := ctx.RawArgs[0]
 		for _, subCommand := range command.SubCommands {
+			subCommand.parent = command
 			if subCommand.Name == subCommandName {
 				ctx.RawArgs = ctx.RawArgs[1:]
 				executeCommand(subCommand, ctx, adapter, bot)

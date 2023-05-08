@@ -27,6 +27,8 @@ type Language struct {
 	*Locale  `json:"locale"`
 	Commands *Commands
 
+	RawMap RawJSONMap `json:"-"`
+
 	commands map[string]any
 }
 
@@ -91,6 +93,7 @@ type Validations struct {
 	MustBeOnAValidVoiceChannel *ValidationMustBeOnAValidVoiceChannel
 	MustBeOnSameVoiceChannel   *ValidationMustBeOnSameVoiceChannel
 	PreCommandValidation       *PreCommandValidation
+	ParametersValidations      *ParametersValidations
 }
 
 type Commands struct {
