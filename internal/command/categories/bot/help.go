@@ -114,9 +114,12 @@ func helpForCommand(ctx *command.CommandContext) {
 
 	cmdLang := i18n.MustGetCommandDefinition(ctx.Lang, cmd.Name)
 
+	categoryName := cmd.GetCategory().Name
+	localizedCategoryName := t.Categories[categoryName].Str()
+
 	embed := model.NewEmbed().
 		WithTitle(fullCommandName).
-		WithField(t.Category.Str(), fmt.Sprintf("%s %s", rootCmd.GetCategory().Emoji, rootCmd.GetCategory().Name)).
+		WithField(t.Category.Str(), fmt.Sprintf("%s %s", rootCmd.GetCategory().Emoji, localizedCategoryName)).
 		WithDescription(cmdLang.Description.Str())
 
 	if cmd.Aliases != nil {
