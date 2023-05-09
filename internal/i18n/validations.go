@@ -35,4 +35,6 @@ type PreCommandValidation struct {
 type ParametersValidations struct {
 	RequiredParam Entry
 	InvalidValue  Entry
+	InvalidInt    Entry
+	InvalidBool   Entry
 }

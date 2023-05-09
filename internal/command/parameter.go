@@ -32,7 +32,7 @@ func (command *Command) ValidateParameters(ctx *CommandContext) (values []any, s
 			break
 		}
 
-		value, err := parameter.Type.Parser(i, arguments)
+		value, err := parameter.Type.Parser(ctx, i, arguments)
 		if err != nil {
 			syntaxError = NewErrCannotParseParameter(lang, err)
 			break

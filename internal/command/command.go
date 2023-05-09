@@ -70,7 +70,7 @@ type CommandValidation struct {
 	Checker   CommandValidationChecker
 }
 
-type CommandParameterTypeParser func(index int, args []string) (any, error)
+type CommandParameterTypeParser func(ctx *CommandContext, index int, args []string) (any, error)
 
 type BaseType struct {
 	Name string

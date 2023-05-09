@@ -38,7 +38,10 @@
             },
             "parametersValidations": {
                 "requiredParam": "parameter `{0:param_name}` is required",
-                "invalidValue":  "invalid value for `{0:param_name}`. Valid values are: `{1:valid_values}`"
+                "invalidValue":  "invalid value for `{0:param_name}`. Valid values are: `{1:valid_values}`",
+                "invalidInt": "invalid integer number",
+                "invalidBool": "invalid boolean value (expected 'true' or 'false')"
+
             },
             "mustBeOnSameVoiceChannel": {
                 "description": "be on the same voice channel as the bot",
