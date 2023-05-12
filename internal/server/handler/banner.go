@@ -1,4 +1,4 @@
-package server
+package handler
 
 import (
 	"image"
@@ -22,7 +22,7 @@ var (
 	vsImg image.Image
 )
 
-func renderBanner(w http.ResponseWriter, r *http.Request) {
+func RenderBanner(w http.ResponseWriter, r *http.Request) {
 	if vsImg == nil {
 		err := loadVsImg()
 		if err != nil {

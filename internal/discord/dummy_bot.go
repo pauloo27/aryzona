@@ -103,6 +103,10 @@ func (DummyBot) UpdatePresence(presence *model.Presence) error {
 	return nil
 }
 
+func (DummyBot) IsLive() bool {
+	return true
+}
+
 func (DummyBot) GuildCount() int {
 	return 0
 }

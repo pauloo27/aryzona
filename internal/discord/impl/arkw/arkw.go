@@ -242,6 +242,11 @@ func (b ArkwBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
 	return buildChannel(dm.ID.String(), buildGuild(""), model.ChannelTypeDirect), nil
 }
 
+func (b ArkwBot) IsLive() bool {
+	_, err := b.s.Me()
+	return err == nil
+}
+
 func (b ArkwBot) Latency() time.Duration {
 	return b.s.Gateway().Latency()
 }

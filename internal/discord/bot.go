@@ -15,6 +15,7 @@ type BotAdapter interface {
 	Implementation() string
 	Init(token string) error
 	StartedAt() *time.Time
+	IsLive() bool
 	Listen(event event.EventType, handlerFunc any) error
 	Start() error
 	Stop() error
