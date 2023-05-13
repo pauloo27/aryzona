@@ -12,11 +12,13 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/goodsign/monday v1.0.1
 	github.com/google/uuid v1.3.0
+	github.com/joho/godotenv v1.5.1
 	github.com/jonas747/ogg v0.0.0-20161220051205-b4f6f4cf3757
 	github.com/kkdai/youtube/v2 v2.7.18
 	github.com/lib/pq v1.10.7
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcdole/gofeed v1.1.3
+	github.com/qiangxue/go-env v1.0.1
 	github.com/stretchr/testify v1.8.2
 	github.com/tidwall/gjson v1.14.0
 	xorm.io/xorm v1.3.2

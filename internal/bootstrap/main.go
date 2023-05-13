@@ -12,7 +12,7 @@ import (
 )
 
 func preStart(commitHash, commitMessage string) {
-	_, err := config.Load()
+	err := config.Load()
 	if err != nil {
 		logger.Fatal("Cannot load config", err)
 	}
