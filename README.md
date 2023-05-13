@@ -26,9 +26,15 @@ _The bot is written in GoLang, so you need the Go compiler._
 
 _To store data, the bot uses Postgres, so you need to have a Postgres server running._
 
-Create a `config.yml` file and copy the content of the `config.example.yml` file into it.
 
-Then, fill the config with proper values.
+The bot supports loading the config from a `config.yml` file or from environment variables.
+You need to pick one.
+
+If you want to use a YAML file, create a `config.yml` file and copy the content of the 
+`config.example.yml` file into it.
+
+If you want to use environment variables, you can set them manually or in a `.env` file.
+See the `.env.example` file for an example.
 
 To start the bot, run `make run` or `go run .`.
 
