@@ -11,7 +11,7 @@ env: 'prod'
 # if empty, the last commit message will be used
 presence: ''
 # link to the remote 
-git_repo_url: 'https://code.db.cafe/Pauloo27/aryzona'
+git_repo_url: 'https://github.com/Pauloo27/aryzona'
 # youtube api key (used for search)
 youtube_api_key: 'your youtube api key here'
 # external http server url
