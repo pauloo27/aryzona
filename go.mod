@@ -1,11 +1,8 @@
-module github.com/Pauloo27/aryzona
+module github.com/pauloo27/aryzona
 
 go 1.19
 
 require (
-	github.com/Pauloo27/logger v0.0.0-20211223231306-c86d1fd2a32d
-	github.com/Pauloo27/lyric v0.0.0-20210816005543-026ef01c6856
-	github.com/Pauloo27/toolkit v0.0.0-20220930010425-02fde0d9cb76
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
 	github.com/diamondburned/arikawa/v3 v3.2.0
 	github.com/ghodss/yaml v1.0.0
@@ -18,6 +15,9 @@ require (
 	github.com/lib/pq v1.10.7
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcdole/gofeed v1.1.3
+	github.com/pauloo27/logger v0.0.0-20230515014548-364273bcc15e
+	github.com/pauloo27/lyric v0.0.0-20230515020121-984bfe7441fa
+	github.com/pauloo27/toolkit v0.0.0-20230515014839-c9cac89ae368
 	github.com/qiangxue/go-env v1.0.1
 	github.com/stretchr/testify v1.8.2
 	github.com/tidwall/gjson v1.14.0
@@ -58,4 +58,4 @@ require (
 	xorm.io/builder v0.3.11-0.20220531020008-1bd24a7dc978 // indirect
 )
 
-replace github.com/diamondburned/arikawa/v3 => github.com/Pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b
+replace github.com/diamondburned/arikawa/v3 => github.com/pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b

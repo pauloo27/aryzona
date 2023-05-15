@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/db/services"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/db/services"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/logger"
 
 	"github.com/diamondburned/arikawa/v3/api"
 	dc "github.com/diamondburned/arikawa/v3/discord"

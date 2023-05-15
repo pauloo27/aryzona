@@ -1,6 +1,6 @@
 package animals
 
-import "github.com/Pauloo27/aryzona/internal/command"
+import "github.com/pauloo27/aryzona/internal/command"
 
 var Animals = command.CommandCategory{
 	Name:  "animals",

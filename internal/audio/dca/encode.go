@@ -10,11 +10,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/core/routine"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/core/routine"
+	"github.com/pauloo27/logger"
 	"github.com/jonas747/ogg"
 
-	k "github.com/Pauloo27/toolkit"
+	k "github.com/pauloo27/toolkit"
 )
 
 // based on https://git.notagovernment.agency/ItsClairton/Anny/ which é...

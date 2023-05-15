@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/aryzona/internal/providers/doc"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/aryzona/internal/providers/doc"
 )
 
 var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)

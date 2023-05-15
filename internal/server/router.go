@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/Pauloo27/aryzona/internal/server/handler"
+	"github.com/pauloo27/aryzona/internal/server/handler"
 	"github.com/go-chi/chi/v5"
 )
 

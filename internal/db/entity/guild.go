@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/Pauloo27/aryzona/internal/i18n"
+import "github.com/pauloo27/aryzona/internal/i18n"
 
 type Guild struct {
 	ID              string            `xorm:"id varchar(255) not null pk"`

@@ -3,8 +3,8 @@ package discord
 import (
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord/event"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord/event"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 )
 
 type DummyBot struct {

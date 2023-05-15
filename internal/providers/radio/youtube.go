@@ -1,9 +1,9 @@
 package radio
 
 import (
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/providers/youtube"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/aryzona/internal/providers/youtube"
+	"github.com/pauloo27/logger"
 )
 
 type YouTubeRadio struct {

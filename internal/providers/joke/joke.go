@@ -3,7 +3,7 @@ package joke
 import (
 	"encoding/json"
 
-	"github.com/Pauloo27/aryzona/internal/core/h"
+	"github.com/pauloo27/aryzona/internal/core/h"
 )
 
 type Joke struct {

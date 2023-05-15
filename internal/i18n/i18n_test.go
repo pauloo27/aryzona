@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/stretchr/testify/assert"
 )
 

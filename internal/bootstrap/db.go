@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"github.com/Pauloo27/aryzona/internal/config"
-	"github.com/Pauloo27/aryzona/internal/db"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/db"
+	"github.com/pauloo27/logger"
 )
 
 func connectToDB() error {

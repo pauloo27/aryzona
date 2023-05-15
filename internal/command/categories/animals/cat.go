@@ -1,9 +1,9 @@
 package animals
 
 import (
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/providers/animal"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/providers/animal"
+	"github.com/pauloo27/logger"
 )
 
 var CatCommand = command.Command{

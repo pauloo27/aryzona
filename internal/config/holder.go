@@ -3,7 +3,7 @@ package config
 import (
 	"os"
 
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/logger"
 	"github.com/ghodss/yaml"
 	"github.com/joho/godotenv"
 	env "github.com/qiangxue/go-env"

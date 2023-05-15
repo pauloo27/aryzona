@@ -5,16 +5,16 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/audio/dca"
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/command/validations"
-	"github.com/Pauloo27/aryzona/internal/core/routine"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/aryzona/internal/providers/youtube"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/audio/dca"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/command/validations"
+	"github.com/pauloo27/aryzona/internal/core/routine"
+	"github.com/pauloo27/aryzona/internal/discord/voicer"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/aryzona/internal/providers/youtube"
+	"github.com/pauloo27/logger"
 )
 
 const (

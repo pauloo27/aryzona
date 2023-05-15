@@ -3,7 +3,7 @@ package xkcd_test
 import (
 	"testing"
 
-	"github.com/Pauloo27/aryzona/internal/providers/xkcd"
+	"github.com/pauloo27/aryzona/internal/providers/xkcd"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

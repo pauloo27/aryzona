@@ -1,6 +1,6 @@
 package services
 
-import "github.com/Pauloo27/aryzona/internal/db"
+import "github.com/pauloo27/aryzona/internal/db"
 
 func upsert[T any](entity T) error {
 	// EAFP: easy to ask for forgiveness than permission,

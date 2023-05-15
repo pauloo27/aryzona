@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/aryzona/internal/i18n"
 )
 
 func Pluralize(i int, singular, plural string) string {

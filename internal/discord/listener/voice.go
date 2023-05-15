@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/core/scheduler"
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/discord/event"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/core/scheduler"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/discord/event"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord/voicer"
+	"github.com/pauloo27/logger"
 )
 
 func init() {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/core/scheduler"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
+	"github.com/pauloo27/aryzona/internal/core/scheduler"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/queue"
 )
 
 func (v *Voicer) IsPaused() bool {

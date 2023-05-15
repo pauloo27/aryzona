@@ -3,7 +3,7 @@ package radio
 import (
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
 )
 
 type RadioChannel interface {

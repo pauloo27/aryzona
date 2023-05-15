@@ -1,8 +1,8 @@
 package tools
 
 import (
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/google/uuid"
 )
 

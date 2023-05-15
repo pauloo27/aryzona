@@ -3,12 +3,12 @@ package fun
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/core/f"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/providers/xkcd"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/core/f"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/providers/xkcd"
+	"github.com/pauloo27/logger"
 )
 
 var XkcdCommand = command.Command{

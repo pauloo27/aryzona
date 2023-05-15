@@ -3,8 +3,8 @@ package command
 import (
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/logger"
 )
 
 var (

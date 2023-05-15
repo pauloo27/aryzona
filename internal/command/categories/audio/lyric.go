@@ -3,11 +3,11 @@ package audio
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/lyric"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/discord/voicer"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/lyric"
 )
 
 var LyricCommand = command.Command{

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/core/routine"
+	"github.com/pauloo27/aryzona/internal/core/routine"
 )
 
 type ListenerFn func(*LiveMatch, error)

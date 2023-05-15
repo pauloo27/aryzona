@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/logger"
 )
 
 type LanguageName string

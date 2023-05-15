@@ -1,8 +1,8 @@
 package validations
 
 import (
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/discord/voicer"
 )
 
 var MustHaveVoicerOnGuild = &command.CommandValidation{

@@ -3,9 +3,9 @@ package permissions_test
 import (
 	"testing"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/permissions"
-	"github.com/Pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/permissions"
+	"github.com/pauloo27/aryzona/internal/config"
 
 	"github.com/stretchr/testify/require"
 )

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/db/services"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/db/services"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/logger"
 )
 
 var LanguageCommand = command.Command{

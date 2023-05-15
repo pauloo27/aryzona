@@ -1,26 +1,26 @@
 package bootstrap
 
 import (
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/config"
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/logger"
 
 	// import arikawa implementation
-	_ "github.com/Pauloo27/aryzona/internal/discord/impl/arkw"
+	_ "github.com/pauloo27/aryzona/internal/discord/impl/arkw"
 
 	// import listeners
-	_ "github.com/Pauloo27/aryzona/internal/discord/listener"
+	_ "github.com/pauloo27/aryzona/internal/discord/listener"
 
 	// import scheduler
-	_ "github.com/Pauloo27/aryzona/internal/core/scheduler"
+	_ "github.com/pauloo27/aryzona/internal/core/scheduler"
 
 	// import all command categories
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/animals"
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/audio"
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/bot"
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/fun"
-	_ "github.com/Pauloo27/aryzona/internal/command/categories/tools"
+	_ "github.com/pauloo27/aryzona/internal/command/categories/animals"
+	_ "github.com/pauloo27/aryzona/internal/command/categories/audio"
+	_ "github.com/pauloo27/aryzona/internal/command/categories/bot"
+	_ "github.com/pauloo27/aryzona/internal/command/categories/fun"
+	_ "github.com/pauloo27/aryzona/internal/command/categories/tools"
 )
 
 func connectToDiscord() {

@@ -5,10 +5,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Pauloo27/aryzona/internal/config"
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/server"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/server"
+	"github.com/pauloo27/logger"
 )
 
 func preStart(commitHash, commitMessage string) {

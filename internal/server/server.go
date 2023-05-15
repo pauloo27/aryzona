@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Pauloo27/aryzona/internal/config"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

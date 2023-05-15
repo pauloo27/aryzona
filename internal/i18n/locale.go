@@ -3,7 +3,7 @@ package i18n
 import (
 	"time"
 
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/logger"
 	"github.com/goodsign/monday"
 )
 

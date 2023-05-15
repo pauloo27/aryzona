@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/logger"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 

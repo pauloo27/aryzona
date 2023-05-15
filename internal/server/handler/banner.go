@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Pauloo27/aryzona/internal/providers/livescore"
+	"github.com/pauloo27/aryzona/internal/providers/livescore"
 	"github.com/go-chi/chi/v5"
 )
 

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Pauloo27/aryzona/internal/bootstrap"
+import "github.com/pauloo27/aryzona/internal/bootstrap"
 
 var (
 	commitHash, commitMessage string

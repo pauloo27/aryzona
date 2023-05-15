@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	"github.com/Pauloo27/aryzona/internal/config"
-	"github.com/Pauloo27/aryzona/internal/providers/git"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/providers/git"
 )
 
 func loadGitInfo(commitHash, commitMessage string) {

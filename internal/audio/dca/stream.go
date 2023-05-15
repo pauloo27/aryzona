@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/core/routine"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/core/routine"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 )
 
 // based on https://git.notagovernment.agency/ItsClairton/Anny/ which é...

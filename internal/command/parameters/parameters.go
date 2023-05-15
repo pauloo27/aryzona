@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command"
 )
 
 var ParameterText = &command.CommandParameterType{

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Pauloo27/aryzona/internal/db"
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/db"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/logger"
 )
 
 func Health(w http.ResponseWriter, r *http.Request) {

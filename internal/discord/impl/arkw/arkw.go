@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/ReneKroon/ttlcache/v2"
 	"github.com/diamondburned/arikawa/v3/api"
 	dc "github.com/diamondburned/arikawa/v3/discord"

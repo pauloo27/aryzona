@@ -1,6 +1,6 @@
 package routine
 
-import "github.com/Pauloo27/logger"
+import "github.com/pauloo27/logger"
 
 func Go(f func()) {
 	go func() {

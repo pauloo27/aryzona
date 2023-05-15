@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/parameters"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/logger"
-	k "github.com/Pauloo27/toolkit"
-	"github.com/Pauloo27/toolkit/slices"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/logger"
+	k "github.com/pauloo27/toolkit"
+	"github.com/pauloo27/toolkit/slices"
 )
 
 var HelpCommand = command.Command{

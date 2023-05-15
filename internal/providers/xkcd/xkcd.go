@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/core/h"
+	"github.com/pauloo27/aryzona/internal/core/h"
 )
 
 type Comic struct {

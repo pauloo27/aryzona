@@ -3,8 +3,8 @@ package queue_test
 import (
 	"testing"
 
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/queue"
 	"github.com/stretchr/testify/assert"
 )
 

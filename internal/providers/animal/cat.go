@@ -1,7 +1,7 @@
 package animal
 
 import (
-	"github.com/Pauloo27/aryzona/internal/core/h"
+	"github.com/pauloo27/aryzona/internal/core/h"
 	"github.com/tidwall/gjson"
 )
 

@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/config"
-	"github.com/Pauloo27/aryzona/internal/core/h"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/core/h"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/logger"
 	yt "github.com/kkdai/youtube/v2"
 	"github.com/tidwall/gjson"
 )

@@ -1,9 +1,9 @@
 package fun
 
 import (
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/providers/joke"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/providers/joke"
+	"github.com/pauloo27/logger"
 )
 
 var JokeCommand = command.Command{

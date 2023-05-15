@@ -3,7 +3,7 @@ package arkw
 import (
 	"context"
 
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/diamondburned/arikawa/v3/voice"
 	"github.com/diamondburned/arikawa/v3/voice/voicegateway"
 )

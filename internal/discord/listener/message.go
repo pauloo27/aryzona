@@ -7,14 +7,14 @@ import (
 
 	"xorm.io/xorm"
 
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/db"
-	"github.com/Pauloo27/aryzona/internal/db/entity"
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/discord/event"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/i18n"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/db"
+	"github.com/pauloo27/aryzona/internal/db/entity"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/discord/event"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/logger"
 )
 
 func init() {

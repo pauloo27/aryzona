@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Pauloo27/aryzona/internal/providers/dice"
+	"github.com/pauloo27/aryzona/internal/providers/dice"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

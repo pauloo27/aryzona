@@ -1,7 +1,7 @@
 package arkw
 
 import (
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 )
 
 type Channel struct {

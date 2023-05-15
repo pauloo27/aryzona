@@ -1,6 +1,6 @@
 package fun
 
-import "github.com/Pauloo27/aryzona/internal/command"
+import "github.com/pauloo27/aryzona/internal/command"
 
 var Fun = command.CommandCategory{
 	Name:  "fun",

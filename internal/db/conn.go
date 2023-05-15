@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/db/entity"
+	"github.com/pauloo27/aryzona/internal/db/entity"
 
 	// postgres driver
 	_ "github.com/lib/pq"

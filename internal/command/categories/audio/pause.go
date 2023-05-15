@@ -1,11 +1,11 @@
 package audio
 
 import (
-	"github.com/Pauloo27/aryzona/internal/command"
-	"github.com/Pauloo27/aryzona/internal/command/validations"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/Pauloo27/aryzona/internal/i18n"
+	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/validations"
+	"github.com/pauloo27/aryzona/internal/discord/voicer"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
+	"github.com/pauloo27/aryzona/internal/i18n"
 )
 
 var PauseCommand = command.Command{

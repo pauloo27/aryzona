@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pauloo27/aryzona/internal/audio/dca"
-	"github.com/Pauloo27/aryzona/internal/discord"
-	"github.com/Pauloo27/aryzona/internal/discord/model"
-	"github.com/Pauloo27/aryzona/internal/discord/voicer/queue"
-	"github.com/Pauloo27/logger"
+	"github.com/pauloo27/aryzona/internal/audio/dca"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord/voicer/queue"
+	"github.com/pauloo27/logger"
 )
 
 type Voicer struct {

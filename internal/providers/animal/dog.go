@@ -3,7 +3,7 @@ package animal
 import (
 	"fmt"
 
-	"github.com/Pauloo27/aryzona/internal/core/h"
+	"github.com/pauloo27/aryzona/internal/core/h"
 )
 
 func GetRandomDog() (string, error) {

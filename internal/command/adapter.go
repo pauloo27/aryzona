@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/Pauloo27/aryzona/internal/discord/model"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 )
 
 type Adapter struct {
