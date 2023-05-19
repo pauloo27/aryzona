@@ -17,7 +17,7 @@ values file (under the `config` section).
 
 If you want to use the secret, create it with the following command:
 
-> `kubectl create secret generic testing --from-file ./config.yml -n <namespace>`
+> `kubectl create secret generic <secret-name> --from-file ./config.yml -n <namespace>`
 
 After having all the values in the values file as you wish, install the chart:
 
