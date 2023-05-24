@@ -20,52 +20,97 @@ func init() {
 }
 
 func voiceUpdate(bot discord.BotAdapter, user model.User, prevCh, curCh model.VoiceChannel) {
-	self, err := bot.Self()
-	if err != nil {
-		return
-	}
-
-	// stop the voice when the bot is disconnected. Why? Admins can disconnect the
-	// bot from the channel, if we dont handle it, the voicer will stop only when
-	// the playlist ends.
-	if self.ID() == user.ID() && curCh == nil {
-		v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
-		if v != nil {
-			_ = v.Disconnect()
-		}
-		return
+	if curCh != nil {
+		onConnect(bot, user, prevCh, curCh)
 	}
 
 	if prevCh != nil {
-		v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
-		if v != nil && v.ChannelID != nil && *v.ChannelID == prevCh.ID() {
-			onDisconnect(bot, prevCh, v)
-			return
-		}
+		onDisconnect(bot, user, prevCh, curCh)
 	}
-
-	if curCh != nil {
-		v := voicer.GetExistingVoicerForGuild(curCh.Guild().ID())
-		if v != nil && v.ChannelID != nil && *v.ChannelID == curCh.ID() {
-			onConnect(bot, curCh)
-		}
-	}
-
 }
 
-func onConnect(bot discord.BotAdapter, ch model.VoiceChannel) {
-	if bot.CountUsersInVoiceChannel(ch) <= 1 {
+func onConnect(bot discord.BotAdapter, user model.User, prevCh, curCh model.VoiceChannel) {
+	if isUserBot(user) {
+		onBotConnected(prevCh, curCh)
+		return
+	}
+	checkConnectedChannel(bot, curCh)
+}
+
+func onDisconnect(bot discord.BotAdapter, user model.User, prevCh, curCh model.VoiceChannel) {
+	if isUserBot(user) {
+		onBotDisconnected(prevCh, curCh)
+		return
+	}
+	checkDisconnectedChannel(bot, prevCh)
+}
+
+func checkConnectedChannel(bot discord.BotAdapter, ch model.VoiceChannel) {
+	v := voicer.GetExistingVoicerForGuild(ch.Guild().ID())
+
+	if !isVoicerValid(v) || *v.ChannelID != ch.ID() {
 		return
 	}
 
-	scheduler.Unschedule(fmt.Sprintf("voice_disconnect_%s", ch.Guild().ID()))
-}
-
-func onDisconnect(bot discord.BotAdapter, ch model.VoiceChannel, v *voicer.Voicer) {
 	if bot.CountUsersInVoiceChannel(ch) > 1 {
+		unsheduleDisconnect(v)
+	}
+}
+
+func checkDisconnectedChannel(bot discord.BotAdapter, prevCh model.VoiceChannel) {
+	v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
+	if !isVoicerValid(v) || *v.ChannelID != prevCh.ID() {
 		return
 	}
 
+	if bot.CountUsersInVoiceChannel(prevCh) <= 1 {
+		scheduleDisconnect(v)
+	}
+}
+
+func onBotConnected(prevCh, curCh model.VoiceChannel) {
+	v := voicer.GetExistingVoicerForGuild(curCh.Guild().ID())
+	if !isVoicerValid(v) {
+		return
+	}
+
+	// if the bot connected to the channel it's expected to, there's nothing to do
+	if *v.ChannelID == curCh.ID() {
+		return
+	}
+
+	*v.ChannelID = curCh.ID()
+
+	usersInCh := discord.Bot.CountUsersInVoiceChannel(curCh)
+
+	if usersInCh > 1 {
+		unsheduleDisconnect(v)
+	} else {
+		scheduleDisconnect(v)
+	}
+}
+
+func onBotDisconnected(prevCh, curCh model.VoiceChannel) {
+	v := voicer.GetExistingVoicerForGuild(prevCh.Guild().ID())
+	if isVoicerValid(v) && curCh == nil {
+		_ = v.Disconnect()
+	}
+}
+
+func isUserBot(user model.User) bool {
+	self, err := discord.Bot.Self()
+	if err != nil {
+		return false
+	}
+
+	return self.ID() == user.ID()
+}
+
+func isVoicerValid(v *voicer.Voicer) bool {
+	return v != nil && v.ChannelID != nil && v.GuildID != nil
+}
+
+func scheduleDisconnect(v *voicer.Voicer) {
 	task := scheduler.NewRunLaterTask(
 		30*time.Second,
 		func(params ...any) {
@@ -75,5 +120,9 @@ func onDisconnect(bot discord.BotAdapter, ch model.VoiceChannel, v *voicer.Voice
 		},
 	)
 
-	scheduler.Schedule(fmt.Sprintf("voice_disconnect_%s", ch.Guild().ID()), task)
+	scheduler.Schedule(fmt.Sprintf("voice_disconnect_%s", *v.GuildID), task)
+}
+
+func unsheduleDisconnect(v *voicer.Voicer) {
+	scheduler.Unschedule(fmt.Sprintf("voice_disconnect_%s", *v.GuildID))
 }
