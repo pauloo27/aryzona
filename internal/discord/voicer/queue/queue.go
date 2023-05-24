@@ -101,11 +101,12 @@ func (q *Queue) Remove(index int) {
 	if q.Size() == 0 {
 		return
 	}
+	item := q.queue[index]
 	var tmp []*QueueEntry
 	tmp = append(tmp, q.queue[:index]...)
 	tmp = append(tmp, q.queue[index+1:]...)
 	q.queue = tmp
-	q.Emit(EventRemove, EventRemoveData{Queue: q, Index: index})
+	q.Emit(EventRemove, EventRemoveData{Queue: q, Index: index, Item: item})
 }
 
 func (q *Queue) Size() int {

@@ -9,6 +9,7 @@ type BotConfig struct {
 	Presence              string `json:"presence" env:"PRESENCE"`
 	GitRepoURL            string `json:"git_repo_url" env:"GIT_REPO_URL"`
 	YoutubeAPIKey         string `json:"youtube_api_key" env:"YOUTUBE_API_KEY,secret"`
+	LastFmAPIKey          string `json:"last_fm_api_key" env:"LAST_FM_API_KEY,secret"`
 	HTTPServerPort        int    `json:"http_server_port" env:"HTTP_SERVER_PORT"`
 	HTTPServerExternalURL string `json:"http_server_external_url" env:"HTTP_SERVER_EXTERNAL_URL"`
 

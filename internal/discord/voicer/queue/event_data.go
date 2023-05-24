@@ -10,4 +10,5 @@ type EventAppendData struct {
 type EventRemoveData struct {
 	Queue *Queue
 	Index int
+	Item  *QueueEntry
 }

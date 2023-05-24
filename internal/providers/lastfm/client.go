@@ -14,6 +14,10 @@ type LastFmClient struct {
 	httpClient *http.Client
 }
 
+var (
+	DefaultClient *LastFmClient
+)
+
 func NewLastFmClient(apiKey string) *LastFmClient {
 	return &LastFmClient{
 		apiKey:     apiKey,

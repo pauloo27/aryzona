@@ -16,7 +16,7 @@ var (
 
 func TestMain(m *testing.M) {
 	// TODO: add to pipeline
-	apiKey = os.Getenv("LASTFM_API_KEY")
+	apiKey = os.Getenv("LAST_FM_API_KEY")
 	client = lastfm.NewLastFmClient(apiKey)
 	os.Exit(m.Run())
 }
