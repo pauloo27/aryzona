@@ -1,6 +1,7 @@
 package parameters_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/pauloo27/aryzona/internal/command"
@@ -16,7 +17,7 @@ var (
 func TestMain(m *testing.M) {
 	i18n.I18nRootDir = "../../../assets/i18n"
 	loadDefaultLang()
-	m.Run()
+	os.Exit(m.Run())
 }
 
 func TestBoolean(t *testing.T) {

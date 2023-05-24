@@ -1,6 +1,7 @@
 package validations_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/pauloo27/aryzona/internal/command"
@@ -22,7 +23,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
-	m.Run()
+	os.Exit(m.Run())
 }
 
 func TestMustHaveVoicerOnGuild(t *testing.T) {
@@ -46,7 +47,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 		ctx := &command.CommandContext{
 			GuildID: "123123", // not the same guild id
 			Locals:  make(map[string]interface{}),
-			Lang: defaultLang,
+			Lang:    defaultLang,
 		}
 
 		b, _ := validations.MustHaveVoicerOnGuild.Checker(ctx)
@@ -65,7 +66,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 		ctx := &command.CommandContext{
 			GuildID: guildId,
 			Locals:  make(map[string]interface{}),
-			Lang: defaultLang,
+			Lang:    defaultLang,
 		}
 
 		b, _ := validations.MustHaveVoicerOnGuild.Checker(ctx)
