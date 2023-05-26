@@ -64,7 +64,7 @@ func listCommands(ctx *command.CommandContext) {
 			aliases = t.AKA.Str(strings.Join(cmd.Aliases, ", "))
 		}
 		sb.WriteString(fmt.Sprintf(
-			" - `%s%s` %s: **%s** %s\n",
+			" -> `%s%s` %s: **%s** %s\n",
 			command.Prefix, cmdLang.Name, aliases, cmdLang.Description, permission,
 		))
 		lastCategory = cmd.GetCategory().Name
