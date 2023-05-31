@@ -466,7 +466,7 @@
             "multipleResultsSelectOne": "Multiple results found, please select one",
             "firstResultWillPlay": "[{0:title} from {1:author} (duration {3:duration})]({2:url})\nWill be added to the queue in {4:timeout_duration} seconds\nIf that's not the result you want, press the `Play other` button",
             "ifYouFailToSelect": "If you fail to select a result in {0:time} seconds, the first result will be selected",
-            "entry": " - {0:number_emoji} - **{1:title}** from **{2:author}** (**{3:duration}**)",
+            "entry": " -> {0:number_emoji} - **{1:title}** from **{2:author}** (**{3:duration}**)",
             "selectedResult": "Selected result for {0:query}",
             "confirmBtn": "Confirm",
             "playOtherBtn": "Play other",
