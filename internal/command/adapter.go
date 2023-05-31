@@ -5,7 +5,7 @@ import (
 )
 
 type Adapter struct {
-	GuildID, AuthorID string
+	MessageID, GuildID, AuthorID string
 	Reply             func(*CommandContext, string) error
 	Edit              func(*CommandContext, string) error
 	DeferResponse     func() error

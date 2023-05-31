@@ -44,6 +44,7 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 	guildID := m.Channel().Guild().ID()
 
 	event := command.Adapter{
+		MessageID: m.ID(),
 		AuthorID: m.Author().ID(),
 		GuildID:  guildID,
 		Reply: func(ctx *command.CommandContext, msg string) error {

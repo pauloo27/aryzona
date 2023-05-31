@@ -8,7 +8,6 @@ import (
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 type CommandHandler func(*CommandContext)
@@ -32,28 +31,28 @@ const (
 	PendingEmbedColor = 0x00add8
 )
 
-type InteractionHandler func(fullID, baseID, userID string) (newMessage *model.ComplexMessage, done bool)
+type InteractionHandler func(id, userID, baseID string) (newMessage *model.ComplexMessage, done bool)
 
 type CommandContext struct {
-	interactionHandler InteractionHandler
-	Lang               *i18n.Language
-	T                  any
-	startTime          time.Time
-	RawArgs            []string
-	Args               []any
-	Bot                discord.BotAdapter
-	Channel            model.TextChannel
-	AuthorID, GuildID  string
-	UsedName           string
-	Locals             map[string]any
-	Reply              func(string) error
-	ReplyEmbed         func(*model.Embed) error
-	ReplyComplex       func(*model.ComplexMessage) error
-	EditComplex        func(*model.ComplexMessage) error
-	Edit               func(string) error
-	EditEmbed          func(*model.Embed) error
-	Command            *Command
-	Trigger            CommandTrigger
+	interactionHandler           InteractionHandler
+	Lang                         *i18n.Language
+	T                            any
+	startTime                    time.Time
+	RawArgs                      []string
+	Args                         []any
+	Bot                          discord.BotAdapter
+	Channel                      model.TextChannel
+	MessageID, AuthorID, GuildID string
+	UsedName                     string
+	Locals                       map[string]any
+	Reply                        func(string) error
+	ReplyEmbed                   func(*model.Embed) error
+	ReplyComplex                 func(*model.ComplexMessage) error
+	EditComplex                  func(*model.ComplexMessage) error
+	Edit                         func(string) error
+	EditEmbed                    func(*model.Embed) error
+	Command                      *Command
+	Trigger                      CommandTrigger
 
 	executionID string
 	processTime time.Duration
@@ -129,6 +128,14 @@ func (ctx *CommandContext) Success(message string) {
 	ctx.handleCannotSendMessage(ctx.SuccessReturning(message))
 }
 
+func (ctx *CommandContext) ReplyWithInteraction(
+	baseID string,
+	message *model.ComplexMessage, handler InteractionHandler,
+) error {
+	ctx.RegisterInteractionHandler(baseID, handler)
+	return ctx.ReplyComplex(message)
+}
+
 func (ctx *CommandContext) Successf(format string, a ...any) {
 	ctx.Success(fmt.Sprintf(format, a...))
 }
@@ -186,22 +193,7 @@ func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	}
 }
 
-func (ctx *CommandContext) RegisterInteractionHandler(handler InteractionHandler) (baseID string, err error) {
-	for {
-		baseID, err = gonanoid.New(InteractionBaseIDLength)
-		if err != nil {
-			logger.Error(err)
-			return "", err
-		}
-		if _, found := commandInteractionMap[baseID]; !found {
-			break
-		}
-	}
+func (ctx *CommandContext) RegisterInteractionHandler(baseID string, handler InteractionHandler) {
 	ctx.interactionHandler = handler
 	commandInteractionMap[baseID] = ctx
-	go func() {
-		time.Sleep(5 * time.Minute)
-		RemoveInteractionHandler(baseID)
-	}()
-	return baseID, nil
 }

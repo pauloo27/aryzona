@@ -2,8 +2,6 @@ package audio
 
 import (
 	"errors"
-	"sync"
-	"time"
 
 	"github.com/pauloo27/aryzona/internal/audio/dca"
 	"github.com/pauloo27/aryzona/internal/command"
@@ -17,11 +15,7 @@ import (
 	"github.com/pauloo27/logger"
 )
 
-const (
-	maxSearchResults       = 5
-	firstResultTimeout     = 5 * time.Second
-	multipleResultsTimeout = 30 * time.Second
-)
+const maxSearchResults = 5
 
 type SearchContext struct {
 	*command.CommandContext
@@ -29,6 +23,8 @@ type SearchContext struct {
 	SearchQuery string
 	Results     []*youtube.SearchResult
 	Voicer      *voicer.Voicer
+
+	SelectionCh chan Selection
 }
 
 var PlayCommand = command.Command{
@@ -41,46 +37,28 @@ var PlayCommand = command.Command{
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandPlay)
 
-		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		searchQuery := ctx.Args[0].(string)
-		hasResultsAndIsConnected := true
 
-		var results []*youtube.SearchResult
-		var wg sync.WaitGroup
-		var err error
+		results, err := youtube.SearchFor(searchQuery, maxSearchResults)
+		if err != nil || len(results) == 0 {
+			ctx.Error(t.SomethingWentWrong.Str())
+			logger.Warnf("Error searching for %s: %v", searchQuery, err)
+			return
+		}
 
+		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		if !vc.IsConnected() {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				if err := vc.Connect(); err != nil {
-					hasResultsAndIsConnected = false
-					ctx.Error(t.CannotConnect.Str())
-					logger.Error(err)
-				}
-			}()
+			if err := vc.Connect(); err != nil {
+				ctx.Error(t.CannotConnect.Str())
+				logger.Error(err)
+				return
+			}
 		} else {
 			ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
 			if !ok {
 				logger.Error(msg)
 				return
 			}
-		}
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			results, err = youtube.SearchFor(searchQuery, maxSearchResults)
-			if err != nil || len(results) == 0 {
-				hasResultsAndIsConnected = false
-				ctx.Error(t.SomethingWentWrong.Str())
-				logger.Warnf("Error searching for %s: %v", searchQuery, err)
-			}
-		}()
-
-		wg.Wait()
-		if !hasResultsAndIsConnected {
-			return
 		}
 
 		// what should be added to the queue, since we support playlists...
@@ -94,10 +72,10 @@ var PlayCommand = command.Command{
 			Results:        results,
 		}
 
-		if len(results) > 1 {
-			toPlay = handleMultipleResults(searchCtx)
-		} else {
+		if len(results) == 1 {
 			toPlay = handleSingleResult(searchCtx)
+		} else {
+			toPlay = handleMultipleResults(searchCtx)
 		}
 
 		if toPlay == nil {
@@ -151,6 +129,5 @@ func handleSingleResult(ctx *SearchContext) (toPlay []playable.Playable) {
 				t.BestResult.Str(ctx.SearchQuery),
 			),
 	)
-
 	return
 }

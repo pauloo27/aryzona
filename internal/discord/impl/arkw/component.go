@@ -1,8 +1,10 @@
 package arkw
 
 import (
-	"github.com/pauloo27/aryzona/internal/discord/model"
+	"fmt"
+
 	dc "github.com/diamondburned/arikawa/v3/discord"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 )
 
 func buildRows(rows []model.MessageComponentRow) dc.ContainerComponents {
@@ -23,9 +25,10 @@ func buildComponents(components []model.MessageComponent) []dc.InteractiveCompon
 	for i, component := range components {
 		switch t := component.(type) {
 		case model.ButtonComponent:
+			id := fmt.Sprintf("%s:%s", t.BaseID, t.ID)
 			builtComponents[i] = &dc.ButtonComponent{
 				Label:    t.Label,
-				CustomID: dc.ComponentID(t.ID),
+				CustomID: dc.ComponentID(id),
 				Emoji:    &dc.ComponentEmoji{Name: t.Emoji},
 				Style:    style(t.Style),
 				Disabled: t.Disabled,

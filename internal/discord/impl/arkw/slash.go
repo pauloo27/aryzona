@@ -247,6 +247,7 @@ func registerCommands(bot ArkwBot) error {
 
 			adapter := command.Adapter{
 				AuthorID: i.Sender().ID.String(),
+				MessageID: i.ID.String(),
 				GuildID:  i.GuildID.String(),
 				DeferResponse: func() error {
 					return bot.s.RespondInteraction(

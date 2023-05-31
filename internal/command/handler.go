@@ -4,11 +4,11 @@ import (
 	"strings"
 	"time"
 
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 var (
@@ -128,6 +128,7 @@ func HandleCommand(
 		T:         t,
 		Lang:      lang,
 		RawArgs:   args,
+		MessageID: adapter.MessageID,
 		AuthorID:  adapter.AuthorID,
 		UsedName:  commandName,
 		GuildID:   adapter.GuildID,
@@ -180,14 +181,19 @@ func HandleCommand(
 	executeCommand(command, ctx, adapter, bot)
 }
 
-func HandleInteraction(id, userID string) *model.ComplexMessage {
-	baseID := id[:10]
+func HandleInteraction(fullID, userID string) *model.ComplexMessage {
+	splitted := strings.Split(fullID, ":")
+	if len(splitted) != 2 {
+		logger.Error("Invalid interaction id", fullID)
+		return nil
+	}
+	baseID, id := splitted[0], splitted[1]
 	ctx, ok := commandInteractionMap[baseID]
 	if !ok {
 		logger.Error("Cannot find interaction adapter for id", baseID)
 		return nil
 	}
-	newMessage, done := ctx.interactionHandler(id, baseID, userID)
+	newMessage, done := ctx.interactionHandler(id, userID, baseID)
 	if done {
 		delete(commandInteractionMap, baseID)
 	}

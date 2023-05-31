@@ -5,6 +5,7 @@ type MessageComponent any
 type ButtonComponent struct {
 	Label    string
 	ID       string
+	BaseID   string
 	Emoji    string
 	Style    ButtonStyle
 	Disabled bool
