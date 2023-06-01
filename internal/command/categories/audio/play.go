@@ -82,7 +82,7 @@ var PlayCommand = command.Command{
 			return
 		}
 
-		routine.Go(func() {
+		routine.GoAndRecover(func() {
 			if err := vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return

@@ -32,7 +32,7 @@ const (
 )
 
 func init() {
-	routine.Go(func() {
+	routine.GoAndRecover(func() {
 		for {
 			for _, match := range followedMatches {
 				updateLiveMatch(match)

@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
+	yt "github.com/kkdai/youtube/v2"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/core/h"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/pauloo27/logger"
-	yt "github.com/kkdai/youtube/v2"
 	"github.com/tidwall/gjson"
 )
 
@@ -62,7 +62,8 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 
 	wg := sync.WaitGroup{}
 
-	results := make([]*SearchResult, len(ids))
+	var results []*SearchResult
+
 	for i, id := range ids {
 		wg.Add(1)
 		go func(i int, id string) {
@@ -72,7 +73,7 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 				logger.Warnf("error getting video %s from playlist %s: %s", id, searchQuery, err)
 				return
 			}
-			results[i] = videoAsSearchResult(vid)
+			results = append(results, videoAsSearchResult(vid))
 		}(i, id)
 	}
 	wg.Wait()

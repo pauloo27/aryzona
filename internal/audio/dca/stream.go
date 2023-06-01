@@ -39,7 +39,7 @@ func NewStream(source *EncodeSession, vc model.VoiceConnection, callback chan er
 		callback:   callback,
 	}
 
-	routine.Go(session.stream)
+	routine.GoAndRecover(session.stream)
 
 	return session
 }
@@ -126,7 +126,7 @@ func (s *StreamingSession) Resume() {
 		return
 	}
 	s.paused = false
-	routine.Go(s.stream)
+	routine.GoAndRecover(s.stream)
 }
 
 func (s *StreamingSession) TogglePause() {

@@ -2,7 +2,7 @@ package routine
 
 import "github.com/pauloo27/logger"
 
-func Go(f func()) {
+func GoAndRecover(f func()) {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {

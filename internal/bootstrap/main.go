@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/aryzona/internal/core/routine"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/server"
 	"github.com/pauloo27/logger"
@@ -28,8 +29,8 @@ func Start(commitHash, commitMessage string) {
 		logger.Fatal("Cannot connect to database", err)
 	}
 
-	go connectToDiscord()
-	go server.StartHTTPServer()
+	routine.GoAndRecover(connectToDiscord)
+	routine.GoAndRecover(server.StartHTTPServer)
 
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol

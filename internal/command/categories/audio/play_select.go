@@ -8,6 +8,7 @@ import (
 
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/core/f"
+	"github.com/pauloo27/aryzona/internal/core/routine"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
@@ -132,7 +133,7 @@ func handleConfirmationInteraction(ctx *SearchContext, msg *model.ComplexMessage
 
 	components := msg.ComponentRows[0].Components
 
-	go func() {
+	routine.GoAndRecover(func() {
 		select {
 		case action := <-actionCh:
 			switch action {
@@ -166,7 +167,7 @@ func handleConfirmationInteraction(ctx *SearchContext, msg *model.ComplexMessage
 			}
 			command.RemoveInteractionHandler(ctx.MessageID)
 		}
-	}()
+	})
 
 	return func(id, userID, baseID string) (newMessage *model.ComplexMessage, done bool) {
 		if userID != ctx.AuthorID {
@@ -286,7 +287,7 @@ func handlePlayOtherInteraction(ctx *SearchContext, msg *model.ComplexMessage) c
 	buttonsRow := msg.ComponentRows[0].Components
 	cancelRow := msg.ComponentRows[1].Components
 
-	go func() {
+	routine.GoAndRecover(func() {
 		select {
 		case index := <-selectedIndexCh:
 			if index >= 0 && index < len(ctx.Results) {
@@ -322,7 +323,8 @@ func handlePlayOtherInteraction(ctx *SearchContext, msg *model.ComplexMessage) c
 			}
 			command.RemoveInteractionHandler(ctx.MessageID)
 		}
-	}()
+	})
+
 	return func(id, userID, baseID string) (newMessage *model.ComplexMessage, done bool) {
 		if userID != ctx.AuthorID {
 			return nil, false

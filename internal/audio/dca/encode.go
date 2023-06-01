@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jonas747/ogg"
 	"github.com/pauloo27/aryzona/internal/core/routine"
 	"github.com/pauloo27/logger"
-	"github.com/jonas747/ogg"
 
 	k "github.com/pauloo27/toolkit"
 )
@@ -52,7 +52,7 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 		isLocal: isLocal,
 	}
 
-	routine.Go(func() {
+	routine.GoAndRecover(func() {
 		err := session.run()
 		if err != nil {
 			logger.Error(err)

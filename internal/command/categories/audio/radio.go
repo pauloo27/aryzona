@@ -71,7 +71,7 @@ var RadioCommand = command.Command{
 		).WithTitle(t.AddedToQueue.Str(channel.GetName()))
 		ctx.SuccessEmbed(embed)
 
-		routine.Go(func() {
+		routine.GoAndRecover(func() {
 			if err := vc.AppendToQueue(ctx.AuthorID, channel); err != nil {
 				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
 					return

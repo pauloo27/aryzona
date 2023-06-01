@@ -60,5 +60,5 @@ func scheduleLoop(delay time.Duration) {
 }
 
 func init() {
-	routine.Go(func() { scheduleLoop(1 * time.Second) })
+	routine.GoAndRecover(func() { scheduleLoop(1 * time.Second) })
 }
