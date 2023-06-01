@@ -188,7 +188,7 @@ func handleConfirmationInteraction(ctx *SearchContext, msg *model.ComplexMessage
 			}
 		}
 
-		var embeds []*model.Embed = nil
+		var embeds []*model.Embed
 
 		if id == ActionPlayNow {
 			embeds = []*model.Embed{
@@ -343,7 +343,7 @@ func handlePlayOtherInteraction(ctx *SearchContext, msg *model.ComplexMessage) c
 
 		selectedIndexCh <- selectedIndex
 
-		var embeds []*model.Embed = nil
+		var embeds []*model.Embed
 
 		if selectedIndex != -1 {
 			embeds = []*model.Embed{
