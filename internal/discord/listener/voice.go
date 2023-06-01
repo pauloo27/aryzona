@@ -112,7 +112,7 @@ func isVoicerValid(v *voicer.Voicer) bool {
 
 func scheduleDisconnect(v *voicer.Voicer) {
 	task := scheduler.NewRunLaterTask(
-		30*time.Second,
+		60*time.Second,
 		func(params ...any) {
 			if err := v.Disconnect(); err != nil {
 				logger.Errorf("Cannot disconnect empty channel: %v", err)
