@@ -7,7 +7,8 @@ jobs:
     container:
       image: catthehacker/ubuntu:act-latest
     steps:
-      - uses: https://github.com/actions/checkout@v3
+      - name: Checkout code
+        uses: https://github.com/actions/checkout@v3
 
       - name: Set up Go
         uses: https://github.com/actions/setup-go@v4
@@ -22,7 +23,8 @@ jobs:
     container:
       image: catthehacker/ubuntu:act-latest
     steps:
-      - uses: https://github.com/actions/checkout@v3
+      - name: Checkout code
+        uses: https://github.com/actions/checkout@v3
 
       - name: Set up Go
         uses: https://github.com/actions/setup-go@v4
@@ -37,7 +39,8 @@ jobs:
     container:
       image: catthehacker/ubuntu:act-latest
     steps:
-      - uses: https://github.com/actions/checkout@v3
+      - name: Checkout code
+        uses: https://github.com/actions/checkout@v3
 
       - name: Set up Go
         uses: https://github.com/actions/setup-go@v4
@@ -60,7 +63,8 @@ jobs:
       image: catthehacker/ubuntu:act-latest
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
     steps:
-      - uses: https://github.com/actions/checkout@v3
+      - name: Checkout code
+        uses: https://github.com/actions/checkout@v3
 
       - name: Set up Docker Context for Buildx
         id: buildx-context
