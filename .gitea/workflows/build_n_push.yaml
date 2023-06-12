@@ -108,5 +108,5 @@ jobs:
         if: github.ref_name == 'master'
         with:
           base_url: https://k7z.db.cafe
-          project_id: aryzona-prod
+          project_id: aryzona-master
           secret: ${{ secrets.K7Z_SECRET }}
