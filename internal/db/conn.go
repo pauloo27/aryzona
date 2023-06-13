@@ -8,6 +8,7 @@ import (
 	// postgres driver
 	_ "github.com/lib/pq"
 	"xorm.io/xorm"
+	"xorm.io/xorm/log"
 )
 
 var (
@@ -47,6 +48,7 @@ func NewDB(config *DBConfig) (*DBConn, error) {
 	if err != nil {
 		return nil, err
 	}
+	engine.Logger().SetLevel(log.LOG_ERR)
 	return &DBConn{
 		Engine: engine,
 	}, nil

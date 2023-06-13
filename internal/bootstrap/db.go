@@ -21,7 +21,13 @@ func connectToDB() error {
 	}
 	db.DB = conn
 
-	logger.Success("Connected to database")
+	err = conn.Ping()
+	if err == nil {
+		logger.Success("Connected to database")
+	} else {
+		logger.Fatalf("Failed to connect to database: %s", err.Error())
+	}
+
 	logger.Info("Migrationg database...")
 	if err = conn.Migrate(); err != nil {
 		return err
