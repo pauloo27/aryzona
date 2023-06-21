@@ -6,7 +6,9 @@ Deploy Aryzona with from a helm chart.
 
 First, add the helm repo to your helm client:
 
-> `not available yet`
+> `helm repo add dbcafe https://code.db.cafe/api/packages/pauloo27/helm` 
+
+> `helm repo update`
 
 Then, generate the default values.yml: 
 
