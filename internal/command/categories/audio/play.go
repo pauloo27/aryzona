@@ -1,13 +1,10 @@
 package audio
 
 import (
-	"errors"
 
-	"github.com/pauloo27/aryzona/internal/audio/dca"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/command/validations"
-	"github.com/pauloo27/aryzona/internal/core/routine"
 	"github.com/pauloo27/aryzona/internal/discord/voicer"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/pauloo27/aryzona/internal/i18n"
@@ -82,16 +79,7 @@ var PlayCommand = command.Command{
 			return
 		}
 
-		routine.GoAndRecover(func() {
-			if err := vc.AppendManyToQueue(ctx.AuthorID, toPlay...); err != nil {
-				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
-					return
-				}
-				ctx.Error(t.SomethingWentWrong.Str())
-				logger.Error(err)
-				return
-			}
-		})
+		vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
 	},
 }
 

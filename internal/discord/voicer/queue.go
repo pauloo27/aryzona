@@ -74,7 +74,7 @@ func (v *Voicer) AppendToQueue(requesterID string, playable playable.Playable) e
 	return nil
 }
 
-func (v *Voicer) AppendManyToQueue(requesterID string, playable ...playable.Playable) error {
+func (v *Voicer) AppendManyToQueue(requesterID string, playable ...playable.Playable) {
 	var entries []*queue.QueueEntry
 	for _, p := range playable {
 		entries = append(entries, &queue.QueueEntry{
@@ -83,7 +83,6 @@ func (v *Voicer) AppendManyToQueue(requesterID string, playable ...playable.Play
 		})
 	}
 	v.Queue.AppendMany(entries...)
-	return nil
 }
 
 func (v *Voicer) scheduleEmptyQueue() {
