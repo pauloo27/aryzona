@@ -13,7 +13,7 @@ import (
 var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 
 var CNPJCommand = command.Command{
-	Name: "cnpj", 
+	Name: "cnpj",
 	Handler: func(ctx *command.CommandContext) {
 		t := ctx.T.(*i18n.CommandCNPJ)
 
@@ -28,7 +28,7 @@ var CNPJCommand = command.Command{
 			model.NewEmbed().
 				WithTitle(t.Title.Str()).
 				WithField(t.WithoutMask.Str(), cnpj).
-				WithField(t.WithoutMask.Str(), maskedCNPJ),
+				WithField(t.WithMask.Str(), maskedCNPJ),
 		)
 	},
 }
