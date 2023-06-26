@@ -22,7 +22,6 @@ type SearchResult struct {
 	Title, Author string
 	Duration      time.Duration
 	ThumbnailURL  string
-	Music         *Music
 }
 
 func searchWithAPI(searchQuery string, limit int) ([]string, error) {
@@ -78,31 +77,7 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 		}(i, id)
 	}
 	wg.Wait()
-
-	return sortResults(results), nil
-}
-
-func sortResults(results []*SearchResult) []*SearchResult {
-	sortedResults := make([]*SearchResult, len(results))
-	foundMusic := false
-
-	for i, result := range results {
-		if foundMusic || result.IsPlaylist() || result.IsLive() {
-			sortedResults[i] = result
-			continue
-		}
-
-		music := parseDescription(result.vid)
-		if music != nil {
-			result.Music = music
-			foundMusic = true
-			sortedResults[0], sortedResults[i] = sortedResults[i], sortedResults[0]
-			continue
-		}
-
-		sortedResults[i] = result
-	}
-	return sortedResults
+	return results, nil
 }
 
 func videoAsSearchResult(vid *yt.Video) *SearchResult {
@@ -164,18 +139,11 @@ func (r *SearchResult) ToPlayable() []playable.Playable {
 		}
 		return playables
 	}
-
-	title, author := r.Title, r.Author
-	if r.Music != nil {
-		title = r.Music.Track
-		author = r.Music.Artist
-	}
-
 	return []playable.Playable{
 		YouTubePlayable{
 			ID:           r.ID,
-			Title:        title,
-			Author:       author,
+			Title:        r.Title,
+			Author:       r.Author,
 			ThumbnailURL: r.ThumbnailURL,
 			Duration:     r.Duration,
 			Live:         r.IsLive(),
