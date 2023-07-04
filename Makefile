@@ -67,8 +67,3 @@ gosec:
 
 .PHONY: inspect
 inspect: lint gosec staticcheck
-
-# auto restart bot
-.PHONY: dev
-dev:
-	air
