@@ -5,7 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func route(r *chi.Mux) {
+func route(r chi.Router) {
 	r.Get("/soccer/banner-{t1}-{t2}.png", handler.RenderBanner)
 	r.Get("/healthz", handler.Health)
 }
