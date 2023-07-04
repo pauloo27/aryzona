@@ -3,20 +3,15 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"time"
 
-	"github.com/pauloo27/aryzona/internal/config"
-	"github.com/pauloo27/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/pauloo27/aryzona/internal/config"
+	"github.com/pauloo27/logger"
 )
 
-/* #nosec G114 */
-func StartHTTPServer() {
-	if config.Config.HTTPServerPort == 0 {
-		logger.Warn("HTTP server disabled")
-		return
-	}
-
+func StartHTTPServer() error {
 	logger.Infof("Starting HTTP server at port %d...", config.Config.HTTPServerPort)
 	r := chi.NewRouter()
 
@@ -27,8 +22,12 @@ func StartHTTPServer() {
 
 	route(r)
 
-	err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config.HTTPServerPort), r)
-	if err != nil {
-		logger.Fatal(err)
+	server := &http.Server{
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		Handler:      r,
+		Addr: fmt.Sprintf(":%d", config.Config.HTTPServerPort),
 	}
+
+	return server.ListenAndServe()
 }
