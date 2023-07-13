@@ -60,9 +60,13 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 		return nil, err
 	}
 
+	return loadResults(ids), nil
+}
+
+func loadResults(ids []string) []*SearchResult {
 	wg := sync.WaitGroup{}
 
-	var results []*SearchResult
+	results := make([]*SearchResult, len(ids))
 
 	for i, id := range ids {
 		wg.Add(1)
@@ -70,14 +74,26 @@ func SearchFor(searchQuery string, limit int) ([]*SearchResult, error) {
 			defer wg.Done()
 			vid, err := defaultClient.GetVideo(id)
 			if err != nil {
-				logger.Warnf("error getting video %s from playlist %s: %s", id, searchQuery, err)
+				logger.Warnf("error getting video %s: %s", id, err)
 				return
 			}
-			results = append(results, videoAsSearchResult(vid))
+			results[i] = videoAsSearchResult(vid)
 		}(i, id)
 	}
 	wg.Wait()
-	return results, nil
+
+	// remove nils from the slice
+	j := 0
+	for i, result := range results {
+		if result != nil {
+			if i != j {
+				results[j] = result
+			}
+			j++
+		}
+	}
+
+	return results
 }
 
 func videoAsSearchResult(vid *yt.Video) *SearchResult {
