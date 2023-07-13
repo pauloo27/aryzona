@@ -53,6 +53,10 @@ dist:
 pack: dist
 	upx ./$(BINARY_NAME)
 
+.PHONY: dev
+dev:
+	air
+
 .PHONY: lint
 lint:
 	revive -formatter friendly -config revive.toml ./...
