@@ -125,6 +125,8 @@ type CommandNews struct {
 	Definition *CommandDefinition
 
 	Title Entry
+	Unknown Entry
+	SeeMore Entry
 }
 
 type CommandPing struct {

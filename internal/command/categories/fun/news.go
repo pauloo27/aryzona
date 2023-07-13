@@ -15,10 +15,10 @@ type NewsFactory func() (*news.NewsFeed, error)
 
 var (
 	Sources = map[string]NewsFactory{
-		"thn":             news.GetTHNFeed,
-		"cnn-world":       news.GetCNNWorldFeed,
-		"cnn-tech":        news.GetCNNTechFeed,
-		"cnn-top-stories": news.GetCNNTopStoriesFeed,
+		"thn":       news.GetTHNFeed,
+		"cnn-top":   news.GetCNNTopStoriesFeed,
+		"cnn-world": news.GetCNNWorldFeed,
+		"cnn-tech":  news.GetCNNTechFeed,
 	}
 )
 
@@ -52,8 +52,14 @@ var NewsCommand = command.Command{
 			logger.Error(err)
 			return
 		}
+
+		author := news.Author
+		if author == "" {
+			author = t.Unknown.Str()
+		}
+
 		embed := model.NewEmbed().
-			WithTitle(t.Title.Str(news.Title, news.Author)).
+			WithTitle(t.Title.Str(news.Title, author)).
 			WithDescription(news.Description).
 			WithImage(news.ThumbnailURL)
 
@@ -66,7 +72,17 @@ var NewsCommand = command.Command{
 			if entry.PostedAt != nil {
 				postedAt = entry.PostedAt.Format("2006-01-02")
 			}
-			embed.WithField(entry.Title, fmt.Sprintf("%s | %v | %s", shortDescription, postedAt, entry.URL))
+			if postedAt == "" {
+				embed.WithField(
+					entry.Title,
+					fmt.Sprintf("%s \n[%s](%s)", shortDescription, t.SeeMore.Str(), entry.URL),
+				)
+			} else {
+				embed.WithField(
+					entry.Title,
+					fmt.Sprintf("%s | %s \n[%s](%s)", shortDescription, postedAt, t.SeeMore.Str(), entry.URL),
+				)
+			}
 		}
 
 		ctx.SuccessEmbed(embed)

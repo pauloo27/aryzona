@@ -6,10 +6,6 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-var (
-	unixEpoch = time.Unix(0, 0)
-)
-
 type NewsEntry struct {
 	Title        string
 	ThumbnailURL string
@@ -38,7 +34,7 @@ func ParseFeed(feedURL string) (*NewsFeed, error) {
 
 	entries := make([]*NewsEntry, len(feed.Items))
 
-	feedAuthor, thumbnailURL := "Unknown", ""
+	feedAuthor, thumbnailURL := "", ""
 
 	if len(feed.Authors) > 0 {
 		feedAuthor = feed.Authors[0].Name
@@ -60,11 +56,6 @@ func ParseFeed(feedURL string) (*NewsFeed, error) {
 
 		if len(item.Authors) > 0 {
 			entry.Author = item.Authors[0].Name
-		} else {
-			entry.Author = "Unknown"
-		}
-		if entry.PostedAt == nil {
-			entry.PostedAt = &unixEpoch
 		}
 
 		entries[i] = entry

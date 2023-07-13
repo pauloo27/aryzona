@@ -200,6 +200,8 @@
         },
         "news": {
             "title": "Noticias - {0:title} por {1:author}",
+            "unknown": "Desconhecido",
+            "seeMore": "Veja mais",
             "definition": {
                 "name": "noticias",
                 "description": "Veja noticias de alguma fonte",
