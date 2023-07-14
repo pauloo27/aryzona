@@ -3,7 +3,6 @@ package i18n
 import (
 	"time"
 
-	"github.com/pauloo27/logger"
 	"github.com/goodsign/monday"
 )
 
@@ -17,7 +16,6 @@ func (l *Locale) FormatSimpleDateTime(time time.Time) string {
 	a := monday.Format(
 		time, l.SimpleDateTimeFormat, monday.Locale(l.langName),
 	)
-	logger.Debug("format", l.SimpleDateTimeFormat)
 
 	return a
 }
