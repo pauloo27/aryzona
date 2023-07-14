@@ -14,11 +14,11 @@ type CommandHandler func(*CommandContext)
 type CommandPermissionChecker func(*CommandContext) bool
 type CommandValidationChecker func(*CommandContext) (bool, string)
 
-type CommandTrigger string
+type CommandTriggerType string
 
 const (
-	CommandTriggerSlash   CommandTrigger = "SLASH"
-	CommandTriggerMessage CommandTrigger = "MESSAGE"
+	CommandTriggerSlash   CommandTriggerType = "SLASH"
+	CommandTriggerMessage CommandTriggerType = "MESSAGE"
 )
 
 const (
@@ -45,17 +45,12 @@ type CommandContext struct {
 	MessageID, AuthorID, GuildID string
 	UsedName                     string
 	Locals                       map[string]any
-	Reply                        func(string) error
-	ReplyEmbed                   func(*model.Embed) error
-	ReplyComplex                 func(*model.ComplexMessage) error
-	EditComplex                  func(*model.ComplexMessage) error
-	Edit                         func(string) error
-	EditEmbed                    func(*model.Embed) error
 	Command                      *Command
-	Trigger                      CommandTrigger
+	TriggerType                  CommandTriggerType
 
 	executionID string
 	processTime time.Duration
+	trigger     *TriggerEvent
 }
 
 type CommandPermission struct {
@@ -122,6 +117,55 @@ func (ctx *CommandContext) handleCannotSendMessage(err error) {
 	if err != nil {
 		logger.Error(err)
 	}
+}
+
+func (ctx *CommandContext) logResponse() {
+	logger.Logf(
+		CommandLogLevel,
+		"[i %s] got response %s, took %s",
+		ctx.executionID,
+		"<omitted>", // dont really care about the response
+		ctx.processTime,
+	)
+}
+
+func (ctx *CommandContext) Reply(message string) error {
+	ctx.logResponse()
+
+	return ctx.trigger.Reply(ctx, &model.ComplexMessage{
+		Content: message,
+	})
+}
+
+func (ctx *CommandContext) ReplyEmbed(embed *model.Embed) error {
+	ctx.logResponse()
+	return ctx.trigger.Reply(ctx, &model.ComplexMessage{
+		Embeds: []*model.Embed{embed},
+	})
+}
+
+func (ctx *CommandContext) ReplyComplex(message *model.ComplexMessage) error {
+	ctx.logResponse()
+	return ctx.trigger.Reply(ctx, message)
+}
+
+func (ctx *CommandContext) EditComplex(message *model.ComplexMessage) error {
+	ctx.logResponse()
+	return ctx.trigger.Edit(ctx, message)
+}
+
+func (ctx *CommandContext) Edit(message string) error {
+	ctx.logResponse()
+	return ctx.trigger.Edit(ctx, &model.ComplexMessage{
+		Content: message,
+	})
+}
+
+func (ctx *CommandContext) EditEmbed(embed *model.Embed) error {
+	ctx.logResponse()
+	return ctx.trigger.Edit(ctx, &model.ComplexMessage{
+		Embeds: []*model.Embed{embed},
+	})
 }
 
 func (ctx *CommandContext) Success(message string) {

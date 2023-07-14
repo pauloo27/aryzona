@@ -1,14 +1,17 @@
 package command
 
 import (
+	"errors"
 	"strings"
-	"time"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
+	"github.com/pauloo27/aryzona/internal/db"
+	"github.com/pauloo27/aryzona/internal/db/entity"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
+	"xorm.io/xorm"
 )
 
 var (
@@ -18,27 +21,67 @@ var (
 	}
 )
 
+func GetCommand(name string) *Command {
+	return commandMap[name]
+}
+
+func HandleCommand(
+	usedCommandName string,
+	args []string,
+	command *Command,
+	bot discord.BotAdapter,
+	trigger *TriggerEvent,
+) {
+	if trigger.PreferedLanguage == "" {
+		trigger.PreferedLanguage = getUserLanguage(trigger.AuthorID, trigger.GuildID)
+	}
+
+	lang := i18n.MustGetLanguage(trigger.PreferedLanguage)
+
+	t := i18n.GetCommand(lang, command.Name)
+
+	ctx := &CommandContext{
+		Bot:         bot,
+		T:           t,
+		Lang:        lang,
+		RawArgs:     args,
+		MessageID:   trigger.MessageID,
+		AuthorID:    trigger.AuthorID,
+		UsedName:    usedCommandName,
+		GuildID:     trigger.GuildID,
+		Locals:      make(map[string]any),
+		Command:     command,
+		startTime:   trigger.EventTime,
+		TriggerType: trigger.Type,
+		Channel:     trigger.Channel,
+		trigger:     trigger,
+		executionID: gonanoid.Must(5),
+	}
+
+	executeCommand(ctx, command)
+}
+
 func executeCommand(
-	command *Command, ctx *CommandContext,
-	adapter *Adapter, bot discord.BotAdapter,
+	ctx *CommandContext,
+	command *Command,
 ) {
 	logger.Logf(
 		CommandLogLevel,
 		"[i %s] (%s) <u %s> <g %s><c %s> executed: %s %s",
-		ctx.executionID, ctx.Trigger,
+		ctx.executionID, ctx.TriggerType,
 		ctx.AuthorID, ctx.GuildID, ctx.Channel.ID(), ctx.UsedName, ctx.RawArgs,
 	)
 
 	validaionsI18n := ctx.Lang.Validations.PreCommandValidation
 
-	if command.Deferred && adapter.DeferResponse != nil {
-		err := adapter.DeferResponse()
+	if command.Deferred && ctx.trigger.DeferResponse != nil {
+		err := ctx.trigger.DeferResponse()
 		if err != nil {
 			logger.Error("Cannot defer response:", err)
 		}
 	}
 
-	if command.Ephemeral && ctx.Trigger != CommandTriggerSlash {
+	if command.Ephemeral && ctx.TriggerType != CommandTriggerSlash {
 		ctx.Error(
 			validaionsI18n.MustBeExecutedAsSlashCommand.Str(command.Name),
 		)
@@ -92,93 +135,19 @@ func executeCommand(
 			subCommand.parent = command
 			if subCommand.Name == subCommandName {
 				ctx.RawArgs = ctx.RawArgs[1:]
-				executeCommand(subCommand, ctx, adapter, bot)
+				executeCommand(ctx, subCommand)
 				return
 			}
 			for _, alias := range subCommand.Aliases {
 				if alias == subCommandName {
 					ctx.RawArgs = ctx.RawArgs[1:]
-					executeCommand(subCommand, ctx, adapter, bot)
+					executeCommand(ctx, command)
 					return
 				}
 			}
 		}
 		ctx.Error(validaionsI18n.InvalidSubCommand.Str(subCommandNames))
 	}
-}
-
-func HandleCommand(
-	commandName string, args []string,
-	langName i18n.LanguageName,
-	startTime time.Time,
-	adapter *Adapter, bot discord.BotAdapter,
-	trigger CommandTrigger, channel model.TextChannel,
-) {
-	command, ok := commandMap[commandName]
-	if !ok {
-		return
-	}
-
-	lang := i18n.MustGetLanguage(langName)
-
-	t := i18n.GetCommand(lang, command.Name)
-
-	ctx := &CommandContext{
-		Bot:       bot,
-		T:         t,
-		Lang:      lang,
-		RawArgs:   args,
-		MessageID: adapter.MessageID,
-		AuthorID:  adapter.AuthorID,
-		UsedName:  commandName,
-		GuildID:   adapter.GuildID,
-		Locals:    make(map[string]any),
-		Command:   command,
-		startTime: startTime,
-		Trigger:   trigger,
-		Channel:   channel,
-	}
-
-	ctx.executionID = gonanoid.Must(5)
-
-	logResponse := func() {
-		logger.Logf(
-			CommandLogLevel,
-			"[i %s] got response %s, took %s",
-			ctx.executionID,
-			// there's no need to log the response, also, not microsoft here
-			"<omitted>",
-			ctx.processTime,
-		)
-	}
-
-	// attach adapter
-	ctx.Reply = func(msg string) error {
-		logResponse()
-		return adapter.Reply(ctx, msg)
-	}
-	ctx.ReplyEmbed = func(embed *model.Embed) error {
-		logResponse()
-		return adapter.ReplyEmbed(ctx, embed)
-	}
-	ctx.Edit = func(msg string) error {
-		logResponse()
-		return adapter.Edit(ctx, msg)
-	}
-	ctx.EditEmbed = func(embed *model.Embed) error {
-		logResponse()
-		return adapter.EditEmbed(ctx, embed)
-	}
-	ctx.ReplyComplex = func(data *model.ComplexMessage) error {
-		logResponse()
-		return adapter.ReplyComplex(ctx, data)
-	}
-	ctx.EditComplex = func(data *model.ComplexMessage) error {
-		logResponse()
-		return adapter.EditComplex(ctx, data)
-	}
-
-	executeCommand(command, ctx, adapter, bot)
 }
 
 func HandleInteraction(fullID, userID string) *model.ComplexMessage {
@@ -198,4 +167,41 @@ func HandleInteraction(fullID, userID string) *model.ComplexMessage {
 		delete(commandInteractionMap, baseID)
 	}
 	return newMessage
+}
+
+func getUserLanguage(userID, guildID string) i18n.LanguageName {
+	var user = entity.User{ID: userID}
+
+	hasUser, err := db.DB.Get(&user)
+	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
+		logger.Error(err)
+	}
+
+	if hasUser {
+		if user.PreferredLocale != "" {
+			return user.PreferredLocale
+		}
+
+		if user.LastSlashCommandLocale != "" {
+			return user.LastSlashCommandLocale
+		}
+	}
+
+	if guildID == "" {
+		return i18n.DefaultLanguageName
+	}
+
+	var guild = entity.Guild{ID: guildID}
+
+	hasGuild, err := db.DB.Get(&guild)
+
+	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
+		logger.Error(err)
+	}
+
+	if hasGuild {
+		return guild.PreferredLocale
+	}
+
+	return i18n.DefaultLanguageName
 }

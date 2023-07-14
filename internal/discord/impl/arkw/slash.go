@@ -139,6 +139,8 @@ func registerCommands(bot ArkwBot) error {
 	}
 
 	bot.s.AddHandler(func(i *gateway.InteractionCreateEvent) {
+		eventTime := time.Now()
+
 		respond := func(message *model.ComplexMessage, flags dc.MessageFlags) error {
 			var embeds []dc.Embed
 			if len(message.Embeds) > 0 {
@@ -215,7 +217,6 @@ func registerCommands(bot ArkwBot) error {
 				logger.Error(err)
 			}
 		case *dc.CommandInteraction:
-			startTime := time.Now()
 			cmd, ok := command.GetCommandMap()[data.Name]
 			if !ok {
 				logger.Error("Invalid slash command interaction received:", data.Name)
@@ -245,48 +246,6 @@ func registerCommands(bot ArkwBot) error {
 				flags = 64
 			}
 
-			adapter := command.Adapter{
-				AuthorID: i.Sender().ID.String(),
-				MessageID: i.ID.String(),
-				GuildID:  i.GuildID.String(),
-				DeferResponse: func() error {
-					return bot.s.RespondInteraction(
-						i.ID,
-						i.Token,
-						api.InteractionResponse{
-							Type: api.DeferredMessageInteractionWithSource,
-						},
-					)
-				},
-				ReplyComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
-					if ctx.Command.Deferred {
-						return edit(message, flags)
-					}
-					return respond(message, flags)
-				},
-				Reply: func(ctx *command.CommandContext, message string) error {
-					if ctx.Command.Deferred {
-						return edit(&model.ComplexMessage{Content: message}, flags)
-					}
-					return respond(&model.ComplexMessage{Content: message}, flags)
-				},
-				ReplyEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
-					if ctx.Command.Deferred {
-						return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
-					}
-					return respond(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
-				},
-				EditComplex: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
-					return edit(message, flags)
-				},
-				Edit: func(ctx *command.CommandContext, message string) error {
-					return edit(&model.ComplexMessage{Content: message}, flags)
-				},
-				EditEmbed: func(ctx *command.CommandContext, embed *model.Embed) error {
-					return edit(&model.ComplexMessage{Embeds: []*model.Embed{embed}}, flags)
-				},
-			}
-
 			langName := i18n.FindLanguageName(
 				strings.Replace(string(i.Locale), "-", "_", 1),
 			)
@@ -298,10 +257,37 @@ func registerCommands(bot ArkwBot) error {
 				logger.Error(err)
 			}
 
-			command.HandleCommand(
-				data.Name, args, langName, startTime, &adapter, bot, command.CommandTriggerSlash,
-				buildChannel(i.ChannelID.String(), buildGuild(i.GuildID.String()), cType),
-			)
+			channel := buildChannel(i.ChannelID.String(), buildGuild(i.GuildID.String()), cType)
+
+			trigger := command.TriggerEvent{
+				EventTime:        eventTime,
+				Channel:          channel,
+				Type:             command.CommandTriggerSlash,
+				PreferedLanguage: langName,
+				AuthorID:         i.Sender().ID.String(),
+				MessageID:        i.ID.String(),
+				GuildID:          i.GuildID.String(),
+				DeferResponse: func() error {
+					return bot.s.RespondInteraction(
+						i.ID,
+						i.Token,
+						api.InteractionResponse{
+							Type: api.DeferredMessageInteractionWithSource,
+						},
+					)
+				},
+				Reply: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+					if ctx.Command.Deferred {
+						return edit(message, flags)
+					}
+					return respond(message, flags)
+				},
+				Edit: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+					return edit(message, flags)
+				},
+			}
+
+			command.HandleCommand(data.Name, args, cmd, bot, &trigger)
 		}
 	})
 
