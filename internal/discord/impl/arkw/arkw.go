@@ -5,8 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/pauloo27/aryzona/internal/discord"
-	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/ReneKroon/ttlcache/v2"
 	"github.com/diamondburned/arikawa/v3/api"
 	dc "github.com/diamondburned/arikawa/v3/discord"
@@ -14,6 +12,8 @@ import (
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/diamondburned/arikawa/v3/utils/json/option"
 	"github.com/diamondburned/arikawa/v3/voice"
+	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 )
 
 var _ discord.BotAdapter = ArkwBot{}
@@ -355,6 +355,15 @@ func (b ArkwBot) GetMember(guildID, channelID, userID string) (model.Member, err
 		roles,
 		model.Permissions(uint64(perms)),
 	), nil
+}
+
+func (b ArkwBot) StartTyping(channel model.TextChannel) error {
+	channelSf, err := dc.ParseSnowflake(channel.ID())
+	if err != nil {
+		return err
+	}
+
+	return b.s.Typing(dc.ChannelID(channelSf))
 }
 
 func (b ArkwBot) UpdatePresence(presence *model.Presence) error {
