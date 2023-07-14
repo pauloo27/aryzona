@@ -7,6 +7,7 @@ import (
 
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/discord"
+	"github.com/pauloo27/aryzona/internal/providers/llama"
 	"github.com/pauloo27/logger"
 )
 
@@ -29,6 +30,14 @@ func Start(commitHash, commitMessage string) {
 
 	go connectToDiscord()
 	go startHTTPServer()
+	go func() {
+		err := llama.Init()
+		if err == nil {
+			logger.Success("Llama prompt tokenized")
+		} else {
+			logger.Fatal(err, "Cannot tokenize prompt")
+		}
+	}()
 
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol

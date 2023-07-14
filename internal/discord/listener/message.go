@@ -35,6 +35,18 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 		return
 	}
 
+	_, _, mentionsUser := parseCommandForPrefix(discord.AsMention(self.ID())+" ", m.Content())
+
+	if mentionsUser {
+		go handleLlama(bot, self, m)
+		return
+	}
+
+	if m.Channel().Type() == model.ChannelTypeDirect {
+		go handleLlama(bot, self, m)
+		return
+	}
+
 	rawCommand, args, ok := parseCommand(self, m.Content())
 	if !ok {
 		return
@@ -45,8 +57,8 @@ func messageCreated(bot discord.BotAdapter, m model.Message) {
 
 	event := command.Adapter{
 		MessageID: m.ID(),
-		AuthorID: m.Author().ID(),
-		GuildID:  guildID,
+		AuthorID:  m.Author().ID(),
+		GuildID:   guildID,
 		Reply: func(ctx *command.CommandContext, msg string) error {
 			var err error
 			lastSentMessage, err = discord.Bot.SendReplyMessage(m, msg)
@@ -125,12 +137,7 @@ func getUserLanguage(userID, guildID string) i18n.LanguageName {
 }
 
 func parseCommand(self model.User, content string) (rawCommand string, args []string, ok bool) {
-	rawCommand, args, ok = parseCommandForPrefix(command.Prefix, content)
-	if ok {
-		return
-	}
-	// check for "@bot command"
-	return parseCommandForPrefix(discord.AsMention(self.ID())+" ", content)
+	return parseCommandForPrefix(command.Prefix, content)
 }
 
 func parseCommandForPrefix(prefix string, content string) (rawCommand string, args []string, ok bool) {
