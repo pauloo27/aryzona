@@ -10,8 +10,8 @@ import (
 
 var PauseCommand = command.Command{
 	Name:        "pause",
-	Validations: []*command.CommandValidation{validations.MustBePlaying},
-	Handler: func(ctx *command.CommandContext) {
+	Validations: []*command.Validation{validations.MustBePlaying},
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandPause)
 
 		vc := ctx.Locals["vc"].(*voicer.Voicer)

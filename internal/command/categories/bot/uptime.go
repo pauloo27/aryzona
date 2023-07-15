@@ -19,7 +19,7 @@ import (
 var UptimeCommand = command.Command{
 	Name:    "uptime",
 	Aliases: []string{"up"},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandUptime)
 
 		uptime := time.Since(*discord.Bot.StartedAt())

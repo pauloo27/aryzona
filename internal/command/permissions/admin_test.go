@@ -20,17 +20,17 @@ func TestAdminPermission(t *testing.T) {
 		permissions: model.PermissionAdministrator,
 	}
 
-	memberCtx := &command.CommandContext{
+	memberCtx := &command.Context{
 		GuildID: "123",
-		Bot: &DummyBot{member: member},
+		Bot:     &DummyBot{member: member},
 	}
 
-	adminMemberCtx := &command.CommandContext{
+	adminMemberCtx := &command.Context{
 		GuildID: "123",
-		Bot: &DummyBot{member: adminMember},
+		Bot:     &DummyBot{member: adminMember},
 	}
 
-	dmCtx := &command.CommandContext{
+	dmCtx := &command.Context{
 		GuildID: "",
 	}
 

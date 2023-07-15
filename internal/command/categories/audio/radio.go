@@ -18,7 +18,7 @@ import (
 var RadioCommand = command.Command{
 	Name:     "radio",
 	Deferred: true,
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name:     "radio",
 			Required: false,
@@ -32,7 +32,7 @@ var RadioCommand = command.Command{
 			},
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandRadio)
 
 		if len(ctx.Args) == 0 {
@@ -84,7 +84,7 @@ var RadioCommand = command.Command{
 	},
 }
 
-func listRadios(ctx *command.CommandContext, title string) {
+func listRadios(ctx *command.Context, title string) {
 	t := ctx.T.(*i18n.CommandRadio)
 
 	embed := model.NewEmbed().

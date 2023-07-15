@@ -40,7 +40,7 @@ func HandleCommand(
 
 	t := i18n.GetCommand(lang, command.Name)
 
-	ctx := &CommandContext{
+	ctx := &Context{
 		Bot:         bot,
 		T:           t,
 		Lang:        lang,
@@ -62,7 +62,7 @@ func HandleCommand(
 }
 
 func executeCommand(
-	ctx *CommandContext,
+	ctx *Context,
 	command *Command,
 ) {
 	logger.Logf(

@@ -1,21 +1,21 @@
 package tools
 
 import (
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 var PasswordCommand = command.Command{
 	Name: "password", Aliases: []string{"pass"},
-	Ephemeral:   true,
-	Parameters: []*command.CommandParameter{
+	Ephemeral: true,
+	Parameters: []*command.Parameter{
 		{Name: "length", Type: parameters.ParameterInt, Required: false},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandPassword)
 
 		length := 10

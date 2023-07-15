@@ -19,10 +19,10 @@ const (
 
 var RollCommand = command.Command{
 	Name: "roll", Aliases: []string{"dice"},
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{Name: "faces", Required: false, Type: diceNotation},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandRoll)
 
 		var d *dice.DiceNotation
@@ -67,10 +67,10 @@ var RollCommand = command.Command{
 
 var (
 	// FIXME: i18n this
-	diceNotation = &command.CommandParameterType{
+	diceNotation = &command.ParameterType{
 		BaseType: parameters.TypeString,
 		Name:     "dice notation",
-		Parser: func(ctx *command.CommandContext, index int, args []string) (any, error) {
+		Parser: func(ctx *command.Context, index int, args []string) (any, error) {
 			d, err := dice.ParseNotation(args[index])
 			if err != nil {
 				return nil, errors.New("invalid notation")

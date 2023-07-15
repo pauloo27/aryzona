@@ -10,7 +10,7 @@ import (
 var (
 	commandMap            = map[string]*Command{}
 	commandLangMap        = map[string]i18n.LanguageName{}
-	commandInteractionMap = map[string]*CommandContext{}
+	commandInteractionMap = map[string]*Context{}
 	commandList           []*Command
 )
 
@@ -48,7 +48,7 @@ func GetCommandMap() map[string]*Command {
 	return commandMap
 }
 
-func RegisterCategory(category CommandCategory) {
+func RegisterCategory(category Category) {
 	if category.OnLoad != nil {
 		category.OnLoad()
 	}

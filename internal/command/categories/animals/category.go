@@ -2,7 +2,7 @@ package animals
 
 import "github.com/pauloo27/aryzona/internal/command"
 
-var Animals = command.CommandCategory{
+var Animals = command.Category{
 	Name:  "animals",
 	Emoji: "🐕",
 	Commands: []*command.Command{

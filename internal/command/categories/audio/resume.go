@@ -10,8 +10,8 @@ import (
 var ResumeCommand = command.Command{
 	Name:        "resume",
 	Aliases:     []string{"unpause"},
-	Validations: []*command.CommandValidation{validations.MustBePlaying},
-	Handler: func(ctx *command.CommandContext) {
+	Validations: []*command.Validation{validations.MustBePlaying},
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandResume)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 

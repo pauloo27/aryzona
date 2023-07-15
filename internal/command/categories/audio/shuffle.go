@@ -10,8 +10,8 @@ import (
 var ShuffleCommand = command.Command{
 	Name:        "shuffle",
 	Aliases:     []string{"sh"},
-	Validations: []*command.CommandValidation{validations.MustBePlaying},
-	Handler: func(ctx *command.CommandContext) {
+	Validations: []*command.Validation{validations.MustBePlaying},
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandShuffle)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		vc.Queue.Shuffle()

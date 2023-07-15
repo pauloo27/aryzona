@@ -276,13 +276,13 @@ func registerCommands(bot ArkwBot) error {
 						},
 					)
 				},
-				Reply: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+				Reply: func(ctx *command.Context, message *model.ComplexMessage) error {
 					if ctx.Command.Deferred {
 						return edit(message, flags)
 					}
 					return respond(message, flags)
 				},
-				Edit: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+				Edit: func(ctx *command.Context, message *model.ComplexMessage) error {
 					return edit(message, flags)
 				},
 			}
@@ -294,7 +294,7 @@ func registerCommands(bot ArkwBot) error {
 	return nil
 }
 
-func mustGetIntegerChoises(arg *command.CommandParameter) (choises []dc.IntegerChoice) {
+func mustGetIntegerChoises(arg *command.Parameter) (choises []dc.IntegerChoice) {
 	for _, value := range arg.GetValidValues() {
 		choises = append(choises, dc.IntegerChoice{
 			Name:  fmt.Sprintf("%v", value),
@@ -304,7 +304,7 @@ func mustGetIntegerChoises(arg *command.CommandParameter) (choises []dc.IntegerC
 	return
 }
 
-func mustGetStringChoises(arg *command.CommandParameter) (choises []dc.StringChoice) {
+func mustGetStringChoises(arg *command.Parameter) (choises []dc.StringChoice) {
 	for _, value := range arg.GetValidValues() {
 		choises = append(choises, dc.StringChoice{
 			Name:  fmt.Sprintf("%v", value),
@@ -314,7 +314,7 @@ func mustGetStringChoises(arg *command.CommandParameter) (choises []dc.StringCho
 	return
 }
 
-func mustGetOption(param *command.CommandParameter, i int, lang languageContext) dc.CommandOption {
+func mustGetOption(param *command.Parameter, i int, lang languageContext) dc.CommandOption {
 	if len(lang.defaultLangCmd.Parameters) <= i {
 		logger.Fatalf("Cannot find parameter %d for command %s in the default language", i, lang.defaultLangCmd.Name)
 		return nil
@@ -370,7 +370,7 @@ func mustGetOption(param *command.CommandParameter, i int, lang languageContext)
 	return nil
 }
 
-func mustGetOptionValue(param *command.CommandParameter, subCmdIdx, paramIdx int, lang languageContext) dc.CommandOptionValue {
+func mustGetOptionValue(param *command.Parameter, subCmdIdx, paramIdx int, lang languageContext) dc.CommandOptionValue {
 	if len(lang.defaultLangCmd.SubCommands[subCmdIdx].Parameters) <= paramIdx {
 		logger.Fatalf(
 			"Cannot find parameter %d for command %s in the default language",

@@ -24,7 +24,7 @@ func TestBoolean(t *testing.T) {
 	var b interface{}
 	var err error
 
-	ctx := &command.CommandContext{
+	ctx := &command.Context{
 		Lang: defaultLang,
 	}
 
@@ -52,7 +52,7 @@ func TestInt(t *testing.T) {
 	var i interface{}
 	var err error
 
-	ctx := &command.CommandContext{
+	ctx := &command.Context{
 		Lang: defaultLang,
 	}
 
@@ -79,7 +79,7 @@ func TestString(t *testing.T) {
 	var str interface{}
 	var err error
 
-	ctx := &command.CommandContext{
+	ctx := &command.Context{
 		Lang: defaultLang,
 	}
 
@@ -96,7 +96,7 @@ func TestText(t *testing.T) {
 	var str interface{}
 	var err error
 
-	ctx := &command.CommandContext{
+	ctx := &command.Context{
 		Lang: defaultLang,
 	}
 

@@ -14,7 +14,7 @@ var (
 	ErrInvalidValue        = errors.New("invalid value")
 )
 
-func (command *Command) ValidateParameters(ctx *CommandContext) (values []any, syntaxError error) {
+func (command *Command) ValidateParameters(ctx *Context) (values []any, syntaxError error) {
 	arguments := ctx.RawArgs
 	lang := ctx.Lang
 
@@ -58,7 +58,7 @@ func (command *Command) ValidateParameters(ctx *CommandContext) (values []any, s
 	return
 }
 
-func NewErrRequiredParameter(lang *i18n.Language, cmd *Command, param *CommandParameter) error {
+func NewErrRequiredParameter(lang *i18n.Language, cmd *Command, param *Parameter) error {
 	localizedParamName := mustGetLocalizedParamName(lang, cmd, param)
 
 	var message string
@@ -68,7 +68,7 @@ func NewErrRequiredParameter(lang *i18n.Language, cmd *Command, param *CommandPa
 	return fmt.Errorf("%w: %s", ErrRequireParameter, message)
 }
 
-func NewErrInvalidValue(lang *i18n.Language, cmd *Command, param *CommandParameter) error {
+func NewErrInvalidValue(lang *i18n.Language, cmd *Command, param *Parameter) error {
 	localizedParamName := mustGetLocalizedParamName(lang, cmd, param)
 
 	var message string
@@ -86,7 +86,7 @@ func NewErrCannotParseParameter(lang *i18n.Language, err error) error {
 	return fmt.Errorf("%w: %s", ErrCannotParseArgument, message)
 }
 
-func mustGetLocalizedParamName(lang *i18n.Language, cmd *Command, param *CommandParameter) string {
+func mustGetLocalizedParamName(lang *i18n.Language, cmd *Command, param *Parameter) string {
 	var paramIdx int
 	for i, p := range cmd.Parameters {
 		if p.Name == param.Name {

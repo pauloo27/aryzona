@@ -2,7 +2,7 @@ package tools
 
 import "github.com/pauloo27/aryzona/internal/command"
 
-var Tools = command.CommandCategory{
+var Tools = command.Category{
 	Name:  "tools",
 	Emoji: "🔧",
 	Commands: []*command.Command{

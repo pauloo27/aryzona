@@ -14,14 +14,14 @@ import (
 
 var LanguageCommand = command.Command{
 	Name: "language", Aliases: []string{"lang", "locale"},
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name: "language", Type: parameters.ParameterLowerCasedString,
 			ValidValuesFunc: listValidLanguages,
 			Required:        false,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		if len(ctx.Args) == 0 {
 			listLanguages(ctx)
 		} else {
@@ -30,7 +30,7 @@ var LanguageCommand = command.Command{
 	},
 }
 
-func listLanguages(ctx *command.CommandContext) {
+func listLanguages(ctx *command.Context) {
 	t := ctx.T.(*i18n.CommandLanguage)
 
 	var validLanguages strings.Builder
@@ -58,7 +58,7 @@ func listLanguages(ctx *command.CommandContext) {
 	ctx.SuccessEmbed(embed)
 }
 
-func selectLanguage(ctx *command.CommandContext) {
+func selectLanguage(ctx *command.Context) {
 	t := ctx.T.(*i18n.CommandLanguage)
 
 	langName := ctx.Args[0].(string)

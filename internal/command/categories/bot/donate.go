@@ -10,7 +10,7 @@ import (
 var DonateCommand = command.Command{
 	Name:    "donate",
 	Aliases: []string{"pix"},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandDonate)
 
 		msg := config.Config.DonateMessage

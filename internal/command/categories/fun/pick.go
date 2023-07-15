@@ -12,14 +12,14 @@ import (
 
 var PickCommand = command.Command{
 	Name: "pick",
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name:     "things",
 			Required: true,
 			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandPick)
 
 		things := strings.Split(ctx.Args[0].(string), " ")

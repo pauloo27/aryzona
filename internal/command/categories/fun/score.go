@@ -14,14 +14,14 @@ import (
 
 var ScoreCommand = command.Command{
 	Name: "score",
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
-			Name:            "game",
-			Required:        false,
-			Type:            parameters.ParameterText,
+			Name:     "game",
+			Required: false,
+			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandScore)
 
 		if len(ctx.Args) == 1 {
@@ -32,7 +32,7 @@ var ScoreCommand = command.Command{
 	},
 }
 
-func ListLiveMatches(ctx *command.CommandContext, t *i18n.CommandScore) {
+func ListLiveMatches(ctx *command.Context, t *i18n.CommandScore) {
 	matches, err := livescore.ListLives()
 	if err != nil {
 		ctx.Error(err.Error())
@@ -58,7 +58,7 @@ func ListLiveMatches(ctx *command.CommandContext, t *i18n.CommandScore) {
 	)
 }
 
-func showMatchInfo(ctx *command.CommandContext, t *i18n.CommandScore) {
+func showMatchInfo(ctx *command.Context, t *i18n.CommandScore) {
 	teamNameOrID := ctx.Args[0].(string)
 	match, err := getMatchByTeamNameOrID(teamNameOrID)
 

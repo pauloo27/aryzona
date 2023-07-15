@@ -1,7 +1,6 @@
 package audio
 
 import (
-
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/command/validations"
@@ -15,7 +14,7 @@ import (
 const maxSearchResults = 5
 
 type SearchContext struct {
-	*command.CommandContext
+	*command.Context
 
 	SearchQuery string
 	Results     []*youtube.SearchResult
@@ -27,11 +26,11 @@ type SearchContext struct {
 var PlayCommand = command.Command{
 	Name: "play", Aliases: []string{"p"},
 	Deferred:    true,
-	Validations: []*command.CommandValidation{validations.MustBeOnAValidVoiceChannel},
-	Parameters: []*command.CommandParameter{
+	Validations: []*command.Validation{validations.MustBeOnAValidVoiceChannel},
+	Parameters: []*command.Parameter{
 		{Name: "song", Required: true, Type: parameters.ParameterText},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandPlay)
 
 		searchQuery := ctx.Args[0].(string)
@@ -63,10 +62,10 @@ var PlayCommand = command.Command{
 		var toPlay []playable.Playable
 
 		searchCtx := &SearchContext{
-			CommandContext: ctx,
-			SearchQuery:    searchQuery,
-			Voicer:         vc,
-			Results:        results,
+			Context:     ctx,
+			SearchQuery: searchQuery,
+			Voicer:      vc,
+			Results:     results,
 		}
 
 		if len(results) == 1 {

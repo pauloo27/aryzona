@@ -1,14 +1,14 @@
 package tools
 
 import (
+	"github.com/google/uuid"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/discord/model"
-	"github.com/google/uuid"
 )
 
 var UUIDCommand = command.Command{
 	Name: "uuid",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		id := uuid.New()
 		ctx.SuccessEmbed(
 			model.NewEmbed().

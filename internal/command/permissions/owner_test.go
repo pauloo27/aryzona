@@ -11,7 +11,7 @@ import (
 )
 
 func TestOwnerPermission(t *testing.T) {
-	ctx := &command.CommandContext{
+	ctx := &command.Context{
 		AuthorID: "777",
 	}
 

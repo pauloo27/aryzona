@@ -11,7 +11,7 @@ import (
 
 var PingCommand = command.Command{
 	Name: "ping",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandPing)
 
 		latency := formatAPILatency(ctx.Bot)

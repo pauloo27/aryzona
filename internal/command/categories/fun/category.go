@@ -2,7 +2,7 @@ package fun
 
 import "github.com/pauloo27/aryzona/internal/command"
 
-var Fun = command.CommandCategory{
+var Fun = command.Category{
 	Name:  "fun",
 	Emoji: "🎉",
 	Commands: []*command.Command{

@@ -16,7 +16,7 @@ import (
 var HelpCommand = command.Command{
 	Name:    "help",
 	Aliases: []string{"h"},
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name:     "command",
 			Required: false, Type: parameters.ParameterString,
@@ -26,7 +26,7 @@ var HelpCommand = command.Command{
 			Required: false, Type: parameters.ParameterString,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		if len(ctx.Args) == 0 {
 			listCommands(ctx)
 		} else {
@@ -35,7 +35,7 @@ var HelpCommand = command.Command{
 	},
 }
 
-func listCommands(ctx *command.CommandContext) {
+func listCommands(ctx *command.Context) {
 	t := ctx.T.(*i18n.CommandHelp)
 
 	embed := model.NewEmbed()
@@ -80,7 +80,7 @@ func listCommands(ctx *command.CommandContext) {
 	ctx.SuccessEmbed(embed)
 }
 
-func helpForCommand(ctx *command.CommandContext) {
+func helpForCommand(ctx *command.Context) {
 	t := ctx.T.(*i18n.CommandHelp)
 
 	commandName := ctx.Args[0].(string)
@@ -146,7 +146,7 @@ func helpForCommand(ctx *command.CommandContext) {
 		embed.WithField(
 			t.Validations.Str(),
 			strings.Join(
-				slices.Map(cmd.Validations, func(validation *command.CommandValidation) string {
+				slices.Map(cmd.Validations, func(validation *command.Validation) string {
 					v, err := t.RawMap.Get("common", "validations", validation.Name, "description")
 					if err != nil {
 						logger.Errorf("Missing validation description for %s", validation.Name)
@@ -164,7 +164,7 @@ func helpForCommand(ctx *command.CommandContext) {
 		embed.WithField(
 			t.Parameters.Str(),
 			strings.Join(
-				slices.Map(cmd.Parameters, func(param *command.CommandParameter) string {
+				slices.Map(cmd.Parameters, func(param *command.Parameter) string {
 					paramLang := cmdLang.Parameters[i]
 					i++
 					return fmt.Sprintf("%s: %s (%s)",

@@ -34,7 +34,7 @@ func listSources() []any {
 
 var NewsCommand = command.Command{
 	Name: "news",
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name:            "source",
 			Type:            parameters.ParameterString,
@@ -42,7 +42,7 @@ var NewsCommand = command.Command{
 			ValidValuesFunc: listSources,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandNews)
 
 		source := ctx.Args[0].(string)

@@ -11,7 +11,7 @@ import (
 
 var ServerCommand = command.Command{
 	Name: "server",
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name: "language", Type: parameters.ParameterLowerCasedString,
 			ValidValuesFunc: listValidLanguages,
@@ -19,7 +19,7 @@ var ServerCommand = command.Command{
 		},
 	},
 	Permission: permissions.MustBeAdmin,
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandServer)
 
 		langName := i18n.FindLanguageName(ctx.Args[0].(string))

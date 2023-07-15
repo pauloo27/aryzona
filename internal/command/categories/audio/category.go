@@ -4,7 +4,7 @@ import (
 	"github.com/pauloo27/aryzona/internal/command"
 )
 
-var Audio = command.CommandCategory{
+var Audio = command.Category{
 	Name:  "audio",
 	Emoji: "🎵",
 	Commands: []*command.Command{

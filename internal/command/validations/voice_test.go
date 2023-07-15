@@ -28,7 +28,7 @@ func TestMain(m *testing.M) {
 
 func TestMustHaveVoicerOnGuild(t *testing.T) {
 	t.Run("implementation is missing", func(t *testing.T) {
-		ctx := &command.CommandContext{
+		ctx := &command.Context{
 			Lang: defaultLang,
 		}
 		b, _ := validations.MustHaveVoicerOnGuild.Checker(ctx)
@@ -44,7 +44,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 		require.NotNil(t, v)
 		require.Nil(t, err)
 
-		ctx := &command.CommandContext{
+		ctx := &command.Context{
 			GuildID: "123123", // not the same guild id
 			Locals:  make(map[string]interface{}),
 			Lang:    defaultLang,
@@ -63,7 +63,7 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 		require.NotNil(t, v)
 		require.Nil(t, err)
 
-		ctx := &command.CommandContext{
+		ctx := &command.Context{
 			GuildID: guildId,
 			Locals:  make(map[string]interface{}),
 			Lang:    defaultLang,

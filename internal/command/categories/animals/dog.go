@@ -8,7 +8,7 @@ import (
 
 var DogCommand = command.Command{
 	Name: "dog",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		url, err := animal.GetRandomDog()
 		if err != nil {
 			ctx.Error(ctx.Lang.SomethingWentWrong.Str())

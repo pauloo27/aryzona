@@ -8,7 +8,7 @@ import (
 
 var SourceCommand = command.Command{
 	Name: "source",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandSource)
 		ctx.Success(t.Description.Str(config.Config.GitRepoURL))
 	},

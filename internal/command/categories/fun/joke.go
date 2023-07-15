@@ -8,7 +8,7 @@ import (
 
 var JokeCommand = command.Command{
 	Name: "joke",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		joke, err := joke.GetRandomJoke()
 		if err != nil {
 			ctx.Error(ctx.Lang.SomethingWentWrong.Str())

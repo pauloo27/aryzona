@@ -21,37 +21,37 @@ var XkcdCommand = command.Command{
 }
 
 var XkcdLatestSubCommand = command.Command{
-	Name: "latest", 
-	Handler: func(ctx *command.CommandContext) {
+	Name: "latest",
+	Handler: func(ctx *command.Context) {
 		comic, err := xkcd.GetLatest()
 		sendComic(ctx, comic, err)
 	},
 }
 
 var XkcdRandomSubCommand = command.Command{
-	Name: "random", 
-	Handler: func(ctx *command.CommandContext) {
+	Name: "random",
+	Handler: func(ctx *command.Context) {
 		comic, err := xkcd.GetRandom()
 		sendComic(ctx, comic, err)
 	},
 }
 
 var XkcdNumberSubCommand = command.Command{
-	Name: "number", 
+	Name:    "number",
 	Aliases: []string{"num"},
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
-			Name: "number", 
+			Name: "number",
 			Type: parameters.ParameterInt, Required: true,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		comic, err := xkcd.GetByNum(ctx.Args[0].(int))
 		sendComic(ctx, comic, err)
 	},
 }
 
-func sendComic(ctx *command.CommandContext, comic *xkcd.Comic, err error) {
+func sendComic(ctx *command.Context, comic *xkcd.Comic, err error) {
 	if err != nil {
 		ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		logger.Error(err)

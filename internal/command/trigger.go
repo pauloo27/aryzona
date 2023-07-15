@@ -10,10 +10,10 @@ import (
 type TriggerEvent struct {
 	EventTime                    time.Time
 	PreferedLanguage             i18n.LanguageName
-	Type                         CommandTriggerType
+	Type                         TriggerType
 	Channel                      model.TextChannel
 	MessageID, GuildID, AuthorID string
 	DeferResponse                func() error
-	Reply                        func(*CommandContext, *model.ComplexMessage) error
-	Edit                         func(*CommandContext, *model.ComplexMessage) error
+	Reply                        func(*Context, *model.ComplexMessage) error
+	Edit                         func(*Context, *model.ComplexMessage) error
 }

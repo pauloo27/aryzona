@@ -14,7 +14,7 @@ var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 
 var CNPJCommand = command.Command{
 	Name: "cnpj",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandCNPJ)
 
 		cnpj := doc.GenerateCNPJ()

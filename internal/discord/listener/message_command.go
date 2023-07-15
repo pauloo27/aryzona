@@ -25,7 +25,7 @@ func handleCommand(bot discord.BotAdapter, self model.User, m model.Message) {
 		AuthorID:  m.Author().ID(),
 		GuildID:   guildID,
 		Channel:   m.Channel(),
-		Reply: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+		Reply: func(ctx *command.Context, message *model.ComplexMessage) error {
 			var err error
 			if message.ReplyTo == nil {
 				message.ReplyTo = m
@@ -33,7 +33,7 @@ func handleCommand(bot discord.BotAdapter, self model.User, m model.Message) {
 			lastSentMessage, err = discord.Bot.SendComplexMessage(ctx.Channel.ID(), message)
 			return err
 		},
-		Edit: func(ctx *command.CommandContext, message *model.ComplexMessage) error {
+		Edit: func(ctx *command.Context, message *model.ComplexMessage) error {
 			_, err := discord.Bot.EditComplexMessage(lastSentMessage, message)
 			return err
 		},

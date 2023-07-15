@@ -8,14 +8,14 @@ import (
 
 var EvenCommand = command.Command{
 	Name: "even", Aliases: []string{"odd"},
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
-			Name:        "number",
-			Type:        parameters.ParameterInt,
-			Required:    true,
+			Name:     "number",
+			Type:     parameters.ParameterInt,
+			Required: true,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandEven)
 
 		n := ctx.Args[0].(int)

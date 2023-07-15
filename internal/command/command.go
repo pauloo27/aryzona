@@ -10,15 +10,15 @@ import (
 	"github.com/pauloo27/logger"
 )
 
-type CommandHandler func(*CommandContext)
-type CommandPermissionChecker func(*CommandContext) bool
-type CommandValidationChecker func(*CommandContext) (bool, string)
+type Handler func(*Context)
+type PermissionChecker func(*Context) bool
+type ValidationChecker func(*Context) (bool, string)
 
-type CommandTriggerType string
+type TriggerType string
 
 const (
-	CommandTriggerSlash   CommandTriggerType = "SLASH"
-	CommandTriggerMessage CommandTriggerType = "MESSAGE"
+	CommandTriggerSlash   TriggerType = "SLASH"
+	CommandTriggerMessage TriggerType = "MESSAGE"
 )
 
 const (
@@ -33,7 +33,7 @@ const (
 
 type InteractionHandler func(id, userID, baseID string) (newMessage *model.ComplexMessage, done bool)
 
-type CommandContext struct {
+type Context struct {
 	interactionHandler           InteractionHandler
 	Lang                         *i18n.Language
 	T                            any
@@ -46,45 +46,45 @@ type CommandContext struct {
 	UsedName                     string
 	Locals                       map[string]any
 	Command                      *Command
-	TriggerType                  CommandTriggerType
+	TriggerType                  TriggerType
 
 	executionID string
 	processTime time.Duration
 	trigger     *TriggerEvent
 }
 
-type CommandPermission struct {
+type Permission struct {
 	Name    string
-	Checker CommandPermissionChecker
+	Checker PermissionChecker
 }
 
-type CommandValidation struct {
+type Validation struct {
 	Name      string
-	DependsOn []*CommandValidation
-	Checker   CommandValidationChecker
+	DependsOn []*Validation
+	Checker   ValidationChecker
 }
 
-type CommandParameterTypeParser func(ctx *CommandContext, index int, args []string) (any, error)
+type ParameterTypeParser func(ctx *Context, index int, args []string) (any, error)
 
 type BaseType struct {
 	Name string
 }
 
-type CommandParameterType struct {
+type ParameterType struct {
 	Name     string
 	BaseType *BaseType
-	Parser   CommandParameterTypeParser
+	Parser   ParameterTypeParser
 }
 
-type CommandParameter struct {
+type Parameter struct {
 	ValidValues     []any
 	Name            string
-	Type            *CommandParameterType
+	Type            *ParameterType
 	ValidValuesFunc func() []any
 	Required        bool
 }
 
-func (param *CommandParameter) GetValidValues() []any {
+func (param *Parameter) GetValidValues() []any {
 	if param.ValidValues != nil {
 		return param.ValidValues
 	}
@@ -97,29 +97,29 @@ func (param *CommandParameter) GetValidValues() []any {
 type Command struct {
 	parent *Command
 
-	Validations []*CommandValidation
-	Parameters  []*CommandParameter
+	Validations []*Validation
+	Parameters  []*Parameter
 	Aliases     []string
 	SubCommands []*Command
 	Name        string
-	Handler     CommandHandler
-	Permission  *CommandPermission
-	category    *CommandCategory
+	Handler     Handler
+	Permission  *Permission
+	category    *Category
 	Deferred    bool
 	Ephemeral   bool
 }
 
-func (c *Command) GetCategory() *CommandCategory {
+func (c *Command) GetCategory() *Category {
 	return c.category
 }
 
-func (ctx *CommandContext) handleCannotSendMessage(err error) {
+func (ctx *Context) handleCannotSendMessage(err error) {
 	if err != nil {
 		logger.Error(err)
 	}
 }
 
-func (ctx *CommandContext) logResponse() {
+func (ctx *Context) logResponse() {
 	logger.Logf(
 		CommandLogLevel,
 		"[i %s] got response %s, took %s",
@@ -129,7 +129,7 @@ func (ctx *CommandContext) logResponse() {
 	)
 }
 
-func (ctx *CommandContext) Reply(message string) error {
+func (ctx *Context) Reply(message string) error {
 	ctx.logResponse()
 
 	return ctx.trigger.Reply(ctx, &model.ComplexMessage{
@@ -137,42 +137,42 @@ func (ctx *CommandContext) Reply(message string) error {
 	})
 }
 
-func (ctx *CommandContext) ReplyEmbed(embed *model.Embed) error {
+func (ctx *Context) ReplyEmbed(embed *model.Embed) error {
 	ctx.logResponse()
 	return ctx.trigger.Reply(ctx, &model.ComplexMessage{
 		Embeds: []*model.Embed{embed},
 	})
 }
 
-func (ctx *CommandContext) ReplyComplex(message *model.ComplexMessage) error {
+func (ctx *Context) ReplyComplex(message *model.ComplexMessage) error {
 	ctx.logResponse()
 	return ctx.trigger.Reply(ctx, message)
 }
 
-func (ctx *CommandContext) EditComplex(message *model.ComplexMessage) error {
+func (ctx *Context) EditComplex(message *model.ComplexMessage) error {
 	ctx.logResponse()
 	return ctx.trigger.Edit(ctx, message)
 }
 
-func (ctx *CommandContext) Edit(message string) error {
+func (ctx *Context) Edit(message string) error {
 	ctx.logResponse()
 	return ctx.trigger.Edit(ctx, &model.ComplexMessage{
 		Content: message,
 	})
 }
 
-func (ctx *CommandContext) EditEmbed(embed *model.Embed) error {
+func (ctx *Context) EditEmbed(embed *model.Embed) error {
 	ctx.logResponse()
 	return ctx.trigger.Edit(ctx, &model.ComplexMessage{
 		Embeds: []*model.Embed{embed},
 	})
 }
 
-func (ctx *CommandContext) Success(message string) {
+func (ctx *Context) Success(message string) {
 	ctx.handleCannotSendMessage(ctx.SuccessReturning(message))
 }
 
-func (ctx *CommandContext) ReplyWithInteraction(
+func (ctx *Context) ReplyWithInteraction(
 	baseID string,
 	message *model.ComplexMessage, handler InteractionHandler,
 ) error {
@@ -180,54 +180,54 @@ func (ctx *CommandContext) ReplyWithInteraction(
 	return ctx.ReplyComplex(message)
 }
 
-func (ctx *CommandContext) Successf(format string, a ...any) {
+func (ctx *Context) Successf(format string, a ...any) {
 	ctx.Success(fmt.Sprintf(format, a...))
 }
 
-func (ctx *CommandContext) SuccessReturning(message string) error {
+func (ctx *Context) SuccessReturning(message string) error {
 	return ctx.SuccessEmbedReturning(model.NewEmbed().WithDescription(message))
 }
 
-func (ctx *CommandContext) Error(message string) {
+func (ctx *Context) Error(message string) {
 	ctx.handleCannotSendMessage(ctx.ErrorReturning(message))
 }
 
-func (ctx *CommandContext) Errorf(format string, a ...any) {
+func (ctx *Context) Errorf(format string, a ...any) {
 	ctx.Error(fmt.Sprintf(format, a...))
 }
 
-func (ctx *CommandContext) ErrorReturning(message string) error {
+func (ctx *Context) ErrorReturning(message string) error {
 	return ctx.ErrorEmbedReturning(model.NewEmbed().WithDescription(message))
 }
 
-func (ctx *CommandContext) Embed(embed *model.Embed) {
+func (ctx *Context) Embed(embed *model.Embed) {
 	ctx.handleCannotSendMessage(ctx.EmbedReturning(embed))
 }
 
-func (ctx *CommandContext) EmbedReturning(embed *model.Embed) error {
+func (ctx *Context) EmbedReturning(embed *model.Embed) error {
 	ctx.AddCommandDuration(embed)
 	return ctx.ReplyEmbed(embed)
 }
 
-func (ctx *CommandContext) SuccessEmbed(embed *model.Embed) {
+func (ctx *Context) SuccessEmbed(embed *model.Embed) {
 	ctx.handleCannotSendMessage(ctx.SuccessEmbedReturning(embed))
 }
 
-func (ctx *CommandContext) SuccessEmbedReturning(embed *model.Embed) error {
+func (ctx *Context) SuccessEmbedReturning(embed *model.Embed) error {
 	embed.Color = SuccessEmbedColor
 	return ctx.EmbedReturning(embed)
 }
 
-func (ctx *CommandContext) ErrorEmbed(embed *model.Embed) {
+func (ctx *Context) ErrorEmbed(embed *model.Embed) {
 	ctx.handleCannotSendMessage(ctx.ErrorEmbedReturning(embed))
 }
 
-func (ctx *CommandContext) ErrorEmbedReturning(embed *model.Embed) error {
+func (ctx *Context) ErrorEmbedReturning(embed *model.Embed) error {
 	embed.Color = ErrorEmbedColor
 	return ctx.EmbedReturning(embed)
 }
 
-func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
+func (ctx *Context) AddCommandDuration(embed *model.Embed) {
 	ctx.processTime = time.Since(ctx.startTime)
 	duration := ctx.Lang.Took.Str(ctx.processTime.Truncate(time.Second))
 	if embed.Footer != "" {
@@ -237,7 +237,7 @@ func (ctx *CommandContext) AddCommandDuration(embed *model.Embed) {
 	}
 }
 
-func (ctx *CommandContext) RegisterInteractionHandler(baseID string, handler InteractionHandler) {
+func (ctx *Context) RegisterInteractionHandler(baseID string, handler InteractionHandler) {
 	ctx.interactionHandler = handler
 	commandInteractionMap[baseID] = ctx
 }

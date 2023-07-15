@@ -14,7 +14,7 @@ var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
 
 var CPFCommand = command.Command{
 	Name: "cpf",
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandCPF)
 
 		cpf := doc.GenerateCPF()

@@ -23,14 +23,14 @@ var (
 var FollowCommand = command.Command{
 	Name:    "follow",
 	Aliases: []string{"live"},
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
-			Name:            "game",
-			Required:        true,
-			Type:            parameters.ParameterText,
+			Name:     "game",
+			Required: true,
+			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandFollow)
 
 		teamNameOrID := ctx.Args[0].(string)

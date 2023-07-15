@@ -10,14 +10,14 @@ import (
 
 var UnFollowCommand = command.Command{
 	Name: "unfollow",
-	Parameters: []*command.CommandParameter{
+	Parameters: []*command.Parameter{
 		{
 			Name:     "game",
 			Required: false,
 			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.CommandContext) {
+	Handler: func(ctx *command.Context) {
 		t := ctx.T.(*i18n.CommandUnFollow)
 
 		authorID := ctx.AuthorID
