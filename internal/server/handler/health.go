@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/pauloo27/aryzona/internal/db"
+	"github.com/pauloo27/aryzona/internal/data/db"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/logger"
 )

@@ -2,7 +2,7 @@ package bootstrap
 
 import (
 	"github.com/pauloo27/aryzona/internal/config"
-	"github.com/pauloo27/aryzona/internal/db"
+	"github.com/pauloo27/aryzona/internal/data/db"
 	"github.com/pauloo27/logger"
 )
 

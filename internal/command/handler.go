@@ -1,17 +1,14 @@
 package command
 
 import (
-	"errors"
 	"strings"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
-	"github.com/pauloo27/aryzona/internal/db"
-	"github.com/pauloo27/aryzona/internal/db/entity"
+	"github.com/pauloo27/aryzona/internal/data/services"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
-	"xorm.io/xorm"
 )
 
 var (
@@ -33,7 +30,7 @@ func HandleCommand(
 	trigger *TriggerEvent,
 ) {
 	if trigger.PreferedLanguage == "" {
-		trigger.PreferedLanguage = getUserLanguage(trigger.AuthorID, trigger.GuildID)
+		trigger.PreferedLanguage = services.User.GetLanguage(trigger.AuthorID, trigger.GuildID)
 	}
 
 	lang := i18n.MustGetLanguage(trigger.PreferedLanguage)
@@ -167,41 +164,4 @@ func HandleInteraction(fullID, userID string) *model.ComplexMessage {
 		delete(commandInteractionMap, baseID)
 	}
 	return newMessage
-}
-
-func getUserLanguage(userID, guildID string) i18n.LanguageName {
-	var user = entity.User{ID: userID}
-
-	hasUser, err := db.DB.Get(&user)
-	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
-		logger.Error(err)
-	}
-
-	if hasUser {
-		if user.PreferredLocale != "" {
-			return user.PreferredLocale
-		}
-
-		if user.LastSlashCommandLocale != "" {
-			return user.LastSlashCommandLocale
-		}
-	}
-
-	if guildID == "" {
-		return i18n.DefaultLanguageName
-	}
-
-	var guild = entity.Guild{ID: guildID}
-
-	hasGuild, err := db.DB.Get(&guild)
-
-	if err != nil && !errors.Is(err, xorm.ErrNotExist) {
-		logger.Error(err)
-	}
-
-	if hasGuild {
-		return guild.PreferredLocale
-	}
-
-	return i18n.DefaultLanguageName
 }

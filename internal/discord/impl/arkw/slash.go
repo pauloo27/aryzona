@@ -7,7 +7,7 @@ import (
 
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
-	"github.com/pauloo27/aryzona/internal/db/services"
+	"github.com/pauloo27/aryzona/internal/data/services"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
@@ -250,12 +250,14 @@ func registerCommands(bot ArkwBot) error {
 				strings.Replace(string(i.Locale), "-", "_", 1),
 			)
 
-			err = services.User.SetLastSlashCommandLocale(
-				i.Sender().ID.String(), langName,
-			)
-			if err != nil {
-				logger.Error(err)
-			}
+			go func() {
+				err = services.User.SetLastSlashCommandLocale(
+					i.Sender().ID.String(), langName,
+				)
+				if err != nil {
+					logger.Error(err)
+				}
+			}()
 
 			channel := buildChannel(i.ChannelID.String(), buildGuild(i.GuildID.String()), cType)
 
