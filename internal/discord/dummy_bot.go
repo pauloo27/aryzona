@@ -10,10 +10,6 @@ import (
 type DummyBot struct {
 }
 
-func (DummyBot) StartTyping(channel model.TextChannel) error {
-	return nil
-}
-
 var _ BotAdapter = DummyBot{}
 
 func (DummyBot) EditMessageContent(message model.Message, newContent string) (model.Message, error) {
