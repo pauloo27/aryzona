@@ -21,16 +21,16 @@ var LanguageCommand = command.Command{
 			Required:        false,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		if len(ctx.Args) == 0 {
-			listLanguages(ctx)
+			return listLanguages(ctx)
 		} else {
-			selectLanguage(ctx)
+			return selectLanguage(ctx)
 		}
 	},
 }
 
-func listLanguages(ctx *command.Context) {
+func listLanguages(ctx *command.Context) command.Result {
 	t := ctx.T.(*i18n.CommandLanguage)
 
 	var validLanguages strings.Builder
@@ -55,10 +55,10 @@ func listLanguages(ctx *command.Context) {
 		WithTitle(t.Title.Str()).
 		WithDescription(description)
 
-	ctx.SuccessEmbed(embed)
+	return ctx.SuccessEmbed(embed)
 }
 
-func selectLanguage(ctx *command.Context) {
+func selectLanguage(ctx *command.Context) command.Result {
 	t := ctx.T.(*i18n.CommandLanguage)
 
 	langName := ctx.Args[0].(string)
@@ -75,12 +75,11 @@ func selectLanguage(ctx *command.Context) {
 	err := services.User.SetPreferredLang(ctx.AuthorID, lang.Name)
 	if err != nil {
 		logger.Error(err)
-		ctx.Error(t.SomethingWentWrong.Str())
-		return
+		return ctx.Error(t.SomethingWentWrong.Str())
 	}
 
 	newLang, _ := i18n.GetLanguage(lang.Name)
-	ctx.Success(newLang.Commands.Language.LanguageChanged.Str(lang.DisplayName))
+	return ctx.Success(newLang.Commands.Language.LanguageChanged.Str(lang.DisplayName))
 }
 
 func listValidLanguages() []any {

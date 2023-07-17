@@ -26,16 +26,16 @@ var HelpCommand = command.Command{
 			Required: false, Type: parameters.ParameterString,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		if len(ctx.Args) == 0 {
-			listCommands(ctx)
+			return listCommands(ctx)
 		} else {
-			helpForCommand(ctx)
+			return helpForCommand(ctx)
 		}
 	},
 }
 
-func listCommands(ctx *command.Context) {
+func listCommands(ctx *command.Context) command.Result {
 	t := ctx.T.(*i18n.CommandHelp)
 
 	embed := model.NewEmbed()
@@ -77,10 +77,10 @@ func listCommands(ctx *command.Context) {
 
 	embed.WithDescription(sb.String())
 
-	ctx.SuccessEmbed(embed)
+	return ctx.SuccessEmbed(embed)
 }
 
-func helpForCommand(ctx *command.Context) {
+func helpForCommand(ctx *command.Context) command.Result {
 	t := ctx.T.(*i18n.CommandHelp)
 
 	commandName := ctx.Args[0].(string)
@@ -91,8 +91,7 @@ func helpForCommand(ctx *command.Context) {
 
 	cmd, found := command.GetCommandMap()[commandName]
 	if !found {
-		ctx.Error(t.CommandNotFound.Str())
-		return
+		return ctx.Error(t.CommandNotFound.Str())
 	}
 	rootCmd := cmd
 
@@ -101,8 +100,7 @@ func helpForCommand(ctx *command.Context) {
 			return subCmd.Name == subCommandName
 		})
 		if subCommand == nil {
-			ctx.Error(t.SubCommandNotFound.Str())
-			return
+			return ctx.Error(t.SubCommandNotFound.Str())
 		}
 		cmd = *subCommand
 	}
@@ -176,7 +174,7 @@ func helpForCommand(ctx *command.Context) {
 		)
 	}
 
-	ctx.SuccessEmbed(
+	return ctx.SuccessEmbed(
 		embed,
 	)
 }

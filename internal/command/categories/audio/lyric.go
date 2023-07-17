@@ -15,7 +15,7 @@ var LyricCommand = command.Command{
 	Parameters: []*command.Parameter{
 		{Name: "song", Type: parameters.ParameterText, Required: false},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandLyric)
 
 		var searchTerms string
@@ -25,13 +25,11 @@ var LyricCommand = command.Command{
 		} else {
 			vc := voicer.GetExistingVoicerForGuild(ctx.GuildID)
 			if vc == nil {
-				ctx.Error(t.NotConnected.Str())
-				return
+				return ctx.Error(t.NotConnected.Str())
 			}
 			entry := vc.Playing()
 			if entry == nil {
-				ctx.Error(t.NothingPlaying.Str())
-				return
+				return ctx.Error(t.NothingPlaying.Str())
 			}
 			playable := entry.Playable
 
@@ -41,9 +39,8 @@ var LyricCommand = command.Command{
 
 		result, err := lyric.SearchDDG(searchTerms)
 		if err != nil {
-			ctx.Error(t.NoResults.Str(searchTerms))
-			return
+			return ctx.Error(t.NoResults.Str(searchTerms))
 		}
-		_ = ctx.Reply(result)
+		return ctx.ReplyRaw(result)
 	},
 }

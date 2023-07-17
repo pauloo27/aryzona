@@ -8,15 +8,12 @@ import (
 
 var CatCommand = command.Command{
 	Name: "cat",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		url, err := animal.GetRandomCat()
 		if err != nil {
-			ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		}
-		if ctx.Reply(url) != nil {
-			logger.Error(url)
-		}
+		return ctx.ReplyRaw(url)
 	},
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
+	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/livescore"
 	"github.com/pauloo27/logger"
@@ -30,44 +31,38 @@ var FollowCommand = command.Command{
 			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandFollow)
 
 		teamNameOrID := ctx.Args[0].(string)
 		match, err := getMatchByTeamNameOrID(teamNameOrID)
 		if err != nil {
-			ctx.Error(t.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 
 		if match == nil {
-			ctx.Error(t.MatchNotFound.Str())
-			return
+			return ctx.Error(t.MatchNotFound.Str())
 		}
 
 		liveMatch, err := livescore.GetLiveMatch(match.ID)
 		if errors.Is(err, livescore.ErrMatchHasFinished) {
-			ctx.Error(t.MatchFinished.Str())
-			return
+			return ctx.Error(t.MatchFinished.Str())
 		}
 
 		if len(followedMatchIDs[ctx.AuthorID]) >= maxFollowPerUser {
-			ctx.Error(t.FollowLimitReached.Str(maxFollowPerUser, command.Prefix))
-			return
+			return ctx.Error(t.FollowLimitReached.Str(maxFollowPerUser, command.Prefix))
 		}
 
 		for _, followedMatchID := range followedMatchIDs[ctx.AuthorID] {
 			if followedMatchID == match.ID {
-				ctx.Error(t.AlreadyFollowing.Str())
-				return
+				return ctx.Error(t.AlreadyFollowing.Str())
 			}
 		}
 
 		addUserFollow(ctx.AuthorID, match.ID)
 
 		embed := buildMatchEmbed(match, t.MatchInfo)
-		ctx.Embed(embed)
 
 		listenerID := getListenerID(ctx.AuthorID, match.ID)
 
@@ -78,12 +73,16 @@ var FollowCommand = command.Command{
 				return
 			}
 			embed := buildMatchEmbed(match.CurrentData, t.MatchInfo)
-			err = ctx.EditEmbed(embed)
+			err = ctx.EditComplexMessage(&model.ComplexMessage{
+				Embeds: []*model.Embed{embed},
+			})
 			if err != nil {
 				_ = liveMatch.RemoveListener(listenerID)
 				removeUserFollow(ctx.AuthorID, match.MatchID)
 			}
 		})
+
+		return ctx.Embed(embed)
 	},
 }
 

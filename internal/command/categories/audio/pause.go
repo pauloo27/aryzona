@@ -11,22 +11,20 @@ import (
 var PauseCommand = command.Command{
 	Name:        "pause",
 	Validations: []*command.Validation{validations.MustBePlaying},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPause)
 
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		playing := ctx.Locals["playing"].(playable.Playable)
 
 		if !playing.CanPause() {
-			ctx.Error(t.CannotPause.Str())
-			return
+			return ctx.Error(t.CannotPause.Str())
 		}
 
 		if vc.IsPaused() {
-			ctx.Error(t.AlreadyPaused.Str(command.Prefix))
-			return
+			return ctx.Error(t.AlreadyPaused.Str(command.Prefix))
 		}
 		vc.Pause()
-		ctx.Successf(t.Paused.Str(command.Prefix))
+		return ctx.Successf(t.Paused.Str(command.Prefix))
 	},
 }

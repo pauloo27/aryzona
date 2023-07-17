@@ -42,15 +42,14 @@ var NewsCommand = command.Command{
 			ValidValuesFunc: listSources,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandNews)
 
 		source := ctx.Args[0].(string)
 		news, err := Sources[source]()
 		if err != nil {
-			ctx.Error(t.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 
 		author := news.Author
@@ -85,6 +84,6 @@ var NewsCommand = command.Command{
 			}
 		}
 
-		ctx.SuccessEmbed(embed)
+		return ctx.SuccessEmbed(embed)
 	},
 }

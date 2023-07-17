@@ -43,22 +43,25 @@ type (
 	}
 )
 
-func handleMultipleResults(ctx *SearchContext) []playable.Playable {
+func handleMultipleResults(ctx *SearchContext, resultCh chan<- []playable.Playable) command.Result {
 	selectionCh := make(chan Selection)
 	ctx.SelectionCh = selectionCh
 
-	promptFirstResultConfirmation(ctx)
+	go func() {
+		selection := <-selectionCh
 
-	selection := <-selectionCh
+		if selection.Type == SelectionTypeCancel {
+			resultCh <- nil
+			return
+		}
 
-	if selection.Type == SelectionTypeCancel {
-		return nil
-	}
+		resultCh <- ctx.Results[selection.Index].ToPlayable()
+	}()
 
-	return ctx.Results[selection.Index].ToPlayable()
+	return promptFirstResultConfirmation(ctx)
 }
 
-func promptFirstResultConfirmation(ctx *SearchContext) {
+func promptFirstResultConfirmation(ctx *SearchContext) command.Result {
 	t := ctx.T.(*i18n.CommandPlay)
 
 	firstResult := ctx.Results[0]
@@ -82,8 +85,6 @@ func promptFirstResultConfirmation(ctx *SearchContext) {
 				int64(firstResultTimeout/time.Second),
 			),
 		)
-
-	ctx.AddCommandDuration(embed)
 
 	baseID := ctx.MessageID
 
@@ -117,15 +118,11 @@ func promptFirstResultConfirmation(ctx *SearchContext) {
 		},
 	}
 
-	err := ctx.ReplyWithInteraction(
+	return ctx.ReplyWithInteraction(
 		baseID,
 		msg,
 		handleConfirmationInteraction(ctx, msg),
 	)
-
-	if err != nil {
-		ctx.Error(t.SomethingWentWrong.Str())
-	}
 }
 
 func handleConfirmationInteraction(ctx *SearchContext, msg *model.ComplexMessage) command.InteractionHandler {
@@ -152,7 +149,7 @@ func handleConfirmationInteraction(ctx *SearchContext, msg *model.ComplexMessage
 				Type:  SelectionTypeSelect,
 				Index: 0,
 			}
-			err := ctx.EditComplex(
+			err := ctx.EditComplexMessage(
 				&model.ComplexMessage{
 					Embeds: []*model.Embed{buildSelectedResultEmbed(ctx, 0)},
 					ComponentRows: []model.MessageComponentRow{
@@ -305,7 +302,7 @@ func handlePlayOtherInteraction(ctx *SearchContext, msg *model.ComplexMessage) c
 				Type:  SelectionTypeSelect,
 				Index: 0,
 			}
-			err := ctx.EditComplex(
+			err := ctx.EditComplexMessage(
 				&model.ComplexMessage{
 					Embeds: []*model.Embed{buildSelectedResultEmbed(ctx, 0)},
 					ComponentRows: []model.MessageComponentRow{

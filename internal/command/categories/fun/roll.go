@@ -22,7 +22,7 @@ var RollCommand = command.Command{
 	Parameters: []*command.Parameter{
 		{Name: "faces", Required: false, Type: diceNotation},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandRoll)
 
 		var d *dice.DiceNotation
@@ -39,9 +39,8 @@ var RollCommand = command.Command{
 		for i := 0; i < d.Dices; i++ {
 			luckyNumber, err := rnd.Rnd(d.Faces)
 			if err != nil {
-				ctx.Error(t.SomethingWentWrong.Str())
 				logger.Error(err)
-				return
+				return ctx.Error(t.SomethingWentWrong.Str())
 			}
 			// +1 since the dice starts at 1
 			luckyNumber++
@@ -61,7 +60,7 @@ var RollCommand = command.Command{
 			).
 			WithImage(gif)
 
-		ctx.SuccessEmbed(embed)
+		return ctx.SuccessEmbed(embed)
 	},
 }
 

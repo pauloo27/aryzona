@@ -30,36 +30,29 @@ var PlayCommand = command.Command{
 	Parameters: []*command.Parameter{
 		{Name: "song", Required: true, Type: parameters.ParameterText},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPlay)
 
 		searchQuery := ctx.Args[0].(string)
 
 		results, err := youtube.SearchFor(searchQuery, maxSearchResults)
 		if err != nil || len(results) == 0 {
-			ctx.Error(t.SomethingWentWrong.Str())
 			logger.Warnf("Error searching for %s: %v", searchQuery, err)
-			return
+			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		if !vc.IsConnected() {
 			if err := vc.Connect(); err != nil {
-				ctx.Error(t.CannotConnect.Str())
 				logger.Error(err)
-				return
+				return ctx.Error(t.CannotConnect.Str())
 			}
 		} else {
 			ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
 			if !ok {
-				logger.Error(msg)
-				return
+				return ctx.Error(msg)
 			}
 		}
-
-		// what should be added to the queue, since we support playlists...
-		// it needs to be a list of playable
-		var toPlay []playable.Playable
 
 		searchCtx := &SearchContext{
 			Context:     ctx,
@@ -69,25 +62,29 @@ var PlayCommand = command.Command{
 		}
 
 		if len(results) == 1 {
-			toPlay = handleSingleResult(searchCtx)
-		} else {
-			toPlay = handleMultipleResults(searchCtx)
+			toPlay, cmdResult := handleSingleResult(searchCtx)
+			vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
+			return cmdResult
 		}
 
-		if toPlay == nil {
-			return
-		}
+		resultCh := make(chan []playable.Playable)
+		cmdResult := handleMultipleResults(searchCtx, resultCh)
 
-		vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
+		go func() {
+			toPlay := <-resultCh
+			vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
+		}()
+
+		return cmdResult
 	},
 }
 
-func handleSingleResult(ctx *SearchContext) (toPlay []playable.Playable) {
+func handleSingleResult(ctx *SearchContext) ([]playable.Playable, command.Result) {
 	t := ctx.T.(*i18n.CommandPlay)
 
 	result := ctx.Results[0]
 
-	toPlay = result.ToPlayable()
+	toPlay := result.ToPlayable()
 
 	var displayResult playable.Playable
 
@@ -102,7 +99,7 @@ func handleSingleResult(ctx *SearchContext) (toPlay []playable.Playable) {
 		displayResult = toPlay[0]
 	}
 
-	ctx.SuccessEmbed(
+	cmdResult := ctx.SuccessEmbed(
 		buildPlayableInfoEmbed(
 			PlayableInfo{
 				Playable:    displayResult,
@@ -116,5 +113,5 @@ func handleSingleResult(ctx *SearchContext) (toPlay []playable.Playable) {
 				t.BestResult.Str(ctx.SearchQuery),
 			),
 	)
-	return
+	return toPlay, cmdResult
 }

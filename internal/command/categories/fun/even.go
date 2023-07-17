@@ -15,14 +15,14 @@ var EvenCommand = command.Command{
 			Required: true,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandEven)
 
 		n := ctx.Args[0].(int)
 		if n&1 == 0 {
-			ctx.Success(t.Even.Str())
+			return ctx.Success(t.Even.Str())
 		} else {
-			ctx.Success(t.Odd.Str())
+			return ctx.Success(t.Odd.Str())
 		}
 	},
 }

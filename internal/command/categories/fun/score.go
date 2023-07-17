@@ -21,26 +21,24 @@ var ScoreCommand = command.Command{
 			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandScore)
 
 		if len(ctx.Args) == 1 {
-			showMatchInfo(ctx, t)
-			return
+			return showMatchInfo(ctx, t)
+		} else {
+			return ListLiveMatches(ctx, t)
 		}
-		ListLiveMatches(ctx, t)
 	},
 }
 
-func ListLiveMatches(ctx *command.Context, t *i18n.CommandScore) {
+func ListLiveMatches(ctx *command.Context, t *i18n.CommandScore) command.Result {
 	matches, err := livescore.ListLives()
 	if err != nil {
-		ctx.Error(err.Error())
-		return
+		return ctx.Error(err.Error())
 	}
 	if len(matches) == 0 {
-		ctx.Error(t.NoMatchesLive.Str())
-		return
+		return ctx.Error(t.NoMatchesLive.Str())
 	}
 	desc := strings.Builder{}
 	for _, match := range matches {
@@ -50,7 +48,8 @@ func ListLiveMatches(ctx *command.Context, t *i18n.CommandScore) {
 			match.T2Score, match.T2.Name,
 		))
 	}
-	ctx.SuccessEmbed(
+
+	return ctx.SuccessEmbed(
 		model.NewEmbed().
 			WithTitle(t.Title.Str(":soccer:")).
 			WithFooter(t.Footer.Str(command.Prefix, ctx.UsedName)).
@@ -58,17 +57,15 @@ func ListLiveMatches(ctx *command.Context, t *i18n.CommandScore) {
 	)
 }
 
-func showMatchInfo(ctx *command.Context, t *i18n.CommandScore) {
+func showMatchInfo(ctx *command.Context, t *i18n.CommandScore) command.Result {
 	teamNameOrID := ctx.Args[0].(string)
 	match, err := getMatchByTeamNameOrID(teamNameOrID)
 
 	if err != nil {
-		ctx.Error(err.Error())
-		return
+		return ctx.Error(err.Error())
 	}
 	if match == nil {
-		ctx.Error(t.MatchNotFound.Str())
-		return
+		return ctx.Error(t.MatchNotFound.Str())
 	}
 
 	embed := buildMatchEmbed(match, t.MatchInfo).
@@ -76,7 +73,7 @@ func showMatchInfo(ctx *command.Context, t *i18n.CommandScore) {
 			t.LiveUpdates.Str(command.Prefix, teamNameOrID),
 		)
 
-	ctx.Embed(embed)
+	return ctx.Embed(embed)
 }
 
 func buildMatchEmbed(match *livescore.MatchInfo, t *i18n.MatchInfo) *model.Embed {

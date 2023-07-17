@@ -19,18 +19,17 @@ var ServerCommand = command.Command{
 		},
 	},
 	Permission: permissions.MustBeAdmin,
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandServer)
 
 		langName := i18n.FindLanguageName(ctx.Args[0].(string))
 
 		err := services.Guild.SetGuildOptions(ctx.GuildID, i18n.LanguageName(langName))
 		if err != nil {
-			ctx.Error(t.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 
-		ctx.Success(t.ServerOptionsChanged.Str())
+		return ctx.Success(t.ServerOptionsChanged.Str())
 	},
 }
