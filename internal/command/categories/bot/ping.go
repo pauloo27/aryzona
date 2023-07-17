@@ -11,7 +11,7 @@ import (
 
 var PingCommand = command.Command{
 	Name: "ping",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPing)
 
 		latency := formatAPILatency(ctx.Bot)
@@ -19,7 +19,7 @@ var PingCommand = command.Command{
 			latency = t.StillCalculating.Str(":hourglass_flowing_sand:")
 		}
 
-		ctx.SuccessEmbed(
+		return ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle(t.Title.Str(":ping_pong:")).
 				WithFooter(t.Footer.Str()).

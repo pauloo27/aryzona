@@ -17,51 +17,45 @@ var UnFollowCommand = command.Command{
 			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandUnFollow)
 
 		authorID := ctx.AuthorID
 
 		if len(ctx.Args) == 0 {
 			if len(followedMatchIDs[authorID]) == 0 {
-				ctx.Error(t.NotFollowingAny.Str())
-				return
+				return ctx.Error(t.NotFollowingAny.Str())
 			}
 			for _, matchID := range followedMatchIDs[authorID] {
 				liveMatch, err := livescore.GetLiveMatch(matchID)
 				if err != nil {
-					ctx.Error(t.SomethingWentWrong.Str())
-					return
+					return ctx.Error(t.SomethingWentWrong.Str())
 				}
 				_ = liveMatch.RemoveListener(getListenerID(authorID, matchID))
 				removeUserFollow(authorID, matchID)
 			}
-			ctx.Success(t.UnFollowedAll.Str())
+			return ctx.Success(t.UnFollowedAll.Str())
 		} else {
 			teamNameOrID := ctx.Args[0].(string)
 			match, err := getMatchByTeamNameOrID(teamNameOrID)
 			if err != nil {
-				ctx.Error(t.SomethingWentWrong.Str())
 				logger.Error(err)
-				return
+				return ctx.Error(t.SomethingWentWrong.Str())
 			}
 			if match == nil {
-				ctx.Error(t.MatchNotFound.Str())
-				return
+				return ctx.Error(t.MatchNotFound.Str())
 			}
 			liveMatch, err := livescore.GetLiveMatch(match.ID)
 			if err != nil {
-				ctx.Error(t.SomethingWentWrong.Str())
 				logger.Error(err)
-				return
+				return ctx.Error(t.SomethingWentWrong.Str())
 			}
 			err = liveMatch.RemoveListener(getListenerID(authorID, match.ID))
 			if err == livescore.ErrListenerNotFound {
-				ctx.Error(t.NotFollowingMatch.Str())
-				return
+				return ctx.Error(t.NotFollowingMatch.Str())
 			}
 			removeUserFollow(authorID, match.ID)
-			ctx.Success(t.UnfollowedMatch.Str(match.T1.Name, match.T2.Name))
+			return ctx.Success(t.UnfollowedMatch.Str(match.T1.Name, match.T2.Name))
 		}
 	},
 }

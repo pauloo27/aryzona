@@ -15,7 +15,7 @@ var PasswordCommand = command.Command{
 	Parameters: []*command.Parameter{
 		{Name: "length", Type: parameters.ParameterInt, Required: false},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPassword)
 
 		length := 10
@@ -25,9 +25,8 @@ var PasswordCommand = command.Command{
 		password, err := generatePassword(length)
 
 		if err != nil {
-			ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		}
 
 		embed := model.NewEmbed().
@@ -38,7 +37,7 @@ var PasswordCommand = command.Command{
 				),
 			)
 
-		ctx.SuccessEmbed(embed)
+		return ctx.SuccessEmbed(embed)
 	},
 }
 

@@ -11,13 +11,6 @@ import (
 	"github.com/pauloo27/logger"
 )
 
-var (
-	CommandLogLevel = logger.Level{
-		Name:  "COMMAND",
-		Color: "\033[38;5;5m",
-	}
-)
-
 func GetCommand(name string) *Command {
 	return commandMap[name]
 }
@@ -55,20 +48,14 @@ func HandleCommand(
 		executionID: gonanoid.Must(5),
 	}
 
-	executeCommand(ctx, command)
+	result := executeCommand(ctx, command)
+	trigger.Reply(ctx, result.Message)
 }
 
 func executeCommand(
 	ctx *Context,
 	command *Command,
-) {
-	logger.Logf(
-		CommandLogLevel,
-		"[i %s] (%s) <u %s> <g %s><c %s> executed: %s %s",
-		ctx.executionID, ctx.TriggerType,
-		ctx.AuthorID, ctx.GuildID, ctx.Channel.ID(), ctx.UsedName, ctx.RawArgs,
-	)
-
+) Result {
 	validaionsI18n := ctx.Lang.Validations.PreCommandValidation
 
 	if command.Deferred && ctx.trigger.DeferResponse != nil {
@@ -79,34 +66,30 @@ func executeCommand(
 	}
 
 	if command.Ephemeral && ctx.TriggerType != CommandTriggerSlash {
-		ctx.Error(
+		return ctx.Error(
 			validaionsI18n.MustBeExecutedAsSlashCommand.Str(command.Name),
 		)
-		return
 	}
 
 	if command.Permission != nil {
 		if !command.Permission.Checker(ctx) {
-			ctx.Error(
+			return ctx.Error(
 				validaionsI18n.PermissionRequired.Str(command.Permission.Name),
 			)
-			return
 		}
 	}
 
 	for _, validation := range command.Validations {
 		ok, msg := RunValidation(ctx, validation)
 		if !ok {
-			ctx.Error(msg)
-			return
+			return ctx.Error(msg)
 		}
 	}
 
 	values, syntaxError := command.ValidateParameters(ctx)
 	if syntaxError != nil {
 		msg := strings.SplitN(syntaxError.Error(), ":", 2)[1]
-		ctx.Error(msg)
-		return
+		return ctx.Error(msg)
 	}
 	ctx.Args = values
 
@@ -117,33 +100,30 @@ func executeCommand(
 	}()
 
 	if command.SubCommands == nil || (len(ctx.RawArgs) == 0 && command.Handler != nil) {
-		command.Handler(ctx)
+		return command.Handler(ctx)
 	} else {
 		var subCommandNames []string
 		for _, subCommand := range command.SubCommands {
 			subCommandNames = append(subCommandNames, subCommand.Name)
 		}
 		if len(ctx.RawArgs) == 0 {
-			ctx.Error(validaionsI18n.MissingSubCommand.Str(subCommandNames))
-			return
+			return ctx.Error(validaionsI18n.MissingSubCommand.Str(subCommandNames))
 		}
 		subCommandName := ctx.RawArgs[0]
 		for _, subCommand := range command.SubCommands {
 			subCommand.parent = command
 			if subCommand.Name == subCommandName {
 				ctx.RawArgs = ctx.RawArgs[1:]
-				executeCommand(ctx, subCommand)
-				return
+				return executeCommand(ctx, subCommand)
 			}
 			for _, alias := range subCommand.Aliases {
 				if alias == subCommandName {
 					ctx.RawArgs = ctx.RawArgs[1:]
-					executeCommand(ctx, command)
-					return
+					return executeCommand(ctx, command)
 				}
 			}
 		}
-		ctx.Error(validaionsI18n.InvalidSubCommand.Str(subCommandNames))
+		return ctx.Error(validaionsI18n.InvalidSubCommand.Str(subCommandNames))
 	}
 }
 

@@ -11,10 +11,10 @@ var ShuffleCommand = command.Command{
 	Name:        "shuffle",
 	Aliases:     []string{"sh"},
 	Validations: []*command.Validation{validations.MustBePlaying},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandShuffle)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 		vc.Queue.Shuffle()
-		ctx.Success(t.Shuffled.Str(":wink:"))
+		return ctx.Success(t.Shuffled.Str(":wink:"))
 	},
 }

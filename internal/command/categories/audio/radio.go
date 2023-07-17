@@ -1,13 +1,9 @@
 package audio
 
 import (
-	"errors"
-
-	"github.com/pauloo27/aryzona/internal/audio/dca"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/command/validations"
-	"github.com/pauloo27/aryzona/internal/core/routine"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/discord/voicer"
 	"github.com/pauloo27/aryzona/internal/i18n"
@@ -32,16 +28,15 @@ var RadioCommand = command.Command{
 			},
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandRadio)
 
 		if len(ctx.Args) == 0 {
-			listRadios(ctx, t.ListTitle.Str())
-			return
+			return listRadios(ctx, t.ListTitle.Str())
 		}
+
 		if ok, msg := command.RunValidation(ctx, validations.MustBeOnAValidVoiceChannel); !ok {
-			ctx.Error(msg)
-			return
+			return ctx.Error(msg)
 		}
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 
@@ -50,15 +45,14 @@ var RadioCommand = command.Command{
 
 		if !vc.IsConnected() {
 			if err := vc.Connect(); err != nil {
-				ctx.Error(t.CannotConnect.Str())
 				logger.Error(err)
-				return
+				return ctx.Error(t.CannotConnect.Str())
 			}
 		} else {
 			ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
 			if !ok {
 				logger.Error(msg)
-				return
+				return ctx.Error(msg)
 			}
 		}
 		embed := buildPlayableInfoEmbed(
@@ -69,22 +63,14 @@ var RadioCommand = command.Command{
 				Common:      t.Common,
 			},
 		).WithTitle(t.AddedToQueue.Str(channel.GetName()))
-		ctx.SuccessEmbed(embed)
 
-		routine.GoAndRecover(func() {
-			if err := vc.AppendToQueue(ctx.AuthorID, channel); err != nil {
-				if errors.Is(err, dca.ErrVoiceConnectionClosed) {
-					return
-				}
-				ctx.Errorf(t.SomethingWentWrong.Str())
-				logger.Error(err)
-				return
-			}
-		})
+		vc.AppendToQueue(ctx.AuthorID, channel)
+
+		return ctx.SuccessEmbed(embed)
 	},
 }
 
-func listRadios(ctx *command.Context, title string) {
+func listRadios(ctx *command.Context, title string) command.Result {
 	t := ctx.T.(*i18n.CommandRadio)
 
 	embed := model.NewEmbed().
@@ -100,5 +86,5 @@ func listRadios(ctx *command.Context, title string) {
 		),
 	)
 
-	ctx.SuccessEmbed(embed)
+	return ctx.SuccessEmbed(embed)
 }

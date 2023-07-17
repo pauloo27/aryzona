@@ -10,7 +10,7 @@ import (
 var DonateCommand = command.Command{
 	Name:    "donate",
 	Aliases: []string{"pix"},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandDonate)
 
 		msg := config.Config.DonateMessage
@@ -18,6 +18,6 @@ var DonateCommand = command.Command{
 			WithTitle(t.Title.Str()).
 			WithDescription(msg)
 
-		ctx.SuccessEmbed(embed)
+		return ctx.SuccessEmbed(embed)
 	},
 }

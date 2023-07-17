@@ -22,7 +22,7 @@ var PlayingCommand = command.Command{
 	Name: "playing", Aliases: []string{"np"},
 	Deferred:    true,
 	Validations: []*command.Validation{validations.MustBePlaying},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPlaying)
 
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
@@ -89,6 +89,6 @@ var PlayingCommand = command.Command{
 			embed.WithField(t.ComingNext.Str(len(next), f.Pluralize(len(next), t.Song.Str(), t.Songs.Str()), f.ShortDuration(queueDuration)), sb.String())
 		}
 
-		ctx.SuccessEmbed(embed)
+		return ctx.SuccessEmbed(embed)
 	},
 }

@@ -66,12 +66,11 @@ func (v *Voicer) Playing() *queue.QueueEntry {
 	return v.Queue.First()
 }
 
-func (v *Voicer) AppendToQueue(requesterID string, playable playable.Playable) error {
+func (v *Voicer) AppendToQueue(requesterID string, playable playable.Playable) {
 	v.Queue.Append(&queue.QueueEntry{
 		Playable:  playable,
 		Requester: requesterID,
 	})
-	return nil
 }
 
 func (v *Voicer) AppendManyToQueue(requesterID string, playable ...playable.Playable) {

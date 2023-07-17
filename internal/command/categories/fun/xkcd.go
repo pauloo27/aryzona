@@ -22,17 +22,17 @@ var XkcdCommand = command.Command{
 
 var XkcdLatestSubCommand = command.Command{
 	Name: "latest",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		comic, err := xkcd.GetLatest()
-		sendComic(ctx, comic, err)
+		return sendComic(ctx, comic, err)
 	},
 }
 
 var XkcdRandomSubCommand = command.Command{
 	Name: "random",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		comic, err := xkcd.GetRandom()
-		sendComic(ctx, comic, err)
+		return sendComic(ctx, comic, err)
 	},
 }
 
@@ -45,20 +45,19 @@ var XkcdNumberSubCommand = command.Command{
 			Type: parameters.ParameterInt, Required: true,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		comic, err := xkcd.GetByNum(ctx.Args[0].(int))
-		sendComic(ctx, comic, err)
+		return sendComic(ctx, comic, err)
 	},
 }
 
-func sendComic(ctx *command.Context, comic *xkcd.Comic, err error) {
+func sendComic(ctx *command.Context, comic *xkcd.Comic, err error) command.Result {
 	if err != nil {
-		ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		logger.Error(err)
-		return
+		return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 	}
 
-	ctx.SuccessEmbed(
+	return ctx.SuccessEmbed(
 		model.NewEmbed().
 			WithTitle(fmt.Sprintf(
 				"#%d - %s (%s/%s/%s)", comic.Num, comic.SafeTitle,

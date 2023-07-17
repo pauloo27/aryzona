@@ -19,17 +19,16 @@ var PickCommand = command.Command{
 			Type:     parameters.ParameterText,
 		},
 	},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPick)
 
 		things := strings.Split(ctx.Args[0].(string), " ")
 		n, err := rnd.Rnd(len(things))
 		if err != nil {
-			ctx.Error(t.SomethingWentWrong.Str())
-			return
+			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 
-		ctx.SuccessEmbed(
+		return ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle("Pick").
 				WithDescription(

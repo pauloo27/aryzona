@@ -11,15 +11,14 @@ var ResumeCommand = command.Command{
 	Name:        "resume",
 	Aliases:     []string{"unpause"},
 	Validations: []*command.Validation{validations.MustBePlaying},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandResume)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 
 		if !vc.IsPaused() {
-			ctx.Error(t.NotPaused.Str())
-			return
+			return ctx.Error(t.NotPaused.Str())
 		}
 		vc.Resume()
-		ctx.Success(t.Resumed.Str())
+		return ctx.Success(t.Resumed.Str())
 	},
 }

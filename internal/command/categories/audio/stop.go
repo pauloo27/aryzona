@@ -11,16 +11,15 @@ import (
 var StopCommand = command.Command{
 	Name:        "stop",
 	Validations: []*command.Validation{validations.MustHaveVoicerOnGuild},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandStop)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 
 		err := vc.Disconnect()
 		if err != nil {
-			ctx.Error(t.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(t.SomethingWentWrong.Str())
 		}
-		ctx.Success(t.Stopped.Str())
+		return ctx.Success(t.Stopped.Str())
 	},
 }

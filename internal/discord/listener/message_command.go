@@ -63,7 +63,7 @@ func parseCommandForPrefix(prefix string, content string) (rawCommand string, ar
 
 	ok = true
 	parts := strings.Split(strings.TrimPrefix(content, prefix), " ")
-	rawCommand = parts[0]
+	rawCommand = strings.ToLower(parts[0])
 	args = parts[1:]
 	return
 }

@@ -10,11 +10,11 @@ import (
 var SkipCommand = command.Command{
 	Name: "skip", Aliases: []string{"s"},
 	Validations: []*command.Validation{validations.MustBePlaying},
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandSkip)
 		vc := ctx.Locals["vc"].(*voicer.Voicer)
 
 		vc.Skip()
-		ctx.Success(t.Skipped.Str())
+		return ctx.Success(t.Skipped.Str())
 	},
 }

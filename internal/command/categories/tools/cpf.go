@@ -14,7 +14,7 @@ var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
 
 var CPFCommand = command.Command{
 	Name: "cpf",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandCPF)
 
 		cpf := doc.GenerateCPF()
@@ -24,7 +24,7 @@ var CPFCommand = command.Command{
 			components[1], components[2], components[3], components[4],
 		)
 
-		ctx.SuccessEmbed(
+		return ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle(t.Title.Str()).
 				WithField(t.WithoutMask.Str(), cpf).

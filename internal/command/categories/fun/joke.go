@@ -8,13 +8,12 @@ import (
 
 var JokeCommand = command.Command{
 	Name: "joke",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		joke, err := joke.GetRandomJoke()
 		if err != nil {
-			ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 			logger.Error(err)
-			return
+			return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		}
-		ctx.Successf("%s\n\n%s", joke.Setup, joke.Punchline)
+		return ctx.Successf("%s\n\n%s", joke.Setup, joke.Punchline)
 	},
 }

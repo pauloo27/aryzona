@@ -14,7 +14,7 @@ var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 
 var CNPJCommand = command.Command{
 	Name: "cnpj",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandCNPJ)
 
 		cnpj := doc.GenerateCNPJ()
@@ -24,7 +24,7 @@ var CNPJCommand = command.Command{
 			components[1], components[2], components[3], components[4], components[5],
 		)
 
-		ctx.SuccessEmbed(
+		return ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle(t.Title.Str()).
 				WithField(t.WithoutMask.Str(), cnpj).

@@ -8,9 +8,9 @@ import (
 
 var UUIDCommand = command.Command{
 	Name: "uuid",
-	Handler: func(ctx *command.Context) {
+	Handler: func(ctx *command.Context) command.Result {
 		id := uuid.New()
-		ctx.SuccessEmbed(
+		return ctx.SuccessEmbed(
 			model.NewEmbed().
 				WithTitle("UUID v4").
 				WithDescription(id.String()),
