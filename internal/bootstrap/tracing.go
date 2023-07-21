@@ -7,14 +7,19 @@ import (
 )
 
 func initTracing() {
-	if config.Config.Tracing.Enabled {
-		err := tracing.InitTracer(
-			config.Config.Tracing.Endpoint,
-			config.Config.Tracing.ServiceName,
-			config.Config.Env,
-		)
-		if err != nil {
-			logger.Fatal(err)
-		}
+	if !config.Config.Tracing.Enabled {
+		logger.Info("Tracing is disabled")
+		tracing.DisableTracer()
+		return
 	}
+
+	err := tracing.InitTracer(
+		config.Config.Tracing.Endpoint,
+		config.Config.Tracing.ServiceName,
+		config.Config.Env,
+	)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	logger.Success("Tracing enabled")
 }

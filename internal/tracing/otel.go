@@ -33,3 +33,7 @@ func InitTracer(uri, service, environment string) error {
 	Tracer = tp.Tracer(service)
 	return nil
 }
+
+func DisableTracer() {
+	Tracer = trace.NewNoopTracerProvider().Tracer("")
+}

@@ -24,7 +24,6 @@ func HandleCommand(
 	bot discord.BotAdapter,
 	trigger *TriggerEvent,
 ) {
-
 	executionID := gonanoid.Must(8)
 
 	trCtx, span := startCommandTrace(command, trigger, executionID)
