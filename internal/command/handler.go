@@ -49,7 +49,10 @@ func HandleCommand(
 	}
 
 	result := executeCommand(ctx, command)
-	trigger.Reply(ctx, result.Message)
+	err := trigger.Reply(ctx, result.Message)
+	if err != nil {
+		logger.Errorf("Cannot reply to command %s: %v", ctx.executionID, err)
+	}
 }
 
 func executeCommand(
@@ -101,30 +104,30 @@ func executeCommand(
 
 	if command.SubCommands == nil || (len(ctx.RawArgs) == 0 && command.Handler != nil) {
 		return command.Handler(ctx)
-	} else {
-		var subCommandNames []string
-		for _, subCommand := range command.SubCommands {
-			subCommandNames = append(subCommandNames, subCommand.Name)
-		}
-		if len(ctx.RawArgs) == 0 {
-			return ctx.Error(validaionsI18n.MissingSubCommand.Str(subCommandNames))
-		}
-		subCommandName := ctx.RawArgs[0]
-		for _, subCommand := range command.SubCommands {
-			subCommand.parent = command
-			if subCommand.Name == subCommandName {
-				ctx.RawArgs = ctx.RawArgs[1:]
-				return executeCommand(ctx, subCommand)
-			}
-			for _, alias := range subCommand.Aliases {
-				if alias == subCommandName {
-					ctx.RawArgs = ctx.RawArgs[1:]
-					return executeCommand(ctx, command)
-				}
-			}
-		}
-		return ctx.Error(validaionsI18n.InvalidSubCommand.Str(subCommandNames))
 	}
+
+	var subCommandNames []string
+	for _, subCommand := range command.SubCommands {
+		subCommandNames = append(subCommandNames, subCommand.Name)
+	}
+	if len(ctx.RawArgs) == 0 {
+		return ctx.Error(validaionsI18n.MissingSubCommand.Str(subCommandNames))
+	}
+	subCommandName := ctx.RawArgs[0]
+	for _, subCommand := range command.SubCommands {
+		subCommand.parent = command
+		if subCommand.Name == subCommandName {
+			ctx.RawArgs = ctx.RawArgs[1:]
+			return executeCommand(ctx, subCommand)
+		}
+		for _, alias := range subCommand.Aliases {
+			if alias == subCommandName {
+				ctx.RawArgs = ctx.RawArgs[1:]
+				return executeCommand(ctx, command)
+			}
+		}
+	}
+	return ctx.Error(validaionsI18n.InvalidSubCommand.Str(subCommandNames))
 }
 
 func HandleInteraction(fullID, userID string) *model.ComplexMessage {

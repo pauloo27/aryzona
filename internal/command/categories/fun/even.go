@@ -21,8 +21,8 @@ var EvenCommand = command.Command{
 		n := ctx.Args[0].(int)
 		if n&1 == 0 {
 			return ctx.Success(t.Even.Str())
-		} else {
-			return ctx.Success(t.Odd.Str())
 		}
+
+		return ctx.Success(t.Odd.Str())
 	},
 }

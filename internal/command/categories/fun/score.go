@@ -26,9 +26,9 @@ var ScoreCommand = command.Command{
 
 		if len(ctx.Args) == 1 {
 			return showMatchInfo(ctx, t)
-		} else {
-			return ListLiveMatches(ctx, t)
 		}
+
+		return ListLiveMatches(ctx, t)
 	},
 }
 

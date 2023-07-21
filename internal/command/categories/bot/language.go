@@ -24,9 +24,9 @@ var LanguageCommand = command.Command{
 	Handler: func(ctx *command.Context) command.Result {
 		if len(ctx.Args) == 0 {
 			return listLanguages(ctx)
-		} else {
-			return selectLanguage(ctx)
 		}
+
+		return selectLanguage(ctx)
 	},
 }
 

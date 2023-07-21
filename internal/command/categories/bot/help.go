@@ -29,9 +29,9 @@ var HelpCommand = command.Command{
 	Handler: func(ctx *command.Context) command.Result {
 		if len(ctx.Args) == 0 {
 			return listCommands(ctx)
-		} else {
-			return helpForCommand(ctx)
 		}
+
+		return helpForCommand(ctx)
 	},
 }
 

@@ -35,27 +35,27 @@ var UnFollowCommand = command.Command{
 				removeUserFollow(authorID, matchID)
 			}
 			return ctx.Success(t.UnFollowedAll.Str())
-		} else {
-			teamNameOrID := ctx.Args[0].(string)
-			match, err := getMatchByTeamNameOrID(teamNameOrID)
-			if err != nil {
-				logger.Error(err)
-				return ctx.Error(t.SomethingWentWrong.Str())
-			}
-			if match == nil {
-				return ctx.Error(t.MatchNotFound.Str())
-			}
-			liveMatch, err := livescore.GetLiveMatch(match.ID)
-			if err != nil {
-				logger.Error(err)
-				return ctx.Error(t.SomethingWentWrong.Str())
-			}
-			err = liveMatch.RemoveListener(getListenerID(authorID, match.ID))
-			if err == livescore.ErrListenerNotFound {
-				return ctx.Error(t.NotFollowingMatch.Str())
-			}
-			removeUserFollow(authorID, match.ID)
-			return ctx.Success(t.UnfollowedMatch.Str(match.T1.Name, match.T2.Name))
 		}
+
+		teamNameOrID := ctx.Args[0].(string)
+		match, err := getMatchByTeamNameOrID(teamNameOrID)
+		if err != nil {
+			logger.Error(err)
+			return ctx.Error(t.SomethingWentWrong.Str())
+		}
+		if match == nil {
+			return ctx.Error(t.MatchNotFound.Str())
+		}
+		liveMatch, err := livescore.GetLiveMatch(match.ID)
+		if err != nil {
+			logger.Error(err)
+			return ctx.Error(t.SomethingWentWrong.Str())
+		}
+		err = liveMatch.RemoveListener(getListenerID(authorID, match.ID))
+		if err == livescore.ErrListenerNotFound {
+			return ctx.Error(t.NotFollowingMatch.Str())
+		}
+		removeUserFollow(authorID, match.ID)
+		return ctx.Success(t.UnfollowedMatch.Str(match.T1.Name, match.T2.Name))
 	},
 }
