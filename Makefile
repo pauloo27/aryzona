@@ -71,3 +71,14 @@ gosec:
 
 .PHONY: inspect
 inspect: lint gosec staticcheck
+
+.PHONY: install-inspect-tools
+install-inspect-tools:
+	go install github.com/mgechev/revive@latest
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+.PHONY: install-dev-tools
+install-dev-tools: install-inspect-tools
+	go install github.com/cosmtrek/air@latest
+	go install gotest.tools/gotestsum@latest
