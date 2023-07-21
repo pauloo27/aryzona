@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"strings"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
@@ -9,6 +10,7 @@ import (
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/logger"
+	"go.opentelemetry.io/otel/codes"
 )
 
 func GetCommand(name string) *Command {
@@ -22,8 +24,17 @@ func HandleCommand(
 	bot discord.BotAdapter,
 	trigger *TriggerEvent,
 ) {
+
+	executionID := gonanoid.Must(8)
+
+	trCtx, span := startCommandTrace(command, trigger, executionID)
+	defer span.End()
+
 	if trigger.PreferedLanguage == "" {
+		_, getUserLangSpan := startChildSpan(trCtx, "GetUserLanguage")
 		trigger.PreferedLanguage = services.User.GetLanguage(trigger.AuthorID, trigger.GuildID)
+		getUserLangSpan.End()
+		getUserLangSpan.SetStatus(codes.Ok, string(trigger.PreferedLanguage))
 	}
 
 	lang := i18n.MustGetLanguage(trigger.PreferedLanguage)
@@ -44,15 +55,32 @@ func HandleCommand(
 		startTime:   trigger.EventTime,
 		TriggerType: trigger.Type,
 		Channel:     trigger.Channel,
+
 		trigger:     trigger,
-		executionID: gonanoid.Must(5),
+		executionID: executionID,
+		trCtx:       trCtx,
+		span:        span,
 	}
 
 	result := executeCommand(ctx, command)
+
+	if result.Success {
+		span.SetStatus(codes.Ok, "Success")
+	} else {
+		span.SetStatus(codes.Error, "Error")
+	}
+
+	_, replySpan := startChildSpan(trCtx, "Reply")
+
 	err := trigger.Reply(ctx, result.Message)
+
+	replySpan.End()
+
 	if err != nil {
+		replySpan.SetStatus(codes.Error, "Error")
 		logger.Errorf("Cannot reply to command %s: %v", ctx.executionID, err)
 	}
+	replySpan.SetStatus(codes.Ok, "Success")
 }
 
 func executeCommand(
@@ -62,6 +90,7 @@ func executeCommand(
 	validaionsI18n := ctx.Lang.Validations.PreCommandValidation
 
 	if command.Deferred && ctx.trigger.DeferResponse != nil {
+		addEventToSpan(ctx.span, "DeferResponse")
 		err := ctx.trigger.DeferResponse()
 		if err != nil {
 			logger.Error("Cannot defer response:", err)
@@ -75,26 +104,48 @@ func executeCommand(
 	}
 
 	if command.Permission != nil {
+		_, permissionSpan := startChildSpan(ctx.trCtx, "CheckPermission")
 		if !command.Permission.Checker(ctx) {
+			permissionSpan.End()
+			permissionSpan.SetStatus(codes.Error, "PermissionDenied")
 			return ctx.Error(
 				validaionsI18n.PermissionRequired.Str(command.Permission.Name),
 			)
 		}
+		permissionSpan.End()
+		permissionSpan.SetStatus(codes.Ok, "PermissionGranted")
 	}
 
-	for _, validation := range command.Validations {
-		ok, msg := RunValidation(ctx, validation)
-		if !ok {
+	if command.Validations != nil {
+		_, validationSpan := startChildSpan(ctx.trCtx, "RunValidations")
+
+		for _, validation := range command.Validations {
+			addEventToSpan(validationSpan, fmt.Sprintf("RunValidation: %s", validation.Name))
+			ok, msg := RunValidation(ctx, validation)
+			if !ok {
+				validationSpan.End()
+				validationSpan.SetStatus(codes.Error, fmt.Sprintf("ValidationFailed: %s", validation.Name))
+				return ctx.Error(msg)
+			}
+		}
+		validationSpan.End()
+		validationSpan.SetStatus(codes.Ok, "ValidationsPassed")
+	}
+
+	if command.Parameters != nil {
+		_, validationSpan := startChildSpan(ctx.trCtx, "ValidateParameters")
+
+		values, syntaxError := command.ValidateParameters(ctx)
+		if syntaxError != nil {
+			msg := strings.SplitN(syntaxError.Error(), ":", 2)[1]
+			validationSpan.End()
+			validationSpan.SetStatus(codes.Error, "ParametersAreInvalid")
 			return ctx.Error(msg)
 		}
+		ctx.Args = values
+		validationSpan.End()
+		validationSpan.SetStatus(codes.Ok, "ParametersAreValid")
 	}
-
-	values, syntaxError := command.ValidateParameters(ctx)
-	if syntaxError != nil {
-		msg := strings.SplitN(syntaxError.Error(), ":", 2)[1]
-		return ctx.Error(msg)
-	}
-	ctx.Args = values
 
 	defer func() {
 		if err := recover(); err != nil {
@@ -103,16 +154,26 @@ func executeCommand(
 	}()
 
 	if command.SubCommands == nil || (len(ctx.RawArgs) == 0 && command.Handler != nil) {
-		return command.Handler(ctx)
+		_, handlerSpan := startChildSpan(ctx.trCtx, "RunHandler")
+
+		result := command.Handler(ctx)
+
+		handlerSpan.End()
+		handlerSpan.SetStatus(codes.Ok, "HandlerExecuted")
+
+		return result
 	}
 
+	// TODO: trace
 	var subCommandNames []string
 	for _, subCommand := range command.SubCommands {
 		subCommandNames = append(subCommandNames, subCommand.Name)
 	}
+
 	if len(ctx.RawArgs) == 0 {
 		return ctx.Error(validaionsI18n.MissingSubCommand.Str(subCommandNames))
 	}
+
 	subCommandName := ctx.RawArgs[0]
 	for _, subCommand := range command.SubCommands {
 		subCommand.parent = command

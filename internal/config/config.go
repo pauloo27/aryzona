@@ -13,7 +13,8 @@ type BotConfig struct {
 	HTTPServerPort        int    `json:"http_server_port" env:"HTTP_SERVER_PORT"`
 	HTTPServerExternalURL string `json:"http_server_external_url" env:"HTTP_SERVER_EXTERNAL_URL"`
 
-	DB `json:"db"`
+	DB      `json:"db"`
+	Tracing `json:"tracing"`
 }
 
 type DB struct {
@@ -23,4 +24,10 @@ type DB struct {
 	Password string `json:"password" env:"DB_PASSWORD,secret"`
 	Database string `json:"database" env:"DB_DATABASE"`
 	SSL      bool   `json:"ssl" env:"DB_SSL"`
+}
+
+type Tracing struct {
+	Enabled     bool   `json:"enabled" env:"TRACING_ENABLED"`
+	Endpoint    string `json:"endpoint" env:"TRACING_ENDPOINT"`
+	ServiceName string `json:"service_name" env:"TRACING_SERVICE_NAME"`
 }

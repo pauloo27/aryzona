@@ -6,8 +6,9 @@ token: 'your secret token here'
 owner_id: 'your user id here'
 # message for the donate command
 donate_message: 'donate message'
-# dev or prod
-env: 'prod' 
+# 'prod', 'homolog', 'dev' or 'local'
+# if local, the bot will not send "I've started" DM messages
+env: 'local' 
 # if empty, the last commit message will be used
 presence: ''
 # link to the remote 
@@ -27,3 +28,9 @@ db:
   password: donnahaditcoming
   database: aryzona_db
   ssl: false
+
+# jaeger tracing config
+tracing:
+  enabled: false
+  endpoint: 'http://localhost:14268/api/traces'
+  service_name: 'aryzona-bot'

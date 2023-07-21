@@ -36,7 +36,7 @@ func ready(bot discord.BotAdapter) {
 		logger.Error(err)
 	}
 
-	if config.Config.Env == "prod" {
+	if config.Config.Env != "local" {
 		c, err := discord.OpenChatWithOwner()
 		if err != nil {
 			logger.Fatal(err)

@@ -27,6 +27,8 @@ func Start(commitHash, commitMessage string) {
 		logger.Fatal("Cannot connect to database", err)
 	}
 
+	initTracing()
+
 	go connectToDiscord()
 	go startHTTPServer()
 

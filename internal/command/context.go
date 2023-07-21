@@ -1,12 +1,14 @@
 package command
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
+	"go.opentelemetry.io/otel/trace"
 )
 
 const (
@@ -31,6 +33,8 @@ type Context struct {
 	TriggerType                  TriggerType
 
 	executionID string
+	trCtx       context.Context
+	span        trace.Span
 	trigger     *TriggerEvent
 }
 
