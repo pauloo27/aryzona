@@ -31,7 +31,6 @@ type Context struct {
 	TriggerType                  TriggerType
 
 	executionID string
-	processTime time.Duration
 	trigger     *TriggerEvent
 }
 
