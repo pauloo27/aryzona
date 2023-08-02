@@ -20,6 +20,7 @@ func handleCommand(bot discord.BotAdapter, self model.User, m model.Message) {
 	}
 
 	trigger := command.TriggerEvent{
+		Type:      command.CommandTriggerMessage,
 		EventTime: eventTime,
 		MessageID: m.ID(),
 		AuthorID:  m.Author().ID(),
