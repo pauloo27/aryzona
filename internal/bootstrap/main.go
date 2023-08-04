@@ -40,5 +40,5 @@ func Start(commitHash, commitMessage string) {
 	if err != nil {
 		logger.Error("Cannot disconnect... we are disconnecting anyway...", err)
 	}
-	logger.Success("Exiting...")
+	logger.Info("Exiting...")
 }
