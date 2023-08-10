@@ -33,50 +33,58 @@ var PlayCommand = command.Command{
 	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandPlay)
 
-		searchQuery := ctx.Args[0].(string)
+		input := ctx.Args[0].(string)
 
-		results, err := youtube.SearchFor(searchQuery, maxSearchResults)
-		if err != nil || len(results) == 0 {
-			logger.Warnf("Error searching for %s: %v", searchQuery, err)
-			return ctx.Error(t.SomethingWentWrong.Str())
+		if res := handleSpotifyLink(ctx, input, t); res != nil {
+			return *res
 		}
 
-		vc := ctx.Locals["vc"].(*voicer.Voicer)
-		if !vc.IsConnected() {
-			if err := vc.Connect(); err != nil {
-				logger.Error(err)
-				return ctx.Error(t.CannotConnect.Str())
-			}
-		} else {
-			ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
-			if !ok {
-				return ctx.Error(msg)
-			}
-		}
-
-		searchCtx := &SearchContext{
-			Context:     ctx,
-			SearchQuery: searchQuery,
-			Voicer:      vc,
-			Results:     results,
-		}
-
-		if len(results) == 1 {
-			toPlay, cmdResult := handleSingleResult(searchCtx)
-			vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
-			return cmdResult
-		}
-
-		resultCh := make(chan []playable.Playable)
-		cmdResult := handleMultipleResults(searchCtx, resultCh)
-
-		go func() {
-			toPlay := <-resultCh
-			vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
-		}()
-
-		return cmdResult
+		return searchYoutube(ctx, input, t)
 	},
+}
+
+func searchYoutube(ctx *command.Context, searchQuery string, t *i18n.CommandPlay) command.Result {
+	results, err := youtube.SearchFor(searchQuery, maxSearchResults)
+	if err != nil || len(results) == 0 {
+		logger.Warnf("Error searching for %s: %v", searchQuery, err)
+		return ctx.Error(t.SomethingWentWrong.Str())
+	}
+
+	vc := ctx.Locals["vc"].(*voicer.Voicer)
+	if !vc.IsConnected() {
+		if err := vc.Connect(); err != nil {
+			logger.Error(err)
+			return ctx.Error(t.CannotConnect.Str())
+		}
+	} else {
+		ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
+		if !ok {
+			return ctx.Error(msg)
+		}
+	}
+
+	searchCtx := &SearchContext{
+		Context:     ctx,
+		SearchQuery: searchQuery,
+		Voicer:      vc,
+		Results:     results,
+	}
+
+	if len(results) == 1 {
+		toPlay, cmdResult := handleSingleResult(searchCtx)
+		vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
+		return cmdResult
+	}
+
+	resultCh := make(chan []playable.Playable)
+	cmdResult := handleMultipleResults(searchCtx, resultCh)
+
+	go func() {
+		toPlay := <-resultCh
+		vc.AppendManyToQueue(ctx.AuthorID, toPlay...)
+	}()
+
+	return cmdResult
 }
 
 func handleSingleResult(ctx *SearchContext) ([]playable.Playable, command.Result) {
