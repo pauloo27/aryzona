@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	SpotifyTrackRe    = regexp.MustCompile(`^https?:\/\/open.spotify.com\/track\/([^/]+)$`)
-	SpotifyPlaylistRe = regexp.MustCompile(`^https?:\/\/open.spotify.com\/playlist\/([^/]+)$`)
+	SpotifyTrackRe = regexp.MustCompile(`^https?:\/\/open.spotify.com\/track\/([^/]+)$`)
 
 	sfy *spotify.Spotify
 )
