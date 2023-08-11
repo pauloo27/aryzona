@@ -17,7 +17,6 @@ func preStart(commitHash, commitMessage string) {
 	}
 
 	loadGitInfo(commitHash, commitMessage)
-	listenToLog()
 }
 
 func Start(commitHash, commitMessage string) {
