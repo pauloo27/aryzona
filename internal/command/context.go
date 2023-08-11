@@ -54,11 +54,23 @@ func (ctx *Context) EditComplexMessage(message *model.ComplexMessage) error {
 	return ctx.trigger.Edit(ctx, message)
 }
 
+func (ctx *Context) appendExecutionInfoToEmbed(embed *model.Embed) []*model.Embed {
+	took := ctx.Lang.Took.Str(time.Since(ctx.startTime).Truncate(time.Second))
+	extraFooter := fmt.Sprintf("%s • %s", took, ctx.executionID)
+
+	if embed.Footer == "" {
+		embed.Footer = extraFooter
+	} else {
+		embed.Footer = fmt.Sprintf("%s • %s", embed.Footer, extraFooter)
+	}
+	return []*model.Embed{embed}
+}
+
 func (ctx *Context) Embed(embed *model.Embed) Result {
 	return Result{
 		Success: true,
 		Message: &model.ComplexMessage{
-			Embeds: []*model.Embed{embed},
+			Embeds: ctx.appendExecutionInfoToEmbed(embed),
 		},
 	}
 }
@@ -68,7 +80,7 @@ func (ctx *Context) SuccessEmbed(embed *model.Embed) Result {
 	return Result{
 		Success: true,
 		Message: &model.ComplexMessage{
-			Embeds: []*model.Embed{embed},
+			Embeds: ctx.appendExecutionInfoToEmbed(embed),
 		},
 	}
 }
@@ -89,7 +101,7 @@ func (ctx *Context) ErrorEmbed(embed *model.Embed) Result {
 	return Result{
 		Success: false,
 		Message: &model.ComplexMessage{
-			Embeds: []*model.Embed{embed},
+			Embeds: ctx.appendExecutionInfoToEmbed(embed),
 		},
 	}
 }
