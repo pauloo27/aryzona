@@ -66,3 +66,5 @@ require (
 )
 
 replace github.com/diamondburned/arikawa/v3 => github.com/pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b
+
+replace github.com/kkdai/youtube/v2 => github.com/ItsClairton/youtube/v2 v2.7.7-0.20230812011820-2f934ba11ce5
