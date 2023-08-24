@@ -1,4 +1,4 @@
-package audio
+package play
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ type PlayableInfo struct {
 	Common      *i18n.Common
 }
 
-func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
+func BuildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
 	playable := info.Playable
 	vc := info.Voicer
 	requesterID := info.RequesterID
@@ -66,7 +66,7 @@ func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
 		}
 	}
 
-	eta := calcETA(playable, vc)
+	eta := CalcETA(playable, vc)
 
 	if eta == -1 {
 		embed.WithFieldInline(
@@ -96,7 +96,7 @@ func buildPlayableInfoEmbed(info PlayableInfo) *model.Embed {
 	return embed
 }
 
-func calcETA(playable playable.Playable, vc *voicer.Voicer) time.Duration {
+func CalcETA(playable playable.Playable, vc *voicer.Voicer) time.Duration {
 	if vc == nil {
 		return 0
 	}

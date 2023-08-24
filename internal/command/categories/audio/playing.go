@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/categories/audio/play"
 	"github.com/pauloo27/aryzona/internal/command/validations"
 	"github.com/pauloo27/aryzona/internal/core/f"
 	"github.com/pauloo27/aryzona/internal/discord"
@@ -29,8 +30,8 @@ var PlayingCommand = command.Command{
 		playing := ctx.Locals["playing"].(playable.Playable)
 		requesterID := ctx.Locals["requesterID"].(string)
 
-		embed := buildPlayableInfoEmbed(
-			PlayableInfo{
+		embed := play.BuildPlayableInfoEmbed(
+			play.PlayableInfo{
 				Playable:    playing,
 				Voicer:      vc,
 				RequesterID: requesterID,
@@ -52,7 +53,7 @@ var PlayingCommand = command.Command{
 				var etaStr string
 				playable := item.Playable
 
-				eta := calcETA(playable, vc)
+				eta := play.CalcETA(playable, vc)
 				if eta == -1 {
 					etaStr = t.PlayingInfo.ETANever.Str()
 				} else {

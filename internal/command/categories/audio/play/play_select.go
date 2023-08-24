@@ -1,4 +1,4 @@
-package audio
+package play
 
 import (
 	"fmt"
@@ -369,7 +369,7 @@ func buildSelectedResultEmbed(ctx *SearchContext, index int) *model.Embed {
 
 	result := ctx.Results[index].ToPlayable()[0]
 
-	return buildPlayableInfoEmbed(
+	return BuildPlayableInfoEmbed(
 		PlayableInfo{
 			Playable:    result,
 			Voicer:      ctx.Voicer,

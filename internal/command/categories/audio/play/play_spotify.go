@@ -1,4 +1,4 @@
-package audio
+package play
 
 import (
 	"regexp"
@@ -63,7 +63,7 @@ func handleSpotifyLink(ctx *command.Context, link string, t *i18n.CommandPlay) *
 	vc.AppendManyToQueue(ctx.AuthorID, results[0].ToPlayable()...)
 
 	res = ctx.SuccessEmbed(
-		buildPlayableInfoEmbed(
+		BuildPlayableInfoEmbed(
 			PlayableInfo{
 				Playable:    results[0].ToPlayable()[0],
 				Voicer:      vc,

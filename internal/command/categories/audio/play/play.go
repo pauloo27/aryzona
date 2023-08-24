@@ -1,4 +1,4 @@
-package audio
+package play
 
 import (
 	"github.com/pauloo27/aryzona/internal/command"
@@ -108,7 +108,7 @@ func handleSingleResult(ctx *SearchContext) ([]playable.Playable, command.Result
 	}
 
 	cmdResult := ctx.SuccessEmbed(
-		buildPlayableInfoEmbed(
+		BuildPlayableInfoEmbed(
 			PlayableInfo{
 				Playable:    displayResult,
 				Voicer:      ctx.Voicer,

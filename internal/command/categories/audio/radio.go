@@ -2,6 +2,7 @@ package audio
 
 import (
 	"github.com/pauloo27/aryzona/internal/command"
+	"github.com/pauloo27/aryzona/internal/command/categories/audio/play"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/command/validations"
 	"github.com/pauloo27/aryzona/internal/discord/model"
@@ -55,8 +56,8 @@ var RadioCommand = command.Command{
 				return ctx.Error(msg)
 			}
 		}
-		embed := buildPlayableInfoEmbed(
-			PlayableInfo{
+		embed := play.BuildPlayableInfoEmbed(
+			play.PlayableInfo{
 				Playable:    channel,
 				RequesterID: ctx.AuthorID,
 				T:           t.PlayingInfo,
