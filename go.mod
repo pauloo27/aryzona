@@ -1,6 +1,6 @@
 module github.com/pauloo27/aryzona
 
-go 1.19
+go 1.21
 
 require (
 	github.com/ReneKroon/ttlcache/v2 v2.11.0
