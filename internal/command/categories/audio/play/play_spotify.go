@@ -26,7 +26,7 @@ func handleSpotifyLink(ctx *command.Context, link string, t *i18n.CommandPlay) *
 	}
 
 	vc := ctx.Locals["vc"].(*voicer.Voicer)
-	trackId := matches[1]
+	trackID := matches[1]
 
 	var res command.Result
 
@@ -37,7 +37,7 @@ func handleSpotifyLink(ctx *command.Context, link string, t *i18n.CommandPlay) *
 		)
 	}
 
-	track, err := sfy.GetTrack(trackId)
+	track, err := sfy.GetTrack(trackID)
 
 	if err != nil {
 		logger.Error(err)

@@ -50,9 +50,9 @@ func TestGetPlaylist(t *testing.T) {
 	assert.Equal(t, "mauriciofsnts", playlist.Owner.DisplayName)
 
 	assert.Len(t, playlist.Images, 3)
-	assert.NotEmpty(t, playlist.Images[0].Url)
-	assert.NotEmpty(t, playlist.Images[1].Url)
-	assert.NotEmpty(t, playlist.Images[2].Url)
+	assert.NotEmpty(t, playlist.Images[0].URL)
+	assert.NotEmpty(t, playlist.Images[1].URL)
+	assert.NotEmpty(t, playlist.Images[2].URL)
 
 	assert.NotNil(t, playlist.Tracks)
 	assert.Greater(t, playlist.Tracks.Total, 25)

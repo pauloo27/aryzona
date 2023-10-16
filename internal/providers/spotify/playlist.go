@@ -7,7 +7,7 @@ import (
 type Playlist struct {
 	Name   string `json:"name"`
 	Images []struct {
-		Url    string `json:"url"`
+		URL    string `json:"url"`
 		Height int    `json:"height"`
 		Width  int    `json:"width"`
 	} `json:"images"`
