@@ -93,6 +93,7 @@ func (e *EncodeSession) run() error {
 		ffmpegArgs = commonArgs
 	}
 
+	/* #nosec GG204 */
 	ffmpeg := exec.Command("ffmpeg", ffmpegArgs...)
 
 	if e.reader != nil {

@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/pauloo27/aryzona/internal/providers/livescore"
 	"github.com/go-chi/chi/v5"
+	"github.com/pauloo27/aryzona/internal/providers/livescore"
 )
 
 const (
@@ -70,9 +70,9 @@ func RenderBanner(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/* #nosec GG107 */
 func loadTeamImg(teamID string) (image.Image, error) {
 	url := livescore.GetTeamImgURL(teamID)
+	/* #nosec GG107 */
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err

@@ -66,9 +66,9 @@ func MustGetLanguage(name LanguageName) *Language {
 	return lang
 }
 
-/* #nosec G304 the name does not come from user input */
 func loadLanguage(name LanguageName) (*Language, error) {
 	fileName := fmt.Sprintf("%s/%s.json", I18nRootDir, name)
+	/* #nosec G304 the name does not come from user input */
 	data, err := os.ReadFile(fileName)
 	if err != nil {
 		return nil, err
@@ -130,8 +130,8 @@ func loadLanguage(name LanguageName) (*Language, error) {
 type RawJSONMap map[string]any
 
 var (
-	ErrInvalidKeyType   = errors.New("invalid key type")
-	ErrInvalidMapAccess = errors.New("invalid map access")
+	ErrInvalidKeyType     = errors.New("invalid key type")
+	ErrInvalidMapAccess   = errors.New("invalid map access")
 	ErrInvalidArrayAccess = errors.New("invalid array access")
 )
 

@@ -14,9 +14,9 @@ func GetString(url string) (string, error) {
 	return string(body), nil
 }
 
-/* #nosec GG107 */
 func Get(url string) ([]byte, error) {
 	var body []byte
+	/* #nosec GG107 */
 	res, err := http.Get(url)
 	if err != nil {
 		return body, err
