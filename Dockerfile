@@ -14,6 +14,8 @@ COPY assets assets
 COPY internal internal
 COPY cmd cmd
 
+RUN go mod download
+
 RUN make dist
 
 # STAGE: TARGET
