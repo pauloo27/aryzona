@@ -83,13 +83,21 @@ type CommandFollow struct {
 	FollowLimitReached Entry
 }
 
-type CommandScore struct {
+type CommandLive struct {
 	*Common
 	Definition *CommandDefinition
 
 	NoMatchesLive Entry
 	Title         Entry
+	Page          Entry
+	PageNotFound  Entry
 	Footer        Entry
+}
+
+type CommandScore struct {
+	*Common
+	Definition *CommandDefinition
+
 	MatchNotFound Entry
 	LiveUpdates   Entry
 }
@@ -124,7 +132,7 @@ type CommandNews struct {
 	*Common
 	Definition *CommandDefinition
 
-	Title Entry
+	Title   Entry
 	Unknown Entry
 	SeeMore Entry
 }

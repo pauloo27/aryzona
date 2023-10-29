@@ -7,7 +7,8 @@ var Fun = command.Category{
 	Emoji: "🎉",
 	Commands: []*command.Command{
 		&PickCommand, &EvenCommand, &RollCommand, &ScoreCommand,
-		&NewsCommand, &JokeCommand, &FollowCommand, &UnFollowCommand, &XkcdCommand,
+		&LiveCommand, &NewsCommand, &JokeCommand, &FollowCommand,
+		&UnFollowCommand, &XkcdCommand,
 	},
 }
 

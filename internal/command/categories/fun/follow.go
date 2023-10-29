@@ -22,8 +22,7 @@ var (
 )
 
 var FollowCommand = command.Command{
-	Name:    "follow",
-	Aliases: []string{"live"},
+	Name: "follow",
 	Parameters: []*command.Parameter{
 		{
 			Name:     "game",

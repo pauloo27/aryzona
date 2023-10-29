@@ -213,10 +213,24 @@
                 ]
             }
         },
+        "live": {
+            "definition": {
+                "name": "agora",
+                "description": "Lista os jogos ao vivo",
+                "parameters": [
+                    {
+                        "name": "página",
+                        "description": "A página a ser listada"
+                    }
+                ]
+            },
+            "noMatchesLive": "Nenhum jogo acontecendo agora",
+            "title": "{0:emoji} Jogos recentes:",
+            "page": "Página {0:page} de {1:total_pages}",
+            "pageNotFound": "Página não encontrada",
+            "footer": "Use `{0:prefix}{1:command} <nome do time>` para ver mais informações sobre a partida"
+        },
         "score": {
-            "noMatchesLive": "Nenhuma partida ao vivo agora",
-            "title": "{0:emoji} Partidas ao vivo:",
-            "footer": "Use `{0:prefix}{1:command} <nome do time>` para ver mais informações sobre uma partida",
             "matchNotFound": "Partida não encontrada",
             "liveUpdates": "Use `{0:prefix}follow {1:team_name}` para receber atualizações ao vivo sobre essa partida",
             "definition": {

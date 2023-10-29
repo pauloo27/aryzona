@@ -17,44 +17,16 @@ var ScoreCommand = command.Command{
 	Parameters: []*command.Parameter{
 		{
 			Name:     "game",
-			Required: false,
+			Required: true,
 			Type:     parameters.ParameterText,
 		},
 	},
 	Handler: func(ctx *command.Context) command.Result {
 		t := ctx.T.(*i18n.CommandScore)
 
-		if len(ctx.Args) == 1 {
-			return showMatchInfo(ctx, t)
-		}
+		return showMatchInfo(ctx, t)
 
-		return ListLiveMatches(ctx, t)
 	},
-}
-
-func ListLiveMatches(ctx *command.Context, t *i18n.CommandScore) command.Result {
-	matches, err := livescore.ListLives()
-	if err != nil {
-		return ctx.Error(err.Error())
-	}
-	if len(matches) == 0 {
-		return ctx.Error(t.NoMatchesLive.Str())
-	}
-	desc := strings.Builder{}
-	for _, match := range matches {
-		desc.WriteString(fmt.Sprintf("%s **%s** ||(%d) x (%d)|| **%s**\n",
-			match.Time,
-			match.T1.Name, match.T1Score,
-			match.T2Score, match.T2.Name,
-		))
-	}
-
-	return ctx.SuccessEmbed(
-		model.NewEmbed().
-			WithTitle(t.Title.Str(":soccer:")).
-			WithFooter(t.Footer.Str(command.Prefix, ctx.UsedName)).
-			WithDescription(desc.String()),
-	)
 }
 
 func showMatchInfo(ctx *command.Context, t *i18n.CommandScore) command.Result {

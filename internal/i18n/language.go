@@ -103,6 +103,7 @@ type Commands struct {
 	Roll     *CommandRoll
 	Follow   *CommandFollow
 	UnFollow *CommandUnFollow
+	Live     *CommandLive
 	Score    *CommandScore
 	CNPJ     *CommandCNPJ
 	CPF      *CommandCPF

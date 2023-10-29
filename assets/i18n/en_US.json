@@ -302,6 +302,23 @@
             "unknown": "Unknown",
             "seeMore": "See more"
         },
+        "live": {
+            "definition": {
+                "name": "live",
+                "description": "List live matches",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "The page number"
+                    }
+                ]
+            },
+            "noMatchesLive": "No live matches found right now",
+            "title": "{0:emoji} Live matches:",
+            "page": "Page {0:page} of {1:total_pages}",
+            "pageNotFound": "Page not found",
+            "footer": "Use `{0:prefix}{1:command} <team name>` to get more info about a match"
+        },
         "score": {
             "definition": {
                 "name": "score",
@@ -313,9 +330,6 @@
                     }
                 ]
             },
-            "noMatchesLive": "No live matches found right now",
-            "title": "{0:emoji} Live matches:",
-            "footer": "Use `{0:prefix}{1:command} <team name>` to get more info about a match",
             "matchNotFound": "Match not found",
             "liveUpdates": "Use `{0:prefix}follow {1:team_name}` to get live updates about this match"
         },

@@ -11,7 +11,7 @@ import (
 
 const (
 	baseAssetURL = "https://lsm-static-prod.livescore.com/high"
-	baseAPIURL   = "https://prod-public-api.livescore.com/v1/api/react"
+	baseAPIURL   = "https://prod-public-api.livescore.com/v1/api/app"
 )
 
 type TeamInfo struct {
@@ -84,7 +84,7 @@ func ListLives() ([]*MatchInfo, error) {
 
 /* #nosec GG107 */
 func FetchMatchInfo(matchID string) (*MatchInfo, error) {
-	endpoint := fmt.Sprintf("%s/match-x/soccer/%s/-3", baseAPIURL, matchID)
+	endpoint := fmt.Sprintf("%s/scoreboard/soccer/%s", baseAPIURL, matchID)
 
 	res, err := httpClient.Get(endpoint)
 	if err != nil {
@@ -151,7 +151,7 @@ func parseEvents(team1, team2 *TeamInfo, matchData gjson.Result) []*Event {
 	// 3 is over time.
 	// 4 is penalties.
 	for half := 1; half <= 4; half++ {
-		for _, event := range matchData.Get(fmt.Sprintf("Incs.%d", half)).Array() {
+		for _, event := range matchData.Get(fmt.Sprintf("Incs-s.%d", half)).Array() {
 			events = append(events, parseEvent(half, team1, team2, event)...)
 		}
 	}
