@@ -2,12 +2,11 @@
 
 The one and only Discord Bot that is proudly Flamenguista.
 
-[![Translation status](https://i18n.db.cafe/widgets/aryzona/-/bot/287x66-black.png)](https://i18n.db.cafe/projects/aryzona/bot/)
-
 > ⚠ I am mentally unstable, so I may `git rebase` on the master branch. Deal with it
 
 ## Features
 
+- multi-language support (currently only english and portuguese)
 - play Flamengo's matches live (using the `!radio globo-rj`)
 - fetch live soccer scores (`!live`)
 - random animals (`!dog`, `!cat`, `!fox`)
