@@ -2,6 +2,7 @@ package fun
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/pauloo27/aryzona/internal/command"
@@ -47,7 +48,7 @@ func ListLiveMatches(ctx *command.Context, t *i18n.CommandLive) command.Result {
 
 	desc := strings.Builder{}
 
-	totalPages := len(matches) / PAGE_SIZE
+	totalPages := int(math.Ceil(float64(len(matches)) / float64(PAGE_SIZE)))
 
 	if page > totalPages {
 		return ctx.Error(t.PageNotFound.Str())
@@ -58,7 +59,14 @@ func ListLiveMatches(ctx *command.Context, t *i18n.CommandLive) command.Result {
 		desc.WriteString("\n\n")
 	}
 
-	for _, match := range matches[(page-1)*PAGE_SIZE : page*PAGE_SIZE] {
+	var pageItems []*livescore.MatchInfo
+	if len(matches) > PAGE_SIZE {
+		pageItems = matches[(page-1)*PAGE_SIZE : page*PAGE_SIZE]
+	} else {
+		pageItems = matches
+	}
+
+	for _, match := range pageItems {
 		desc.WriteString(fmt.Sprintf("%s **%s** %d x %d **%s**\n",
 			match.Time,
 			match.T1.Name, match.T1Score,
