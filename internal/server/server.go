@@ -18,7 +18,7 @@ func StartHTTPServer() error {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
-	r.Use(middleware.Logger)
+	r.Use(loggerMiddleware)
 
 	route(r)
 
