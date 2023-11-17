@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"time"
 
 	"github.com/lmittmann/tint"
 	gonanoid "github.com/matoous/go-nanoid/v2"
@@ -62,7 +63,29 @@ func HandleCommand(
 		span:        span,
 	}
 
+	slog.Info(
+		"Got command",
+		"executionID", executionID,
+		"name", command.Name,
+		"args", args,
+		"type", trigger.Type,
+		"author", trigger.AuthorID,
+		"guild", trigger.GuildID,
+		"channel", trigger.Channel.ID(),
+		"message", trigger.MessageID,
+		"eventTime", trigger.EventTime.Format(time.DateTime),
+		"lang", trigger.PreferedLanguage,
+	)
+
 	result := executeCommand(ctx, command)
+
+	slog.Info(
+		"Command executed",
+		"executionID", executionID,
+		"name", command.Name,
+		"success", result.Success,
+		"took", time.Since(ctx.startTime),
+	)
 
 	if result.Success {
 		span.SetStatus(codes.Ok, "Success")
