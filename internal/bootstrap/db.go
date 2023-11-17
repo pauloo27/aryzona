@@ -32,7 +32,7 @@ func connectToDB() error {
 		os.Exit(1)
 	}
 
-	slog.Info("Migrationg database...")
+	slog.Info("Migrating database...")
 	if err = conn.Migrate(); err != nil {
 		slog.Error("Failed to migrate database", tint.Err(err))
 		return err
