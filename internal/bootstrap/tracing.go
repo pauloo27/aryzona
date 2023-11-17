@@ -1,14 +1,17 @@
 package bootstrap
 
 import (
+	"log/slog"
+	"os"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/tracing"
-	"github.com/pauloo27/logger"
 )
 
 func initTracing() {
 	if !config.Config.Tracing.Enabled {
-		logger.Info("Tracing is disabled")
+		slog.Info("Tracing is disabled")
 		tracing.DisableTracer()
 		return
 	}
@@ -19,7 +22,8 @@ func initTracing() {
 		config.Config.Env,
 	)
 	if err != nil {
-		logger.Fatal(err)
+		slog.Error("Cannot init tracer", tint.Err(err))
+		os.Exit(1)
 	}
-	logger.Success("Tracing enabled")
+	slog.Info("Tracing enabled")
 }

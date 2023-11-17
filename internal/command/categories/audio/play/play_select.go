@@ -2,10 +2,12 @@ package play
 
 import (
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/core/f"
 	"github.com/pauloo27/aryzona/internal/core/routine"
@@ -13,7 +15,6 @@ import (
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 	k "github.com/pauloo27/toolkit"
 )
 
@@ -160,7 +161,7 @@ func handleConfirmationInteraction(ctx *SearchContext, msg *model.ComplexMessage
 				},
 			)
 			if err != nil {
-				logger.Error(err)
+				slog.Error("Cannot edit message", tint.Err(err))
 			}
 			command.RemoveInteractionHandler(ctx.MessageID)
 		}
@@ -316,7 +317,7 @@ func handlePlayOtherInteraction(ctx *SearchContext, msg *model.ComplexMessage) c
 				},
 			)
 			if err != nil {
-				logger.Error(err)
+				slog.Error("Cannot edit message", tint.Err(err))
 			}
 			command.RemoveInteractionHandler(ctx.MessageID)
 		}
@@ -335,7 +336,7 @@ func handlePlayOtherInteraction(ctx *SearchContext, msg *model.ComplexMessage) c
 		} else {
 			selectedIndex, err = strconv.Atoi(strings.TrimPrefix(id, ActionSelect))
 			if err != nil {
-				logger.Error(err)
+				slog.Error("Cannot convert id to string", "id", id, tint.Err(err))
 				selectedIndex = -1
 			}
 		}

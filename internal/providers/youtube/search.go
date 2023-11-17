@@ -2,15 +2,16 @@ package youtube
 
 import (
 	"fmt"
+	"log/slog"
 	"net/url"
 	"sync"
 	"time"
 
 	yt "github.com/kkdai/youtube/v2"
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/core/h"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
-	"github.com/pauloo27/logger"
 	"github.com/tidwall/gjson"
 )
 
@@ -74,7 +75,7 @@ func loadResults(ids []string) []*SearchResult {
 			defer wg.Done()
 			vid, err := defaultClient.GetVideo(id)
 			if err != nil {
-				logger.Warnf("error getting video %s: %s", id, err)
+				slog.Warn("Error getting video", "id", id, tint.Err(err))
 				return
 			}
 			results[i] = videoAsSearchResult(vid)

@@ -1,13 +1,16 @@
 package bootstrap
 
 import (
+	"log/slog"
+	"os"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/data/db"
-	"github.com/pauloo27/logger"
 )
 
 func connectToDB() error {
-	logger.Info("Connecting to database...")
+	slog.Info("Connecting to database...")
 	conn, err := db.NewDB(&db.DBConfig{
 		Host:     config.Config.DB.Host,
 		Port:     config.Config.DB.Port,
@@ -23,15 +26,17 @@ func connectToDB() error {
 
 	err = conn.Ping()
 	if err == nil {
-		logger.Success("Connected to database")
+		slog.Info("Connected to database")
 	} else {
-		logger.Fatalf("Failed to connect to database: %s", err.Error())
+		slog.Error("Failed to connect to database", "err", err.Error())
+		os.Exit(1)
 	}
 
-	logger.Info("Migrationg database...")
+	slog.Info("Migrationg database...")
 	if err = conn.Migrate(); err != nil {
+		slog.Error("Failed to migrate database", tint.Err(err))
 		return err
 	}
-	logger.Success("Database migrated")
+	slog.Info("Database migrated")
 	return nil
 }

@@ -1,12 +1,14 @@
 package routine
 
-import "github.com/pauloo27/logger"
+import (
+	"log/slog"
+)
 
 func GoAndRecover(f func()) {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				logger.Error(err)
+				slog.Error("Go routine error recovered", "err", err)
 			}
 		}()
 		f()

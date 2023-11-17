@@ -1,6 +1,9 @@
 package audio
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/categories/audio/play"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
@@ -9,7 +12,6 @@ import (
 	"github.com/pauloo27/aryzona/internal/discord/voicer"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/radio"
-	"github.com/pauloo27/logger"
 )
 
 var RadioCommand = command.Command{
@@ -46,13 +48,13 @@ var RadioCommand = command.Command{
 
 		if !vc.IsConnected() {
 			if err := vc.Connect(); err != nil {
-				logger.Error(err)
+				slog.Error("Cannot connect", tint.Err(err))
 				return ctx.Error(t.CannotConnect.Str())
 			}
 		} else {
 			ok, msg := validations.MustBeOnSameVoiceChannel.Checker(ctx)
 			if !ok {
-				logger.Error(msg)
+				slog.Error("Validation failed", "msg", msg)
 				return ctx.Error(msg)
 			}
 		}

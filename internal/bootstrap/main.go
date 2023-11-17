@@ -1,19 +1,21 @@
 package bootstrap
 
 import (
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/discord"
-	"github.com/pauloo27/logger"
 )
 
 func preStart(commitHash, commitMessage string) {
 	err := config.Load()
 	if err != nil {
-		logger.Fatal("Cannot load config", err)
+		slog.Error("Cannot load config", tint.Err(err))
+		os.Exit(1)
 	}
 
 	loadGitInfo(commitHash, commitMessage)
@@ -21,9 +23,11 @@ func preStart(commitHash, commitMessage string) {
 
 func Start(commitHash, commitMessage string) {
 	preStart(commitHash, commitMessage)
+	setupLog(config.Config.LogType, config.Config.LogLevel)
 
 	if err := connectToDB(); err != nil {
-		logger.Fatal("Cannot connect to database", err)
+		slog.Error("Cannot connect to database", tint.Err(err))
+		os.Exit(1)
 	}
 
 	initTracing()
@@ -37,7 +41,7 @@ func Start(commitHash, commitMessage string) {
 	<-stop
 	err := discord.Bot.Stop()
 	if err != nil {
-		logger.Error("Cannot disconnect... we are disconnecting anyway...", err)
+		slog.Error("Cannot disconnect... we are disconnecting anyway...", tint.Err(err))
 	}
-	logger.Info("Exiting...")
+	slog.Info("Exiting...")
 }

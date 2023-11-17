@@ -1,9 +1,11 @@
 package radio
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/pauloo27/aryzona/internal/providers/youtube"
-	"github.com/pauloo27/logger"
 )
 
 type YouTubeRadio struct {
@@ -53,7 +55,7 @@ func (r YouTubeRadio) GetFullTitle() (title, artist string) {
 func (r YouTubeRadio) GetPlayable() playable.Playable {
 	vid, err := youtube.GetVideo(r.URL)
 	if err != nil {
-		logger.Error("Error getting video: ", err)
+		slog.Error("Error getting video", tint.Err(err))
 	}
 	return vid
 }

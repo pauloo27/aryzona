@@ -2,11 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/data/db"
 	"github.com/pauloo27/aryzona/internal/discord"
-	"github.com/pauloo27/logger"
 )
 
 func Health(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +31,6 @@ func Health(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewEncoder(w).Encode(status)
 	if err != nil {
-		logger.Error(err)
+		slog.Error("Cannot encode status", tint.Err(err))
 	}
 }

@@ -2,14 +2,15 @@ package command
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
+	"github.com/lmittmann/tint"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/pauloo27/aryzona/internal/data/services"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 	"go.opentelemetry.io/otel/codes"
 )
 
@@ -77,7 +78,7 @@ func HandleCommand(
 
 	if err != nil {
 		replySpan.SetStatus(codes.Error, "Error")
-		logger.Errorf("Cannot reply to command %s: %v", ctx.executionID, err)
+		slog.Error("Cannot reply to command", "executionID", ctx.executionID, tint.Err(err))
 	}
 	replySpan.SetStatus(codes.Ok, "Success")
 }
@@ -92,7 +93,7 @@ func executeCommand(
 		addEventToSpan(ctx.span, "DeferResponse")
 		err := ctx.trigger.DeferResponse()
 		if err != nil {
-			logger.Error("Cannot defer response:", err)
+			slog.Error("Cannot defer response", tint.Err(err))
 		}
 	}
 
@@ -148,7 +149,7 @@ func executeCommand(
 
 	defer func() {
 		if err := recover(); err != nil {
-			logger.Errorf("Panic catch while running command %s: %v", command.Name, err)
+			slog.Error("Panic catch while running command", "commandName", command.Name, "err", err)
 		}
 	}()
 
@@ -193,13 +194,13 @@ func executeCommand(
 func HandleInteraction(fullID, userID string) *model.ComplexMessage {
 	splitted := strings.Split(fullID, ":")
 	if len(splitted) != 2 {
-		logger.Error("Invalid interaction id", fullID)
+		slog.Error("Invalid interaction id", "fullID", fullID)
 		return nil
 	}
 	baseID, id := splitted[0], splitted[1]
 	ctx, ok := commandInteractionMap[baseID]
 	if !ok {
-		logger.Error("Cannot find interaction adapter for id", baseID)
+		slog.Error("Cannot find interaction adapter for id", "baseID", baseID)
 		return nil
 	}
 	newMessage, done := ctx.interactionHandler(id, userID, baseID)

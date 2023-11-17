@@ -2,13 +2,14 @@ package fun
 
 import (
 	"fmt"
+	"log/slog"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/news"
-	"github.com/pauloo27/logger"
 )
 
 type NewsFactory func() (*news.NewsFeed, error)
@@ -46,9 +47,10 @@ var NewsCommand = command.Command{
 		t := ctx.T.(*i18n.CommandNews)
 
 		source := ctx.Args[0].(string)
+		// goofy ahh syntax
 		news, err := Sources[source]()
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot load news source", tint.Err(err))
 			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 

@@ -3,14 +3,15 @@ package fun
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"strconv"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/livescore"
-	"github.com/pauloo27/logger"
 )
 
 const (
@@ -36,7 +37,7 @@ var FollowCommand = command.Command{
 		teamNameOrID := ctx.Args[0].(string)
 		match, err := getMatchByTeamNameOrID(teamNameOrID)
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot get match", tint.Err(err))
 			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 

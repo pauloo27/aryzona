@@ -1,10 +1,10 @@
 package scheduler
 
 import (
+	"log/slog"
 	"time"
 
 	"github.com/pauloo27/aryzona/internal/core/routine"
-	"github.com/pauloo27/logger"
 )
 
 type TaskCallback func(params ...any)
@@ -43,7 +43,7 @@ func scheduleLoop(delay time.Duration) {
 			go func() {
 				defer func() {
 					if err := recover(); err != nil {
-						logger.Errorf("scheduler caught %v", err)
+						slog.Error("scheduler caught error", "err", err)
 					}
 				}()
 				task.Callback()

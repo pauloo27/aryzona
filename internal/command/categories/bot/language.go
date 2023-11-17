@@ -2,14 +2,15 @@ package bot
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/data/services"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 )
 
 var LanguageCommand = command.Command{
@@ -74,7 +75,7 @@ func selectLanguage(ctx *command.Context) command.Result {
 
 	err := services.User.SetPreferredLang(ctx.AuthorID, lang.Name)
 	if err != nil {
-		logger.Error(err)
+		slog.Error("Cannot set preferred lang", tint.Err(err))
 		return ctx.Error(t.SomethingWentWrong.Str())
 	}
 

@@ -1,9 +1,11 @@
 package animals
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/providers/animal"
-	"github.com/pauloo27/logger"
 )
 
 var DogCommand = command.Command{
@@ -11,7 +13,7 @@ var DogCommand = command.Command{
 	Handler: func(ctx *command.Context) command.Result {
 		url, err := animal.GetRandomDog()
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot get random dog", tint.Err(err))
 			return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		}
 		return ctx.ReplyRaw(url)

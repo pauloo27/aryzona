@@ -1,11 +1,13 @@
 package audio
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/validations"
 	"github.com/pauloo27/aryzona/internal/discord/voicer"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 )
 
 var StopCommand = command.Command{
@@ -17,7 +19,7 @@ var StopCommand = command.Command{
 
 		err := vc.Disconnect()
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot disconnect", tint.Err(err))
 			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 		return ctx.Success(t.Stopped.Str())

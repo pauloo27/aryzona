@@ -1,15 +1,16 @@
 package play
 
 import (
+	"log/slog"
 	"regexp"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/discord/voicer"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/spotify"
 	"github.com/pauloo27/aryzona/internal/providers/youtube"
-	"github.com/pauloo27/logger"
 )
 
 var (
@@ -40,7 +41,7 @@ func handleSpotifyLink(ctx *command.Context, link string, t *i18n.CommandPlay) *
 	track, err := sfy.GetTrack(trackID)
 
 	if err != nil {
-		logger.Error(err)
+		slog.Error("Cannot get spotify track", tint.Err(err))
 		res = ctx.Error(t.SomethingWentWrong.Str())
 		return &res
 	}
@@ -49,13 +50,13 @@ func handleSpotifyLink(ctx *command.Context, link string, t *i18n.CommandPlay) *
 
 	results, err := youtube.SearchFor(searchQuery, 1)
 	if err != nil {
-		logger.Error(err)
+		slog.Error("Cannot search youtube", tint.Err(err))
 		res = ctx.Error(t.SomethingWentWrong.Str())
 		return &res
 	}
 
 	if len(results) == 0 {
-		logger.Error(err)
+		slog.Error("No results found")
 		res = ctx.Error(t.SomethingWentWrong.Str())
 		return &res
 	}

@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"os"
 	"reflect"
 	"strings"
 
-	"github.com/pauloo27/logger"
+	"github.com/lmittmann/tint"
 )
 
 type LanguageName string
@@ -61,7 +62,8 @@ func GetLanguage(name LanguageName) (*Language, error) {
 func MustGetLanguage(name LanguageName) *Language {
 	lang, err := GetLanguage(name)
 	if err != nil {
-		logger.Fatal(err)
+		slog.Error("Cannot get language", tint.Err(err))
+		os.Exit(1)
 	}
 	return lang
 }

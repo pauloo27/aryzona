@@ -2,14 +2,15 @@ package listener
 
 import (
 	"fmt"
+	"log/slog"
 	"time"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/core/scheduler"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/event"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/discord/voicer"
-	"github.com/pauloo27/logger"
 )
 
 func init() {
@@ -115,7 +116,7 @@ func scheduleDisconnect(v *voicer.Voicer) {
 		60*time.Second,
 		func(params ...any) {
 			if err := v.Disconnect(); err != nil {
-				logger.Errorf("Cannot disconnect empty channel: %v", err)
+				slog.Error("Cannot disconnect empty channel", tint.Err(err))
 			}
 		},
 	)

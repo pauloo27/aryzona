@@ -1,19 +1,22 @@
 package listener
 
 import (
+	"log/slog"
+	"os"
 	"strings"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/event"
 	"github.com/pauloo27/aryzona/internal/discord/model"
-	"github.com/pauloo27/logger"
 )
 
 func init() {
 	err := discord.Bot.Listen(event.MessageCreated, messageCreated)
 	if err != nil {
-		logger.Fatal(err)
+		slog.Error("Cannot listen to message created event", tint.Err(err))
+		os.Exit(1)
 	}
 }
 

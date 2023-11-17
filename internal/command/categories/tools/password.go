@@ -1,12 +1,14 @@
 package tools
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 )
 
 var PasswordCommand = command.Command{
@@ -25,7 +27,7 @@ var PasswordCommand = command.Command{
 		password, err := generatePassword(length)
 
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot generate password", tint.Err(err))
 			return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 		}
 

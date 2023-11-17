@@ -2,13 +2,13 @@ package bot
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 	k "github.com/pauloo27/toolkit"
 	"github.com/pauloo27/toolkit/slices"
 )
@@ -48,7 +48,7 @@ func listCommands(ctx *command.Context) command.Result {
 		categoryName := cmd.GetCategory().Name
 		localizedCategoryName := t.Categories[categoryName].Str()
 		if localizedCategoryName == "" {
-			logger.Warnf("Missing category name for %s", categoryName)
+			slog.Warn("Missing localized category name", "category", categoryName)
 			localizedCategoryName = categoryName
 		}
 
@@ -147,7 +147,7 @@ func helpForCommand(ctx *command.Context) command.Result {
 				slices.Map(cmd.Validations, func(validation *command.Validation) string {
 					v, err := t.RawMap.Get("common", "validations", validation.Name, "description")
 					if err != nil {
-						logger.Errorf("Missing validation description for %s", validation.Name)
+						slog.Error("Missing validation description", "validation", validation.Name)
 						return validation.Name
 					}
 					return v.(string)

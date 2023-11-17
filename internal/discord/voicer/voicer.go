@@ -3,14 +3,15 @@ package voicer
 import (
 	"errors"
 	"io"
+	"log/slog"
 	"sync"
 	"time"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/audio/dca"
 	"github.com/pauloo27/aryzona/internal/discord"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/discord/voicer/queue"
-	"github.com/pauloo27/logger"
 )
 
 type Voicer struct {
@@ -127,7 +128,7 @@ func (v *Voicer) Disconnect() error {
 		v.Queue.Clear()
 		err = v.Voice.Disconnect()
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot disconnect", tint.Err(err))
 		}
 		v.Voice = nil
 	}
@@ -182,7 +183,7 @@ func (v *Voicer) Start() error {
 
 	err := <-done
 	if err != nil && err != io.EOF {
-		logger.Error(err)
+		slog.Error("Voicer had problems :(", tint.Err(err))
 	}
 
 	for {

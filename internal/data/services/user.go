@@ -2,12 +2,13 @@ package services
 
 import (
 	"errors"
+	"log/slog"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/data/db"
 	"github.com/pauloo27/aryzona/internal/data/db/entity"
 	"github.com/pauloo27/aryzona/internal/data/db/repos"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 )
 
 var User = &UserService{}
@@ -35,7 +36,7 @@ func (s *UserService) GetLanguage(userID, guildID string) i18n.LanguageName {
 	userNotFound := errors.Is(err, db.ErrNotFound)
 
 	if err != nil && !userNotFound {
-		logger.Error(err)
+		slog.Warn("Cannot load user from db", tint.Err(err))
 	}
 
 	if !userNotFound {
@@ -56,7 +57,7 @@ func (s *UserService) GetLanguage(userID, guildID string) i18n.LanguageName {
 	guildNotFound := errors.Is(err, db.ErrNotFound)
 
 	if err != nil && !guildNotFound {
-		logger.Error(err)
+		slog.Error("Cannot load guild from db", err)
 	}
 
 	if !guildNotFound {

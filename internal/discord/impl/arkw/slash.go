@@ -2,15 +2,17 @@ package arkw
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 	"strings"
 	"time"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/data/services"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 
 	"github.com/diamondburned/arikawa/v3/api"
 	dc "github.com/diamondburned/arikawa/v3/discord"
@@ -51,16 +53,16 @@ func registerCommands(bot ArkwBot) error {
 
 		defaultCmdLang := i18n.MustGetCommandDefinition(defaultLang, cmd.Name)
 		if defaultCmdLang == nil {
-			logger.Fatalf("Command %s not found in default language", cmd.Name)
-			break
+			slog.Error("Command not found in default language", "name", cmd.Name)
+			os.Exit(1)
 		}
 
 		otherCmdLangs := make([]*i18n.CommandDefinition, len(otherLangs))
 		for i, lang := range otherLangs {
 			otherCmdLangs[i] = i18n.MustGetCommandDefinition(lang, cmd.Name)
 			if otherCmdLangs[i] == nil {
-				logger.Fatalf("Command %s not found in language %s", cmd.Name, lang.Name)
-				return nil
+				slog.Error("Command not found in language", "command", cmd.Name, "lang", lang.Name)
+				os.Exit(1)
 			}
 		}
 
@@ -95,8 +97,8 @@ func registerCommands(bot ArkwBot) error {
 			}
 
 			if len(defaultCmdLang.SubCommands) <= i {
-				logger.Fatalf("Subcommand %s not found in default language", subCmd.Name)
-				return nil
+				slog.Error("Subcommand  not found in default language", "name", subCmd.Name)
+				os.Exit(1)
 			}
 
 			defaultSubCmdName := defaultCmdLang.SubCommands[i].Name.Str()
@@ -109,11 +111,11 @@ func registerCommands(bot ArkwBot) error {
 				langName := dc.Language(otherLangs[j].Name.DiscordName())
 
 				if len(l.SubCommands) <= i {
-					logger.Fatalf(
-						"Cannot find sub command %d for command %s in the language %s",
-						i, l.Name.Str(), langName,
+					slog.Error(
+						"Cannot find sub command for command in the language",
+						"subCommandIdx", i, "command", l.Name.Str(), "lang", langName,
 					)
-					return nil
+					os.Exit(1)
 				}
 				localizedSubCmdNames[langName] = l.SubCommands[i].Name.Str()
 				localizedSubCmdDescriptions[langName] = l.SubCommands[i].Description.Str()
@@ -183,7 +185,7 @@ func registerCommands(bot ArkwBot) error {
 					Type: api.DeferredMessageUpdate,
 				})
 				if err != nil {
-					logger.Error(err)
+					slog.Error("Cannot respond interaction", tint.Err(err))
 				}
 				return
 			}
@@ -214,12 +216,12 @@ func registerCommands(bot ArkwBot) error {
 				},
 			})
 			if err != nil {
-				logger.Error(err)
+				slog.Error("Cannot respond interaction", tint.Err(err))
 			}
 		case *dc.CommandInteraction:
 			cmd, ok := command.GetCommandMap()[data.Name]
 			if !ok {
-				logger.Error("Invalid slash command interaction received:", data.Name)
+				slog.Error("Invalid slash command interaction received", "name", data.Name)
 				return
 			}
 
@@ -255,7 +257,7 @@ func registerCommands(bot ArkwBot) error {
 					i.Sender().ID.String(), langName,
 				)
 				if err != nil {
-					logger.Error(err)
+					slog.Error("Cannot set last slash command locale", tint.Err(err))
 				}
 			}()
 
@@ -318,8 +320,8 @@ func mustGetStringChoises(arg *command.Parameter) (choises []dc.StringChoice) {
 
 func mustGetOption(param *command.Parameter, i int, lang languageContext) dc.CommandOption {
 	if len(lang.defaultLangCmd.Parameters) <= i {
-		logger.Fatalf("Cannot find parameter %d for command %s in the default language", i, lang.defaultLangCmd.Name)
-		return nil
+		slog.Error("Cannot find parameter for command in the default language", "idx", i, "command", lang.defaultLangCmd.Name)
+		os.Exit(1)
 	}
 
 	defaultParamName := lang.defaultLangCmd.Parameters[i].Name.Str()
@@ -332,8 +334,8 @@ func mustGetOption(param *command.Parameter, i int, lang languageContext) dc.Com
 		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
 
 		if len(l.Parameters) <= i {
-			logger.Fatalf("Cannot find parameter %d for command %s in the language %s", i, l.Name.Str(), langName)
-			return nil
+			slog.Error("Cannot find parameter for command in the language", "idx", i, "command", l.Name.Str(), "lang", langName)
+			os.Exit(1)
 		}
 		localizedParamName[langName] = l.Parameters[i].Name.Str()
 		localizedParamDescription[langName] = l.Parameters[i].Description.Str()
@@ -367,19 +369,20 @@ func mustGetOption(param *command.Parameter, i int, lang languageContext) dc.Com
 			Choices:                  mustGetIntegerChoises(param),
 		}
 	default:
-		logger.Fatalf("Cannot find discord type for %s", param.Type.BaseType.Name)
+		slog.Error("Cannot find discord type", "baseType", param.Type.BaseType.Name)
+		os.Exit(1)
 	}
 	return nil
 }
 
 func mustGetOptionValue(param *command.Parameter, subCmdIdx, paramIdx int, lang languageContext) dc.CommandOptionValue {
 	if len(lang.defaultLangCmd.SubCommands[subCmdIdx].Parameters) <= paramIdx {
-		logger.Fatalf(
-			"Cannot find parameter %d for command %s in the default language",
-			paramIdx,
-			lang.defaultLangCmd.Name,
+		slog.Error(
+			"Cannot find parameter for command in the default language",
+			"idx", paramIdx,
+			"lang", lang.defaultLangCmd.Name,
 		)
-		return nil
+		os.Exit(1)
 	}
 
 	defaultParamName := lang.defaultLangCmd.SubCommands[subCmdIdx].Parameters[paramIdx].Name.Str()
@@ -392,13 +395,13 @@ func mustGetOptionValue(param *command.Parameter, subCmdIdx, paramIdx int, lang 
 		langName := dc.Language(lang.otherLangs[j].Name.DiscordName())
 
 		if len(l.SubCommands[subCmdIdx].Parameters) <= paramIdx {
-			logger.Fatalf(
-				"Cannot find parameter %d for command %s in the language %s",
-				paramIdx,
-				l.Name.Str(),
-				langName,
+			slog.Error(
+				"Cannot find parameter for command in the language",
+				"idx", paramIdx,
+				"command", l.Name.Str(),
+				"lang", langName,
 			)
-			return nil
+			os.Exit(1)
 		}
 		localizedParamName[langName] = l.SubCommands[subCmdIdx].Parameters[paramIdx].Name.Str()
 		localizedParamDescription[langName] = l.SubCommands[subCmdIdx].Parameters[paramIdx].Description.Str()
@@ -432,7 +435,8 @@ func mustGetOptionValue(param *command.Parameter, subCmdIdx, paramIdx int, lang 
 			Choices:                  mustGetIntegerChoises(param),
 		}
 	default:
-		logger.Fatalf("Cannot find discord type for %s", param.Type.BaseType.Name)
+		slog.Error("Cannot find discord type", "baseType", param.Type.BaseType.Name)
+		os.Exit(1)
 	}
 	return nil
 }

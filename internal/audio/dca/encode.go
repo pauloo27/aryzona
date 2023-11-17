@@ -5,14 +5,15 @@ import (
 	"encoding/binary"
 	"errors"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 	"sync"
 	"time"
 
 	"github.com/jonas747/ogg"
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/core/routine"
-	"github.com/pauloo27/logger"
 
 	k "github.com/pauloo27/toolkit"
 )
@@ -55,7 +56,7 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 	routine.GoAndRecover(func() {
 		err := session.run()
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Session went bad", tint.Err(err))
 		}
 	})
 	return session
@@ -139,7 +140,7 @@ func (e *EncodeSession) run() error {
 			if loggedErr != "" {
 				message += ": " + loggedErr
 			}
-			logger.Error(message)
+			slog.Error("Ffmpeg crashed", "msg", message)
 		}
 
 		e.Lock()

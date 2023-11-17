@@ -2,13 +2,14 @@ package fun
 
 import (
 	"fmt"
+	"log/slog"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/core/f"
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/providers/xkcd"
-	"github.com/pauloo27/logger"
 )
 
 var XkcdCommand = command.Command{
@@ -53,7 +54,7 @@ var XkcdNumberSubCommand = command.Command{
 
 func sendComic(ctx *command.Context, comic *xkcd.Comic, err error) command.Result {
 	if err != nil {
-		logger.Error(err)
+		slog.Error("Cannot send comic", tint.Err(err))
 		return ctx.Error(ctx.Lang.SomethingWentWrong.Str())
 	}
 

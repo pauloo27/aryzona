@@ -1,10 +1,13 @@
 package bootstrap
 
 import (
+	"log/slog"
+	"os"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/discord"
-	"github.com/pauloo27/logger"
 
 	// import arikawa implementation
 	_ "github.com/pauloo27/aryzona/internal/discord/impl/arkw"
@@ -24,26 +27,29 @@ import (
 )
 
 func connectToDiscord() {
-	logger.Infof("Connecting to Discord using implementation %s...", discord.Bot.Implementation())
+	slog.Info("Connecting to Discord", "implementation", discord.Bot.Implementation())
 	err := discord.CreateBot(config.Config.Token)
 	if err != nil {
-		logger.Fatal(err)
+		slog.Error("Cannot create bot", tint.Err(err))
+		os.Exit(1)
 	}
 
 	err = discord.Bot.Start()
 	if err != nil {
-		logger.Fatal(err)
+		slog.Error("Cannot start bot", tint.Err(err))
+		os.Exit(1)
 	}
-	logger.Success("Connected to discord")
+	slog.Info("Connected to discord")
 
 	command.Prefix = config.Config.Prefix
 
-	logger.Info("Registering slash commands handlers...")
+	slog.Info("Registering slash commands handlers...")
 	err = discord.Bot.RegisterSlashCommands()
 	if err != nil {
-		logger.Fatal(err)
+		slog.Error("Cannot register slash commands", tint.Err(err))
+		os.Exit(1)
 	}
-	logger.Success("Slash commands created!")
+	slog.Info("Slash commands created!")
 
-	logger.Success("Up and running!")
+	slog.Info("Up and running!")
 }

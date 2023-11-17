@@ -1,5 +1,9 @@
 # command prefix
 prefix: '!'
+# log type: text, json, colored
+log_type: 'colored'
+# log level: debug, info, warn, error
+log_level: 'info'
 # bot secret token
 token: 'your secret token here'
 # some commands are owner only, so put your id here

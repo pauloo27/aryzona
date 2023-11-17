@@ -1,11 +1,13 @@
 package fun
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/livescore"
-	"github.com/pauloo27/logger"
 )
 
 var UnFollowCommand = command.Command{
@@ -40,7 +42,7 @@ var UnFollowCommand = command.Command{
 		teamNameOrID := ctx.Args[0].(string)
 		match, err := getMatchByTeamNameOrID(teamNameOrID)
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot get match", tint.Err(err))
 			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 		if match == nil {
@@ -48,7 +50,7 @@ var UnFollowCommand = command.Command{
 		}
 		liveMatch, err := livescore.GetLiveMatch(match.ID)
 		if err != nil {
-			logger.Error(err)
+			slog.Error("Cannot get live match", tint.Err(err))
 			return ctx.Error(t.SomethingWentWrong.Str())
 		}
 		err = liveMatch.RemoveListener(getListenerID(authorID, match.ID))

@@ -2,7 +2,9 @@ package fun
 
 import (
 	"errors"
+	"log/slog"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/core/f"
@@ -10,7 +12,6 @@ import (
 	"github.com/pauloo27/aryzona/internal/discord/model"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/dice"
-	"github.com/pauloo27/logger"
 )
 
 const (
@@ -39,7 +40,7 @@ var RollCommand = command.Command{
 		for i := 0; i < d.Dices; i++ {
 			luckyNumber, err := rnd.Rnd(d.Faces)
 			if err != nil {
-				logger.Error(err)
+				slog.Error("Cannot get random number", tint.Err(err))
 				return ctx.Error(t.SomethingWentWrong.Str())
 			}
 			// +1 since the dice starts at 1

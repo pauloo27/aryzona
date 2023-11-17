@@ -3,9 +3,10 @@ package command
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/i18n"
-	"github.com/pauloo27/logger"
 )
 
 var (
@@ -113,7 +114,7 @@ func mustGetLocalizedParamName(lang *i18n.Language, cmd *Command, param *Paramet
 	}
 
 	if err != nil {
-		logger.Errorf("Failed to get localized parameter name: %v", err)
+		slog.Error("Failed to get localized parameter name", tint.Err(err))
 		return param.Name
 	}
 

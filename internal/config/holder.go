@@ -1,9 +1,9 @@
 package config
 
 import (
+	"log/slog"
 	"os"
 
-	"github.com/pauloo27/logger"
 	"github.com/ghodss/yaml"
 	"github.com/joho/godotenv"
 	env "github.com/qiangxue/go-env"
@@ -19,21 +19,22 @@ const (
 
 func Load() error {
 	if _, err := os.Stat(yamlFilePath); err == nil {
-		logger.Infof("Found %s, loading...", yamlFilePath)
+		slog.Info("Yaml file located, loading", "path", yamlFilePath)
 		err = loadConfigFromYaml()
 		if err == nil {
-			logger.Success("Config loaded")
+			slog.Info("Config loaded")
 		}
 		return err
 	}
 
-	logger.Warnf("Config file %s not found, loading from environment...", yamlFilePath)
+	slog.Warn("Yaml config file not found, using environment...")
 
 	if _, err := os.Stat(envFilePath); err == nil {
-		logger.Infof("Found %s file, loading...", envFilePath)
+		slog.Info("Found env file, loading...", "path", envFilePath)
 		err := godotenv.Load(envFilePath)
 		if err != nil {
-			logger.Fatal(err)
+			slog.Error("Cannot load env file", err)
+			os.Exit(1)
 		}
 	}
 

@@ -1,6 +1,9 @@
 package play
 
 import (
+	"log/slog"
+
+	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/command"
 	"github.com/pauloo27/aryzona/internal/command/parameters"
 	"github.com/pauloo27/aryzona/internal/command/validations"
@@ -8,7 +11,6 @@ import (
 	"github.com/pauloo27/aryzona/internal/discord/voicer/playable"
 	"github.com/pauloo27/aryzona/internal/i18n"
 	"github.com/pauloo27/aryzona/internal/providers/youtube"
-	"github.com/pauloo27/logger"
 )
 
 const maxSearchResults = 5
@@ -46,14 +48,14 @@ var PlayCommand = command.Command{
 func searchYoutube(ctx *command.Context, searchQuery string, t *i18n.CommandPlay) command.Result {
 	results, err := youtube.SearchFor(searchQuery, maxSearchResults)
 	if err != nil || len(results) == 0 {
-		logger.Warnf("Error searching for %s: %v", searchQuery, err)
+		slog.Warn("Error searching", "query", searchQuery, tint.Err(err))
 		return ctx.Error(t.SomethingWentWrong.Str())
 	}
 
 	vc := ctx.Locals["vc"].(*voicer.Voicer)
 	if !vc.IsConnected() {
 		if err := vc.Connect(); err != nil {
-			logger.Error(err)
+			slog.Error("Cannot connect", tint.Err(err))
 			return ctx.Error(t.CannotConnect.Str())
 		}
 	} else {
