@@ -340,8 +340,6 @@ github.com/pact-foundation/pact-go v1.0.4/go.mod h1:uExwJY4kCzNPcHRj+hCR/HBbOOIw
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b h1:evOEyC031bgusPXo16j3184SF/M0MIwJpAHqScVrksQ=
 github.com/pauloo27/arikawa/v3 v3.0.0-20230321131420-61953514c36b/go.mod h1:+ifmDonP/JdBiUOzZmVReEjPTHDUSkyqqRRmjSf9NE8=
-github.com/pauloo27/logger v0.0.0-20230515014548-364273bcc15e h1:R+pybX9Hel+rELKM6Xv7lVpeXPOOmg+VJCWxIBNoiDg=
-github.com/pauloo27/logger v0.0.0-20230515014548-364273bcc15e/go.mod h1:MttfJxZYIstGocN28eDh94zCmBhVMvXyOh+6n7tbx9I=
 github.com/pauloo27/lyric v0.0.0-20230515020121-984bfe7441fa h1:Vk/Pk8z6kB1jt1NPUt8DBAv3bB9bAFyH1vbubu3kL70=
 github.com/pauloo27/lyric v0.0.0-20230515020121-984bfe7441fa/go.mod h1:5u7yteEqnbXkPkzmvI1CdUmtGL6Q0F3+xV5qxgxoNf8=
 github.com/pauloo27/toolkit v0.0.0-20230515014839-c9cac89ae368 h1:fce0ZfT/HHt1cP4gHVSi7yp5yBlWTH3ux+22Ny2EId4=
