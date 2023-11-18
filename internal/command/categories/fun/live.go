@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	PAGE_SIZE = 20
+	PageSize = 20
 )
 
 var LiveCommand = command.Command{
@@ -48,20 +48,20 @@ func ListLiveMatches(ctx *command.Context, t *i18n.CommandLive) command.Result {
 
 	desc := strings.Builder{}
 
-	totalPages := int(math.Ceil(float64(len(matches)) / float64(PAGE_SIZE)))
+	totalPages := int(math.Ceil(float64(len(matches)) / float64(PageSize)))
 
 	if page > totalPages {
 		return ctx.Error(t.PageNotFound.Str())
 	}
 
-	if len(matches) > PAGE_SIZE {
+	if len(matches) > PageSize {
 		desc.WriteString(t.Page.Str(page, totalPages))
 		desc.WriteString("\n\n")
 	}
 
 	var pageItems []*livescore.MatchInfo
-	if len(matches) > PAGE_SIZE {
-		pageItems = matches[(page-1)*PAGE_SIZE : page*PAGE_SIZE]
+	if len(matches) > PageSize {
+		pageItems = matches[(page-1)*PageSize : page*PageSize]
 	} else {
 		pageItems = matches
 	}
