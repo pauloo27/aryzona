@@ -3,8 +3,6 @@ package db
 import (
 	"fmt"
 
-	"github.com/pauloo27/aryzona/internal/data/db/entity"
-
 	// postgres driver
 	_ "github.com/lib/pq"
 	"xorm.io/xorm"
@@ -12,11 +10,6 @@ import (
 )
 
 var (
-	models = []any{
-		new(entity.Guild),
-		new(entity.User),
-	}
-
 	DB *DBConn
 )
 
