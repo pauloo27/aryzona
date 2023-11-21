@@ -19,6 +19,7 @@ require (
 	github.com/pauloo27/lyric v0.0.0-20230515020121-984bfe7441fa
 	github.com/pauloo27/toolkit v0.0.0-20230515014839-c9cac89ae368
 	github.com/qiangxue/go-env v1.0.1
+	github.com/rubenv/sql-migrate v1.5.2
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/gjson v1.14.0
 	go.opentelemetry.io/otel v1.16.0
@@ -36,6 +37,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/dop251/goja v0.0.0-20230828202809-3dbe69dd2b8e // indirect
+	github.com/go-gorp/gorp/v3 v3.1.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect

@@ -33,10 +33,12 @@ func connectToDB() error {
 	}
 
 	slog.Info("Migrating database...")
-	if err = conn.Migrate(); err != nil {
+	migrationCount, err := conn.Migrate()
+
+	if err != nil {
 		slog.Error("Failed to migrate database", tint.Err(err))
 		return err
 	}
-	slog.Info("Database migrated")
+	slog.Info("Database migrated", "migrations", migrationCount)
 	return nil
 }

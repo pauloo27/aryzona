@@ -54,10 +54,6 @@ func NewDB(config *DBConfig) (*DBConn, error) {
 	}, nil
 }
 
-func (db *DBConn) Migrate() error {
-	return db.Sync(models...)
-}
-
 func (db *DBConn) Close() error {
 	return db.Engine.Close()
 }
