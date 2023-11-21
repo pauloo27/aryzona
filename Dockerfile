@@ -11,6 +11,7 @@ COPY go.sum .
 COPY Makefile .
 
 COPY assets assets
+COPY migration migration
 COPY internal internal
 COPY cmd cmd
 
@@ -28,6 +29,7 @@ RUN addgroup -S ary && adduser -S ary -G ary
 USER ary
 
 WORKDIR /app
+COPY --from=builder /app/migration /app/migration
 COPY --from=builder /app/assets /app/assets
 COPY --from=builder /app/aryzona /app/aryzona
 
