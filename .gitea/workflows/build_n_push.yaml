@@ -92,18 +92,9 @@ jobs:
           push: true
           tags: code.db.cafe/pauloo27/aryzona:${{ github.sha }},code.db.cafe/pauloo27/aryzona:${{ github.ref_name }}
 
-      - name: Rollout dev deployment using k7z
+      - name: Rollout deployment using k7z
         uses: https://code.db.cafe/actions/k7z-rollout@master
-        if: github.ref_name == 'dev'
         with:
           base_url: https://k7z.db.cafe
-          project_id: aryzona-dev
-          secret: ${{ secrets.K7Z_SECRET }}
-
-      - name: Rollout master deployment using k7z
-        uses: https://code.db.cafe/actions/k7z-rollout@master
-        if: github.ref_name == 'master'
-        with:
-          base_url: https://k7z.db.cafe
-          project_id: aryzona-master
+          project_id: aryzona-${{ github.ref_name }}
           secret: ${{ secrets.K7Z_SECRET }}
