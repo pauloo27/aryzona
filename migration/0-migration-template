@@ -1,8 +1,8 @@
 -- +migrate Up
 -- SQL in section 'Up' is executed when this migration is applied
-CREATE STUFF;
+CREATE TABLE stuff;
 
 
 -- +migrate Down
 -- SQL section 'Down' is executed when this migration is rolled back
-DROP INDEX stuff;
+DROP TABLE stuff;
