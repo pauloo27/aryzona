@@ -25,11 +25,15 @@ func buildComponents(components []model.MessageComponent) []dc.InteractiveCompon
 	for i, component := range components {
 		switch t := component.(type) {
 		case model.ButtonComponent:
+			var emoji *dc.ComponentEmoji
+			if t.Emoji != "" {
+				emoji = &dc.ComponentEmoji{Name: t.Emoji}
+			}
 			id := fmt.Sprintf("%s:%s", t.BaseID, t.ID)
 			builtComponents[i] = &dc.ButtonComponent{
 				Label:    t.Label,
 				CustomID: dc.ComponentID(id),
-				Emoji:    &dc.ComponentEmoji{Name: t.Emoji},
+				Emoji:    emoji,
 				Style:    style(t.Style),
 				Disabled: t.Disabled,
 			}
