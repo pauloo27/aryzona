@@ -82,6 +82,11 @@ jobs:
           username: pauloo27
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          echo "COMMIT_SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: https://github.com/docker/build-push-action@v4
         env:
@@ -90,7 +95,7 @@ jobs:
           file: Dockerfile
           context: .
           push: true
-          tags: code.db.cafe/pauloo27/aryzona:${{ github.sha }},code.db.cafe/pauloo27/aryzona:${{ github.ref_name }}
+          tags: code.db.cafe/pauloo27/aryzona:${{ env.COMMIT_SHORT_SHA }},code.db.cafe/pauloo27/aryzona:${{ github.ref_name }}
 
       - name: Rollout deployment using k7z
         uses: https://code.db.cafe/actions/k7z-rollout@master
