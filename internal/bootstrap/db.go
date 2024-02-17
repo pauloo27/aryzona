@@ -28,7 +28,7 @@ func connectToDB() error {
 	if err == nil {
 		slog.Info("Connected to database")
 	} else {
-		slog.Error("Failed to connect to database", "err", err.Error())
+		slog.Error("Failed to connect to database", tint.Err(err))
 		os.Exit(1)
 	}
 
