@@ -62,7 +62,6 @@ func EncodeData(path string, isOpus, isLocal bool) *EncodeSession {
 	return session
 }
 
-/* #nosec G204 */
 func (e *EncodeSession) run() error {
 	defer func() {
 		e.Lock()
@@ -94,7 +93,7 @@ func (e *EncodeSession) run() error {
 		ffmpegArgs = commonArgs
 	}
 
-	/* #nosec GG204 */
+	/* #nosec G204 */
 	ffmpeg := exec.Command("ffmpeg", ffmpegArgs...)
 
 	if e.reader != nil {
