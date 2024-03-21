@@ -60,13 +60,19 @@ func (p YouTubePlayable) GetDirectURL() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	if p.Live {
 		return getLiveURL(vid)
 	}
-	if format := vid.Formats.FindByItag(251); format != nil {
-		return defaultClient.GetStreamURL(vid, format)
+
+	formats := vid.Formats.Itag(251)
+
+	if len(formats) > 0 {
+		format := formats[0]
+		return defaultClient.GetStreamURL(vid, &format)
 	}
-	return defaultClient.GetStreamURL(vid, vid.Formats.FindByItag(140))
+
+	return defaultClient.GetStreamURL(vid, &vid.Formats[0])
 }
 
 func (p YouTubePlayable) GetFullTitle() (title string, artist string) {
@@ -82,7 +88,7 @@ func (p YouTubePlayable) IsOpus() bool {
 	if err != nil {
 		return false
 	}
-	return vid.Formats.FindByItag(251) != nil
+	return len(vid.Formats.Itag(251)) > 0
 }
 
 func GetVideo(videoURL string) (YouTubePlayable, error) {
