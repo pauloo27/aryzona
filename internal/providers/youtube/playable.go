@@ -56,6 +56,9 @@ func (YouTubePlayable) TogglePause() error {
 }
 
 func (p YouTubePlayable) GetDirectURL() (string, error) {
+	// for some reason, using the same client can result in some 403
+	defaultClient = youtube.Client{}
+
 	vid, err := p.video()
 	if err != nil {
 		return "", err
