@@ -33,7 +33,7 @@ func Load() error {
 		slog.Info("Found env file, loading...", "path", envFilePath)
 		err := godotenv.Load(envFilePath)
 		if err != nil {
-			slog.Error("Cannot load env file", err)
+			slog.Error("Cannot load env file", "err", err)
 			os.Exit(1)
 		}
 	}
