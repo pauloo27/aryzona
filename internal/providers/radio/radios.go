@@ -9,7 +9,6 @@ func init() {
 	registerRadios(
 		newYouTubeRadio("lofi", "Lofi: beats to relax/study to", "https://www.youtube.com/watch?v=jfKfPfyJRdk"),
 		newYouTubeRadio("lofi-sleep", "Lofi: beats to sleep/chill to", "https://www.youtube.com/watch?v=rUxyKA_-grg"),
-		newYouTubeRadio("techno", "Techno: Rave Radio 24/7", "https://www.youtube.com/watch?v=6Irus3d5f0E"),
 
 		newCidadeRadio(
 			"cidade", "Rádio Cidade", "https://18003.live.streamtheworld.com/RADIOCIDADEAAC.aac",
@@ -41,13 +40,6 @@ func init() {
 		),
 		newHunterRadio(
 			"lofi-hunter", "Rádio Hunter Lofi", "https://hls.hunter.fm/lofi/192.m3u8",
-		),
-
-		newGloboRadio(
-			"globo-rj", "Rádio Globo RJ", "https://medias.sgr.globo.com/hls/aRGloboRJ/aRGloboRJ.m3u8",
-		),
-		newGloboRadio(
-			"globo-sp", "Rádio Globo SP", "https://medias.sgr.globo.com/hls/aRGloboSP/aRGloboSP.m3u8",
 		),
 	)
 }
