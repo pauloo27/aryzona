@@ -347,6 +347,12 @@
                 "name": "pause"
             }
         },
+        "volume": {
+            "definition": {
+                "name": "volume",
+                "description": "Quer alterar o volume do bot?"
+            }
+        },
         "radio": {
             "listTitle": "Lista de rádios:",
             "cannotConnect": "Não foi possível conectar no canal de voz",

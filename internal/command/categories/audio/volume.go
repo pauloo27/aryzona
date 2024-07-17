@@ -9,6 +9,6 @@ var VolumeCommand = command.Command{
 	Name:        "volume",
 	Validations: []*command.Validation{validations.MustBePlaying},
 	Handler: func(ctx *command.Context) command.Result {
-		return ctx.Success("https://i.imgur.com/K7v2ue7.png")
+		return ctx.ReplyRaw("https://i.imgur.com/K7v2ue7.png")
 	},
 }

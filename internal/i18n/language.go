@@ -118,6 +118,7 @@ type Commands struct {
 	Stop     *CommandStop
 	Lyric    *CommandLyric
 	Pause    *CommandPause
+	Volume   *CommandVolume
 	Playing  *CommandPlaying
 	Radio    *CommandRadio
 	Help     *CommandHelp

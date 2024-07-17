@@ -427,6 +427,12 @@
             },
             "stopped": "Stopped!"
         },
+        "volume": {
+            "definition": {
+                "name": "volume",
+                "description": "Wanna change the bot volume?"
+            }
+        },
         "pause": {
             "definition": {
                 "name": "pause",

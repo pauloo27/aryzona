@@ -206,6 +206,11 @@ type CommandStop struct {
 	Stopped Entry
 }
 
+type CommandVolume struct {
+	*Common
+	Definition *CommandDefinition
+}
+
 type CommandPause struct {
 	*Common
 	Definition *CommandDefinition
