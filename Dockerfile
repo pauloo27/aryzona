@@ -1,5 +1,5 @@
 # STAGE: BUILD
-FROM golang:1.22 AS builder
+FROM golang:1.23 AS builder
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ RUN make dist
 
 # STAGE: TARGET
 
-FROM alpine:latest
+FROM alpine:3
 RUN apk add ffmpeg
 
 RUN addgroup -S ary && adduser -S ary -G ary

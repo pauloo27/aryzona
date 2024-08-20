@@ -15,5 +15,5 @@ var Audio = command.Category{
 }
 
 func init() {
-	command.RegisterCategory(Audio)
+	//command.RegisterCategory(Audio)
 }
