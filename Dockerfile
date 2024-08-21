@@ -22,7 +22,6 @@ RUN make dist
 # STAGE: TARGET
 
 FROM alpine:3
-RUN apk add ffmpeg
 
 RUN addgroup -S ary && adduser -S ary -G ary
 
