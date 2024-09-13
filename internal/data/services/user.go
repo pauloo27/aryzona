@@ -57,7 +57,7 @@ func (s *UserService) GetLanguage(userID, guildID string) i18n.LanguageName {
 	guildNotFound := errors.Is(err, db.ErrNotFound)
 
 	if err != nil && !guildNotFound {
-		slog.Error("Cannot load guild from db", err)
+		slog.Error("Cannot load guild from db", "err", err)
 	}
 
 	if !guildNotFound {
