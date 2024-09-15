@@ -19,7 +19,7 @@ func (command *Command) ValidateParameters(ctx *Context) (values []any, syntaxEr
 	arguments := ctx.RawArgs
 	lang := ctx.Lang
 
-	if command.Parameters == nil || len(command.Parameters) == 0 {
+	if len(command.Parameters) == 0 {
 		return
 	}
 

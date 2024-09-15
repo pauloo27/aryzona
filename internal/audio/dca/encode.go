@@ -178,7 +178,13 @@ func (e *EncodeSession) readStdout(stdout io.ReadCloser) error {
 func (e *EncodeSession) writeOpusFrame(frame []byte) error {
 	var buffer bytes.Buffer
 
-	err := binary.Write(&buffer, binary.LittleEndian, int16(len(frame)))
+	frameLen := len(frame)
+
+	if frameLen > 0x1FFF {
+		return errors.New("frame too large")
+	}
+
+	err := binary.Write(&buffer, binary.LittleEndian, int16(frameLen))
 
 	if err != nil {
 		return err
