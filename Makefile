@@ -80,6 +80,6 @@ install-inspect-tools:
 
 .PHONY: install-dev-tools
 install-dev-tools: install-inspect-tools
-	go install github.com/cosmtrek/air@latest
+	go install github.com/air-verse/air@latest
 	go install gotest.tools/gotestsum@latest
 	go install github.com/rubenv/sql-migrate/...@latest
