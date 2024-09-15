@@ -12,7 +12,7 @@ type Embed struct {
 	ImageURL     string
 	ThumbnailURL string
 	Footer       string
-	Color        int
+	Color        int32
 	URL          string
 }
 
@@ -20,7 +20,7 @@ func NewEmbed() *Embed {
 	return &Embed{}
 }
 
-func (e *Embed) WithColor(color int) *Embed {
+func (e *Embed) WithColor(color int32) *Embed {
 	e.Color = color
 	return e
 }
