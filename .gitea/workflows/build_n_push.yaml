@@ -28,7 +28,7 @@ jobs:
         run: make inspect
  
   deploy:
-    needs: [build, test, inspect]
+    needs: [build_test_inspect]
     runs-on: ubuntu-latest
     container:
       image: catthehacker/ubuntu:act-latest
