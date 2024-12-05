@@ -1,7 +1,11 @@
 package youtube
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/kkdai/youtube/v2"
@@ -56,26 +60,37 @@ func (YouTubePlayable) TogglePause() error {
 }
 
 func (p YouTubePlayable) GetDirectURL() (string, error) {
-	// for some reason, using the same client can result in some 403
-	defaultClient = youtube.Client{}
-
-	vid, err := p.video()
-	if err != nil {
-		return "", err
-	}
-
+	// Check if the URL is for a live stream
 	if p.Live {
-		return getLiveURL(vid)
+		return p.getLiveStreamURL()
 	}
 
-	formats := vid.Formats.Itag(251)
+	return p.getVideoURL()
+}
 
-	if len(formats) > 0 {
-		format := formats[0]
-		return defaultClient.GetStreamURL(vid, &format)
+func (p YouTubePlayable) getLiveStreamURL() (string, error) {
+	cmd := exec.Command("yt-dlp", "-g", "-f", "best", p.GetShareURL())
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return "", errors.New("failed to fetch live stream URL: " + err.Error())
 	}
 
-	return defaultClient.GetStreamURL(vid, &vid.Formats[0])
+	return strings.TrimSpace(out.String()), nil
+}
+
+func (p YouTubePlayable) getVideoURL() (string, error) {
+	cmd := exec.Command("yt-dlp", "-g", "-f", "251", p.GetShareURL()) // itag 251 = audio (webm)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return "", errors.New("failed to fetch video URL: " + err.Error())
+	}
+
+	// Trim the output to remove any extra spaces or newline characters
+	return strings.TrimSpace(out.String()), nil
 }
 
 func (p YouTubePlayable) GetFullTitle() (title string, artist string) {
