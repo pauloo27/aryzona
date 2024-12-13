@@ -69,7 +69,6 @@ func (p YouTubePlayable) GetDirectURL() (string, error) {
 }
 
 func (p YouTubePlayable) getLiveStreamURL() (string, error) {
-	/* #nosec G204 get rekt */
 	cmd := exec.Command("yt-dlp", "-g", "-f", "best", p.GetShareURL())
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -82,7 +81,6 @@ func (p YouTubePlayable) getLiveStreamURL() (string, error) {
 }
 
 func (p YouTubePlayable) getVideoURL() (string, error) {
-	/* #nosec G204 get rekt */
 	cmd := exec.Command("yt-dlp", "-g", "-f", "251", p.GetShareURL()) // itag 251 = audio (webm)
 	var out bytes.Buffer
 	cmd.Stdout = &out
