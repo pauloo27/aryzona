@@ -1,7 +1,7 @@
 package youtube
 
 import (
-	"github.com/kkdai/youtube/v2"
+	"github.com/pauloo27/youtube/v2"
 )
 
 var (
