@@ -22,10 +22,7 @@ RUN make dist
 # STAGE: TARGET
 
 FROM alpine:latest
-RUN apk add ffmpeg python3 py3-pip curl
-
-RUN curl -L -o /bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp && \
-  chmod +x /bin/yt-dlp
+RUN apk add ffmpeg
 
 RUN addgroup -S ary && adduser -S ary -G ary
 
