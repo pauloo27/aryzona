@@ -9,8 +9,8 @@ import (
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/discord"
 
-	// import arikawa implementation
-	_ "github.com/pauloo27/aryzona/internal/discord/impl/arkw"
+	// disgo impl
+	_ "github.com/pauloo27/aryzona/internal/discord/impl/disgo"
 
 	// import listeners
 	_ "github.com/pauloo27/aryzona/internal/discord/listener"
