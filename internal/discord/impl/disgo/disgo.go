@@ -49,7 +49,12 @@ func (d *DisgoBot) GetMember(guildID string, channelID string, userID string) (m
 }
 
 func (d *DisgoBot) GuildCount() int {
-	panic("unimplemented")
+	// TODO: feels stupid 
+	guilds, err := d.client.Rest().GetCurrentUserGuilds("", snowflake.MustParse("null"), snowflake.MustParse("null"), 100, false)
+	if err != nil {
+		return -1
+	}
+	return len(guilds)
 }
 
 func (d *DisgoBot) Implementation() string {
@@ -58,11 +63,13 @@ func (d *DisgoBot) Implementation() string {
 
 func (d *DisgoBot) Init(token string) error {
 	d.token = token
+	d.intents = append(d.intents, gateway.IntentGuilds)
 	return nil
 }
 
 func (d *DisgoBot) IsLive() bool {
-	panic("unimplemented")
+	_, err := d.Self()
+	return err == nil
 }
 
 func (d *DisgoBot) JoinVoiceChannel(guildID string, channelID string) (model.VoiceConnection, error) {
@@ -74,7 +81,16 @@ func (d *DisgoBot) Latency() time.Duration {
 }
 
 func (d *DisgoBot) OpenChannelWithUser(userID string) (model.TextChannel, error) {
-	panic("unimplemented")
+	userSf, err := snowflake.Parse(userID)
+	if err != nil {
+		return nil, err
+	}
+	dm, err := d.client.Rest().CreateDMChannel(userSf)
+	if err != nil {
+		return nil, err
+	}
+
+	return buildChannel(dm.ID().String(), buildGuild(""), model.ChannelTypeDirect), nil
 }
 
 func (d *DisgoBot) OpenGuild(guildID string) (model.Guild, error) {
@@ -88,6 +104,32 @@ func (d *DisgoBot) RegisterSlashCommands() error {
 
 func (d *DisgoBot) Self() (model.User, error) {
 	return buildUser(d.client.ID().String()), nil
+}
+
+func (b *DisgoBot) SendReplyMessage(m model.Message, content string) (model.Message, error) {
+	return b.SendComplexMessage(m.Channel().ID(), &model.ComplexMessage{
+		Content: content,
+		ReplyTo: m,
+	})
+}
+
+func (b *DisgoBot) SendMessage(channelID string, message string) (model.Message, error) {
+	return b.SendComplexMessage(channelID, &model.ComplexMessage{
+		Content: message,
+	})
+}
+
+func (b *DisgoBot) SendReplyEmbedMessage(m model.Message, embed *model.Embed) (model.Message, error) {
+	return b.SendComplexMessage(m.Channel().ID(), &model.ComplexMessage{
+		Embeds:  []*model.Embed{embed},
+		ReplyTo: m,
+	})
+}
+
+func (b *DisgoBot) SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error) {
+	return b.SendComplexMessage(channelID, &model.ComplexMessage{
+		Embeds: []*model.Embed{embed},
+	})
 }
 
 func (d *DisgoBot) SendComplexMessage(channelID string, message *model.ComplexMessage) (model.Message, error) {
@@ -139,22 +181,6 @@ func (d *DisgoBot) SendComplexMessage(channelID string, message *model.ComplexMe
 		buildUser(sentMessage.Author.ID.String()),
 		sentMessage.Content,
 	), nil
-}
-
-func (d *DisgoBot) SendEmbedMessage(channelID string, embed *model.Embed) (model.Message, error) {
-	panic("unimplemented")
-}
-
-func (d *DisgoBot) SendMessage(channelID string, content string) (model.Message, error) {
-	panic("unimplemented")
-}
-
-func (d *DisgoBot) SendReplyEmbedMessage(message model.Message, embed *model.Embed) (model.Message, error) {
-	panic("unimplemented")
-}
-
-func (d *DisgoBot) SendReplyMessage(message model.Message, content string) (model.Message, error) {
-	panic("unimplemented")
 }
 
 func (d *DisgoBot) Start() error {
