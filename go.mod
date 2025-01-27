@@ -17,7 +17,7 @@ require (
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/pauloo27/lyric v0.0.0-20230515020121-984bfe7441fa
 	github.com/pauloo27/toolkit v0.0.0-20230515014839-c9cac89ae368
-	github.com/pauloo27/youtube/v2 v2.0.0-20241213224833-508d1f82879e
+	github.com/pauloo27/youtube/v2 v2.0.0-20250127122611-aa65ab687230
 	github.com/qiangxue/go-env v1.0.1
 	github.com/rubenv/sql-migrate v1.5.2
 	github.com/stretchr/testify v1.10.0
@@ -36,7 +36,7 @@ require (
 	github.com/bitly/go-simplejson v0.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dlclark/regexp2 v1.11.4 // indirect
-	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd // indirect
+	github.com/dop251/goja v0.0.0-20250125213203-5ef83b82af17 // indirect
 	github.com/go-gorp/gorp/v3 v3.1.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -44,7 +44,7 @@ require (
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20241210010833-40e02aabc2ad // indirect
+	github.com/google/pprof v0.0.0-20250125003558-7fdb3d7e6fa0 // indirect
 	github.com/gorilla/schema v1.2.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
