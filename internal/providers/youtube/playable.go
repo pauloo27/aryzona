@@ -1,11 +1,10 @@
 package youtube
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
-	"github.com/pauloo27/youtube/v2"
+	"github.com/kkdai/youtube/v2"
 )
 
 type YouTubePlayable struct {
@@ -69,16 +68,14 @@ func (p YouTubePlayable) GetDirectURL() (string, error) {
 		return getLiveURL(vid)
 	}
 
-	formats := vid.Formats
-	formats = formats.WithAudioChannels()
-	formats.Sort()
+	formats := vid.Formats.Itag(251)
 
-	if len(formats) == 0 {
-		return "", errors.New("no audio info found")
+	if len(formats) > 0 {
+		format := formats[0]
+		return defaultClient.GetStreamURL(vid, &format)
 	}
-	format := formats[0]
 
-	return defaultClient.GetStreamURL(vid, &format)
+	return defaultClient.GetStreamURL(vid, &vid.Formats[0])
 }
 
 func (p YouTubePlayable) GetFullTitle() (title string, artist string) {

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	yt "github.com/pauloo27/youtube/v2"
+	yt "github.com/kkdai/youtube/v2"
 	"github.com/lmittmann/tint"
 	"github.com/pauloo27/aryzona/internal/config"
 	"github.com/pauloo27/aryzona/internal/core/h"
