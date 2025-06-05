@@ -60,6 +60,6 @@ type DummyBot struct {
 	member *DummyMember
 }
 
-func (b DummyBot) GetMember(guildId, userId, authorId string) (model.Member, error) {
+func (b DummyBot) GetMember(guildID, userID, authorID string) (model.Member, error) {
 	return b.member, nil
 }

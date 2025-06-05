@@ -38,15 +38,15 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 	t.Run("hasn't voicer in the same guild id", func(t *testing.T) {
 		discord.UseImplementation(discord.DummyBot{})
 
-		guildId := "321"
+		guildID := "321"
 
-		v, err := voicer.NewVoicerForUser("123", guildId)
+		v, err := voicer.NewVoicerForUser("123", guildID)
 		require.NotNil(t, v)
 		require.Nil(t, err)
 
 		ctx := &command.Context{
 			GuildID: "123123", // not the same guild id
-			Locals:  make(map[string]interface{}),
+			Locals:  make(map[string]any),
 			Lang:    defaultLang,
 		}
 
@@ -57,15 +57,15 @@ func TestMustHaveVoicerOnGuild(t *testing.T) {
 	t.Run("has voicer in the same guild id", func(t *testing.T) {
 		discord.UseImplementation(discord.DummyBot{})
 
-		guildId := "321"
+		guildID := "321"
 
-		v, err := voicer.NewVoicerForUser("123", guildId)
+		v, err := voicer.NewVoicerForUser("123", guildID)
 		require.NotNil(t, v)
 		require.Nil(t, err)
 
 		ctx := &command.Context{
-			GuildID: guildId,
-			Locals:  make(map[string]interface{}),
+			GuildID: guildID,
+			Locals:  make(map[string]any),
 			Lang:    defaultLang,
 		}
 

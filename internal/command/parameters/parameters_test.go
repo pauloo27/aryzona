@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestBoolean(t *testing.T) {
-	var b interface{}
+	var b any
 	var err error
 
 	ctx := &command.Context{
@@ -49,7 +49,7 @@ func TestBoolean(t *testing.T) {
 }
 
 func TestInt(t *testing.T) {
-	var i interface{}
+	var i any
 	var err error
 
 	ctx := &command.Context{
@@ -76,7 +76,7 @@ func TestInt(t *testing.T) {
 }
 
 func TestString(t *testing.T) {
-	var str interface{}
+	var str any
 	var err error
 
 	ctx := &command.Context{
@@ -93,7 +93,7 @@ func TestString(t *testing.T) {
 }
 
 func TestText(t *testing.T) {
-	var str interface{}
+	var str any
 	var err error
 
 	ctx := &command.Context{

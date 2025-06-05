@@ -9,30 +9,30 @@ import (
 )
 
 var (
-	clientId, clientSecret string
+	clientID, clientSecret string
 
-	playlistId = "1D6l3qeCbryB9COT1CGalw"
-	trackId    = "6K4t31amVTZDgR3sKmwUJJ"
+	playlistID = "1D6l3qeCbryB9COT1CGalw"
+	trackID    = "6K4t31amVTZDgR3sKmwUJJ"
 
 	sfy *spotify.Spotify
 )
 
 func TestMain(m *testing.M) {
-	clientId = os.Getenv("SPOTIFY_CLIENT_ID")
+	clientID = os.Getenv("SPOTIFY_CLIENT_ID")
 	clientSecret = os.Getenv("SPOTIFY_CLIENT_SECRET")
 
 	os.Exit(m.Run())
 }
 
 func TestNewSpotify(t *testing.T) {
-	if clientId == "" {
+	if clientID == "" {
 		t.Skip("spotify: SPOTIFY_CLIENT_ID is not set")
 	}
 	if clientSecret == "" {
 		t.Skip("spotify: SPOTIFY_CLIENT_SECRET is not set")
 	}
 
-	sfy = spotify.NewSpotify(clientId, clientSecret)
+	sfy = spotify.NewSpotify(clientID, clientSecret)
 
 	assert.NotNil(t, sfy)
 }
@@ -42,7 +42,7 @@ func TestGetPlaylist(t *testing.T) {
 		t.Skip("spotify: spotify instance is nil")
 	}
 
-	playlist, err := sfy.GetPlaylist(playlistId)
+	playlist, err := sfy.GetPlaylist(playlistID)
 	assert.NoError(t, err)
 
 	assert.NotNil(t, playlist)
@@ -63,7 +63,7 @@ func TestGetPlaylistItems(t *testing.T) {
 		t.Skip("spotify: spotify instance is nil")
 	}
 
-	playlist, err := sfy.GetPlaylistItems(playlistId, 10, 0)
+	playlist, err := sfy.GetPlaylistItems(playlistID, 10, 0)
 	assert.NoError(t, err)
 
 	assert.NotNil(t, playlist)
@@ -78,7 +78,7 @@ func TestGetTrack(t *testing.T) {
 		t.Skip("spotify: spotify instance is nil")
 	}
 
-	track, err := sfy.GetTrack(trackId)
+	track, err := sfy.GetTrack(trackID)
 	assert.NoError(t, err)
 
 	assert.NotNil(t, track)
