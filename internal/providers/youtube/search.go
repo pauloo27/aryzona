@@ -84,17 +84,14 @@ func loadResults(ids []string) []*SearchResult {
 	wg.Wait()
 
 	// remove nils from the slice
-	j := 0
-	for i, result := range results {
-		if result != nil {
-			if i != j {
-				results[j] = result
-			}
-			j++
+	filteredResults := make([]*SearchResult, 0, len(results))
+	for _, res := range results {
+		if res != nil {
+			filteredResults = append(filteredResults, res)
 		}
 	}
 
-	return results
+	return filteredResults
 }
 
 func videoAsSearchResult(vid *yt.Video) *SearchResult {
